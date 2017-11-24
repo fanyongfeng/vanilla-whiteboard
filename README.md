@@ -1,6 +1,29 @@
 # vanilla-whiteboard
 
-> A Vue.js project
+> High performance, pluggable, elegant whiteboard for modern internet education.
+
+
+> 
+```
+-commands
+  处理所有的命令（包括: redo, undo, delete, copy,  move, scale, etc.）
+-lib
+  canvas及图形相关lib
+-tools
+  具名绘制工具及可定制插件相关
+-util
+  工具方法
+```
+```
+APIs
+
+import
+export
+trace
+high-pref / full-feats
+
+
+```
 
 ## Build Setup
 
@@ -17,5 +40,3 @@ npm run build
 # build for production and view the bundle analyzer report
 npm run build --report
 ```
-
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
