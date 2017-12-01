@@ -1,6 +1,7 @@
 # vanilla-whiteboard
 
 > High performance, pluggable, elegant whiteboard for modern internet education.
+> 不依赖任何库，纯JS实现
 
 
 > 
