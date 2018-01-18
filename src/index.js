@@ -2,10 +2,19 @@ let dragging  = false
 
 window.vanilla = {
   init(canvas) {
-    canvas.addEventListener('mousemove', () => {
-      console.log('1',dragging);
+    canvas.addEventListener('mousemove', (event) => {
       if(dragging) {
-        var ctxt = canvas.getContext('2d');
+        var ctx = canvas.getContext('2d');
+
+        ctx.strokeStyle = '#f00'
+        ctx.lineWidth = 2
+
+        ctx.beginPath();
+        
+        ctx.moveTo(event.offsetX, event.offsetY);
+        console.log(event);
+        ctx.closePath();
+
       }
     }, false);
 
@@ -13,12 +22,14 @@ window.vanilla = {
       dragging = true;
     }, false);
 
-    canvas.addEventListener('mouseup', () => {
+    document.addEventListener('mouseup', () => {
 
       dragging = false;
     }, false);
   },
 };
+
+
 
 vanilla.init(document.getElementById('canvas'));
 
