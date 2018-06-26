@@ -1,35 +1,13 @@
-let dragging  = false
+import shapes from "./graphic";
+import grid from "./component/grid";
 
 window.vanilla = {
   init(canvas) {
-    canvas.addEventListener('mousemove', (event) => {
-      if(dragging) {
-        var ctx = canvas.getContext('2d');
+    var ctx = canvas.getContext('2d');
 
-        ctx.strokeStyle = '#f00'
-        ctx.lineWidth = 2
+    var arc =new shapes.Arc();
+    arc.render(ctx);
 
-        ctx.beginPath();
-        
-        ctx.moveTo(event.offsetX, event.offsetY);
-        console.log(event);
-        ctx.closePath();
-
-      }
-    }, false);
-
-    canvas.addEventListener('mousedown', () => {
-      dragging = true;
-    }, false);
-
-    document.addEventListener('mouseup', () => {
-
-      dragging = false;
-    }, false);
-  },
-};
-
-
-
+  }
+}
 vanilla.init(document.getElementById('canvas'));
-

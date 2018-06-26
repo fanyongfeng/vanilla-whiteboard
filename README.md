@@ -1,9 +1,14 @@
 # vanilla-whiteboard
 
 > High performance, pluggable, elegant whiteboard for modern internet education.
+> 轻量，高性能，可定制，可扩展，“数学化”，矢量化，便于结构化数据（传输），零依赖，可以方便面向3D的
 > 不依赖任何库，纯JS实现
 
 
+> features：
+* TM+已支持所有图形
+* 数学图形，圆规，画
+* Canvas 动画、场景
 > 
 ```
 -commands
