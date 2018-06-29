@@ -1,3 +1,13 @@
+
+
+function drawMajorGrid(hDivide, vDivide, bounds) {
+
+}
+
+function drawMinorGrid(hDivide, vDivide, bounds) {
+  
+}
+
 export default function drawGrid(hDivide, vDivide, bounds) {
   let cellWidth = bounds.width / hDivide;
   let cellHeight = bounds.height / vDivide;

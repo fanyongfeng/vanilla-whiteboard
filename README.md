@@ -9,6 +9,7 @@
 * TM+已支持所有图形
 * 数学图形，圆规，画
 * Canvas 动画、场景
+* editable mode, readonly mode.
 > 
 ```
 -commands

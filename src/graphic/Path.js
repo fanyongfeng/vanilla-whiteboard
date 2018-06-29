@@ -6,12 +6,14 @@ export default class Path {
     // /this.shape = Object.assign({}, shape);
   }
 
-  getBounds(){
+  getBBox(){
     return new Rect();
   }
+  
   buildPath(ctx, shape) {
     throw "This method must be implemented!";
   }
+
   render(ctx){
     this.buildPath(ctx, this.shape);
 

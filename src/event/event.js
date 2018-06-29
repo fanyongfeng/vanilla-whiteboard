@@ -1,5 +1,16 @@
 let dragging  = false
 
+let mouseEventNames = [
+  'click', 'dblclick', 'mousewheel', 'mouseout',
+  'mouseup', 'mousedown', 'mousemove', 'contextmenu'
+];
+
+let touchEventNames = [
+  'touchstart', 'touchend', 'touchmove'
+];
+
+//绑定流程和一般拖拽类似
+
 window.vanilla = {
   init(canvas) {
     canvas.addEventListener('mousemove', (event) => {
@@ -30,6 +41,4 @@ window.vanilla = {
 };
 
 
-
-vanilla.init(document.getElementById('canvas'));
 
