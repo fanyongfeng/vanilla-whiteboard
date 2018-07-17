@@ -47,3 +47,10 @@ npm run build
 # build for production and view the bundle analyzer report
 npm run build --report
 ```
+
+## Sample
+
+* 吃豆子
+* 动画
+* 签名
+* 

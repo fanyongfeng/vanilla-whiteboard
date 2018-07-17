@@ -2,19 +2,13 @@
  * Custom Mouse Event Class
  */
 
-let mouseEventNames = [
-  'click', 'dblclick', 'mousewheel', 'mouseout',
-  'mouseup', 'mousedown', 'mousemove', 'contextmenu'
-];
-
-let touchEventNames = [
-  'touchstart', 'touchend', 'touchmove'
-];
-
-
 export default class MouseEvent {
   constructor(originEvent){
     this.originEvent = originEvent;
+    this.type = originEvent.type;
+    this.target = originEvent.target;
+    this.offsetX = originEvent.offsetX; 
+    this.offsetY = originEvent.offsetY;
   }
 
   get delta() {
@@ -24,5 +18,12 @@ export default class MouseEvent {
         y : this.originEvent.movementY, 
       }
     }
+  }
+  toString() {
+    return "{ type: '" + this.type
+            + "', point: " + this.point
+            + ', target: ' + this.target
+            + (this.delta ? ', delta: ' + this.delta : '')
+            + ' }';
   }
 }
