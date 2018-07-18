@@ -8,4 +8,8 @@ export default class CanvasMgr {
     this.ctx.clearRect(0, 0, this.width, this.height);
     return this;
   }
+
+  renderAll(){
+    
+  }
 } 
