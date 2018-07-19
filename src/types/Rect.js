@@ -51,6 +51,10 @@ export default class Rect {
     return new Point(this.getCenterX(), this.getCenterY());
   }
 
+  get Area(){
+    return this.width * this.height;
+  }
+
   contains(arg) {
     // Detect rectangles either by checking for 'width' on the passed object
     // or by looking at the amount of elements in the arguments list,

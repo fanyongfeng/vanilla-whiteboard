@@ -9,9 +9,7 @@ let touchEventNames = [
 
 import MouseEvent from './MouseEvent'
 import Point from '../types/Point'
-
-
-function foo(x,y){var v = Math.atan2(y, x); if(v<0) return v+ 2*Math.PI; return v  }
+import Rect from '../graphic/shape/Rect';
 
 //绑定流程和一般拖拽类似
 
@@ -109,36 +107,6 @@ var handlers = {
     this._handleMove(new MouseEvent(event));
   },
 
-  //function a(x,y ){var v = Math.atan2(y, x) * 180 / Math.PI; if(a<0) return v+ 360; return v  }
-
-  getAngle2(i){
-    var cp = new Point(0, 0);
-    var sp = new Point(0, 200);
-    var ep = new Point(-300, 300 + i);
-
-   // var v = Math.atan2(y, x); if(v<0) return v+ 2*Math.PI; return v 
-
-    return Math.atan((ep.x - cp.x)/(ep.y-cp.y));// - Math.atan2(sp.x - cp.x, sp.y-cp.y);
-
-  },
-
-  getAngle(i){
-    var cp = new Point(0, 0);
-    var sp = new Point(0, 200);
-    var ep = new Point(-300, 300 + i);
-
-
-    var disCS = cp.distanceFrom(sp);
-    var disCE = cp.distanceFrom(ep);
-    var disSE = sp.distanceFrom(ep);
-
-    return Math.acos(((Math.pow(disCS, 2)) + (Math.pow(disCE, 2)) - (Math.pow(disSE, 2))) / (2 * disCS * disCE));
-
-    //angle in degrees
-    //var resultDegree = resultRadian * 180 / Math.PI;
-    // console.log(resultRadian, resultDegree);
-
-  },
 
   _handleDown(event){
     var ctx = this.canvas.getContext('2d');
@@ -146,18 +114,13 @@ var handlers = {
     ctx.lineCap = "round";
     ctx.lineWidth = 10;
 
+    
+    let rect = new Rect();
+
+    rect.buildPath(ctx, rect.shape);
+    ctx.stroke();
+    
     ctx.beginPath();
-    const COUNT =  100000;
-
-    console.time('------tri------')
-    for(let i=0; i<COUNT; i++) this.getAngle(i);
-    console.timeEnd('------tri------')
-    console.time('------vector------')
-    for(let i=0; i<COUNT; i++) this.getAngle2(i);
-
-    console.timeEnd('------vector------')
-
-
     ctx.moveTo(event.offsetX, event.offsetY);
     lastPoint = new Point(event.offsetX, event.offsetY);
   },

@@ -1,7 +1,5 @@
-import shapes from "./graphic";
-import grid from "./component/grid";
 
-import handler from './event/event';
+import playground from './playground'
 
 //top-level APIs
 /**
@@ -16,7 +14,10 @@ class VanillaWhiteboard {
   }
 
   constructor(canvas){
-    handler.bind(canvas);
+
+    //playground.event();
+    playground.init(canvas);
+    playground.rect();
   }
   
   on(type, fn){

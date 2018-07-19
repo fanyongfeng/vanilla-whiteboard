@@ -1,5 +1,7 @@
-import Arc from "./shape/Arc"
+import Rect from "./shape/Rect"
+import Line from "./shape/Line"
+import Bezier from "./shape/Bezier"
 
 export default {
-  Arc
+  Line, Rect, Bezier
 }

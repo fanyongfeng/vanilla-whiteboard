@@ -1,7 +1,7 @@
 stages:
   - analysis
 
-lint:
+test:
   stage: analysis
   image: node:8
   cache:

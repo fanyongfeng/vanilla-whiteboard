@@ -1,6 +1,6 @@
-import Path from "../Path"
+import Element from "../Element"
 
-export default class Arc extends Path {
+export default class Arc extends Element {
   points = []
 
   buildPath(){
