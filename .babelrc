@@ -3,11 +3,13 @@
     ["env", {
       "modules": false
     }],
+    "@ava/stage-4",
     "stage-2"
   ],
   "plugins": ["transform-runtime"],
   "env": {
     "test": {
-      "presets": ["env", "stage-2"]    }
+      "presets": ["env", "stage-2"]
+    }
   }
 }

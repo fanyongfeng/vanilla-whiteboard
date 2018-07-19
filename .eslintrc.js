@@ -36,5 +36,23 @@ module.exports = {
     }],
     // allow debugger during development
     'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0
+  },
+  "globals": {
+    "window": true,
+    "document": true,
+    "setTimeout": true,
+    "setInterval": true,
+    "GDATA": true,
+    "SENTRY_URL": true,
+    "VERSION": true,
+    "ISSTORYBOOK": true,
+    "pdfMake": true,
+    "tmclient": true,
+    "Guacamole": true,
+    "BlobBuilder":true,
+    "WebKitBlobBuilder":true,
+    "MozBlobBuilder": true,
+    "__MILKYWAY_DEVTOOLS_GLOBAL_HOOK__": true,
+    "__REDUX_DEVTOOLS_EXTENSION__": true
   }
 }

@@ -10,6 +10,9 @@ let touchEventNames = [
 import MouseEvent from './MouseEvent'
 import Point from '../types/Point'
 
+
+function foo(x,y){var v = Math.atan2(y, x); if(v<0) return v+ 2*Math.PI; return v  }
+
 //绑定流程和一般拖拽类似
 
 let lastPoint = null;
@@ -106,21 +109,34 @@ var handlers = {
     this._handleMove(new MouseEvent(event));
   },
 
-  getAngle(){
+  //function a(x,y ){var v = Math.atan2(y, x) * 180 / Math.PI; if(a<0) return v+ 360; return v  }
+
+  getAngle2(i){
     var cp = new Point(0, 0);
     var sp = new Point(0, 200);
-    var ep = new Point(-300, 300);
+    var ep = new Point(-300, 300 + i);
+
+   // var v = Math.atan2(y, x); if(v<0) return v+ 2*Math.PI; return v 
+
+    return Math.atan((ep.x - cp.x)/(ep.y-cp.y));// - Math.atan2(sp.x - cp.x, sp.y-cp.y);
+
+  },
+
+  getAngle(i){
+    var cp = new Point(0, 0);
+    var sp = new Point(0, 200);
+    var ep = new Point(-300, 300 + i);
 
 
     var disCS = cp.distanceFrom(sp);
     var disCE = cp.distanceFrom(ep);
     var disSE = sp.distanceFrom(ep);
 
-    var resultRadian = Math.acos(((Math.pow(disCS, 2)) + (Math.pow(disCE, 2)) - (Math.pow(disSE, 2))) / (2 * disCS * disCE));
+    return Math.acos(((Math.pow(disCS, 2)) + (Math.pow(disCE, 2)) - (Math.pow(disSE, 2))) / (2 * disCS * disCE));
 
     //angle in degrees
-    var resultDegree = resultRadian * 180 / Math.PI;
-    console.log(resultRadian, resultDegree);
+    //var resultDegree = resultRadian * 180 / Math.PI;
+    // console.log(resultRadian, resultDegree);
 
   },
 
@@ -131,6 +147,16 @@ var handlers = {
     ctx.lineWidth = 10;
 
     ctx.beginPath();
+    const COUNT =  100000;
+
+    console.time('------tri------')
+    for(let i=0; i<COUNT; i++) this.getAngle(i);
+    console.timeEnd('------tri------')
+    console.time('------vector------')
+    for(let i=0; i<COUNT; i++) this.getAngle2(i);
+
+    console.timeEnd('------vector------')
+
 
     ctx.moveTo(event.offsetX, event.offsetY);
     lastPoint = new Point(event.offsetX, event.offsetY);

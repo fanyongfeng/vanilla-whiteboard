@@ -1,7 +1,7 @@
 /**
  * Mouse Event Class
  */
-export default class MouseEvent {
+export default class KeyEvent {
   constructor(originEvent){
     this.originEvent = originEvent;
   }

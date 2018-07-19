@@ -10,6 +10,9 @@ export default class CanvasMgr {
   }
 
   renderAll(){
+
+  }
+  scale(){
     
   }
 } 

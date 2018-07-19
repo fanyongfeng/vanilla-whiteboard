@@ -1,3 +1,6 @@
+/**
+ * 
+ */
 export default class Point {
   constructor(x, y) {
     this.x = x;
@@ -22,9 +25,9 @@ export default class Point {
 
   /**
    * Returns new point which is the result of linear interpolation with this one and another one
-   * @param {fabric.Point} other
+   * @param {Point} other
    * @param {Number} t , position of interpolation, between 0 and 1 default 0.5
-   * @return {fabric.Point}
+   * @return {Point}
    */
   lerp(other, t) {
     if (typeof t === 'undefined') {
@@ -48,6 +51,10 @@ export default class Point {
       dy = this.y - other.y;
 
     return Math.sqrt(dx * dx + dy * dy);
+  }
+
+  nearby(point, threshold = 5){
+    return this.distanceFrom(point) < threshold;
   }
 
   /**
