@@ -7,6 +7,7 @@ import Style from './Style';
 export default class Element {
 
   selectable = true;
+  data = {};
 
   stroke = null;
   strokeWidth = 1;
