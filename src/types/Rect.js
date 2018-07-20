@@ -10,13 +10,27 @@ const dirs = [
 /**
  * 
  */
-export default class Rect {
+class Rect {
   constructor(x, y, width, height) {
     this.x = x;
     this.y = y;
     this.width = width;
     this.height = height;
   }
+
+  /**
+   * The coordinate of the top, left, right, bottom.
+   *
+   * @bean
+   * @type Number
+   * @ignore
+   */
+  get top() { return this.y; }
+  get left() { return this.x; }
+  get bottom() { return this.y + this.height; }
+  get right() { return this.x + this.width; }
+
+  get topRight() { return new Point(this.right, this.top); }
 
   /**
    * The center-x coordinate of the rectangle.
@@ -51,7 +65,7 @@ export default class Rect {
     return new Point(this.getCenterX(), this.getCenterY());
   }
 
-  get Area(){
+  get Area() {
     return this.width * this.height;
   }
 
@@ -115,3 +129,5 @@ export default class Rect {
       + ' }';
   }
 }
+
+export default Rect;

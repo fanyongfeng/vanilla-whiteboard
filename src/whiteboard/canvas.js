@@ -3,6 +3,7 @@
  */
 
 import hookable from '../decorators/hookable';
+
 @hookable
 export default class CanvasMgr {
   constructor(element) {

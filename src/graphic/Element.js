@@ -1,7 +1,8 @@
 /**
  * Base of all shapes
  */
-import Rect from '../types/Rect'
+import Rect from '../types/Rect';
+import Style from './Style';
 
 export default class Element {
 
@@ -9,16 +10,18 @@ export default class Element {
 
   stroke = null;
   strokeWidth = 1;
-  x = 0;
-  y = 0;
-  width = 0;
-  height = 0;
+  _bounds = new Rect(0,0,0,0);
+  _style = new Style();
 
   constructor(shape){
     // /this.shape = Object.assign({}, shape);
   }
 
-  getBBox(){
+  get style(){
+    
+  }
+
+  get bounds(){
     return new Rect(this.x, this.y, this.width, this.height);
   }
   
