@@ -1,7 +1,7 @@
 import Rect from "./shape/Rect"
 import Line from "./shape/Line"
-import Bezier from "./shape/Bezier"
+import Curve from "./shape/Curve"
 
 export default {
-  Line, Rect, Bezier
+  Line, Rect, Curve
 }

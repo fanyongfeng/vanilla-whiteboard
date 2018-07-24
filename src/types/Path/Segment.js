@@ -9,7 +9,7 @@ export default class Segment {
   }
 
   get handleOut(){
-
+    return new SegmentPoint();
   }
 
   get point(){

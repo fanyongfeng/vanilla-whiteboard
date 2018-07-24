@@ -1,18 +1,17 @@
-import Element from "../Element"
+import Shape from "../Shape"
+import Point from "../../types/Point";
 
-export default class Rect extends Element {
+export default class Rect extends Shape {
 
-  radius = 0;
+  radius = 2;
 
   buildPath(ctx) {
-    var x = this.x;
-    var y = this.y;
-    var width = this.width;
-    var height = this.height;
+
+
     let radius = this.radius;
 
     let shortLine = Math.min(width, height);
-    if(radius > shortLine / 2) radius = shortLine / 2;
+    if (radius > shortLine / 2) radius = shortLine / 2;
     let isRounded = radius !== 0;
 
     ctx.beginPath();
@@ -26,7 +25,9 @@ export default class Rect extends Element {
     ctx.lineTo(x, y + radius);
     isRounded && ctx.arc(x + radius, y + radius, radius, Math.PI, Math.PI * 1.5);
     ctx.closePath();
-    
+
+    ctx.stroke();
+
     return;
   }
 }

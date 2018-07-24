@@ -1,6 +1,6 @@
-import Element from "../Element"
+import Shape from "../Shape"
 
-export default class Ellipse extends Element {
+export default class Ellipse extends Shape {
   shape = {
     cx: 0, cy: 0,
     rx: 0, ry: 0
@@ -23,7 +23,10 @@ export default class Ellipse extends Element {
     ctx.bezierCurveTo(x + ox, y - b, x + a, y - oy, x + a, y);
     ctx.bezierCurveTo(x + a, y + oy, x + ox, y + b, x, y + b);
     ctx.bezierCurveTo(x - ox, y + b, x - a, y + oy, x - a, y);
+
+    ctx.stroke();
     ctx.closePath();
+
     return;
   }
 }

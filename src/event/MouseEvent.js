@@ -2,6 +2,8 @@
  * Custom Mouse Event Class
  */
 
+ import Point from '../types/Point';
+ 
 export default class MouseEvent {
   constructor(originEvent){
     this.originEvent = originEvent;
@@ -9,6 +11,7 @@ export default class MouseEvent {
     this.target = originEvent.target;
     this.offsetX = originEvent.offsetX; 
     this.offsetY = originEvent.offsetY;
+    this.point = new Point(event.offsetX, event.offsetY);
   }
 
   get delta() {
@@ -19,6 +22,7 @@ export default class MouseEvent {
       }
     }
   }
+
   toString() {
     return "{ type: '" + this.type
             + "', point: " + this.point
