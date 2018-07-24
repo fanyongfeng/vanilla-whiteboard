@@ -3,10 +3,13 @@ import Point from "../../types/Point";
 
 export default class Rect extends Shape {
 
+  type = 'rectangle';
+
   radius = 2;
 
   buildPath(ctx) {
 
+    let { x, y, width, height } = this.bounds;
 
     let radius = this.radius;
 

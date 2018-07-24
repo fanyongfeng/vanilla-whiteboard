@@ -14,6 +14,8 @@ import Rect from '../graphic/shape/Rect';
 import FreeDrawing from '../tools/FreeDrawing';
 import ShapeDrawing from '../tools/ShapeDrawing';
 
+import Selection from '../tools/Selection';
+
 //绑定流程和一般拖拽类似
 
 let lastPoint = null;
@@ -21,42 +23,42 @@ let lastPoint = null;
  * Bind Events
  */
 function addListener(element, eventType, handler) {
-  if(!element) return;
+  if (!element) return;
 
   var events = eventType.split(' ');
   if (events.length > 1) {
-      for (var i = 0; i < events.length; i++) {
-        addListener(element, events[i], handler);
-      }
-      return;
+    for (var i = 0; i < events.length; i++) {
+      addListener(element, events[i], handler);
+    }
+    return;
   }
 
   if (element.addEventListener) {
-      element.addEventListener(eventType, handler, false);
+    element.addEventListener(eventType, handler, false);
   } else if (element.attachEvent) {
-      element.attachEvent('on' + eventType, handler);
+    element.attachEvent('on' + eventType, handler);
   } else {
-      element['on' + eventType] = handler;
+    element['on' + eventType] = handler;
   }
 }
 
-function removeListener(element, eventType, handler) { 
-  if(!element) return;
+function removeListener(element, eventType, handler) {
+  if (!element) return;
 
   var events = eventType.split(' ');
   if (events.length > 1) {
-      for (var i = 0; i < events.length; i++) {
-        removeListener(element, events[i], handler);
-      }
-      return;
+    for (var i = 0; i < events.length; i++) {
+      removeListener(element, events[i], handler);
+    }
+    return;
   }
 
   if (element.removeEventListener) {
     element.removeEventListener(eventType, handler, false);
   } else if (element.detachEvent) {
-      element.detachEvent('on' + eventType, handler);
+    element.detachEvent('on' + eventType, handler);
   } else {
-      element['on' + eventType] = null;
+    element['on' + eventType] = null;
   }
 }
 
@@ -66,18 +68,21 @@ var handlers = {
   isDragging: false,
   isMouseDown: false,
   currentTool: new ShapeDrawing,
+  selection: new Selection,
 
-  bind(canvas){
+  bind(canvas) {
     this.canvas = canvas;
 
     this.onMouseDown = this.onMouseDown.bind(this);
     this.onMouseMove = this.onMouseMove.bind(this);
     this.onMouseUp = this.onMouseUp.bind(this);
-    
+
     addListener(document, 'mousedown', this.onMouseDown);
+    addListener(this.canvas, 'mousemove', this.onMouseMove);
+    //addListener(this.canvas, 'click', this.onClick);
   },
 
-  onMouseDown(event){
+  onMouseDown(event) {
     event.preventDefault();
     this.isMouseDown = true;
 
@@ -87,7 +92,7 @@ var handlers = {
     removeListener(this.canvas, 'mousemove', this.onMouseMove);
   },
 
-  onMouseUp(event){
+  onMouseUp(event) {
 
     event.preventDefault();
 
@@ -100,14 +105,14 @@ var handlers = {
     addListener(this.canvas, 'mousemove', this.onMouseMove);
   },
 
-  onMouseMove (event) {
+  onMouseMove(event) {
     event.preventDefault();
 
     if (typeof event.touches !== 'undefined' && event.touches.length > 1) {
       return;
     }
 
-    if(this.isMouseDown) {
+    if (this.isMouseDown) {
       this.isDragging = true;
       this._handleDragging(new MouseEvent(event));
     }
@@ -116,19 +121,21 @@ var handlers = {
   },
 
 
-  _handleDown(event){
+  _handleDown(event) {
     this.currentTool.onMouseDown(event);
+    this.selection.onMouseDown(event);
+
   },
 
-  _handleDragging(event){
+  _handleDragging(event) {
     this.currentTool.onMouseMove(event);
   },
 
-  _handleMove(){
-
+  _handleMove(event) {
+    this.selection.onMouseMove(event);
   },
 
-  _handleUp(){
+  _handleUp(event) {
     this.currentTool.onMouseUp(event);
   }
 }

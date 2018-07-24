@@ -17,6 +17,8 @@ function calcArrow(sp, ep) {
 }
 export default class Arrow extends Shape {
 
+  type = 'arrow';
+
   buildPath(ctx) {
 
     ctx.beginPath();
@@ -30,6 +32,5 @@ export default class Arrow extends Shape {
 
     ctx.stroke();
     ctx.closePath();
-
   }
 }

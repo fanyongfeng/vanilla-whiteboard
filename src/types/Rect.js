@@ -62,12 +62,37 @@ class Rect {
    * @ignore
    */
   get center() {
-    return new Point(this.getCenterX(), this.getCenterY());
+    return new Point(this.centerX, this.centerY);
   }
 
-  get Area() {
+  /**
+   * The area of the rectangle.
+   *
+   * @bean
+   * @type Number
+   */
+  get area() {
     return this.width * this.height;
   }
+
+
+  /**
+   * Returns a new rectangle representing the union of this rectangle with the
+   * specified rectangle.
+   *
+   * @param {Rectangle} rect the rectangle to be combined with this rectangle
+   * @return {Rectangle} the smallest rectangle containing both the specified
+   * rectangle and this rectangle
+   */
+  unite(rect) {
+    let x1 = Math.min(this.x, rect.x),
+      y1 = Math.min(this.y, rect.y),
+      x2 = Math.max(this.x + this.width, rect.x + rect.width),
+      y2 = Math.max(this.y + this.height, rect.y + rect.height);
+
+    return new Rectangle(x1, y1, x2 - x1, y2 - y1);
+  }
+
 
   contains(arg) {
     // Detect rectangles either by checking for 'width' on the passed object

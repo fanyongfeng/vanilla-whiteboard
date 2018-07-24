@@ -16,7 +16,7 @@ class VanillaWhiteboard {
   constructor(canvas){
 
     playground.init(canvas);
-    playground.event();
+    playground.event(canvas);
     playground.rect();
   }
   

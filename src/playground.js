@@ -17,8 +17,8 @@ export default {
     console.log(this.canvas);
   },
 
-  event(){
-    handler.bind();
+  event(canvas){
+    handler.bind(canvas);
   },
 
   rect(){
