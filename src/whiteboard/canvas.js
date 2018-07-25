@@ -13,6 +13,18 @@ export default class CanvasMgr {
     this.ctx = element.getContext('2d');
   }
 
+  get pixelRadio(){
+    if (!/^off|false$/.test(PaperScope.getAttribute(canvas, 'hidpi'))) {
+        // Hi-DPI Canvas support based on:
+        // http://www.html5rocks.com/en/tutorials/canvas/hidpi/
+        var deviceRatio = window.devicePixelRatio || 1,
+            backingStoreRatio = DomElement.getPrefixed(ctx,
+                    'backingStorePixelRatio') || 1;
+        return deviceRatio / backingStoreRatio;
+    }
+    return 1;
+  }
+
   clear() {
     this.ctx.clearRect(0, 0, this.width, this.height);
     return this;

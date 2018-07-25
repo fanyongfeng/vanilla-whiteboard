@@ -1,7 +1,7 @@
 import Rect from "./shape/Rect"
 import Line from "./shape/Line"
-import Curve from "./shape/Curve"
+import Writing from "./shape/Writing"
 
 export default {
-  Line, Rect, Curve
+  Line, Rect, Writing
 }

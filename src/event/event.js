@@ -8,6 +8,7 @@ let touchEventNames = [
 ];
 
 import MouseEvent from './MouseEvent'
+import KeyEvent from './KeyEvent'
 import Point from '../types/Point'
 import Rect from '../graphic/shape/Rect';
 
@@ -18,6 +19,10 @@ import Selection from '../tools/Selection';
 
 //绑定流程和一般拖拽类似
 
+function throttleDistance(dis){
+  
+}
+
 let lastPoint = null;
 /**
  * Bind Events
@@ -25,9 +30,9 @@ let lastPoint = null;
 function addListener(element, eventType, handler) {
   if (!element) return;
 
-  var events = eventType.split(' ');
+  let events = eventType.split(' ');
   if (events.length > 1) {
-    for (var i = 0; i < events.length; i++) {
+    for (let i = 0; i < events.length; i++) {
       addListener(element, events[i], handler);
     }
     return;
@@ -45,9 +50,9 @@ function addListener(element, eventType, handler) {
 function removeListener(element, eventType, handler) {
   if (!element) return;
 
-  var events = eventType.split(' ');
+  let events = eventType.split(' ');
   if (events.length > 1) {
-    for (var i = 0; i < events.length; i++) {
+    for (let i = 0; i < events.length; i++) {
       removeListener(element, events[i], handler);
     }
     return;
@@ -63,10 +68,11 @@ function removeListener(element, eventType, handler) {
 }
 
 
-var handlers = {
+let handlers = {
 
   isDragging: false,
   isMouseDown: false,
+  //currentTool: new FreeDrawing,
   currentTool: new ShapeDrawing,
   selection: new Selection,
 
@@ -79,8 +85,16 @@ var handlers = {
 
     addListener(document, 'mousedown', this.onMouseDown);
     addListener(this.canvas, 'mousemove', this.onMouseMove);
-    //addListener(this.canvas, 'click', this.onClick);
+
+
+    addListener(this.canvas, 'keydown', this.onKeyDown);
+    addListener(this.canvas, 'keypress', this.onKeyPress);
+    addListener(this.canvas, 'keyup', this.onKeyUp);
   },
+
+  onKeyDown(event) {},
+  onKeyPress(event) {},
+  onKeyUp(event) {},
 
   onMouseDown(event) {
     event.preventDefault();

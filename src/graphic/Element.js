@@ -4,6 +4,7 @@
 import Rect from '../types/Rect';
 import Style from './Style';
 import {tsid, uid} from '../util/id';
+import Path from '../types/Path';
 
 const _selected = Symbol('selected');
 
@@ -19,12 +20,12 @@ export default class Element {
   constructor(){
     this.id = tsid();
     this[_selected] = false;
+    this.path = new Path();
   }
-
 
   drawBoundRect(){
     let ctx = this.ctx;
-    let {x, y, width, height} = this.bounds;
+    let {x, y, width, height} = this.strokeBounds;
 
     ctx.save();
     ctx.lineWidth = 1;
@@ -57,16 +58,36 @@ export default class Element {
   get bounds(){
     return new Rect(this.x, this.y, this.width, this.height);
   }
+
+  get strokeBounds(){
+    return this.bounds.expand(this.style.strokeWidth);
+  }
   
   buildPath(ctx, shape) {
     throw "This method must be implemented!";
+  }
+
+  draw(){
+    //this.
+  }
+
+  moveTo() {
+
+  }
+
+  lineTo() {
+
+  }
+
+  bezierCurveTo(){
+
   }
 
   render(ctx){
     this.ctx = ctx;
 
     ctx.strokeStyle = '#c69';
-    ctx.lineWidth = 3;
+    ctx.lineWidth = 30;
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
 

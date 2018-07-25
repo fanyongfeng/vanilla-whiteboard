@@ -1,7 +1,7 @@
 import Element from "../Element"
 import Point from "../../types/Point"
 
-export default class Curve extends Element {
+export default class Writing extends Element {
   points = []
 
   buildPath(){

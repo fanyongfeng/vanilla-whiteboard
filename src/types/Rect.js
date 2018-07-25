@@ -143,7 +143,14 @@ class Rect {
    * @type Point
    */
   clone() {
-    return new Rectangle(this.x, this.y, this.width, this.height);
+    return new Rect(this.x, this.y, this.width, this.height);
+  }
+
+  expand(width, height) {
+    if (typeof height === 'undefined') height = width;
+
+    return new Rect(this.x - width / 2, this.y - height / 2,
+      this.width + width, this.height + height);
   }
 
   toString() {
