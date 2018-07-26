@@ -7,7 +7,7 @@ export default class Rect extends Shape {
 
   radius = 2;
 
-  buildPath(ctx) {
+  buildPath() {
 
     let { x, y, width, height } = this.bounds;
 
@@ -17,19 +17,20 @@ export default class Rect extends Shape {
     if (radius > shortLine / 2) radius = shortLine / 2;
     let isRounded = radius !== 0;
 
-    ctx.beginPath();
-    ctx.moveTo(x + radius, y);
-    ctx.lineTo(x + width - radius, y);
-    isRounded && ctx.arc(x + width - radius, y + radius, radius, -Math.PI / 2, 0);
-    ctx.lineTo(x + width, y + height - radius);
-    isRounded && ctx.arc(x + width - radius, y + height - radius, radius, 0, Math.PI / 2);
-    ctx.lineTo(x + radius, y + height);
-    isRounded && ctx.arc(x + radius, y + height - radius, radius, Math.PI / 2, Math.PI);
-    ctx.lineTo(x, y + radius);
-    isRounded && ctx.arc(x + radius, y + radius, radius, Math.PI, Math.PI * 1.5);
-    ctx.closePath();
+    this.path.moveTo(new Point(x + radius, y));
+    this.path.lineTo(new Point(x + width - radius, y));
+    isRounded && this.path.arc(x + width - radius, y + radius, radius, -Math.PI / 2, 0);
 
-    ctx.stroke();
+    this.path.lineTo(new Point(x + width, y + height - radius));
+    isRounded && this.path.arc(x + width - radius, y + height - radius, radius, 0, Math.PI / 2);
+
+    this.path.lineTo(new Point(x + radius, y + height));
+    isRounded && this.path.arc(x + radius, y + height - radius, radius, Math.PI / 2, Math.PI);
+
+    this.path.lineTo(new Point(x, y + radius));
+    isRounded && this.path.arc(x + radius, y + radius, radius, Math.PI, Math.PI * 1.5);
+    this.path.closePath();
+
 
     return;
   }

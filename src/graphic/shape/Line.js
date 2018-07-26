@@ -4,16 +4,13 @@ import Shape from "../Shape";
 export default class Line extends Shape {
   
   type = 'line';
-
   dash = [];
 
-  buildPath(ctx) {
+  buildPath() {
 
-    ctx.beginPath();
-    ctx.moveTo(this.startPoint.x, this.startPoint.y);
-    ctx.lineTo(this.endPoint.x, this.endPoint.y);
-    ctx.stroke();
-    ctx.closePath();
+    this.path.moveTo(this.startPoint);
+    this.path.lineTo(this.endPoint);
+    this.path.closePath();
 
     return;
   }

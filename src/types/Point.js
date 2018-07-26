@@ -65,6 +65,10 @@ export default class Point {
     return new Point(this.x, this.y);
   }
 
+  toJSON(){
+    return [this.x , this.y];
+  }
+
   toString() {
     return '{ x: ' + this.x + ', y: ' + this.y + ' }';
   }

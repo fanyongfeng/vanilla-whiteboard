@@ -1,5 +1,6 @@
-import Point from '../types/Point'
-
+import Point from '../types/Point';
+import Writing from '../graphic/shape/Writing';
+import items from '../store/items';
 // values: Marker & Highlighter
 export default class FreeDrawing {
 
@@ -14,14 +15,12 @@ export default class FreeDrawing {
     * @param {Object} pointer
     */
   onMouseDown(event) {
-    var ctx = this.canvas.getContext('2d');
-    ctx.strokeStyle = '#c69'
-    ctx.lineCap = "round";
-    ctx.lineWidth = 10;
+    this.currentShape = new Writing();
+    items.add(this.currentShape);
+
+    this.currentShape.path.moveTo(event.point);
     
-    ctx.beginPath();
-    ctx.moveTo(event.offsetX, event.offsetY);
-    this.lastPoint = new Point(event.offsetX, event.offsetY);
+    this.lastPoint = event.point;
   }
 
   /**
@@ -30,35 +29,21 @@ export default class FreeDrawing {
    */
   onMouseMove(event) {
     let ctx = this.canvas.getContext('2d');
+    ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-    var point = new Point(event.offsetX, event.offsetY);
+
+    var point = event.point;
     var midPoint = point.midPointFrom(this.lastPoint);
+    this.currentShape.path.quadraticCurveTo(this.lastPoint, midPoint);
+    this.lastPoint = point;
 
-    if(this.oldEnd) {
-      ctx.beginPath();
-      ctx.moveTo(this.oldEnd.x, this.oldEnd.y);
-    }
 
-    // ctx.lineTo(midPoint.x, midPoint.y);
-    ctx.quadraticCurveTo(this.lastPoint.x, this.lastPoint.y, midPoint.x, midPoint.y);
-    this.oldEnd = midPoint;
-    
-    ctx.stroke();
-
-    this.lastPoint = new Point(event.offsetX, event.offsetY);
+    items.items.forEach(item=>item.render(ctx));
   }
   /**
    * Invoked on mouse up
    */
-  onMouseUp() {
-    this.oldEnd = null;
-    var ctx = this.canvas.getContext('2d');
-    ctx.closePath();
-  }
+  onMouseUp(event) {
 
-  _drawSegment(ctx, p1, p2) {
-    var midPoint = p1.midPointFrom(p2);
-    ctx.quadraticCurveTo(p1.x, p1.y, midPoint.x, midPoint.y);
-    return midPoint;
   }
 }

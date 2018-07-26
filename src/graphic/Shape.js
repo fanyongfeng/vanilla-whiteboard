@@ -14,7 +14,6 @@ export default class Shape extends Element {
     return new ctor(startPoint, endPoint);
   }
 
-
   constructor(sp, ep) {
     super();
     this.startPoint = sp;
@@ -43,14 +42,10 @@ export default class Shape extends Element {
     return new Rect(x, y, width, height);
   }
 
-  get data() {
-    return [
+  toJSON() {
+    return [this.name, [
       [this.startPoint.x, this.startPoint.y],
       [this.endPoint.x, this.endPoint.y],
-    ]
-  }
-
-  toString() {
-    return JSON.stringify(this.data);
+    ]];
   }
 }

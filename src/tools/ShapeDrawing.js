@@ -13,25 +13,31 @@ export default class ShapeTool {
   }
 
   onMouseDown(event) { 
-    this.currentShape = new Ellipse();
+    let options = this.style;
+    this.currentShape = new Rect(options);
     this.currentShape.startPoint = event.point;
+    items.add(this.currentShape);
   }
 
   onMouseMove(event) { 
 
-    let ctx = this.canvas.getContext('2d');
-    ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-    items.items.forEach(item=>item.render(ctx));
-    
     this.currentShape.endPoint = event.point;
-    this.currentShape.buildPath(ctx);
+
+    this.currentShape.path.clear();
+    this.currentShape.buildPath();
+    this.refresh();
+  }
+
+  refresh(){
+    requestAnimationFrame(()=>{
+      let ctx = this.canvas.getContext('2d');
+      ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      items.items.forEach(item=>item.render(ctx));
+    });
   }
 
   onMouseUp(event) { 
-    if(this.currentShape.endPoint) {
-      items.add(this.currentShape);
-    }
     this.currentShape = null;
   }
 

@@ -2,6 +2,7 @@
  * Make Class support 'on', 'fire'
  */
 export default function hookable(target) {
+  
   target.prototype.__callbacks = {};
 
   target.prototype.on = function(name, fn) {

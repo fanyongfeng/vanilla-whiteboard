@@ -153,6 +153,10 @@ class Rect {
       this.width + width, this.height + height);
   }
 
+  toJSON(){
+    return [this.x , this.y, this.width, this.height];
+  }
+
   toString() {
     return '{ x: ' + this.x
       + ', y: ' + this.y

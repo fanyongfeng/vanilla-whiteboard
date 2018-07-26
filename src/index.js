@@ -13,10 +13,10 @@ class VanillaWhiteboard {
     
   }
 
-  constructor(canvas){
+  constructor(options){
 
-    playground.init(canvas);
-    playground.event(canvas);
+    playground.init(options.canvas);
+    playground.event(options.canvas);
     playground.rect();
   }
   
@@ -31,4 +31,8 @@ class VanillaWhiteboard {
 
 window._canvas = document.getElementById('canvas');
 
-window.vwb = new VanillaWhiteboard(document.getElementById('canvas'))
+window.vwb = new VanillaWhiteboard({
+  el:document.getElementById('canvas'),
+  width: 800,
+  height: 800,
+})

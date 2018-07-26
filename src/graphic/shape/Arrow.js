@@ -19,18 +19,17 @@ export default class Arrow extends Shape {
 
   type = 'arrow';
 
-  buildPath(ctx) {
+  buildPath() {
 
-    ctx.beginPath();
     let points = calcArrow(this.startPoint, this.endPoint);
-    ctx.moveTo(this.startPoint.x, this.startPoint.y)
-    ctx.lineTo(this.endPoint.x, this.endPoint.y);
 
-    ctx.moveTo(points[0].x, points[0].y);
-    ctx.lineTo(points[1].x, points[1].y);
-    ctx.lineTo(points[2].x, points[2].y);
+    this.path.moveTo(this.startPoint)
+    this.path.lineTo(this.endPoint);
 
-    ctx.stroke();
-    ctx.closePath();
+    this.path.moveTo(points[0]);
+    this.path.lineTo(points[1]);
+    this.path.lineTo(points[2]);
+
+    this.path.closePath();
   }
 }

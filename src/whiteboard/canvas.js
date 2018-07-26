@@ -14,12 +14,13 @@ export default class CanvasMgr {
   }
 
   get pixelRadio(){
-    if (!/^off|false$/.test(PaperScope.getAttribute(canvas, 'hidpi'))) {
+    if (!/^off|false$/.test(canvas.getAttribute('hidpi'))) {
         // Hi-DPI Canvas support based on:
         // http://www.html5rocks.com/en/tutorials/canvas/hidpi/
         var deviceRatio = window.devicePixelRatio || 1,
             backingStoreRatio = DomElement.getPrefixed(ctx,
                     'backingStorePixelRatio') || 1;
+
         return deviceRatio / backingStoreRatio;
     }
     return 1;
@@ -33,6 +34,7 @@ export default class CanvasMgr {
   renderAll(){
 
   }
+  
   scale(){
     
   }

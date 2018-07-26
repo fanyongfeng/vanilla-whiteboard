@@ -22,7 +22,7 @@
 -lib
   canvas及图形相关lib
 -tools
-  具名绘制工具与Event绑定
+  反应在鼠标键盘io上的绘制和操作工具
 -util
   工具方法
 ```

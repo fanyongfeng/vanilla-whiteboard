@@ -24,6 +24,5 @@ export default class Arc extends Element {
 
     ctx.moveTo(unitX * r + x, unitY * r + y);
     ctx.arc(x, y, r, startAngle, endAngle, !clockwise);
-    ctx.stroke();
   }
 }

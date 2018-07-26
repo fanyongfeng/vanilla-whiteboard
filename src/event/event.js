@@ -137,7 +137,7 @@ let handlers = {
 
   _handleDown(event) {
     this.currentTool.onMouseDown(event);
-    this.selection.onMouseDown(event);
+    // this.selection.onMouseDown(event);
 
   },
 

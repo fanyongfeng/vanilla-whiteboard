@@ -1,21 +1,22 @@
 
 import Shape from "../Shape";
+import Point from "../../types/Point";
 
 export default class Triangle extends Shape {
 
   anti = false;
 
-  buildPath(ctx) {
+  buildPath() {
 
-    ctx.beginPath();
+    let sp = new Point(this.startPoint.x, this.endPoint.y);
+    let to = new Point((this.startPoint.x + this.endPoint.x) / 2, this.startPoint.y);
 
-    ctx.moveTo(this.startPoint.x, this.endPoint.y);
-    ctx.lineTo((this.startPoint.x + this.endPoint.x) / 2, this.startPoint.y);
-    ctx.lineTo(this.endPoint.x, this.endPoint.y);
-    ctx.lineTo(this.startPoint.x, this.endPoint.y);
+    this.path.moveTo(sp);
+    this.path.lineTo(to);
+    this.path.lineTo(this.endPoint);
+    this.path.lineTo(sp);
 
-    ctx.stroke();
-    ctx.closePath();
+    this.path.closePath();
 
     return;
   }

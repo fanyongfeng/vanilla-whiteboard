@@ -3,7 +3,7 @@
  */
 import Rect from '../types/Rect';
 import Style from './Style';
-import {tsid, uid} from '../util/id';
+import { tsid, uid } from '../util/id';
 import Path from '../types/Path';
 
 const _selected = Symbol('selected');
@@ -17,15 +17,15 @@ export default class Element {
   _style = new Style();
   group = null;
 
-  constructor(){
+  constructor() {
     this.id = tsid();
     this[_selected] = false;
     this.path = new Path();
   }
 
-  drawBoundRect(){
+  drawBoundRect() {
     let ctx = this.ctx;
-    let {x, y, width, height} = this.strokeBounds;
+    let { x, y, width, height } = this.strokeBounds;
 
     ctx.save();
     ctx.lineWidth = 1;
@@ -34,63 +34,102 @@ export default class Element {
     ctx.restore();
   }
 
-  get selected(){
+  get selected() {
     return this[_selected];
   }
 
-  set selected(val){
+  set selected(val) {
     this.drawBoundRect();
     this[_selected] = val;
   }
 
-  get style(){
+  get style() {
     return {
       strokeColor: this.strokeColor,
       strokeWidth: this.strokeWidth,
     }
   }
 
-  set style(val){
+  set style(val) {
     this.strokeColor = val.strokeColor;
     this.strokeWidth = val.strokeWidth;
   }
 
-  get bounds(){
-    return new Rect(this.x, this.y, this.width, this.height);
+  get bounds() {
+    return this.path.bounds;
   }
 
-  get strokeBounds(){
+  get strokeBounds() {
     return this.bounds.expand(this.style.strokeWidth);
   }
-  
+
   buildPath(ctx, shape) {
-    throw "This method must be implemented!";
+    //throw "This method must be implemented!";
   }
 
-  draw(){
-    //this.
-  }
+  draw(ctx) {
+    let command, cp, currentPoint;
 
-  moveTo() {
-
-  }
-
-  lineTo() {
-
-  }
-
-  bezierCurveTo(){
-
-  }
-
-  render(ctx){
-    this.ctx = ctx;
-
-    ctx.strokeStyle = '#c69';
-    ctx.lineWidth = 30;
+    ctx.strokeStyle = '#c69'
     ctx.lineCap = "round";
-    ctx.lineJoin = "round";
+    ctx.lineWidth = 3;
+    ctx.beginPath();
 
-    this.buildPath(ctx);
+    for (var i = 0, len = this.path.commands.length; i < len; ++i) {
+
+      command = this.path.commands[i];
+
+      switch (command.name) { // first letter
+        case 'm':
+        case 'M': // moveTo, absolute
+          ctx.moveTo(command.point.x, command.point.y);
+          break;
+        case 'a':
+        case 'A':
+          ctx.arc.apply(ctx, [...command.arc]);
+          break;
+        case 'l':
+        case 'L': // lineto, absolute
+          ctx.lineTo(command.point.x, command.point.y);
+          break;
+        case 'q':
+        case 'Q':
+          ctx.quadraticCurveTo(
+            command.controlA.x,
+            command.controlA.y,
+            command.point.x, 
+            command.point.y
+          );
+          break;
+        case 'c':
+        case 'C':
+          ctx.bezierCurveTo(
+            command.controlA.x,
+            command.controlA.y,
+            command.controlB.x,
+            command.controlB.y,
+            command.point.x, 
+            command.point.y
+          );
+          break;
+        case 'z':
+        case 'Z':
+          ctx.closePath();
+      }
+    }
+    ctx.stroke();
+  }
+
+  render(ctx) {
+    this.ctx = ctx;
+    this.draw(ctx);
+  }
+
+  toJSON() {
+    return this.path.toJSON();
+  }
+
+  toString() {
+    return JSON.stringify(this.toJSON());
   }
 }
