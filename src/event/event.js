@@ -146,7 +146,7 @@ let handlers = {
   },
 
   _handleMove(event) {
-    this.selection.onMouseMove(event);
+    //this.selection.onMouseMove(event);
   },
 
   _handleUp(event) {

@@ -4,21 +4,70 @@
 export default class Point {
   type = 'point'
 
+  static instance(point) {
+    if(typeof point === "number") return new Point(point, point)
+    return point;
+  }
+
   constructor(x, y) {
     this.x = x;
     this.y = y;
   }
 
-  add(other) {
-    return new Point(this.x + other.x, this.y + other.y);
+  /**
+    * Returns the addition of the supplied value to both coordinates of
+    * the point as a new point.
+    * The object itself is not modified!
+    */
+  add(point) {
+    point = Point.instance(point);
+    return new Point(this.x + point.x, this.y + point.y);
   }
 
+  /**
+   * Returns the multiplication of the supplied point to the point as a new
+   * point.
+   * The object itself is not modified!
+   */
+  multiply(point) {
+    point = Point.instance(point);
+    return new Point(this.x * point.x, this.y * point.y);
+  }
+
+  /**
+    * Returns the subtraction of the supplied value to both coordinates of
+    * the point as a new point.
+    * The object itself is not modified!
+    */
+  subtract(point) {
+    point = Point.instance(point);
+    return new Point(this.x - point.x, this.y - point.y);
+  }
+
+  /**
+   * Returns the division of the supplied value to both coordinates of
+   * the point as a new point.
+   * The object itself is not modified!
+   */
+  divide(point) {
+    point = Point.instance(point);
+    return new Point(this.x / point.x, this.y / point.y);
+  }
+
+  /**
+   * And return this
+   * @param {Point} other 
+   */
   addEquals(other) {
     this.x += other.x;
     this.y += other.y;
     return this;
   }
 
+  /**
+   * If the point coord is equal to the other point.
+   * @param {Point} other 
+   */
   eq(other) {
     return this === other || (this.x === other.x && this.y === other.y);
   }
@@ -46,19 +95,24 @@ export default class Point {
     return this.lerp(other);
   }
 
-  distanceFrom(other) {
+  getDistance(other) {
     let dx = this.x - other.x,
       dy = this.y - other.y;
 
     return Math.sqrt(dx * dx + dy * dy);
   }
 
+  /**
+   * 
+   * @param {Point} point 
+   * @param {number} threshold 
+   */
   nearby(point, threshold = 5) {
-    return this.distanceFrom(point) < threshold;
+    return this.getDistance(point) < threshold;
   }
 
-  subtract(point) {
-    return new Point(this.x - point.x, this.y - point.y);
+  negate() {
+      return new Point(-this.x, -this.y);
   }
 
   get length() {
@@ -66,39 +120,53 @@ export default class Point {
   }
 
   /**
- * Normalize modifies the {@link #length} of the vector to `1` without
- * changing its angle and returns it as a new point. The optional `length`
- * parameter defines the length to normalize to. The object itself is not
- * modified!
- *
- * @param {Number} [length=1] The length of the normalized vector
- * @return {Point} the normalized vector of the vector that is represented
- *     by this point's coordinates
- */
+   * Normalize modifies the {@link #length} of the vector to `1` without
+   * changing its angle and returns it as a new point. The optional `length`
+   * parameter defines the length to normalize to. The object itself is not
+   * modified!
+   *
+   * @param {Number} [length=1] The length of the normalized vector
+   * @return {Point} the normalized vector of the vector that is represented
+   *     by this point's coordinates
+   */
   normalize(length) {
-    if (length === undefined)
-      length = 1;
-    var current = this.length,
-      scale = current !== 0 ? length / current : 0,
-      point = new Point(this.x * scale, this.y * scale);
-    // Preserve angle.
-    if (scale >= 0)
-      point._angle = this._angle;
-    return point;
+    if (length === undefined) length = 1;
+
+    let current = this.length,
+      scale = current !== 0 ? length / current : 0;
+
+    return new Point(this.x * scale, this.y * scale);
   }
 
   /**
-    * return a cloned instance of the point
-    * @return {fabric.Point}
-    */
+   * {@group-title Vector Math Functions}
+   * Returns the dot product of the point and another point.
+   *
+   * @param {Point} point
+   * @return {Number} the dot product of the two points
+   */
+  dot(point) {
+    return this.x * point.x + this.y * point.y;
+  }
+
+  /**
+   * return a cloned instance of the point
+   * @return {Point}
+   */
   clone() {
     return new Point(this.x, this.y);
   }
 
+  /**
+   * return point data as JSON-format: [x, y]
+   */
   toJSON() {
     return [this.x, this.y];
   }
 
+  /**
+   * return point data as String-format
+   */
   toString() {
     return '{ x: ' + this.x + ', y: ' + this.y + ' }';
   }

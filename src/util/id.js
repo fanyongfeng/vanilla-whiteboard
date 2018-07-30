@@ -7,7 +7,7 @@ function genMixId (num) {
 }
 
 /**
- * Generate unique id via timestamp per 3 hours, and format as [0-9a-zA-Z]
+ * Generate unique id via timestamp per 3 hours, and format as [0-9a-zA-Z]+
  */
 export const tsid = () => genMixId((+new Date % dateTS) * 1000 +  parseInt((Math.random() * 100) % 100, 10));
 // export const tsid = () => genMixId(+new Date);

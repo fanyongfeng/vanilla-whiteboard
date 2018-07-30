@@ -11,9 +11,9 @@ export function getAngle(){
   var ep = new Point(-300, 300);
 
 
-  var disCS = cp.distanceFrom(sp);
-  var disCE = cp.distanceFrom(ep);
-  var disSE = sp.distanceFrom(ep);
+  var disCS = cp.getDistance(sp);
+  var disCE = cp.getDistance(ep);
+  var disSE = sp.getDistance(ep);
 
   var resultRadian = Math.acos(((Math.pow(disCS, 2)) + (Math.pow(disCE, 2)) - (Math.pow(disSE, 2))) / (2 * disCS * disCE));
 

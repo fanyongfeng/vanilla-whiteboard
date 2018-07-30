@@ -1,5 +1,6 @@
 import Element from "../Element"
 import Point from "../../types/Point"
+import fitCurve from "../../util/fitCurve";
 
 /**
  * Shapes create by: pen, marker, highlighter, etc.

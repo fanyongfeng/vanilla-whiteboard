@@ -28,17 +28,21 @@ export default class FreeDrawing {
    * @param {Object} pointer
    */
   onMouseMove(event) {
-    let ctx = this.canvas.getContext('2d');
-    ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-
+    
     var point = event.point;
     var midPoint = point.midPointFrom(this.lastPoint);
     this.currentShape.path.quadraticCurveTo(this.lastPoint, midPoint);
     this.lastPoint = point;
+    
+    this.refresh();
+  }
 
-
-    items.items.forEach(item=>item.render(ctx));
+  refresh(){
+    requestAnimationFrame(()=>{
+      let ctx = this.canvas.getContext('2d');
+      ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      items.items.forEach(item=>item.render(ctx));
+    });
   }
   /**
    * Invoked on mouse up

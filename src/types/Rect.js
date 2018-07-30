@@ -173,6 +173,9 @@ class Rect {
       this.width + width, this.height + height);
   }
 
+  /**
+   * return point data as JSON-format: [x, y, width, height]
+   */
   toJSON(){
     return [this.x , this.y, this.width, this.height];
   }
