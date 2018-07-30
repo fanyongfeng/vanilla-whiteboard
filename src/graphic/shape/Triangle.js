@@ -4,6 +4,7 @@ import Point from "../../types/Point";
 
 export default class Triangle extends Shape {
 
+  type = 'triangle';
   anti = false;
 
   buildPath() {

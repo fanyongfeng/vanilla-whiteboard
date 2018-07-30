@@ -7,6 +7,17 @@ const dirs = [
   ['Right', 'Center'], ['Bottom', 'Center']
 ];
 
+const antiDir = {
+  'bottomRight': 'topLeft',
+  'topLeft': 'bottomRight',
+  'bottomLeft': 'topRight',
+  'topRight': 'bottomLeft',
+  'rightCenter': 'leftCenter',
+  'leftCenter': 'rightCenter',
+  'bottomCenter': 'topCenter',
+  'topCenter': 'bottomCenter',
+};
+
 /**
  * 
  */
@@ -32,6 +43,7 @@ class Rect {
 
   get topRight() { return new Point(this.right, this.top); }
 
+
   /**
    * The center-x coordinate of the rectangle.
    *
@@ -43,6 +55,10 @@ class Rect {
     return this.x + this.width / 2;
   }
 
+  set centerX(val){
+    this.x = val - this.width / 2;
+  }
+
   /**
    * The center-y coordinate of the rectangle.
    *
@@ -52,6 +68,10 @@ class Rect {
    */
   get centerY() {
     return this.y + this.height / 2;
+  }
+
+  set centerY(val){
+    this.y = val - this.height / 2;
   }
 
   /**

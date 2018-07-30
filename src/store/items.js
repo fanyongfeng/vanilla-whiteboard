@@ -45,4 +45,33 @@ export default {
     }
     return false;
   },
+
+  selectAll() {
+    items.forEach(item => item.path.selected = true);
+  },
+
+  antiSelectAll(id) {
+    items.forEach(item => item.path.selected = !item.path.selected);
+  },
+
+  deselectAll(id) {
+    items.forEach(item => item.path.selected = false);
+  },
+
+  /**
+   * delete selected items and return hash
+   */
+  deleteSelect(){
+    let deletedItems = [];
+    items = items.filter(item => {
+      if (item.path.selected === true) {
+        deletedItems.push(item.hash);
+        item.remove();
+        return false;
+      }
+      return true;
+    });
+    this.removeHelper();
+    return deletedItems;
+  },
 }

@@ -67,6 +67,10 @@ export default class Element {
     //throw "This method must be implemented!";
   }
 
+  drawPath(){
+    
+  }
+
   draw(ctx) {
     let command, cp, currentPoint;
 

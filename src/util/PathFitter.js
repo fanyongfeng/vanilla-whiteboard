@@ -31,10 +31,10 @@ export default class PathFitter {
   fit(error) {
     let points = this.points,
       length = points.length;
-
+      
     if (length <= 0) return null;
+
     let segments = [new Segment(points[0])];
-    
     if (length > 1) {
       this.fitCubic(segments, error, 0, length - 1,
         // Left Tangent

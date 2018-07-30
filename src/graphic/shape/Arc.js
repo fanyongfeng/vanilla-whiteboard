@@ -1,6 +1,7 @@
 import Element from "../Element"
 
 export default class Arc extends Element {
+  type = 'arc';
   shape = {
       cx: 100,
       cy: 100,
