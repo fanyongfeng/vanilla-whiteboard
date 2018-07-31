@@ -1,5 +1,7 @@
 import Point from '../types/Point';
-import Curve from '../types/Curve';
+
+import {BezierSegment} from '../types/Segment';
+
 /**
  *  @preserve  JavaScript implementation of
  *  Algorithm for Automatically Fitting Digitized Curves
@@ -45,18 +47,20 @@ function fitCurve(points, maxError) {
 }
 
 function fitCubic(points, error, first, last, tan1, tan2) {
-
   if (last - first === 1) {
     let pt1 = points[first],
       pt2 = points[last],
       dist = pt1.getDistance(pt2) / 3;
 
-    return [new Curve(
-      pt1, 
+    
+    let seg = new BezierSegment(
       pt1.add(tan1.normalize(dist)),
       pt2.add(tan2.normalize(dist)), 
       pt2
-    )];
+    );
+      seg.contextPoint = pt1;
+
+    return [seg];
   }
 
   let uPrime = chordLengthParameterize(points, first, last),
@@ -69,7 +73,9 @@ function fitCubic(points, error, first, last, tan1, tan2) {
     //  Find max deviation of points to fitted curve
     let max = findMaxError(points, first, last, curve, uPrime);
     if (max.error < error && parametersInOrder) {
-      return [new Curve(curve[0], curve[1], curve[2], curve[3])];
+      let seg = new BezierSegment(curve[1], curve[2], curve[3]);
+      seg.contextPoint = curve[0];
+      return [seg];
     }
 
     split = max.index;

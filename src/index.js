@@ -3,11 +3,16 @@ import playground from './playground'
 
 //top-level APIs
 /**
- * on
+ * on('type', handler);
+ *  possible-values:
+ *  - changed 当白板上元素发生变化是，（返回变更的数据和Hash）
+ *  - 
  */
 
 class VanillaWhiteboard {
   // /version = __VERSION__;
+
+  mode = 'readonly';
 
   static install(){
     
@@ -17,7 +22,16 @@ class VanillaWhiteboard {
 
     playground.init(options.canvas);
     playground.event(options.canvas);
-    playground.rect();
+    // playground.rect();
+
+
+    //playground.drawPolyline();
+
+     playground.drawPolyline('cubicInOut');
+
+    // playground.drawPolyline('circularInOut');
+
+    // playground.drawPolyline('bounceInOut');
   }
   
   on(type, fn){
@@ -27,6 +41,13 @@ class VanillaWhiteboard {
   off(type, fn){
     
   }
+
+  export(){
+
+  }
+
+  import(){}
+
 }
 
 window._canvas = document.getElementById('canvas');

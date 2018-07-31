@@ -1,10 +1,10 @@
 /**
- * 
+ * The base type of graphic ,(location & vector)
  */
 export default class Point {
   type = 'point'
 
-  static instance(point) {
+  static instantiate(point) {
     if(typeof point === "number") return new Point(point, point)
     return point;
   }
@@ -20,7 +20,7 @@ export default class Point {
     * The object itself is not modified!
     */
   add(point) {
-    point = Point.instance(point);
+    point = Point.instantiate(point);
     return new Point(this.x + point.x, this.y + point.y);
   }
 
@@ -30,7 +30,7 @@ export default class Point {
    * The object itself is not modified!
    */
   multiply(point) {
-    point = Point.instance(point);
+    point = Point.instantiate(point);
     return new Point(this.x * point.x, this.y * point.y);
   }
 
@@ -40,7 +40,7 @@ export default class Point {
     * The object itself is not modified!
     */
   subtract(point) {
-    point = Point.instance(point);
+    point = Point.instantiate(point);
     return new Point(this.x - point.x, this.y - point.y);
   }
 

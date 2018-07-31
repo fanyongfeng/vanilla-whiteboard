@@ -1,90 +1,87 @@
 import Point from './Point';
 import Rect from './Rect';
-
-class Command {
-
-  controlA = null;
-  controlB = null;
-  point = null;
-
-  constructor(name) {
-    this.name = name; // M, L, Q, C
-  }
-
-  toJSON() {
-
-  }
-
-  toString() {
-
-  }
-}
+import fitCurve from '../util/fitCurve';
+import smoothCurve from '../util/smoothCurve';
+import {Segment, LineSegment, BezierSegment, MoveSegment, QuadraticSegment} from './Segment';
 
 /**
  * A full path 
  */
-export default class Path {
-  constructor() {
-    this._commands = [];
+class Path {
+
+  _segments = [];
+
+  startPoint = null;
+  contextPoint= null;
+  isClose = false;
+
+  constructor(point) {
+    this.startPoint = point;
   }
 
-  get commands() {
-    return this._commands;
+  get segments() {
+    return this._segments;
   }
 
-  add(command) {
-    this._commands.push(command);
+  get style(){
+
+  }
+
+  add(segment) {
+    segment.contextPoint = this.contextPoint;
+    this.segments.push(segment);
+    this.contextPoint= segment.point;
   }
 
   get bounds() {
     return new Rect(0, 0, 0, 0);
   }
 
-  simplify() {
-
-  }
-
-  smooth() {
-
+  *[Symbol.iterator]() {
+    for (let i = 0, len = this.segments.length; i < len; i++) {
+      yield this.segments[i];
+    }
   }
 
   clear() {
-    this._commands = [];
+    this.segments = [];
   }
 
   arc(x, y, r, sa, ea) {
-    var cmd = new Command('A');
-    cmd.arc = [x, y, r, sa, ea];
-    this._commands.push(cmd);
+    let segment = new Command('A');
+    segment.arc = [x, y, r, sa, ea];
+    this.add(segment);
     return this;
-    // cmd
+    // segment
   }
 
   moveTo(point) {
-    var cmd = new Command('M');
-    cmd.point = point;
-    this._commands.push(cmd);
+    let segment = new MoveSegment(point);
+    this.add(segment);
     return this;
   }
 
   lineTo(point) {
-    var cmd = new Command('L');
-    cmd.point = point;
-    this._commands.push(cmd);
+    let segment = new LineSegment(point);
+    this.add(segment);
     return this;
   }
 
+  /**
+   * Support chaining-call
+   * @param {*} cp1 
+   * @param {*} cp2 
+   * @param {*} point 
+   */
   bezierCurveTo(cp1, cp2, point) {
-
-    var cmd = new Command('C');
-    cmd.controlA = cp1;
-    cmd.controlB = cp2;
-    cmd.point = point;
-    this._commands.push(cmd);
+    let segment = new BezierSegment(cp1, cp2, point);
+    this.add(segment);
     return this;
   }
 
-  quadraticCurveTo2(cp, point) { //二阶转三阶
+  quadraticCurveTo(cp, point) { //二阶转三阶
+
+    let current = this.contextPoint;
 
     // This is exact:
     // If we have the three quad points: A E D,
@@ -94,61 +91,135 @@ export default class Path {
     this.bezierCurveTo(
       cp.add(current.subtract(cp).multiply(1 / 3)),
       cp.add(point.subtract(cp).multiply(1 / 3)),
-      to
+      point
     );
     return this;
   }
 
-  quadraticCurveTo(cp, point) {
-
-    var cmd = new Command('Q');
-    cmd.controlA = cp;
-    cmd.point = point;
-    this._commands.push(cmd);
+  quadraticCurveTo2(cp, point) {
+    let segment = new QuadraticSegment(cp, point);
+    this.add(segment);
     return this;
   }
 
   closePath() {
-    var cmd = new Command('Z');
-    this._commands.push(cmd);
-    return this;
+    this.isClose = true;
   }
 
+  /**
+   * get bounds of path.
+   */
   get bounds() {
     let x1 = Infinity,
       x2 = -x1,
       y1 = x1,
       y2 = x2;
-    for (var i = 0, l = segments.length; i < l; i++) {
-      var segment = segments[i].point;
+
+    for (let i = 0, l = this.segments.length; i < l; i++) {
+      let bound = this.segments[i].bounds;
+
+      let xn = bound.x,
+        yn = bound.y,
+        xx = bound.x + bound.width,
+        yx = bound.y + bound.height;
 
       if (xn < x1) x1 = xn;
       if (xx > x2) x2 = xx;
       if (yn < y1) y1 = yn;
       if (yx > y2) y2 = yx;
     }
-    return new Rectangle(x1, y1, x2 - x1, y2 - y1);
+
+    return new Rect(x1, y1, x2 - x1, y2 - y1);
+
+  }
+
+  drawBoundRect(){
+    let {x, y, width, height} = this.bounds;
+
+    this._ctx.beginPath();
+    this._ctx.strokeStyle = '#669'
+    this._ctx.lineCap = "round";
+    this._ctx.lineWidth = 1;
+    this._ctx.moveTo(x, y);
+    this._ctx.lineTo(x + width , y);
+    this._ctx.lineTo(x + width, y + height);
+    this._ctx.lineTo(x, y + height);
+    this._ctx.lineTo(x, y);
+    this._ctx.stroke();
   }
 
   toJSON() {
-    return this._commands.map(item => {
-      var ret = [];
-      if (item.point) ret.push(item.point.toJSON());
-      if (item.controlA) ret.push(item.controlA.toJSON());
-      if (item.controlB) ret.push(item.controlB.toJSON());
-      return ret;
-    });
+    return this.segments.map(item => item.toJSON());
   }
 
   toString() {
-    return this._commands.map(item => {
-      var ret = [];
-      ret.push(item.name);
-      if (item.controlA) ret.push(item.controlA.x, item.controlA.y);
-      if (item.controlB) ret.push(item.controlB.x, item.controlB.y);
-      if (item.point) ret.push(item.point.x, item.point.y);
-      if (item.arc) ret.push.apply(ret, item.arc);
-      return ret.join(' ');
-    }).join(',');
+    let segmentSVG = this.segments.map(item => item.toString()).join(' ');
+    return `<path d="${segmentSVG} ${this.isClose ? 'z' : ''}"></path>`;
+  }
+
+  simplify() {
+    let segments = fitCurve(this.segments.map(item => item.point), 5);
+    this._segments = ([this._segments[0]]).concat(segments);
+
+    return this._segments;
+  }
+
+  smooth() {
+    let segment = smoothCurve(this.segments, this.isClose);
+    this._segments = segment;
+    return this._segments;
+  }
+
+  applyStyle(ctx){
+    ctx.strokeStyle = '#c69'
+    ctx.lineCap = "round";
+    ctx.fillStyle = "blue";
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+  }
+
+  draw(ctx) {
+    let segment;
+
+    this._ctx = ctx;
+
+    ctx.beginPath();
+    this.applyStyle(ctx);
+
+    for (let i = 0, len = this.segments.length; i < len; ++i) {
+
+      segment = this.segments[i];
+
+      switch (segment.command) { // first letter
+        case 'm':
+        case 'M': // moveTo, absolute
+          ctx.moveTo(segment.point.x, segment.point.y);
+          break;
+        case 'a':
+        case 'A':
+          ctx.arc.apply(ctx, [...segment.arc]);
+          break;
+        case 'l':
+        case 'L': // lineto, absolute
+          ctx.lineTo.apply(ctx, segment.args);
+          break;
+        case 'q':
+        case 'Q':
+          ctx.quadraticCurveTo.apply(ctx, segment.args);
+          break;
+        case 'c':
+        case 'C':
+          ctx.bezierCurveTo.apply(ctx, segment.args);
+          break;
+        case 'z':
+        case 'Z':
+          ctx.closePath();
+      }
+    }
+    ctx.stroke();
   }
 }
+
+window.Path = Path;
+
+export default Path;

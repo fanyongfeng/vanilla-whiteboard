@@ -68,60 +68,16 @@ export default class Element {
   }
 
   drawPath(){
-    
+
   }
 
   draw(ctx) {
-    let command, cp, currentPoint;
 
     ctx.strokeStyle = '#c69'
     ctx.lineCap = "round";
     ctx.lineWidth = 3;
     ctx.beginPath();
-
-    for (var i = 0, len = this.path.commands.length; i < len; ++i) {
-
-      command = this.path.commands[i];
-
-      switch (command.name) { // first letter
-        case 'm':
-        case 'M': // moveTo, absolute
-          ctx.moveTo(command.point.x, command.point.y);
-          break;
-        case 'a':
-        case 'A':
-          ctx.arc.apply(ctx, [...command.arc]);
-          break;
-        case 'l':
-        case 'L': // lineto, absolute
-          ctx.lineTo(command.point.x, command.point.y);
-          break;
-        case 'q':
-        case 'Q':
-          ctx.quadraticCurveTo(
-            command.controlA.x,
-            command.controlA.y,
-            command.point.x, 
-            command.point.y
-          );
-          break;
-        case 'c':
-        case 'C':
-          ctx.bezierCurveTo(
-            command.controlA.x,
-            command.controlA.y,
-            command.controlB.x,
-            command.controlB.y,
-            command.point.x, 
-            command.point.y
-          );
-          break;
-        case 'z':
-        case 'Z':
-          ctx.closePath();
-      }
-    }
-    ctx.stroke();
+    this.path.draw(ctx);
   }
 
   render(ctx) {

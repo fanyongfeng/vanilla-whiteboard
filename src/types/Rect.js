@@ -22,6 +22,12 @@ const antiDir = {
  * 
  */
 class Rect {
+
+  static instantiate(x, y, width, height) {
+    if(typeof x === "number") return new Rect(x, y, width, height)
+    return x;
+  }
+  
   constructor(x, y, width, height) {
     this.x = x;
     this.y = y;

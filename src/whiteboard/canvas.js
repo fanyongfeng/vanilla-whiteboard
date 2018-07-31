@@ -4,6 +4,7 @@
 
 import hookable from '../decorators/hookable';
 
+
 @hookable
 export default class CanvasMgr {
   constructor(element) {
@@ -13,15 +14,18 @@ export default class CanvasMgr {
     this.ctx = element.getContext('2d');
   }
 
-  get pixelRadio(){
+  get pixelRadio() {
     if (!/^off|false$/.test(canvas.getAttribute('hidpi'))) {
-        // Hi-DPI Canvas support based on:
-        // http://www.html5rocks.com/en/tutorials/canvas/hidpi/
-        var deviceRatio = window.devicePixelRatio || 1,
-            backingStoreRatio = DomElement.getPrefixed(ctx,
-                    'backingStorePixelRatio') || 1;
+      // Hi-DPI Canvas support based on:
+      // http://www.html5rocks.com/en/tutorials/canvas/hidpi/
+      var deviceRatio = window.devicePixelRatio || 1,
+        backingStoreRatio = ctx.webkitBackingStorePixelRatio ||
+          ctx.mozBackingStorePixelRatio ||
+          ctx.msBackingStorePixelRatio ||
+          ctx.oBackingStorePixelRatio ||
+          ctx.backingStorePixelRatio || 1;
 
-        return deviceRatio / backingStoreRatio;
+      return deviceRatio / backingStoreRatio;
     }
     return 1;
   }
@@ -31,11 +35,11 @@ export default class CanvasMgr {
     return this;
   }
 
-  renderAll(){
+  renderAll() {
 
   }
-  
-  scale(){
-    
+
+  scale() {
+
   }
 } 
