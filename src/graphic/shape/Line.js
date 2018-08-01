@@ -8,9 +8,9 @@ export default class Line extends Shape {
 
   buildPath() {
 
-    this.path.moveTo(this.startPoint);
-    this.path.lineTo(this.endPoint);
-    this.path.closePath();
+    this.path.moveTo(this.startPoint)
+      .lineTo(this.endPoint)
+      .closePath();
 
     return;
   }

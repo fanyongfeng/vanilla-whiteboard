@@ -11,7 +11,6 @@ const _selected = Symbol('selected');
 export default class Element {
 
   selectable = true;
-
   strokeColor = null;
   strokeWidth = 1;
   _style = new Style();
@@ -60,7 +59,7 @@ export default class Element {
   }
 
   get strokeBounds() {
-    return this.bounds.expand(this.style.strokeWidth);
+    return this.bounds.expand(this.style.strokeWidth) / 2;
   }
 
   buildPath(ctx, shape) {

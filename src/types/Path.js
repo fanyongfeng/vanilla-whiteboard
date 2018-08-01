@@ -2,7 +2,8 @@ import Point from './Point';
 import Rect from './Rect';
 import fitCurve from '../util/fitCurve';
 import smoothCurve from '../util/smoothCurve';
-import {Segment, LineSegment, BezierSegment, MoveSegment, QuadraticSegment} from './Segment';
+import {Segment, LineSegment, BezierSegment, MoveSegment, QuadraticSegment, ArcSegment} from './Segment';
+import memoized from '../decorators/memoized'
 
 /**
  * A full path 
@@ -19,6 +20,20 @@ class Path {
     this.startPoint = point;
   }
 
+  static instantiate(segments) {
+
+    let ins = new Path;
+    ins._segments = segments.map(seg=> {
+      if(seg.length == 1) return new MoveSegment(new Point(seg[0][0], seg[0][1]));
+      if(seg.length == 4) {
+         let p = new BezierSegment(new Point(seg[1][0], seg[1][1]),new Point(seg[2][0], seg[2][1]),new Point(seg[3][0], seg[3][1]));
+         p.contextPoint = new Point(seg[0][0], seg[0][1]);
+         return p;
+      }
+    });
+    return ins;
+  }
+
   get segments() {
     return this._segments;
   }
@@ -33,10 +48,6 @@ class Path {
     this.contextPoint= segment.point;
   }
 
-  get bounds() {
-    return new Rect(0, 0, 0, 0);
-  }
-
   *[Symbol.iterator]() {
     for (let i = 0, len = this.segments.length; i < len; i++) {
       yield this.segments[i];
@@ -44,11 +55,11 @@ class Path {
   }
 
   clear() {
-    this.segments = [];
+    this._segments = [];
   }
 
   arc(x, y, r, sa, ea) {
-    let segment = new Command('A');
+    let segment = new ArcSegment();
     segment.arc = [x, y, r, sa, ea];
     this.add(segment);
     return this;
@@ -107,8 +118,9 @@ class Path {
   }
 
   /**
-   * get bounds of path.
+   * get bounds of path. It's a memoized getter for performance.
    */
+  @memoized()
   get bounds() {
     let x1 = Infinity,
       x2 = -x1,
@@ -159,15 +171,9 @@ class Path {
 
   simplify() {
     console.log('---before---', this._segments.length);
-
-
     let segments = fitCurve(this.segments.map(item => item.point), 1);
     this._segments = ([this._segments[0]]).concat(segments);
-
     console.log('---after---', this._segments.length);
-
-    this._ctx.clearRect(0, 0, 800, 800);
-    this.draw(this._ctx);
 
     return this._segments;
   }
@@ -182,7 +188,8 @@ class Path {
     ctx.strokeStyle = '#c69'
     ctx.lineCap = "round";
     ctx.fillStyle = "blue";
-    ctx.lineWidth = 1;
+    ctx.lineJoin  = "round";
+    ctx.lineWidth = 3;
     ctx.beginPath();
   }
 

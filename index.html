@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>vanilla-whiteboard</title>
-    <style>
-    
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>vanilla-whiteboard</title>
+  <style>
     body {
       padding-top: 30px;
     }
@@ -14,33 +14,104 @@
       border: 1px dotted #ccc;
     }
 
-    .tool-box>div {
-      width: 32px;
-      height: 32px;
-      display: inline-block;
+    .btns-group {
+      padding: 20px 0 0 0;
     }
+  </style>
 
-    .tool-box>div:nth-child(n){
-      border: 1px solid #777;
-      background-color: #ccc;
-    }
-    .tool-box>div:nth-child(n){
-      border: 1px solid #777;
-      background-color: #ddd;
-    }
-    </style>
+  <link rel=stylesheet href="//lib.baomitu.com/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="http://lib.baomitu.com/jquery/2.2.4/jquery.min.js"></script>
+  <script src="http://lib.baomitu.com/stats.js/16/Stats.min.js"></script>
+</head>
 
-    <link rel=stylesheet href="//lib.baomitu.com/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
-  </head>
-  <body>
-    <div class="container">
-      <div id="draw-panel">
+<body>
+  <div class="container">
+    <div id="draw-panel">
+    </div>
+    <div class="btns-group">
+      <div class="btn-group">
+        <button id="btnSelect" class="btn btn-default">选择</button>
+        <button id="btnPointer" class="btn btn-default">鼠标手</button>
+        <button id="btnLine" class="btn btn-default">直线</button>
+        <button id="btnEllipse" class="btn btn-default">圆形</button>
+        <button id="btnRect" class="btn btn-default">矩形</button>
+        <button id="btnMarker" class="btn btn-default">Marker</button>
+        <button id="btnMarker" class="btn btn-default">Highlighter</button>
+        <button id="btnMarker" class="btn btn-default">图片</button>
       </div>
     </div>
-    <script>
-      
-    </script>
-    <!-- built files will be auto injected -->
-    
-  </body>
+
+    <div class="btns-group">
+      <div class="btn-group">
+        <button id="btnClear" class="btn btn-default">Clear</button>
+        <button id="btnRedo" class="btn btn-default">Redo</button>
+        <button id="btnUndo" class="btn btn-default">Undo</button>
+        <button id="btnScale" class="btn btn-default">缩放</button>
+      </div>
+    </div>
+
+    <div class="btns-group">
+        <div class="btn-group">
+          <button id="btnRdm" class="btn btn-default">绘制随机图形</button>
+          <button id="btnSave" class="btn btn-default">保存当前图形</button>
+          <button id="btnPaths" class="btn btn-default">绘制保存图形</button>
+          <button id="btnPerf" class="btn btn-default">性能</button>
+          <button id="btnSimp" class="btn btn-default">简化</button>
+        </div>
+      </div>
+
+  </div>
+  <script>
+    var stats = new Stats();
+    stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+    document.body.appendChild(stats.dom);
+
+    function animate() {
+      stats.begin();
+      // monitored code goes here
+
+      stats.end();
+      requestAnimationFrame(animate);
+    }
+    requestAnimationFrame(animate);
+
+    const MILLION = 1000000;
+    const WAN = 100000;
+    $(()=>{
+      $("#btnPerf").click(()=>{
+        let item = items[0];
+
+        if(item) {
+          console.time("perf: get bounds")
+          for(let i = 0; i< WAN; i++) {
+            let w = item.bounds.width;
+          }
+          console.timeEnd("perf: get bounds")
+        }
+      });
+
+      $("#btnSave").click(()=>{
+        localStorage.setItem("_VANILLA_WHITEBOARD_", JSON.stringify(canvas.data));
+      });
+
+      $("#btnPaths").click(()=>{
+        const PATHS = JSON.parse(localStorage.getItem("_VANILLA_WHITEBOARD_"));
+        PATHS.forEach(element => {
+          canvas.add(element);
+        });
+        canvas.refresh();
+      });
+
+      $("#btnSimp").click(()=>{ 
+        items.forEach(element => {
+          element.path.simplify();
+        });
+        canvas.refresh();
+      });
+    })
+  </script>
+  <!-- built files will be auto injected -->
+
+</body>
+
 </html>

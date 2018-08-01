@@ -23,7 +23,6 @@ function throttleDistance(dis){
   
 }
 
-let lastPoint = null;
 /**
  * Bind Events
  */
@@ -77,6 +76,7 @@ let handlers = {
 
   bind(canvas) {
 
+    // this.currentTool = new ShapeDrawing,
     this.currentTool = new FreeDrawing,
 
     this.canvas = canvas;
@@ -85,13 +85,13 @@ let handlers = {
     this.onMouseMove = this.onMouseMove.bind(this);
     this.onMouseUp = this.onMouseUp.bind(this);
 
-    addListener(document, 'mousedown', this.onMouseDown);
-    addListener(this.canvas, 'mousemove', this.onMouseMove);
+    addListener(canvas, 'mousedown', this.onMouseDown);
+    addListener(canvas, 'mousemove', this.onMouseMove);
 
 
-    addListener(this.canvas, 'keydown', this.onKeyDown);
-    addListener(this.canvas, 'keypress', this.onKeyPress);
-    addListener(this.canvas, 'keyup', this.onKeyUp);
+    addListener(canvas, 'keydown', this.onKeyDown);
+    addListener(canvas, 'keypress', this.onKeyPress);
+    addListener(canvas, 'keyup', this.onKeyUp);
   },
 
   onKeyDown(event) {},
@@ -131,24 +131,24 @@ let handlers = {
     if (this.isMouseDown) {
       this.isDragging = true;
       this._handleDragging(new MouseEvent(event));
+    } else {
+      this._handleMove(new MouseEvent(event));
     }
 
-    this._handleMove(new MouseEvent(event));
   },
-
 
   _handleDown(event) {
     this.currentTool.onMouseDown(event);
     // this.selection.onMouseDown(event);
-
   },
 
   _handleDragging(event) {
     this.currentTool.onMouseMove(event);
+    this.refreshCanvas();
   },
 
   _handleMove(event) {
-    //this.selection.onMouseMove(event);
+    this.selection.onMouseMove(event);
   },
 
   _handleUp(event) {

@@ -1,7 +1,6 @@
 //A playground of this proj
 import shapes from "./graphic";
 import grid from "./component/grid";
-import handler from './event/event';
 import CanvasMgr from "./whiteboard/canvas";
 import Path from "./types/Path";
 
@@ -15,22 +14,13 @@ import Grid from './component/grid'
 window.paths = [];
 
 export default {
-  canvas:null,
 
   init(){
-    this.canvas = new CanvasMgr({
+    window.canvas = this.canvas = new CanvasMgr({
       container:document.getElementById('draw-panel'),
-      width: 800,
+      width: 1000,
       height: 800,
     });
-  },
-
-  event(){
-    handler.bind(this.canvas.activeCanvas);
-  },
-
-  rect(){
-    let rect = new shapes.Rect();
   },
 
   drawGrid(){

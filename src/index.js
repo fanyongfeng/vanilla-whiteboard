@@ -7,6 +7,9 @@ import playground from './playground'
  *  possible-values:
  *  - changed 当白板上元素发生变化是，（返回变更的数据和Hash）
  *  - 
+ * options:
+ *  - selectionMode: 'bounds', 'path'
+ *  
  */
 
 class VanillaWhiteboard {
@@ -21,12 +24,12 @@ class VanillaWhiteboard {
   constructor(options){
 
     playground.init(options);
-    playground.event();
-    // playground.rect();
+    
+    
     playground.drawGrid();
 
-    //playground.drawPolyline();
-    playground.drawPolyline('cubicInOut');
+    // playground.drawPolyline();
+    // playground.drawPolyline('cubicInOut');
     // playground.drawPolyline('circularInOut');
     // playground.drawPolyline('bounceInOut');
 

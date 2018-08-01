@@ -19,6 +19,11 @@ export default class Selection {
 
   onMouseMove(event) {
     let hover = items.items.find(item => item.bounds.containsPoint(event.point));
+
+    if(hover) {
+      hover.drawBoundRect();
+      console.log(hover);
+    } 
   }
 
   onMouseUp(event) {

@@ -6,10 +6,15 @@ import hookable from '../decorators/hookable';
 import bgLayer from './bgLayer';
 import staticLayer from './staticLayer';
 import {setStyle} from '../util/dom'
+import items from '../store/items';
+import handler from '../event/event';
+import Writing from '../graphic/shape/Writing'
 
 
 @hookable
 export default class CanvasMgr {
+  items = items;
+
   constructor(options) {
 
     let {container, width, height} = options;
@@ -27,8 +32,13 @@ export default class CanvasMgr {
 
     this.bgCanvas = this.createAndApplyCanvasAttr('bgcanvas');
     this.activeCanvas = this.createAndApplyCanvasAttr('canvas');
+    this.operateCanvas = this.createAndApplyCanvasAttr('opcanvas');
     this.ctx = this.activeCanvas.getContext('2d');
     this.bgCtx = this.bgCanvas.getContext('2d');
+    this.opCtx = this.operateCanvas.getContext('2d');
+
+    handler.bind(this.operateCanvas);
+    handler.refreshCanvas = this.refresh.bind(this);
   }
 
   createAndApplyCanvasAttr(id){
@@ -51,6 +61,25 @@ export default class CanvasMgr {
 
     this.wrapper.appendChild(canvas);
     return canvas;
+  }
+
+  refresh(){
+    requestAnimationFrame(()=>{
+      this.ctx.clearRect(0, 0, this.width, this.height);
+      this.items.items.forEach(item=>item.render(this.ctx));
+    });
+  }
+
+  get data(){
+    return this.items.items.map(item=>item.path.toJSON());
+  }
+
+  add(segments){
+    this.items.add(Writing.instantiate(segments));
+  }
+
+  refreshAll(){
+    
   }
 
   dispose () {

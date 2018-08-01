@@ -5,7 +5,7 @@ export default class Rect extends Shape {
 
   type = 'rectangle';
 
-  radius = 2;
+  radius = 0;
 
   buildPath() {
 

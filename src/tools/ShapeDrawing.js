@@ -7,34 +7,24 @@ import Ellipse from '../graphic/shape/Ellipse';
 import items from '../store/items';
 
 export default class ShapeTool { 
-  
-  constructor(canvas){
-    this.canvas = document.getElementById('canvas');
+
+  constructor(name){
+    this.shapeCtor = name;
   }
 
   onMouseDown(event) { 
     let options = this.style;
-    this.currentShape = new Rect(options);
-    this.currentShape.startPoint = event.point;
+    this.currentShape = new Ellipse(options);
+    this.currentShape.startPoint = this.currentShape.endPoint = event.point;
     items.add(this.currentShape);
   }
 
   onMouseMove(event) { 
 
-
     this.currentShape.endPoint = event.point;
 
     this.currentShape.path.clear();
     this.currentShape.buildPath();
-    this.refresh();
-  }
-
-  refresh(){
-    requestAnimationFrame(()=>{
-      let ctx = this.canvas.getContext('2d');
-      ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-      items.items.forEach(item=>item.render(ctx));
-    });
   }
 
   onMouseUp(event) { 

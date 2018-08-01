@@ -7,7 +7,7 @@ import Rect from '../types/Rect';
  */
 export default class Shape extends Element {
 
-  static getInstance([sp, ep]) {
+  static instantiate([sp, ep]) {
     let startPoint = new Point(sp[0], sp[1]);
     let endPoint = new Point(ep[0], ep[1]);
 

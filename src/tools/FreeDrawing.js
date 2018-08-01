@@ -5,7 +5,7 @@ import items from '../store/items';
 export default class FreeDrawing {
 
   constructor(name){
-    this.canvas = document.getElementById('canvas');
+    this.shapeCtor = name;
   }
 
   lastPoint = null;
@@ -33,17 +33,8 @@ export default class FreeDrawing {
     var midPoint = point.midPointFrom(this.lastPoint);
     this.currentShape.path.quadraticCurveTo(this.lastPoint, midPoint);
     this.lastPoint = point;
-    
-    this.refresh();
   }
 
-  refresh(){
-    requestAnimationFrame(()=>{
-      let ctx = this.canvas.getContext('2d');
-      ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-      items.items.forEach(item=>item.render(ctx));
-    });
-  }
   /**
    * Invoked on mouse up
    */

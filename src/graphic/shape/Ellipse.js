@@ -1,4 +1,5 @@
 import Shape from "../Shape"
+import Point from "../../types/Point";
 
 export default class Ellipse extends Shape {
   type = 'ellipse';
@@ -16,12 +17,11 @@ export default class Ellipse extends Shape {
     let oy = b * kappa; // 垂直控制点偏移量
     // 从椭圆的左端点开始顺时针绘制四条三次贝塞尔曲线
     
-    this.path.moveTo(x - a, y);
-
-    this.path.bezierCurveTo(x - a, y - oy, x - ox, y - b, x, y - b);
-    this.path.bezierCurveTo(x + ox, y - b, x + a, y - oy, x + a, y);
-    this.path.bezierCurveTo(x + a, y + oy, x + ox, y + b, x, y + b);
-    this.path.bezierCurveTo(x - ox, y + b, x - a, y + oy, x - a, y);
+    this.path.moveTo(new Point(x - a, y))
+      .bezierCurveTo(new Point(x - a, y - oy), new Point(x - ox, y - b), new Point(x, y - b))
+      .bezierCurveTo(new Point(x + ox, y - b), new Point(x + a, y - oy), new Point(x + a, y))
+      .bezierCurveTo(new Point(x + a, y + oy), new Point(x + ox, y + b), new Point(x, y + b))
+      .bezierCurveTo(new Point(x - ox, y + b), new Point(x - a, y + oy), new Point(x - a, y));
     
     this.path.closePath();
 
