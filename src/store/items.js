@@ -22,6 +22,10 @@ export default {
 
   },
 
+  removeAll(){
+    window.items = items = [];
+  },
+
   /**
    * delete by ids
    */

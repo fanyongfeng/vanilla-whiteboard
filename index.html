@@ -55,6 +55,7 @@
           <button id="btnRdm" class="btn btn-default">绘制随机图形</button>
           <button id="btnSave" class="btn btn-default">保存当前图形</button>
           <button id="btnPaths" class="btn btn-default">绘制保存图形</button>
+          <button id="btnSaveImg" class="btn btn-default">保存为图片</button>
           <button id="btnPerf" class="btn btn-default">性能</button>
           <button id="btnSimp" class="btn btn-default">简化</button>
         </div>
@@ -90,12 +91,17 @@
         }
       });
 
+
+      $("#btnClear").click(()=>{
+        canvas.clear();
+      });
+
       $("#btnSave").click(()=>{
-        localStorage.setItem("_VANILLA_WHITEBOARD_", JSON.stringify(canvas.data));
+        localStorage.setItem("_VANILLA_WHITEBOARD_1", JSON.stringify(canvas.data));
       });
 
       $("#btnPaths").click(()=>{
-        const PATHS = JSON.parse(localStorage.getItem("_VANILLA_WHITEBOARD_"));
+        const PATHS = JSON.parse(localStorage.getItem("_VANILLA_WHITEBOARD_1"));
         PATHS.forEach(element => {
           canvas.add(element);
         });

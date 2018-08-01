@@ -117,6 +117,7 @@ export default class CanvasMgr {
   }
 
   clear() {
+    this.items.removeAll();
     this.ctx.clearRect(0, 0, this.width, this.height);
     return this;
   }
