@@ -158,8 +158,16 @@ class Path {
   }
 
   simplify() {
-    let segments = fitCurve(this.segments.map(item => item.point), 5);
+    console.log('---before---', this._segments.length);
+
+
+    let segments = fitCurve(this.segments.map(item => item.point), 1);
     this._segments = ([this._segments[0]]).concat(segments);
+
+    console.log('---after---', this._segments.length);
+
+    this._ctx.clearRect(0, 0, 800, 800);
+    this.draw(this._ctx);
 
     return this._segments;
   }
@@ -174,7 +182,7 @@ class Path {
     ctx.strokeStyle = '#c69'
     ctx.lineCap = "round";
     ctx.fillStyle = "blue";
-    ctx.lineWidth = 3;
+    ctx.lineWidth = 1;
     ctx.beginPath();
   }
 
@@ -216,6 +224,11 @@ class Path {
           ctx.closePath();
       }
     }
+
+    // for (let i = 0, len = this.segments.length; i < len; ++i) {
+    //   segment = this.segments[i];
+    //   segment.draw(ctx);
+    // }
     ctx.stroke();
   }
 }

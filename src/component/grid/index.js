@@ -1,46 +1,71 @@
 
 
-function drawMajorGrid(hDivide, vDivide, bounds) {
+/**
+ * Component Grid.
+ */
+export default class Grid {
+  minor = false;
 
-}
-
-function drawMinorGrid(hDivide, vDivide, bounds) {
-  
-}
-
-export default function drawGrid(hDivide, vDivide, bounds) {
-  let cellWidth = bounds.width / hDivide;
-  let cellHeight = bounds.height / vDivide;
-
-  for (let i = 0; i <= hDivide; i++) {
-    let xPos = bounds.left + i * cellWidth;
-    let topPoint = new paper.Point(xPos, bounds.top);
-    let bottomPoint = new paper.Point(xPos, bounds.bottom);
-    let aLine = new paper.Path.Line(topPoint, bottomPoint);
-    aLine.strokeColor = 'black';
-    aLine.strokeColor.alpha = 0.15;
-
-    let text = new paper.PointText(new paper.Point(xPos + 10, 10));
-    text.justification = 'center';
-    text.fillColor = 'black';
-    text.fillColor.alpha = 0.15;
-    text.content = parseInt(i * cellWidth, 10);
-    text.fontSize = 9;
+  constructor(minor) {
+    this.minor = minor;
   }
 
-  for (let i = 0; i <= vDivide; i++) {
-    let yPos = bounds.top + i * cellHeight;
-    let leftPoint = new paper.Point(bounds.left, yPos);
-    let rightPoint = new paper.Point(bounds.right, yPos);
-    let aLine = new paper.Path.Line(leftPoint, rightPoint);
-    aLine.strokeColor = 'black';
-    aLine.strokeColor.alpha = 0.15;
+  draw(ctx, width, height) {
+    this._ctx = ctx
+    ctx.save();
+    //preset context2d styles
+    ctx.lineWidth = 0.5;
+    ctx.fontSize = 10;
+    ctx.font = "9px serif";
 
-    let text = new paper.PointText(new paper.Point(10, yPos));
-    text.justification = 'center';
-    text.fillColor = 'black';
-    text.fillColor.alpha = 0.15;
-    text.content = parseInt(i * cellHeight, 10);
-    text.fontSize = 9;
+    //draw vertical lines
+    if (this.minor) this.drawManorGrid(ctx, width, height);
+    this.drawMajorGrid(ctx, width, height);
+    ctx.restore();
+  }
+
+  drawMajorGrid(ctx, width, height) {
+    ctx.strokeStyle = "#c0c0c0";
+    let x = 0;
+    while (x < width) {
+      x += 50;
+      this.drawLine(ctx, x, 0, x, height);
+      this.drawPixelText(ctx, x.toString(), x, 9);
+    }
+    //draw horizontal lines
+    let y = 0;
+    while (y < height) {
+      y += 50;
+      this.drawLine(ctx, 0, y, width, y);
+      this.drawPixelText(ctx, y.toString(), 0, y);
+    }
+  }
+
+  drawManorGrid(ctx, width, height) {
+    ctx.strokeStyle = "#f0f0f0";
+    let x = 0;
+    while (x < width) {
+      x += 10;
+      this.drawLine(ctx, x, 0, x, height);
+    }
+    //draw horizontal lines
+    let y = 0;
+    while (y < height) {
+      y += 10;
+      this.drawLine(ctx, 0, y, width, y);
+    }
+  }
+
+
+  drawLine(ctx, x1, y1, x2, y2) {
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.closePath();
+    ctx.stroke();
+  }
+
+  drawPixelText(ctx, text, x, y) {
+    ctx.fillText(text, x, y);
   }
 }

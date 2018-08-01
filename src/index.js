@@ -20,18 +20,16 @@ class VanillaWhiteboard {
 
   constructor(options){
 
-    playground.init(options.canvas);
-    playground.event(options.canvas);
+    playground.init(options);
+    playground.event();
     // playground.rect();
-
+    playground.drawGrid();
 
     //playground.drawPolyline();
-
-     playground.drawPolyline('cubicInOut');
-
+    playground.drawPolyline('cubicInOut');
     // playground.drawPolyline('circularInOut');
-
     // playground.drawPolyline('bounceInOut');
+
   }
   
   on(type, fn){
@@ -50,10 +48,4 @@ class VanillaWhiteboard {
 
 }
 
-window._canvas = document.getElementById('canvas');
-
-window.vwb = new VanillaWhiteboard({
-  el:document.getElementById('canvas'),
-  width: 800,
-  height: 800,
-})
+window.vwb = new VanillaWhiteboard()

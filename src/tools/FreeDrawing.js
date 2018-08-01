@@ -4,7 +4,7 @@ import items from '../store/items';
 // values: Marker & Highlighter
 export default class FreeDrawing {
 
-  constructor(canvas){
+  constructor(name){
     this.canvas = document.getElementById('canvas');
   }
 

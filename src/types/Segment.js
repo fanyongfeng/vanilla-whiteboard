@@ -23,25 +23,35 @@ export class Segment {
     return new Rect(this.point.x, this.point.y, 0, 0);
   }
 
+  /**
+   * tmp method for debugger bezier
+   * @param {*} ctx 
+   */
   draw(ctx) {
     // this.point.forEach(p=>{
 
     // })
-    ctx.fillRect(this.point.x - 3, this.point.y - 3, 6, 6);
+    ctx.fillStyle = "#aaa";
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = '#ccc'
+    ctx.fillRect(this.point.x - 2, this.point.y - 2, 1, 1);
+    this.contextPoint && ctx.fillRect(this.contextPoint.x - 2, this.contextPoint.y - 2, 1, 1);
+
     if (this.control) {
       ctx.fillRect(this.control.x - 1, this.control.y - 1, 2, 2);
     }
 
     if (this.control1) {
       ctx.fillRect(this.control1.x - 1, this.control1.y - 1, 2, 2);
-      // ctx.moveTo(this.point.x, this.point.y)
-      // ctx.lineTo(this.control1.x, this.control1.y)
+      ctx.beginPath();
+      ctx.moveTo(this.contextPoint.x, this.contextPoint.y)
+      ctx.lineTo(this.control1.x, this.control1.y)
     }
     if (this.control2) {
       ctx.fillRect(this.control2.x - 1, this.control2.y - 1, 2, 2);
-
-      // ctx.moveTo(this.point.x, this.point.y)
-      // ctx.lineTo(this.control2.x, this.control2.y)
+      ctx.beginPath();
+      ctx.moveTo(this.point.x, this.point.y)
+      ctx.lineTo(this.control2.x, this.control2.y)
     }
   }
 
@@ -95,7 +105,7 @@ export class LineSegment extends Segment {
     let to = this.point;
     width = to.x - x;
     height = to.y - y;
-    
+
     // Check if horizontal or vertical order needs to be reversed.
     if (width < 0) {
       x = to.x;

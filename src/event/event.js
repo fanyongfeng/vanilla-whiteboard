@@ -72,11 +72,13 @@ let handlers = {
 
   isDragging: false,
   isMouseDown: false,
-  currentTool: new FreeDrawing,
   //currentTool: new ShapeDrawing,
   selection: new Selection,
 
   bind(canvas) {
+
+    this.currentTool = new FreeDrawing,
+
     this.canvas = canvas;
 
     this.onMouseDown = this.onMouseDown.bind(this);

@@ -8,10 +8,9 @@ import Path from "./types/Path";
 
 import Rect from "./types/Rect";
 import Point from "./types/Point";
-
 import ease from './animate/ease'
-
 import fitCurve from './util/fitCurve'
+import Grid from './component/grid'
 
 window.paths = [];
 
@@ -19,16 +18,24 @@ export default {
   canvas:null,
 
   init(){
-    this.canvas = new CanvasMgr(canvas);
-    console.log(this.canvas);
+    this.canvas = new CanvasMgr({
+      container:document.getElementById('draw-panel'),
+      width: 800,
+      height: 800,
+    });
   },
 
-  event(canvas){
-    handler.bind(canvas);
+  event(){
+    handler.bind(this.canvas.activeCanvas);
   },
 
   rect(){
-    var rect = new shapes.Rect();
+    let rect = new shapes.Rect();
+  },
+
+  drawGrid(){
+    let grid = new Grid(true);
+    grid.draw(this.canvas.bgCtx, this.canvas.width, this.canvas.height);
   },
 
   drawPolyline(type) {
@@ -40,7 +47,7 @@ export default {
       p1.lineTo(new Point(i* 50, 500 - k* 500))
     }
 
-    //p1.simplify();
+    // p1.simplify();
 
     p1.draw(this.canvas.ctx);
     window.paths.push(p1)
