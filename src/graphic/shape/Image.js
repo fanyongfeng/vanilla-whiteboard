@@ -1,77 +1,112 @@
 import Element from "../Element"
-export default class Image extends Element { 
+import Rect from '../../types/Rect';
+import Point from '../../types/Point';
 
+export default class Image extends Element {
+
+  _src = null;
   loaded = false;
+  strokeDashArray = [0, 1];
+  x = 10;
+  y = 10;
 
-  get src(){
-
+  constructor(src) {
+    super();
+    this._src = src;
   }
 
-  set src(ref) {
-
+  set src(src) {
+    this.loaded = false;
+    this._src = src;
   }
 
-  loadImage(url, callback, context, crossOrigin){
+  get src() {
+    return this._src;
+  }
+
+
+  get bounds() {
+    return new Rect(this.x, this.y, this.width, this.height);
+  }
+
+  loadImage(url, callback, context) {
     if (!url) {
       callback && callback.call(context, url);
       return;
     }
 
-    var img = document.createElement('img');
+    let img = document.createElement('img');
+    img.setAttribute('crossOrigin', 'anonymous');
+    img.src = url;
 
-    /** @ignore */
-    var onLoadCallback = function () {
+    img.onload = () => {
+      this.loaded = true;
+      this.width = img ? img.naturalWidth || img.width : 0;
+      this.height = img ? img.naturalHeight || img.height : 0;
+
       callback && callback.call(context, img);
       img = img.onload = img.onerror = null;
     };
 
-    img.onload = onLoadCallback;
-    /** @ignore */
-    img.onerror = function() {
-      fabric.log('Error loading ' + img.src);
+    img.onerror = function () {
       callback && callback.call(context, null, true);
       img = img.onload = img.onerror = null;
     };
 
-    if (url.indexOf('data') !== 0 && crossOrigin) {
-      img.crossOrigin = crossOrigin;
-    }
-
-    img.src = url;
+    this._image = img;
   }
 
-  onLoaded(image){
-    this.loaded = true;
+  drawDashedLine() {
 
-    let width = image ? image.naturalWidth || image.width : 0;
-    let height = image ? image.naturalHeight || image.height : 0;
   }
 
-  renderStroke(){
-    
-    var x = -this.width / 2,
-    y = -this.height / 2,
-    w = this.width,
-    h = this.height;
+  getImageData() {
+    return this._ctx.getImageData(this.x, this.y,this.width, this.height);
+  }
+
+  setImageData(data) {
+    this._ctx.putImageData(data, this.x, this.y);
+  }
+
+  toJSON(){
+    return [this.src];
+  }
+
+  renderStroke(ctx) {
+
+    let x = -this.width / 2,
+      y = -this.height / 2,
+      w = this.width,
+      h = this.height;
 
     ctx.save();
-    this._setStrokeStyles(ctx, this);
+    // this._setStrokeStyles(ctx, this);
 
     ctx.beginPath();
-    fabric.util.drawDashedLine(ctx, x, y, x + w, y, this.strokeDashArray);
-    fabric.util.drawDashedLine(ctx, x + w, y, x + w, y + h, this.strokeDashArray);
-    fabric.util.drawDashedLine(ctx, x + w, y + h, x, y + h, this.strokeDashArray);
-    fabric.util.drawDashedLine(ctx, x, y + h, x, y, this.strokeDashArray);
+    this.drawDashedLine(ctx, x, y, x + w, y, this.strokeDashArray);
+    this.drawDashedLine(ctx, x + w, y, x + w, y + h, this.strokeDashArray);
+    this.drawDashedLine(ctx, x + w, y + h, x, y + h, this.strokeDashArray);
+    this.drawDashedLine(ctx, x, y + h, x, y, this.strokeDashArray);
     ctx.closePath();
     ctx.restore();
   }
 
-  drawImage(image, point) {
-    this.ctx.drawImage(image, point.x, point.y);
+  drawImage(ctx) {
+    ctx.drawImage(this._image, this.x, this.y);
   }
 
-  draw(){
-    this.drawImage();
-    this.renderStroke();
+  draw(ctx) {
+    this._ctx = ctx;
+
+    if (this.loaded) {
+      this.drawImage(ctx);
+      this.renderStroke(ctx);
+    } else {
+      this.loadImage(this._src, () => {
+        this.drawImage(ctx);
+        this.renderStroke(ctx);
+      });
+      
+    }
   }
 }

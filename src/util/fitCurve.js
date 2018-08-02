@@ -24,6 +24,8 @@ import {BezierSegment} from '../types/Segment';
  * 
  */
 function fitCurve(points, maxError) {
+  if(points.length <= 1) return[];
+
   let _points = [],
     curves, length;
 
@@ -34,8 +36,7 @@ function fitCurve(points, maxError) {
     }
   }
 
-  length = _points.length
-  if (length <= 0) return null;
+  length = _points.length;
 
   curves = fitCubic(_points, maxError, 0, length - 1,
     // Left Tangent

@@ -2,7 +2,7 @@
  * Base of all shapes
  */
 import Rect from '../types/Rect';
-import Style from './Style';
+import Style from '../types/Style';
 import { tsid, uid } from '../util/id';
 import Path from '../types/Path';
 

@@ -1,6 +1,8 @@
 import Point from './Point';
 import Rect from './Rect';
 
+const POINT_WIDTH = 4;
+const OFFSET = POINT_WIDTH / 2;
 export class Segment {
   /**
    * record start point via context
@@ -23,36 +25,38 @@ export class Segment {
     return new Rect(this.point.x, this.point.y, 0, 0);
   }
 
+  drawPoint(ctx, point){
+    if(!point) return;
+    ctx.strokeRect(point.x - OFFSET, point.y - OFFSET, POINT_WIDTH, POINT_WIDTH);
+  }
+
+  drawControlPoint(ctx, point, controlPoint) {
+    if(!controlPoint) return;
+    ctx.fillRect(controlPoint.x - OFFSET, controlPoint.y - OFFSET, POINT_WIDTH, POINT_WIDTH);
+
+    ctx.moveTo(point.x, point.y)
+    ctx.lineTo(controlPoint.x, controlPoint.y)
+  }
+
   /**
    * tmp method for debugger bezier
    * @param {*} ctx 
    */
   draw(ctx) {
-    // this.point.forEach(p=>{
 
-    // })
-    ctx.fillStyle = "#aaa";
+    ctx.fillStyle = "#4f80ff";
     ctx.lineWidth = 1;
-    ctx.strokeStyle = '#ccc'
-    ctx.fillRect(this.point.x - 2, this.point.y - 2, 1, 1);
-    this.contextPoint && ctx.fillRect(this.contextPoint.x - 2, this.contextPoint.y - 2, 1, 1);
+    ctx.strokeStyle = '#5887ff';
+    ctx.beginPath();
+    this.drawPoint(ctx, this.point);
+    this.drawPoint(ctx, this.contextPoint);
 
-    if (this.control) {
-      ctx.fillRect(this.control.x - 1, this.control.y - 1, 2, 2);
-    }
 
-    if (this.control1) {
-      ctx.fillRect(this.control1.x - 1, this.control1.y - 1, 2, 2);
-      ctx.beginPath();
-      ctx.moveTo(this.contextPoint.x, this.contextPoint.y)
-      ctx.lineTo(this.control1.x, this.control1.y)
-    }
-    if (this.control2) {
-      ctx.fillRect(this.control2.x - 1, this.control2.y - 1, 2, 2);
-      ctx.beginPath();
-      ctx.moveTo(this.point.x, this.point.y)
-      ctx.lineTo(this.control2.x, this.control2.y)
-    }
+    this.drawControlPoint(ctx, this.point, this.control);
+    this.drawControlPoint(ctx, this.contextPoint, this.control1);
+    this.drawControlPoint(ctx, this.point, this.control2);
+
+    ctx.stroke();
   }
 
   /**

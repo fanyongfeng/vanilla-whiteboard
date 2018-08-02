@@ -189,7 +189,7 @@ class Path {
     ctx.lineCap = "round";
     ctx.fillStyle = "blue";
     ctx.lineJoin  = "round";
-    ctx.lineWidth = 3;
+    ctx.lineWidth = 1;
     ctx.beginPath();
   }
 
@@ -232,11 +232,12 @@ class Path {
       }
     }
 
+    ctx.stroke();
+
     // for (let i = 0, len = this.segments.length; i < len; ++i) {
     //   segment = this.segments[i];
     //   segment.draw(ctx);
     // }
-    ctx.stroke();
   }
 }
 

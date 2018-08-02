@@ -8,7 +8,9 @@ import staticLayer from './staticLayer';
 import {setStyle} from '../util/dom'
 import items from '../store/items';
 import handler from '../event/event';
-import Writing from '../graphic/shape/Writing'
+import Writing from '../graphic/shape/Writing';
+import saveImage from '../util/saveImage';
+import Image from '../graphic/shape/Image';
 
 
 @hookable
@@ -78,6 +80,14 @@ export default class CanvasMgr {
     this.items.add(Writing.instantiate(segments));
   }
 
+  addImage(src) {
+    this.items.add(new Image(src));
+  }
+
+  saveImage(){
+    return saveImage(this.activeCanvas);
+  }
+
   refreshAll(){
     
   }
@@ -101,19 +111,20 @@ export default class CanvasMgr {
   }
 
   get pixelRadio() {
+    let ctx = this.ctx;
     if (!/^off|false$/.test(canvas.getAttribute('hidpi'))) {
       // Hi-DPI Canvas support based on:
       // http://www.html5rocks.com/en/tutorials/canvas/hidpi/
-      var deviceRatio = window.devicePixelRatio || 1,
-        backingStoreRatio = ctx.webkitBackingStorePixelRatio ||
+      
+        let backingStoreRatio = ctx.webkitBackingStorePixelRatio ||
           ctx.mozBackingStorePixelRatio ||
           ctx.msBackingStorePixelRatio ||
           ctx.oBackingStorePixelRatio ||
           ctx.backingStorePixelRatio || 1;
 
-      return deviceRatio / backingStoreRatio;
+      return this.deviceRatio / backingStoreRatio;
     }
-    return 1;
+    return this.deviceRatio;
   }
 
   clear() {

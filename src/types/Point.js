@@ -5,7 +5,7 @@ export default class Point {
   type = 'point'
 
   static instantiate(point) {
-    if(typeof point === "number") return new Point(point, point)
+    if (typeof point === "number") return new Point(point, point)
     return point;
   }
 
@@ -16,9 +16,9 @@ export default class Point {
 
   /**
     * Returns the addition of the supplied value to both coordinates of
-    * the point as a new point.
-    * The object itself is not modified!
-    */
+  * the point as a new point.
+  * The object itself is not modified!
+  */
   add(point) {
     point = Point.instantiate(point);
     return new Point(this.x + point.x, this.y + point.y);
@@ -112,7 +112,7 @@ export default class Point {
   }
 
   negate() {
-      return new Point(-this.x, -this.y);
+    return new Point(-this.x, -this.y);
   }
 
   get length() {

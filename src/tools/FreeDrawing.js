@@ -3,6 +3,7 @@ import Writing from '../graphic/shape/Writing';
 import items from '../store/items';
 // values: Marker & Highlighter
 export default class FreeDrawing {
+  styles = {};
 
   constructor(name){
     this.shapeCtor = name;

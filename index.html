@@ -17,11 +17,57 @@
     .btns-group {
       padding: 20px 0 0 0;
     }
+
+    .btn-group {
+      padding-right: 20px;
+    }
+
+    .btn span {
+      background: #484848;
+      border-radius: 50%;
+      cursor: pointer;
+      box-sizing: border-box;
+      box-sizing: border-box;
+      display: block;
+      width:15px;
+      height:15px;
+    }
+
+    #btnWidth1 span {
+      width:3px;
+      height:3px;
+    }
+
+    #btnWidth2 span {
+      width:8px;
+      height:8px;
+    }
+
+    button {
+      height: 30px;
+    }
+
+    #btnColor1 span {
+      background: rgb(40, 40, 40);
+    }
+    #btnColor2 span {
+      background: rgb(255, 75, 89);
+    }
+    #btnColor3 span {
+      background: rgb(142, 207, 84);
+    }
+    #btnColor4 span {
+      background: rgb(255, 163, 0);
+    }
+    #btnColor5 span {
+      background: rgb(0, 184, 252);
+    }
   </style>
 
   <link rel=stylesheet href="//lib.baomitu.com/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="http://lib.baomitu.com/jquery/2.2.4/jquery.min.js"></script>
   <script src="http://lib.baomitu.com/stats.js/16/Stats.min.js"></script>
+  <script src="/samples/js/data.js"></script>
 </head>
 
 <body>
@@ -36,8 +82,20 @@
         <button id="btnEllipse" class="btn btn-default">圆形</button>
         <button id="btnRect" class="btn btn-default">矩形</button>
         <button id="btnMarker" class="btn btn-default">Marker</button>
-        <button id="btnMarker" class="btn btn-default">Highlighter</button>
-        <button id="btnMarker" class="btn btn-default">图片</button>
+        <button id="btnHighlighter" class="btn btn-default">Highlighter</button>
+        <button id="btnImage" class="btn btn-default">图片</button>
+      </div>
+      <div class="btn-group">
+          <button id="btnWidth1" class="btn btn-default"><span></span></button>
+          <button id="btnWidth2" class="btn btn-default"><span></span></button>
+          <button id="btnWidth3" class="btn btn-default"><span></span></button>
+      </div>
+      <div class="btn-group color">
+          <button id="btnColor1" class="btn btn-default"><span></span></button>
+          <button id="btnColor2" class="btn btn-default"><span></span></button>
+          <button id="btnColor3" class="btn btn-default"><span></span></button>
+          <button id="btnColor4" class="btn btn-default"><span></span></button>
+          <button id="btnColor5" class="btn btn-default"><span></span></button>
       </div>
     </div>
 
@@ -91,10 +149,20 @@
         }
       });
 
+      $("#btnImage").click(()=>{
+        canvas.addImage(images[0]);
+        canvas.refresh();
+      });
+
 
       $("#btnClear").click(()=>{
         canvas.clear();
       });
+
+      $("#btnSaveImg").click(()=>{
+        canvas.saveImage();
+      });
+      //btnSaveImg
 
       $("#btnSave").click(()=>{
         localStorage.setItem("_VANILLA_WHITEBOARD_1", JSON.stringify(canvas.data));
