@@ -25,6 +25,8 @@ export class Segment {
     return new Rect(this.point.x, this.point.y, 0, 0);
   }
 
+  containPoint() {return false;}
+
   drawPoint(ctx, point){
     if(!point) return;
     ctx.strokeRect(point.x - OFFSET, point.y - OFFSET, POINT_WIDTH, POINT_WIDTH);
@@ -90,6 +92,7 @@ export class MoveSegment extends Segment {
     super();
     this.point = point;
   }
+  
 }
 
 export class LineSegment extends Segment {
@@ -122,6 +125,11 @@ export class LineSegment extends Segment {
     return new Rect(x, y, width, height);
   }
 
+  get length(){
+    let sub = this.contextPoint.subtract(this.point);
+    return Math.sqrt(sub.x * sub.x + sub.y * sub.y);
+  }
+
   get points() {
     return [this.contextPoint, this.point];
   }
@@ -138,6 +146,18 @@ export class BezierSegment extends Segment {
     this.control1 = cp1;
     this.control2 = cp2;
     this.point = point;
+  }
+
+  containPoint(point, strokeWidth){
+    let ret =  containStroke(
+      this.contextPoint.x,this.contextPoint.y,
+      this.control1.x,this.control1.y,
+      this.control2.x,this.control2.y,
+      this.point.x,this.point.y,
+      strokeWidth, point.x, point.y    
+    )
+    return ret
+    
   }
 
   // Converted from code found here:
@@ -235,6 +255,12 @@ export class QuadraticSegment extends Segment {
     this.control = cp;
     this.point = point;
   }
+
+  get bounds() {
+    //转成三阶算
+    return this._calcBoundsOfBeizer.apply(this, this.fullArgs);
+  }
+
   get points() {
     return [this.contextPoint, this.control, this.point];
   }
@@ -251,4 +277,144 @@ export class ArcSegment extends Segment {
   get points() {
     return [this.contextPoint, this.control, this.point];
   }
+}
+
+
+/**
+ * 向量距离平方
+ * @param {Vector2} v1
+ * @param {Vector2} v2
+ * @return {number}
+ */
+function distanceSquare(v1, v2) {
+  return (v1[0] - v2[0]) * (v1[0] - v2[0])
+      + (v1[1] - v2[1]) * (v1[1] - v2[1]);
+}
+
+function cubicAt(p0, p1, p2, p3, t) {
+  const onet = 1 - t;
+  return onet * onet * (onet * p3 + 3 * t * p2) + t * t * (t * p0 + 3 * onet * p1);
+}
+
+/**
+ * 投射点到三次贝塞尔曲线上，返回投射距离。
+ * 投射点有可能会有一个或者多个，这里只返回其中距离最短的一个。
+ * @param {number} x0
+ * @param {number} y0
+ * @param {number} x1
+ * @param {number} y1
+ * @param {number} x2
+ * @param {number} y2
+ * @param {number} x3
+ * @param {number} y3
+ * @param {number} x
+ * @param {number} y
+ * @param {Array.<number>} [out] 投射点
+ * @return {number}
+ */
+function cubicProjectPoint(x1, y1, x2, y2, x3, y3, x4, y4, x, y, out) {
+  let t;
+  let interval = 0.005;
+  let d = Infinity;
+  let _t;
+  let v1;
+  let d1;
+  let d2;
+  let v2;
+  let prev;
+  let next;
+  const EPSILON = 0.0001;
+  const v0 = [ x, y ];
+
+  for (_t = 0; _t < 1; _t += 0.05) {
+    v1 = [
+      cubicAt(x1, x2, x3, x4, _t),
+      cubicAt(y1, y2, y3, y4, _t)
+    ];
+
+    d1 = distanceSquare(v0, v1);
+    if (d1 < d) {
+      t = _t;
+      d = d1;
+    }
+  }
+  d = Infinity;
+
+  for (let i = 0; i < 32; i++) {
+    if (interval < EPSILON) {
+      break;
+    }
+
+    prev = t - interval;
+    next = t + interval;
+
+    v1 = [
+      cubicAt(x1, x2, x3, x4, prev),
+      cubicAt(y1, y2, y3, y4, prev)
+    ];
+
+    d1 = distanceSquare(v0, v1);
+
+    if (prev >= 0 && d1 < d) {
+      t = prev;
+      d = d1;
+    } else {
+      v2 = [
+        cubicAt(x1, x2, x3, x4, next),
+        cubicAt(y1, y2, y3, y4, next)
+      ];
+
+      d2 = distanceSquare(v0, v2);
+
+      if (next <= 1 && d2 < d) {
+        t = next;
+        d = d2;
+      } else {
+        interval *= 0.5;
+      }
+    }
+  }
+
+  if (out) {
+    out.x = cubicAt(x1, x2, x3, x4, t);
+    out.y = cubicAt(y1, y2, y3, y4, t);
+  }
+
+  return Math.sqrt(d);
+}
+
+/**
+ * 三次贝塞尔曲线描边包含判断
+ * @param  {number}  x0
+ * @param  {number}  y0
+ * @param  {number}  x1
+ * @param  {number}  y1
+ * @param  {number}  x2
+ * @param  {number}  y2
+ * @param  {number}  x3
+ * @param  {number}  y3
+ * @param  {number}  lineWidth
+ * @param  {number}  x
+ * @param  {number}  y
+ * @return {boolean}
+ */
+export function containStroke(x0, y0, x1, y1, x2, y2, x3, y3, lineWidth, x, y) {
+  if (lineWidth === 0) {
+      return false;
+  }
+  var _l = lineWidth;
+  // Quick reject
+  if (
+      (y > y0 + _l && y > y1 + _l && y > y2 + _l && y > y3 + _l)
+      || (y < y0 - _l && y < y1 - _l && y < y2 - _l && y < y3 - _l)
+      || (x > x0 + _l && x > x1 + _l && x > x2 + _l && x > x3 + _l)
+      || (x < x0 - _l && x < x1 - _l && x < x2 - _l && x < x3 - _l)
+  ) {
+      return false;
+  }
+  var d = cubicProjectPoint(
+      x0, y0, x1, y1, x2, y2, x3, y3,
+      x, y, null
+  );
+  return d <= _l / 2;
 }

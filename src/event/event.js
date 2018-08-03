@@ -138,8 +138,8 @@ let handlers = {
   },
 
   _handleDown(event) {
-    this.currentTool.onMouseDown(event);
-    // this.selection.onMouseDown(event);
+      this.currentTool.onMouseDown(event);
+     //this.selection.onMouseDown(event);
   },
 
   _handleDragging(event) {

@@ -18,12 +18,21 @@ export default class Selection {
   }
 
   onMouseMove(event) {
-    let hover = items.items.find(item => item.bounds.containsPoint(event.point));
+    let hover;
+    //  hover = items.items.find(item => item.bounds.containsPoint(event.point));
+     hover = items.items.find(item => item.path.containPoint(event.point)); 
+    //  hover = items.items.find(item => {
+    //   console.log(document.getElementById('canvas').getContext('2d').isPointInStroke(item.path.path2dObj, event.point.x, event.point.y))
+    // });
+
 
     if(hover) {
       hover.drawBoundRect();
-      console.log(hover);
-    } 
+      this.lastHover = hover;
+      // console.log(!!hover);
+    } else {
+      //this.lastHover
+    }
   }
 
   onMouseUp(event) {

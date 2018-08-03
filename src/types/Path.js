@@ -12,12 +12,18 @@ class Path {
 
   _segments = [];
 
+  path2dObj = undefined;
+
   startPoint = null;
   contextPoint= null;
   isClose = false;
 
   constructor(point) {
     this.startPoint = point;
+
+    if(typeof Path2D !== 'undefined') {
+      // this.path2dObj = new Path2D();
+    }
   }
 
   static instantiate(segments) {
@@ -184,12 +190,17 @@ class Path {
     return this._segments;
   }
 
+  containPoint(point) {
+    let seg = this.segments.find(item=>item.containPoint(point, 30));
+    return !!seg;
+  }
+
   applyStyle(ctx){
     ctx.strokeStyle = '#c69'
     ctx.lineCap = "round";
     ctx.fillStyle = "blue";
     ctx.lineJoin  = "round";
-    ctx.lineWidth = 1;
+    ctx.lineWidth = 2;
     ctx.beginPath();
   }
 
@@ -201,6 +212,8 @@ class Path {
     ctx.beginPath();
     this.applyStyle(ctx);
 
+    let ctxOrPath = this.path2dObj || ctx;
+
     for (let i = 0, len = this.segments.length; i < len; ++i) {
 
       segment = this.segments[i];
@@ -208,30 +221,31 @@ class Path {
       switch (segment.command) { // first letter
         case 'm':
         case 'M': // moveTo, absolute
-          ctx.moveTo(segment.point.x, segment.point.y);
+        ctxOrPath.moveTo(segment.point.x, segment.point.y);
           break;
         case 'a':
         case 'A':
-          ctx.arc.apply(ctx, [...segment.arc]);
+        ctxOrPath.arc.apply(ctxOrPath, [...segment.arc]);
           break;
         case 'l':
         case 'L': // lineto, absolute
-          ctx.lineTo.apply(ctx, segment.args);
+        ctxOrPath.lineTo.apply(ctxOrPath, segment.args);
           break;
         case 'q':
         case 'Q':
-          ctx.quadraticCurveTo.apply(ctx, segment.args);
+        ctxOrPath.quadraticCurveTo.apply(ctxOrPath, segment.args);
           break;
         case 'c':
         case 'C':
-          ctx.bezierCurveTo.apply(ctx, segment.args);
+        ctxOrPath.bezierCurveTo.apply(ctxOrPath, segment.args);
           break;
         case 'z':
         case 'Z':
-          ctx.closePath();
+        ctxOrPath.closePath();
       }
     }
 
+    // ctx.stroke(this.path2dObj);
     ctx.stroke();
 
     // for (let i = 0, len = this.segments.length; i < len; ++i) {
