@@ -67,7 +67,7 @@
   <link rel=stylesheet href="//lib.baomitu.com/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="http://lib.baomitu.com/jquery/2.2.4/jquery.min.js"></script>
   <script src="http://lib.baomitu.com/stats.js/16/Stats.min.js"></script>
-  <script src="/samples/js/data.js"></script>
+  <script src="/samples/js/mock-data.js"></script>
 </head>
 
 <body>
@@ -107,6 +107,12 @@
         <button id="btnScale" class="btn btn-default">缩放</button>
       </div>
     </div>
+
+    <div class="btns-group">
+        <div class="btn-group">
+            <button id="btnCurve" class="btn btn-default">绘制曲线</button>
+        </div>
+      </div>
 
     <div class="btns-group">
         <div class="btn-group">
@@ -157,6 +163,11 @@
 
       $("#btnClear").click(()=>{
         canvas.clear();
+      });
+
+      $("#btnCurve").click(()=>{
+        canvas.add(curve1);
+        canvas.refresh();
       });
 
       $("#btnSaveImg").click(()=>{

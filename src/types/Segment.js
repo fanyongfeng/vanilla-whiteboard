@@ -241,7 +241,7 @@ export class BezierSegment extends Segment {
   }
 
   get points() {
-    return [this.contextPoint, this.control1, this.control1, this.point];
+    return [this.contextPoint, this.control1, this.control2, this.point];
   }
 }
 

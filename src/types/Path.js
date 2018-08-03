@@ -248,10 +248,10 @@ class Path {
     // ctx.stroke(this.path2dObj);
     ctx.stroke();
 
-    // for (let i = 0, len = this.segments.length; i < len; ++i) {
-    //   segment = this.segments[i];
-    //   segment.draw(ctx);
-    // }
+    for (let i = 0, len = this.segments.length; i < len; ++i) {
+      segment = this.segments[i];
+      segment.draw(ctx);
+    }
   }
 }
 

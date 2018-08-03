@@ -1,6 +1,6 @@
-//https://github.com/steelsojka/lodash-decorators#example-3
-
-function assign() {};
+function assign(target, frm) {
+  return Object.assign(target, frm);
+};
 
 /**
  * Mixins an object into the classes prototype.
@@ -20,10 +20,10 @@ function assign() {};
  *
  * myClass.blorg(); // => 'blorg!'
  */
-export function Mixin(...srcs) {
+export function mixin(...srcs) {
   return ((target) => {
     assign(target.prototype, ...srcs);
     return target;
   });
 }
-export default Mixin;
+export default mixin;

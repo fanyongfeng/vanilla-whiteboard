@@ -138,12 +138,13 @@ let handlers = {
   },
 
   _handleDown(event) {
-      this.currentTool.onMouseDown(event);
-     //this.selection.onMouseDown(event);
+      //this.currentTool.onMouseDown(event);
+    this.selection.onMouseDown(event);
   },
 
   _handleDragging(event) {
-    this.currentTool.onMouseMove(event);
+    //this.currentTool.onMouseMove(event);
+    this.selection.onMouseDrag(event);
     this.refreshCanvas();
   },
 
@@ -152,7 +153,7 @@ let handlers = {
   },
 
   _handleUp(event) {
-    this.currentTool.onMouseUp(event);
+    //this.currentTool.onMouseUp(event);
   }
 }
 

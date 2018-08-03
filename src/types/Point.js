@@ -107,10 +107,13 @@ export default class Point {
    * @param {Point} point 
    * @param {number} threshold 
    */
-  nearby(point, threshold = 5) {
+  nearby(point, threshold = 4) {
     return this.getDistance(point) < threshold;
   }
 
+  /**
+   * negate point & return a new point.
+   */
   negate() {
     return new Point(-this.x, -this.y);
   }
