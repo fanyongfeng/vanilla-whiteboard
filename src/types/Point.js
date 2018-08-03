@@ -2,7 +2,6 @@
  * The base type of graphic ,(location & vector)
  */
 export default class Point {
-  type = 'point'
 
   static instantiate(point) {
     if (typeof point === "number") return new Point(point, point)
@@ -61,6 +60,12 @@ export default class Point {
   addEquals(other) {
     this.x += other.x;
     this.y += other.y;
+    return this;
+  }
+
+  assign(point) {
+    this.x = point.x;
+    this.y = point.y;
     return this;
   }
 

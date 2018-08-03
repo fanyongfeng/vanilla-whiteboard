@@ -2,7 +2,7 @@ import Point from './Point';
 import Rect from './Rect';
 import fitCurve from '../util/fitCurve';
 import smoothCurve from '../util/smoothCurve';
-import {Segment, LineSegment, BezierSegment, MoveSegment, QuadraticSegment, ArcSegment} from './Segment';
+import { Segment, LineSegment, BezierSegment, MoveSegment, QuadraticSegment, ArcSegment } from './Segment';
 import memoized from '../decorators/memoized'
 
 /**
@@ -15,43 +15,47 @@ class Path {
   path2dObj = undefined;
 
   startPoint = null;
-  contextPoint= null;
+  contextPoint = null;
   isClose = false;
 
   constructor(point) {
     this.startPoint = point;
 
-    if(typeof Path2D !== 'undefined') {
+    if (typeof Path2D !== 'undefined') {
       // this.path2dObj = new Path2D();
     }
   }
 
   static instantiate(segments) {
 
-    let ins = new Path;
-    ins._segments = segments.map(seg=> {
-      if(seg.length == 1) return new MoveSegment(new Point(seg[0][0], seg[0][1]));
-      if(seg.length == 4) {
-         let p = new BezierSegment(new Point(seg[1][0], seg[1][1]),new Point(seg[2][0], seg[2][1]),new Point(seg[3][0], seg[3][1]));
-         p.contextPoint = new Point(seg[0][0], seg[0][1]);
-         return p;
+    let path = new Path;
+
+    segments.forEach(seg => {
+      let segment;
+      if (seg.length == 1) {
+        segment = new MoveSegment(new Point(seg[0][0], seg[0][1]) );
+      } else if (seg.length == 4) {
+        segment = new BezierSegment(new Point(seg[1][0], seg[1][1]), new Point(seg[2][0], seg[2][1]), new Point(seg[3][0], seg[3][1]));
       }
+      path.add(segment)
     });
-    return ins;
+
+    return path;
   }
 
   get segments() {
     return this._segments;
   }
 
-  get style(){
+  get style() {
 
   }
 
   add(segment) {
+    segment.owner = this;
     segment.contextPoint = this.contextPoint;
     this.segments.push(segment);
-    this.contextPoint= segment.point;
+    this.contextPoint = segment.point;
   }
 
   *[Symbol.iterator]() {
@@ -151,15 +155,15 @@ class Path {
 
   }
 
-  drawBoundRect(){
-    let {x, y, width, height} = this.bounds;
+  drawBoundRect() {
+    let { x, y, width, height } = this.bounds;
 
     this._ctx.beginPath();
     this._ctx.strokeStyle = '#669'
     this._ctx.lineCap = "round";
     this._ctx.lineWidth = 1;
     this._ctx.moveTo(x, y);
-    this._ctx.lineTo(x + width , y);
+    this._ctx.lineTo(x + width, y);
     this._ctx.lineTo(x + width, y + height);
     this._ctx.lineTo(x, y + height);
     this._ctx.lineTo(x, y);
@@ -191,15 +195,15 @@ class Path {
   }
 
   containPoint(point) {
-    let seg = this.segments.find(item=>item.containPoint(point, 30));
+    let seg = this.segments.find(item => item.containPoint(point, 30));
     return !!seg;
   }
 
-  applyStyle(ctx){
+  applyStyle(ctx) {
     ctx.strokeStyle = '#c69'
     ctx.lineCap = "round";
     ctx.fillStyle = "blue";
-    ctx.lineJoin  = "round";
+    ctx.lineJoin = "round";
     ctx.lineWidth = 2;
     ctx.beginPath();
   }
@@ -221,27 +225,27 @@ class Path {
       switch (segment.command) { // first letter
         case 'm':
         case 'M': // moveTo, absolute
-        ctxOrPath.moveTo(segment.point.x, segment.point.y);
+          ctxOrPath.moveTo(segment.point.x, segment.point.y);
           break;
         case 'a':
         case 'A':
-        ctxOrPath.arc.apply(ctxOrPath, [...segment.arc]);
+          ctxOrPath.arc.apply(ctxOrPath, [...segment.arc]);
           break;
         case 'l':
         case 'L': // lineto, absolute
-        ctxOrPath.lineTo.apply(ctxOrPath, segment.args);
+          ctxOrPath.lineTo.apply(ctxOrPath, segment.args);
           break;
         case 'q':
         case 'Q':
-        ctxOrPath.quadraticCurveTo.apply(ctxOrPath, segment.args);
+          ctxOrPath.quadraticCurveTo.apply(ctxOrPath, segment.args);
           break;
         case 'c':
         case 'C':
-        ctxOrPath.bezierCurveTo.apply(ctxOrPath, segment.args);
+          ctxOrPath.bezierCurveTo.apply(ctxOrPath, segment.args);
           break;
         case 'z':
         case 'Z':
-        ctxOrPath.closePath();
+          ctxOrPath.closePath();
       }
     }
 

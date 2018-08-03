@@ -1,5 +1,6 @@
 
 import items from '../store/items';
+import canvasStatus from '../canvasStatus'
 
 export default class Selection { 
   
@@ -26,7 +27,8 @@ export default class Selection {
       this.lastHover = hover;
       console.log(!!hover);
     } else {
-      //this.lastHover
+      this.lastHover && this.lastHove;
+      this.lastHover = null;
     }
   }
 
@@ -47,18 +49,30 @@ export default class Selection {
           this.seg = seg;
           this.segp = '1';
           document.getElementById('opcanvas').style.cursor = 'pointer';
+          canvasStatus.isSelectionMode = true;
           break;
 
         } else if(seg.control2.nearby(event.point)) {
           this.seg = seg;
           this.segp = '2';
           document.getElementById('opcanvas').style.cursor = 'pointer';
+          canvasStatus.isSelectionMode = true;
+          break;
+
+        }
+        else if(seg.point.nearby(event.point)) {
+          this.seg = seg;
+          this.segp = '3';
+          document.getElementById('opcanvas').style.cursor = 'pointer';
+          canvasStatus.isSelectionMode = true;
           break;
 
         } else {
           this.seg = null;
-          this.segp = '2';
+          this.segp = '';
           document.getElementById('opcanvas').style.cursor = 'default';
+
+          canvasStatus.isSelectionMode = false;
         }
         
       }
@@ -70,8 +84,9 @@ export default class Selection {
 
   onMouseDrag(event){
     if(this.seg) {
-      if(this.segp == '1') this.seg.control1 = event.point;
-      else  this.seg.control2 = event.point;
+      if(this.segp == '1') this.seg.control1.assign(event.point);
+      else if(this.segp == '2') this.seg.control2.assign(event.point);
+      else this.seg.point.assign(event.point);
 
     }
   }

@@ -17,6 +17,8 @@ import ShapeDrawing from '../tools/ShapeDrawing';
 
 import Selection from '../tools/Selection';
 
+
+import canvasStatus from '../canvasStatus'
 //绑定流程和一般拖拽类似
 
 function throttleDistance(dis){
@@ -138,13 +140,22 @@ let handlers = {
   },
 
   _handleDown(event) {
-      //this.currentTool.onMouseDown(event);
-    this.selection.onMouseDown(event);
+    if(canvasStatus.isSelectionMode){
+      this.selection.onMouseDown(event);
+
+    } else {
+
+      this.currentTool.onMouseDown(event);
+    }
   },
 
   _handleDragging(event) {
-    //this.currentTool.onMouseMove(event);
-    this.selection.onMouseDrag(event);
+
+    if(canvasStatus.isSelectionMode){
+      this.selection.onMouseDrag(event);
+    } else {
+      this.currentTool.onMouseMove(event);
+    }
     this.refreshCanvas();
   },
 
@@ -153,7 +164,7 @@ let handlers = {
   },
 
   _handleUp(event) {
-    //this.currentTool.onMouseUp(event);
+    this.currentTool.onMouseUp(event);
   }
 }
 

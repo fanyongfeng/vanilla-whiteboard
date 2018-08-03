@@ -9,6 +9,7 @@ export class Segment {
    */
   contextPoint = null;
   point = null;
+  owner = null;
 
   nearby() {
     return false;
