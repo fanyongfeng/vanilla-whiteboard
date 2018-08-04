@@ -43,7 +43,7 @@ export class Segment {
 
   /**
    * tmp method for debugger bezier
-   * @param {*} ctx 
+   * @param {*} ctx
    */
   draw(ctx) {
 
@@ -93,7 +93,7 @@ export class MoveSegment extends Segment {
     super();
     this.point = point;
   }
-  
+
 }
 
 export class LineSegment extends Segment {
@@ -155,15 +155,15 @@ export class BezierSegment extends Segment {
       this.control1.x,this.control1.y,
       this.control2.x,this.control2.y,
       this.point.x,this.point.y,
-      strokeWidth, point.x, point.y    
+      strokeWidth, point.x, point.y
     )
     return ret
-    
+
   }
 
   // Converted from code found here:
   // http://blog.hackers-cafe.net/2009/06/how-to-calculate-bezier-curves-bounding.html
-  // 
+  //
   _calcBoundsOfBeizer(x0, y0, x1, y1, x2, y2, x3, y3) {
     const tvalues = [], bounds = [[], []];
     let a, b, c, t;
@@ -269,14 +269,26 @@ export class QuadraticSegment extends Segment {
 
 export class ArcSegment extends Segment {
   command = 'A';
+  radius = 0;
 
-  constructor(cp, point) {
+  constructor(cp1, cp2, radius) {
     super();
-    this.control = cp;
-    this.point = point;
+    this.control1 = cp1;
+    this.control2 = cp2;
+    this.point = cp1;
+    this.radius = radius;
   }
+
+  get args() {
+    return [
+      this.control1.x, this.control1.y,
+      this.control2.x, this.control2.y,
+      this.radius
+    ]
+  }
+
   get points() {
-    return [this.contextPoint, this.control, this.point];
+    return [this.contextPoint, this.control1, this.point];
   }
 }
 
@@ -418,4 +430,69 @@ export function containStroke(x0, y0, x1, y1, x2, y2, x3, y3, lineWidth, x, y) {
       x, y, null
   );
   return d <= _l / 2;
+}
+
+
+let PI2 = Math.PI * 2;
+
+function normalizeRadian(angle) {
+    angle %= PI2;
+    if (angle < 0) {
+        angle += PI2;
+    }
+    return angle;
+}
+
+/**
+ * 圆弧描边包含判断
+ * @param  {number}  cx
+ * @param  {number}  cy
+ * @param  {number}  r
+ * @param  {number}  startAngle
+ * @param  {number}  endAngle
+ * @param  {boolean}  anticlockwise
+ * @param  {number} lineWidth
+ * @param  {number}  x
+ * @param  {number}  y
+ * @return {Boolean}
+ */
+function containStroke(
+    cx, cy, r, startAngle, endAngle, anticlockwise,
+    lineWidth, x, y
+) {
+
+    if (lineWidth === 0) {
+        return false;
+    }
+    var _l = lineWidth;
+
+    x -= cx;
+    y -= cy;
+    var d = Math.sqrt(x * x + y * y);
+
+    if ((d - _l > r) || (d + _l < r)) {
+        return false;
+    }
+    if (Math.abs(startAngle - endAngle) % PI2 < 1e-4) {
+        // Is a circle
+        return true;
+    }
+    if (anticlockwise) {
+        var tmp = startAngle;
+        startAngle = normalizeRadian(endAngle);
+        endAngle = normalizeRadian(tmp);
+    } else {
+        startAngle = normalizeRadian(startAngle);
+        endAngle = normalizeRadian(endAngle);
+    }
+    if (startAngle > endAngle) {
+        endAngle += PI2;
+    }
+
+    var angle = Math.atan2(y, x);
+    if (angle < 0) {
+        angle += PI2;
+    }
+    return (angle >= startAngle && angle <= endAngle)
+        || (angle + PI2 >= startAngle && angle + PI2 <= endAngle);
 }

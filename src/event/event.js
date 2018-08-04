@@ -22,7 +22,7 @@ import canvasStatus from '../canvasStatus'
 //绑定流程和一般拖拽类似
 
 function throttleDistance(dis){
-  
+
 }
 
 /**
@@ -73,13 +73,12 @@ let handlers = {
 
   isDragging: false,
   isMouseDown: false,
-  //currentTool: new ShapeDrawing,
   selection: new Selection,
 
   bind(canvas) {
 
-    // this.currentTool = new ShapeDrawing,
-    this.currentTool = new FreeDrawing,
+    this.currentTool = new ShapeDrawing,
+    // this.currentTool = new FreeDrawing,
 
     this.canvas = canvas;
 

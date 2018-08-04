@@ -6,7 +6,7 @@ import { Segment, LineSegment, BezierSegment, MoveSegment, QuadraticSegment, Arc
 import memoized from '../decorators/memoized'
 
 /**
- * A full path 
+ * A full path
  */
 class Path {
 
@@ -76,6 +76,13 @@ class Path {
     // segment
   }
 
+  arcTo(cp1, cp2, radius) {
+    let segment = new ArcSegment(cp1, cp2, radius);
+    this.add(segment);
+    return this;
+    // segment
+  }
+
   moveTo(point) {
     let segment = new MoveSegment(point);
     this.add(segment);
@@ -90,9 +97,9 @@ class Path {
 
   /**
    * Support chaining-call
-   * @param {*} cp1 
-   * @param {*} cp2 
-   * @param {*} point 
+   * @param {*} cp1
+   * @param {*} cp2
+   * @param {*} point
    */
   bezierCurveTo(cp1, cp2, point) {
     let segment = new BezierSegment(cp1, cp2, point);
@@ -229,7 +236,8 @@ class Path {
           break;
         case 'a':
         case 'A':
-          ctxOrPath.arc.apply(ctxOrPath, [...segment.arc]);
+          // ctxOrPath.arc.apply(ctxOrPath, [...segment.arc]);
+          ctxOrPath.arcTo.apply(ctxOrPath, segment.args);
           break;
         case 'l':
         case 'L': // lineto, absolute

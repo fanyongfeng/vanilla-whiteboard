@@ -6,10 +6,11 @@ import playground from './playground'
  * on('type', handler);
  *  possible-values:
  *  - changed 当白板上元素发生变化是，（返回变更的数据和Hash）
- *  - 
+ *  -
  * options:
  *  - selectionMode: 'bounds', 'path'
- *  
+ *  - alignToGrid: boolean 对齐到网格
+ *
  */
 
 class VanillaWhiteboard {
@@ -18,15 +19,20 @@ class VanillaWhiteboard {
   mode = 'readonly';
 
   static install(){
-    
+
   }
 
   constructor(options){
 
     playground.init(options);
-    
-    
+
+
+    /**
+     * draw background
+     */
     playground.drawGrid();
+    playground.drawAxes();
+
 
     // playground.drawPolyline();
     // playground.drawPolyline('cubicInOut');
@@ -34,13 +40,13 @@ class VanillaWhiteboard {
     // playground.drawPolyline('bounceInOut');
 
   }
-  
+
   on(type, fn){
 
   }
-    
+
   off(type, fn){
-    
+
   }
 
   export(){

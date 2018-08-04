@@ -14,7 +14,7 @@ export default class Grid {
     this._ctx = ctx
     ctx.save();
     //preset context2d styles
-    ctx.lineWidth = 0.5;
+    ctx.lineWidth = 1;
     ctx.fontSize = 10;
     ctx.font = "9px serif";
 

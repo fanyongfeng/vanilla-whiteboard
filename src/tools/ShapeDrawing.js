@@ -6,20 +6,20 @@ import Ellipse from '../graphic/shape/Ellipse';
 
 import items from '../store/items';
 
-export default class ShapeTool { 
+export default class ShapeTool {
 
   constructor(name){
     this.shapeCtor = name;
   }
 
-  onMouseDown(event) { 
+  onMouseDown(event) {
     let options = this.style;
-    this.currentShape = new Ellipse(options);
+    this.currentShape = new Rect(options);
     this.currentShape.startPoint = this.currentShape.endPoint = event.point;
     items.add(this.currentShape);
   }
 
-  onMouseMove(event) { 
+  onMouseMove(event) {
 
     this.currentShape.endPoint = event.point;
 
@@ -27,7 +27,7 @@ export default class ShapeTool {
     this.currentShape.buildPath();
   }
 
-  onMouseUp(event) { 
+  onMouseUp(event) {
     this.currentShape = null;
   }
 

@@ -1,6 +1,4 @@
 //A playground of this proj
-import shapes from "./graphic";
-import grid from "./component/grid";
 import CanvasMgr from "./whiteboard/canvas";
 import Path from "./types/Path";
 
@@ -9,7 +7,8 @@ import Rect from "./types/Rect";
 import Point from "./types/Point";
 import ease from './animate/ease'
 import fitCurve from './util/fitCurve'
-import Grid from './component/grid'
+import Grid from './component/Grid'
+import Axes from './component/Axes'
 
 window.paths = [];
 
@@ -27,6 +26,12 @@ export default {
     let grid = new Grid(true);
     grid.draw(this.canvas.bgCtx, this.canvas.width, this.canvas.height);
   },
+
+  drawAxes(){
+    let grid = new Axes();
+    grid.draw(this.canvas.bgCtx, this.canvas.width, this.canvas.height);
+  },
+
 
   drawPolyline(type) {
     type = type || 'linear';
