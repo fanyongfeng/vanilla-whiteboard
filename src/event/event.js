@@ -17,55 +17,13 @@ import ShapeDrawing from '../tools/ShapeDrawing';
 
 import Selection from '../tools/Selection';
 
+import {addListener, removeListener} from '../util/dom'
 
 import canvasStatus from '../canvasStatus'
 //绑定流程和一般拖拽类似
 
 function throttleDistance(dis){
 
-}
-
-/**
- * Bind Events
- */
-function addListener(element, eventType, handler) {
-  if (!element) return;
-
-  let events = eventType.split(' ');
-  if (events.length > 1) {
-    for (let i = 0; i < events.length; i++) {
-      addListener(element, events[i], handler);
-    }
-    return;
-  }
-
-  if (element.addEventListener) {
-    element.addEventListener(eventType, handler, false);
-  } else if (element.attachEvent) {
-    element.attachEvent('on' + eventType, handler);
-  } else {
-    element['on' + eventType] = handler;
-  }
-}
-
-function removeListener(element, eventType, handler) {
-  if (!element) return;
-
-  let events = eventType.split(' ');
-  if (events.length > 1) {
-    for (let i = 0; i < events.length; i++) {
-      removeListener(element, events[i], handler);
-    }
-    return;
-  }
-
-  if (element.removeEventListener) {
-    element.removeEventListener(eventType, handler, false);
-  } else if (element.detachEvent) {
-    element.detachEvent('on' + eventType, handler);
-  } else {
-    element['on' + eventType] = null;
-  }
 }
 
 

@@ -1,3 +1,6 @@
+
+import {addListener, removeListener} from '../util/dom'
+
 /**
  * Tool to input text on whiteboard
  */
@@ -29,6 +32,10 @@ export default class Text {
     addListener(hiddenText, 'compositionstart', this.onCompositionStart.bind(this));
     addListener(hiddenText, 'compositionupdate', this.onCompositionUpdate.bind(this));
     addListener(hiddenText, 'compositionend', this.onCompositionEnd.bind(this));
+
+  }
+
+  onMouseDown(event) {
 
   }
 

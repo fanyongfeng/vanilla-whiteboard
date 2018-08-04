@@ -24,6 +24,17 @@ export default class Point {
   }
 
   /**
+   * Transforms the point by the matrix as a new point. The object itself is
+   * not modified!
+   *
+   * @param {Matrix} matrix
+   * @return {Point} the transformed point
+   */
+  transform(matrix) {
+    return matrix ? matrix._transformPoint(this) : this;
+  }
+
+  /**
    * Returns the multiplication of the supplied point to the point as a new
    * point.
    * The object itself is not modified!
@@ -54,8 +65,8 @@ export default class Point {
   }
 
   /**
-   * And return this
-   * @param {Point} other 
+   * Add and return this
+   * @param {Point} other
    */
   addEquals(other) {
     this.x += other.x;
@@ -63,15 +74,20 @@ export default class Point {
     return this;
   }
 
+  /**
+   * Assign x, y from other point.
+   * @param {*} point
+   */
   assign(point) {
     this.x = point.x;
     this.y = point.y;
     return this;
   }
 
+
   /**
    * If the point coord is equal to the other point.
-   * @param {Point} other 
+   * @param {Point} other
    */
   eq(other) {
     return this === other || (this.x === other.x && this.y === other.y);
@@ -108,9 +124,9 @@ export default class Point {
   }
 
   /**
-   * 
-   * @param {Point} point 
-   * @param {number} threshold 
+   *
+   * @param {Point} point
+   * @param {number} threshold
    */
   nearby(point, threshold = 4) {
     return this.getDistance(point) < threshold;
@@ -123,8 +139,28 @@ export default class Point {
     return new Point(-this.x, -this.y);
   }
 
+  /**
+   * get the length of point from (0,0);
+   */
   get length() {
     return Math.sqrt(this.x * this.x + this.y * this.y);
+  }
+
+  /**
+   * Get Angle In Radians
+   */
+  get angle() {
+    if (this.length) return 0;
+    return Math.atan2(this.y, this.x);
+  }
+
+  /**
+   * transform point
+   * NOTE: Point only support translate~
+   */
+  transform(matrix){
+    matrix.transformPoint(this);
+    return this;
   }
 
   /**

@@ -2,7 +2,7 @@ export default class Text extends Element {
 
   type = 'text';
 
-  _draw() {
+  draw(ctx) {
 
     let style = this.style,
       hasFill = style.hasFill,
@@ -51,7 +51,7 @@ export default class Text extends Element {
 
   renderCursor() {
 
-    var cursorLocation = this.get2DCursorLocation(),
+    let cursorLocation = this.get2DCursorLocation(),
       lineIndex = cursorLocation.lineIndex,
       charIndex = cursorLocation.charIndex > 0 ? cursorLocation.charIndex - 1 : 0,
       charHeight = this.getValueOfPropertyAt(lineIndex, charIndex, 'fontSize'),
@@ -128,7 +128,6 @@ export default class Text extends Element {
           boxEnd - boxStart,
           lineHeight);
       }
-
 
       boundaries.topOffset += realLineHeight;
     }

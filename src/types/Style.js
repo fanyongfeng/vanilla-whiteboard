@@ -61,10 +61,14 @@ export default class Style {
   }
 
   hasStroke() {
-    var color = this.getStrokeColor();
+    var color = this.strokeColor;
     return !!color && color.alpha > 0 && this.getStrokeWidth() > 0;
   }
 
+  hasFill() {
+    var color = this.fillColor;
+    return !!color && color.alpha > 0;
+  }
 
   hasShadow() {
     var color = this.getShadowColor();
@@ -75,6 +79,6 @@ export default class Style {
   }
 
   toString() {
-
+    return [`${key}=${val}`].join(' ');
   }
 }

@@ -1,16 +1,22 @@
 //https://github.com/chrisaljoudi/transformatrix.js
 
+/**
+ * 变换矩阵，用于transform
+ */
 class Matrix {
   constructor(m) {
     m = m || [1, 0, 0, 1, 0, 0]
-    this.m = [m[0], m[1], m[2], m[3], m[4], m[5]]
+    this.m = [m[0], m[1], m[2], m[3], m[4], m[5]];
   }
 
-  unit() {
-    this.m = [1, 0, 0, 1, 0, 0]
-    return this
+  reset() {
+    this.m = [1, 0, 0, 1, 0, 0];
+    return this;
   }
 
+  /**
+   * 一个矩阵作用于另一个矩阵
+   */
   multiply(m) {
     const m1 = this.m
     let m2
@@ -38,6 +44,9 @@ class Matrix {
     return this
   }
 
+  /**
+   * 返回反操作矩阵
+   */
   inverse() {
     const inv = new Matrix(this.m),
       invm = inv.m
@@ -60,6 +69,7 @@ class Matrix {
   }
 
   /**
+   * 语法糖移动
     (1, 0, sx)
     (0, 1, sy)
    * */
@@ -68,6 +78,7 @@ class Matrix {
   }
 
   /**
+   *  语法糖旋转
       (cos, -sin, 0)
       (sin, cos, 0)
    */
@@ -80,6 +91,8 @@ class Matrix {
   }
 
   /**
+   *
+   *  语法糖倾斜
       (1, tx, 0)
       (ty, 1, 0)
    */
@@ -93,8 +106,8 @@ class Matrix {
     return this.multiply([1, ty, tx, 1, 0, 0])
   }
 
-
   /**
+   *  语法糖缩放
     (sx, 0, 0)
     (0, sy, 0)
    */
@@ -102,22 +115,30 @@ class Matrix {
     return this.multiply([sx, 0, 0, sy, 0, 0])
   }
 
-  transformPoint(px, py) {
-    const x = px,
-      y = py
-    px = x * this.m[0] + y * this.m[2] + this.m[4]
-    py = x * this.m[1] + y * this.m[3] + this.m[5]
+ /**
+  * 变形一个点
+  * @param {*} point
+  */
+  transformPoint(point) {
+    let {x, y} = point;
 
-    return [px, py]
+    point.x = x * this.m[0] + y * this.m[2] + this.m[4],
+    point.y = x * this.m[1] + y * this.m[3] + this.m[5]
+
+    return point;
   }
 
-  transformVector(px, py) {
-    const x = px,
-      y = py
-    px = x * this.m[0] + y * this.m[2]
-    py = x * this.m[1] + y * this.m[3]
+  /**
+   * 变形向量
+   * @param {*} point
+   */
+  transformVector(point) {
+    let {x, y} = point;
 
-    return [px, py]
+    point.x = x * this.m[0] + y * this.m[2]
+    point.y = x * this.m[1] + y * this.m[3]
+
+    return point;
   }
 }
 

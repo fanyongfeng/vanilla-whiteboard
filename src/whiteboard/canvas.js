@@ -1,11 +1,11 @@
 /**
- * 
+ *
  */
 
 import hookable from '../decorators/hookable';
 import bgLayer from './bgLayer';
 import staticLayer from './staticLayer';
-import {setStyle} from '../util/dom'
+import { setStyle } from '../util/dom'
 import items from '../store/items';
 import handler from '../event/event';
 import Writing from '../graphic/shape/Writing';
@@ -19,11 +19,11 @@ export default class CanvasMgr {
 
   constructor(options) {
 
-    let {container, width, height} = options;
+    let { container, width, height } = options;
 
     this.wrapper = container;
 
-    setStyle(container,  {
+    setStyle(container, {
       width: `${width}px`,
       height: `${height}px`,
       position: 'relative'
@@ -43,7 +43,7 @@ export default class CanvasMgr {
     handler.refreshCanvas = this.refresh.bind(this);
   }
 
-  createAndApplyCanvasAttr(id){
+  createAndApplyCanvasAttr(id) {
     let canvas = document.createElement('canvas');
 
     canvas.setAttribute('id', id);
@@ -57,7 +57,7 @@ export default class CanvasMgr {
       'touch-action': 'none',
     });
 
-    if(this.deviceRatio > 1) {
+    if (this.deviceRatio > 1) {
       this.applyRatio(canvas);
     }
 
@@ -65,18 +65,18 @@ export default class CanvasMgr {
     return canvas;
   }
 
-  refresh(){
-    requestAnimationFrame(()=>{
+  refresh() {
+    requestAnimationFrame(() => {
       this.ctx.clearRect(0, 0, this.width, this.height);
-      this.items.items.forEach(item=>item.render(this.ctx));
+      this.items.items.forEach(item => item.render(this.ctx));
     });
   }
 
-  get data(){
-    return this.items.items.map(item=>item.path.toJSON());
+  get data() {
+    return this.items.items.map(item => item.path.toJSON());
   }
 
-  add(segments){
+  add(segments) {
     this.items.add(Writing.instantiate(segments));
   }
 
@@ -84,29 +84,33 @@ export default class CanvasMgr {
     this.items.add(new Image(src));
   }
 
-  saveImage(){
+  saveImage() {
     return saveImage(this.activeCanvas);
   }
 
-  refreshAll(){
-    
+  refreshAll() {
+
   }
 
-  dispose () {
+  dispose() {
     let wrapper = this.wrapper;
     //TODO: remove all object.
     wrapper.removeChild(this.bgCanvas);
     wrapper.removeChild(this.activeCanvas);
   }
 
-  applyRatio(canvas){
+  applyRatio(canvas) {
 
     canvas.width = this.width * this.deviceRatio;
     canvas.height = this.height * this.deviceRatio;
     canvas.getContext('2d').scale(this.deviceRatio, this.deviceRatio);
   }
 
-  get deviceRatio(){
+  resetTransform(canvas) {
+    canvas.getContext('2d').setTransform(this.deviceRatio, 0, 0, this.deviceRatio, 0, 0);
+  }
+
+  get deviceRatio() {
     return window.devicePixelRatio || 1;
   }
 
@@ -115,12 +119,12 @@ export default class CanvasMgr {
     if (!/^off|false$/.test(canvas.getAttribute('hidpi'))) {
       // Hi-DPI Canvas support based on:
       // http://www.html5rocks.com/en/tutorials/canvas/hidpi/
-      
-        let backingStoreRatio = ctx.webkitBackingStorePixelRatio ||
-          ctx.mozBackingStorePixelRatio ||
-          ctx.msBackingStorePixelRatio ||
-          ctx.oBackingStorePixelRatio ||
-          ctx.backingStorePixelRatio || 1;
+
+      let backingStoreRatio = ctx.webkitBackingStorePixelRatio ||
+        ctx.mozBackingStorePixelRatio ||
+        ctx.msBackingStorePixelRatio ||
+        ctx.oBackingStorePixelRatio ||
+        ctx.backingStorePixelRatio || 1;
 
       return this.deviceRatio / backingStoreRatio;
     }
@@ -133,6 +137,6 @@ export default class CanvasMgr {
     return this;
   }
 
-  renderAll() {}
-  scale() {}
-} 
+  renderAll() { }
+  scale() { }
+}
