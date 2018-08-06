@@ -3,17 +3,38 @@ import items from '../store/items';
 import canvasStatus from '../canvasStatus';
 import Rect from '../graphic/shape/Rect';
 
-const cursorMap =  [
-  'n-resize',
-  'ne-resize',
-  'e-resize',
-  'se-resize',
-  's-resize',
-  'sw-resize',
-  'w-resize',
-  'nw-resize'
+const cursorMap =  {
+  'topLeft' : 'nw-resize',
+  'topCenter':'n-resize',
+  'topRight':'ne-resize',
+  'rightCenter':'e-resize',
+  'bottomRight':'se-resize',
+  'bottomCenter':'s-resize',
+  'bottomLeft':'sw-resize',
+  'leftCenter':'w-resize',
+};
+
+const boundsPoi = [
+  'topLeft',
+  'topCenter',
+  'topRight',
+  'rightCenter',
+  'bottomRight',
+  'bottomCenter',
+  'bottomLeft',
+  'leftCenter',
 ];
 
+const antiDir = {
+  'bottomRight': 'topLeft',
+  'topLeft': 'bottomRight',
+  'bottomLeft': 'topRight',
+  'topRight': 'bottomLeft',
+  'rightCenter': 'leftCenter',
+  'leftCenter': 'rightCenter',
+  'bottomCenter': 'topCenter',
+  'topCenter': 'bottomCenter',
+};
 
 export default class Selection {
 
@@ -119,7 +140,22 @@ export default class Selection {
   }
 
   moveOnController(event){
+    for(let i=0; i<items.items.length; i++ ) {
+      let bounds = items.items[i].path.bounds;
 
+      boundsPoi.forEach(key => {
+        let point = bounds[key];
+        if(event.point.nearby(point)) {
+          // this.setCursor(cursorMap[key]);
+          document.getElementById('opcanvas').style.cursor = cursorMap[key]
+        } else {
+          // this.setCursor('default');
+
+          document.getElementById('opcanvas').style.cursor = 'default';
+        }
+      })
+
+    }
   }
 
   onMouseMove(event) {
