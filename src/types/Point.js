@@ -4,7 +4,7 @@
 export default class Point {
 
   static instantiate(x, y) {
-    if (typeof point === "number") return new Point(x, y);
+    if (typeof x === "number") return new Point(x, y);
     return x;
   }
 
@@ -156,7 +156,6 @@ export default class Point {
 
   /**
    * transform point
-   * NOTE: Point only support translate~
    */
   transform(matrix){
     matrix.transformPoint(this);

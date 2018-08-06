@@ -3,6 +3,8 @@ import items from '../store/items';
 import canvasStatus from '../canvasStatus';
 import Rect from '../graphic/shape/Rect';
 
+let sx = 1.0,
+sy = 1.0;
 const cursorMap =  {
   'topLeft' : 'nw-resize',
   'topCenter':'n-resize',
@@ -107,7 +109,7 @@ export default class Selection {
           this.segp = '';
           document.getElementById('opcanvas').style.cursor = 'default';
 
-          canvasStatus.isSelectionMode = false;
+          canvasStatus.isSelectionMode = true;
         }
 
       }
@@ -126,6 +128,19 @@ export default class Selection {
     // strokeWidth: 1,
     // dashArray: [5, 2],
     this.selectionRect.startPoint = this.selectionRect.endPoint = event.point;
+
+    let corner, bounds;
+    for(let i=0; i<items.items.length; i++ ) {
+      bounds = items.items[i].path.bounds;
+      if(corner = boundsPoi.find(key => event.point.nearby(bounds[key]))) break;
+    }
+    if(!corner) return this.setCursor('default');
+
+    this.setCursor(cursorMap[corner]);
+    this.basePoint = bounds[antiDir[corner]];
+    this.mode = 'resize';
+    this.target = bounds.owner;
+    this.dir = corner;
   }
 
   onMouseDrag(event){
@@ -135,27 +150,34 @@ export default class Selection {
       else this.seg.point.assign(event.point);
     }
 
+    //TODO: resize
+
+    if( this.mode === 'resize') {
+
+      sx += 0.01;
+        sy += 0.01;
+      // if (Math.abs(realTimeSize.x) > 0.0000001 && resizeDir !== 'topCenter' && resizeDir !== 'bottomCenter')
+      //   sx = size.x / realTimeSize.x;
+      // if (Math.abs(realTimeSize.y) > 0.0000001 && resizeDir !== 'leftCenter' && resizeDir !== 'rightCenter')
+      //   sy = size.y / realTimeSize.y;
+
+
+      this.target.scale(sx, sy, this.basePoint);
+
+    }
+
     this._drawSelectArea(event);
 
   }
 
   moveOnController(event){
+    let corner, bounds;
     for(let i=0; i<items.items.length; i++ ) {
-      let bounds = items.items[i].path.bounds;
-
-      boundsPoi.forEach(key => {
-        let point = bounds[key];
-        if(event.point.nearby(point)) {
-          // this.setCursor(cursorMap[key]);
-          document.getElementById('opcanvas').style.cursor = cursorMap[key]
-        } else {
-          // this.setCursor('default');
-
-          document.getElementById('opcanvas').style.cursor = 'default';
-        }
-      })
-
+      bounds = items.items[i].path.bounds;
+      if(corner = boundsPoi.find(key => event.point.nearby(bounds[key]))) break;
     }
+    if(!corner) return this.setCursor('default');
+    this.setCursor(cursorMap[corner]);
   }
 
   onMouseMove(event) {

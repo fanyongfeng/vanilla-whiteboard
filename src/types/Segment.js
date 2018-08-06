@@ -18,6 +18,7 @@ export class Segment {
     return [this.point];
   }
 
+
   get strokeBounds() {
 
   }
@@ -26,15 +27,32 @@ export class Segment {
     return new Rect(this.point.x, this.point.y, 0, 0);
   }
 
-  containPoint() {return false;}
+  transformCoordinates(matrix) {
 
-  drawPoint(ctx, point){
-    if(!point) return;
+    let point = this.point,
+      control1 = this.control1 || null,
+      control2 = this.control2 || null;
+
+    matrix.transformPoint(point);
+
+    if (control1) {
+      matrix.transformPoint(control1);
+    }
+
+    if (control2) {
+      matrix.transformPoint(control2);
+    }
+  }
+
+  containPoint() { return false; }
+
+  drawPoint(ctx, point) {
+    if (!point) return;
     ctx.strokeRect(point.x - OFFSET, point.y - OFFSET, POINT_WIDTH, POINT_WIDTH);
   }
 
   drawControlPoint(ctx, point, controlPoint) {
-    if(!controlPoint) return;
+    if (!controlPoint) return;
     ctx.fillRect(controlPoint.x - OFFSET, controlPoint.y - OFFSET, POINT_WIDTH, POINT_WIDTH);
 
     ctx.moveTo(point.x, point.y)
@@ -126,7 +144,7 @@ export class LineSegment extends Segment {
     return new Rect(x, y, width, height);
   }
 
-  get length(){
+  get length() {
     let sub = this.contextPoint.subtract(this.point);
     return Math.sqrt(sub.x * sub.x + sub.y * sub.y);
   }
@@ -149,12 +167,12 @@ export class BezierSegment extends Segment {
     this.point = point;
   }
 
-  containPoint(point, strokeWidth){
-    let ret =  containStroke(
-      this.contextPoint.x,this.contextPoint.y,
-      this.control1.x,this.control1.y,
-      this.control2.x,this.control2.y,
-      this.point.x,this.point.y,
+  containPoint(point, strokeWidth) {
+    let ret = containStroke(
+      this.contextPoint.x, this.contextPoint.y,
+      this.control1.x, this.control1.y,
+      this.control2.x, this.control2.y,
+      this.point.x, this.point.y,
       strokeWidth, point.x, point.y
     )
     return ret
@@ -301,7 +319,7 @@ export class ArcSegment extends Segment {
  */
 function distanceSquare(v1, v2) {
   return (v1[0] - v2[0]) * (v1[0] - v2[0])
-      + (v1[1] - v2[1]) * (v1[1] - v2[1]);
+    + (v1[1] - v2[1]) * (v1[1] - v2[1]);
 }
 
 function cubicAt(p0, p1, p2, p3, t) {
@@ -337,7 +355,7 @@ function cubicProjectPoint(x1, y1, x2, y2, x3, y3, x4, y4, x, y, out) {
   let prev;
   let next;
   const EPSILON = 0.0001;
-  const v0 = [ x, y ];
+  const v0 = [x, y];
 
   for (_t = 0; _t < 1; _t += 0.05) {
     v1 = [
@@ -413,21 +431,21 @@ function cubicProjectPoint(x1, y1, x2, y2, x3, y3, x4, y4, x, y, out) {
  */
 export function containStroke(x0, y0, x1, y1, x2, y2, x3, y3, lineWidth, x, y) {
   if (lineWidth === 0) {
-      return false;
+    return false;
   }
   var _l = lineWidth;
   // Quick reject
   if (
-      (y > y0 + _l && y > y1 + _l && y > y2 + _l && y > y3 + _l)
-      || (y < y0 - _l && y < y1 - _l && y < y2 - _l && y < y3 - _l)
-      || (x > x0 + _l && x > x1 + _l && x > x2 + _l && x > x3 + _l)
-      || (x < x0 - _l && x < x1 - _l && x < x2 - _l && x < x3 - _l)
+    (y > y0 + _l && y > y1 + _l && y > y2 + _l && y > y3 + _l)
+    || (y < y0 - _l && y < y1 - _l && y < y2 - _l && y < y3 - _l)
+    || (x > x0 + _l && x > x1 + _l && x > x2 + _l && x > x3 + _l)
+    || (x < x0 - _l && x < x1 - _l && x < x2 - _l && x < x3 - _l)
   ) {
-      return false;
+    return false;
   }
   var d = cubicProjectPoint(
-      x0, y0, x1, y1, x2, y2, x3, y3,
-      x, y, null
+    x0, y0, x1, y1, x2, y2, x3, y3,
+    x, y, null
   );
   return d <= _l / 2;
 }
@@ -436,11 +454,11 @@ export function containStroke(x0, y0, x1, y1, x2, y2, x3, y3, lineWidth, x, y) {
 let PI2 = Math.PI * 2;
 
 function normalizeRadian(angle) {
-    angle %= PI2;
-    if (angle < 0) {
-        angle += PI2;
-    }
-    return angle;
+  angle %= PI2;
+  if (angle < 0) {
+    angle += PI2;
+  }
+  return angle;
 }
 
 /**
@@ -457,42 +475,42 @@ function normalizeRadian(angle) {
  * @return {Boolean}
  */
 function containStroke(
-    cx, cy, r, startAngle, endAngle, anticlockwise,
-    lineWidth, x, y
+  cx, cy, r, startAngle, endAngle, anticlockwise,
+  lineWidth, x, y
 ) {
 
-    if (lineWidth === 0) {
-        return false;
-    }
-    var _l = lineWidth;
+  if (lineWidth === 0) {
+    return false;
+  }
+  var _l = lineWidth;
 
-    x -= cx;
-    y -= cy;
-    var d = Math.sqrt(x * x + y * y);
+  x -= cx;
+  y -= cy;
+  var d = Math.sqrt(x * x + y * y);
 
-    if ((d - _l > r) || (d + _l < r)) {
-        return false;
-    }
-    if (Math.abs(startAngle - endAngle) % PI2 < 1e-4) {
-        // Is a circle
-        return true;
-    }
-    if (anticlockwise) {
-        var tmp = startAngle;
-        startAngle = normalizeRadian(endAngle);
-        endAngle = normalizeRadian(tmp);
-    } else {
-        startAngle = normalizeRadian(startAngle);
-        endAngle = normalizeRadian(endAngle);
-    }
-    if (startAngle > endAngle) {
-        endAngle += PI2;
-    }
+  if ((d - _l > r) || (d + _l < r)) {
+    return false;
+  }
+  if (Math.abs(startAngle - endAngle) % PI2 < 1e-4) {
+    // Is a circle
+    return true;
+  }
+  if (anticlockwise) {
+    var tmp = startAngle;
+    startAngle = normalizeRadian(endAngle);
+    endAngle = normalizeRadian(tmp);
+  } else {
+    startAngle = normalizeRadian(startAngle);
+    endAngle = normalizeRadian(endAngle);
+  }
+  if (startAngle > endAngle) {
+    endAngle += PI2;
+  }
 
-    var angle = Math.atan2(y, x);
-    if (angle < 0) {
-        angle += PI2;
-    }
-    return (angle >= startAngle && angle <= endAngle)
-        || (angle + PI2 >= startAngle && angle + PI2 <= endAngle);
+  var angle = Math.atan2(y, x);
+  if (angle < 0) {
+    angle += PI2;
+  }
+  return (angle >= startAngle && angle <= endAngle)
+    || (angle + PI2 >= startAngle && angle + PI2 <= endAngle);
 }

@@ -5,10 +5,13 @@ import smoothCurve from '../util/smoothCurve';
 import { Segment, LineSegment, BezierSegment, MoveSegment, QuadraticSegment, ArcSegment } from './Segment';
 import memoized from '../decorators/memoized'
 import Style from './Style';
+import Matrix from './Matrix';
+import hookable from '../decorators/hookable'
 
 /**
  * A full path
  */
+@hookable
 class Path {
 
   _segments = [];
@@ -35,11 +38,6 @@ class Path {
     }
   }
 
-
-  get style() {
-    return _style;
-  }
-
   static instantiate(segments) {
 
     let path = new Path;
@@ -59,6 +57,13 @@ class Path {
 
   get segments() {
     return this._segments;
+  }
+
+  /**
+   * style of current path
+   */
+  get style() {
+    return _style;
   }
 
   add(segment) {
@@ -147,7 +152,7 @@ class Path {
   /**
    * get bounds of path. It's a memoized getter for performance.
    */
-  @memoized()
+  // @memoized()
   get bounds() {
     let x1 = Infinity,
       x2 = -x1,
@@ -168,7 +173,7 @@ class Path {
       if (yx > y2) y2 = yx;
     }
 
-    return new Rect(x1, y1, x2 - x1, y2 - y1);
+    return new Rect(x1, y1, x2 - x1, y2 - y1, this);
 
   }
 
@@ -214,12 +219,9 @@ class Path {
   }
 
   simplify() {
-    console.log('---before---', this._segments.length);
     let segments = fitCurve(this.segments.map(item => item.point), 1);
     this._segments = ([this._segments[0]]).concat(segments);
-    console.log('---after---', this._segments.length);
-
-    return this._segments;
+    return this;
   }
 
   smooth() {
@@ -240,6 +242,49 @@ class Path {
     ctx.lineJoin = "round";
     ctx.lineWidth = 2;
     ctx.beginPath();
+  }
+
+  get position(){
+    return this.bounds.center;
+  }
+
+  set position(value){
+    this.translate(value.subtract(this.position));
+  }
+
+  setPosition(x, y){
+    this.translate(Point.instantiate(x, y).subtract(this.position));
+  }
+
+  translate(point){
+    let mx = new Matrix();
+    return this.transform(mx.translate(point));
+  }
+
+  scale(sx, sy, point){
+    let mx = new Matrix();
+    point = point || this.bounds.center;
+    return this.transform(mx.scale(sx, sy, point));
+  }
+
+  rotate(deg, point) {
+    let mx = new Matrix();
+    point = point || this.bounds.center;
+    return this.transform(mx.rotate(deg, point));
+  }
+
+  transform(matrix){
+
+    this.transformContent(matrix);
+    return this;
+    // this.emit('changed');
+    //TODO:markAsDrity
+  }
+
+  transformContent(matrix){
+    this.segments.forEach(item=>{
+      item.transformCoordinates(matrix);
+    });
   }
 
   draw(ctx) {
@@ -287,13 +332,12 @@ class Path {
     // ctx.stroke(this.path2dObj);
     ctx.stroke();
 
-    // for (let i = 0, len = this.segments.length; i < len; ++i) {
-    //   segment = this.segments[i];
-    //   segment.draw(ctx);
-    // }
+    for (let i = 0, len = this.segments.length; i < len; ++i) {
+      segment = this.segments[i];
+      segment.draw(ctx);
+    }
+    this.drawBoundRect();
   }
 }
-
-window.Path = Path;
 
 export default Path;

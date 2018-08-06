@@ -1,8 +1,8 @@
 /**
- * Make Class support 'on', 'fire'
+ * Make Class support 'on', 'emit'
  */
 export default function hookable(target) {
-  
+
   target.prototype.__callbacks = {};
 
   target.prototype.on = function(name, fn) {
@@ -16,7 +16,18 @@ export default function hookable(target) {
     return this;
   };
 
-  target.prototype.fire = function(name) {
+  target.prototype.off = function() {
+
+  }
+
+  target.prototype.once = function(name, fn) {
+    return this.on(name, function() {
+        fn.apply(this, arguments);
+        this.off(name, fn);
+    });
+  }
+
+  target.prototype.emit = function(name) {
     if (!this.__callbacks[name]) return;
 
     let args = [];
@@ -28,6 +39,14 @@ export default function hookable(target) {
     // this.__callbacks[name].forEach((fn) => {
     //   fn.apply(this, args);
     // })
-    this.__callbacks[name].apply(this, args);
+
+    if (this.__callbacks[name].apply(this, args) === false) {
+      // If the handler returns false, prevent the default behavior
+      // and stop propagation of the event by calling stop()
+        if (event && event.stop)
+            event.stop();
+        // Stop propagation right now!
+        // break;
+    }
   };
 }

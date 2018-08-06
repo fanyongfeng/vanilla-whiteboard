@@ -77,7 +77,8 @@ export default class CanvasMgr {
   }
 
   add(segments) {
-    this.items.add(Writing.instantiate(segments));
+    let ins = Writing.instantiate(segments);
+    this.items.add(ins);
   }
 
   addImage(src) {

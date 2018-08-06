@@ -16,7 +16,7 @@ import playground from './playground'
  *
  */
 
-class VanillaWhiteboard {
+class Whiteboard {
   // /version = __VERSION__;
 
   mode = 'readonly';
@@ -60,4 +60,11 @@ class VanillaWhiteboard {
 
 }
 
-window.vwb = new VanillaWhiteboard()
+let nebula = typeof nebula !== 'undefined' ? nebula : {};
+nebula.Whiteboard = Whiteboard;
+
+new Whiteboard;
+window.nebula = nebula;
+// export const Whiteboard = Whiteboard;
+
+

@@ -2,33 +2,7 @@ import Point from './Point';
 
 const horizontal = ['left', 'centerX', 'right']; //CenterX
 const vertical = ['top', 'centerY', 'bottom']; //CenterY
-
-const boundsPoi = [
-  'topLeft',
-  'topCenter',
-  'topRight',
-  'rightCenter',
-  'bottomRight',
-  'bottomCenter',
-  'bottomLeft',
-  'leftCenter',
-];
-
-const antiDir = {
-  'bottomRight': 'topLeft',
-  'topLeft': 'bottomRight',
-  'bottomLeft': 'topRight',
-  'topRight': 'bottomLeft',
-  'rightCenter': 'leftCenter',
-  'leftCenter': 'rightCenter',
-  'bottomCenter': 'topCenter',
-  'topCenter': 'bottomCenter',
-};
-
-
-const create = Object.create,
-describe = Object.getOwnPropertyDescriptor,
-define = Object.defineProperty;
+const define = Object.defineProperty;
 
 const capitalize = (str) => {
   return str.replace(/\b[a-z]/g, function(match) {
@@ -55,11 +29,12 @@ class Rect {
     return x;
   }
 
-  constructor(x, y, width, height) {
+  constructor(x, y, width, height, owner = null) {
     this.x = x;
     this.y = y;
     this.width = width;
     this.height = height;
+    this.owner = owner;
 
 
     horizontal.forEach((x, indexX) => {
