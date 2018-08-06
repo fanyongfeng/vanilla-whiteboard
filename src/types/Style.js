@@ -1,23 +1,21 @@
-import Point from './Point';
 
 const defaultStyles = {
   // Paths
   fillColor: null,
   fillRule: 'nonzero',
   strokeColor: null,
-  strokeWidth: 1,
-  strokeCap: 'round',
-  strokeJoin: 'miter',
+  lineWidth: 1,
+  lineCap: 'round',
+  lineJoin: 'round',
   strokeScaling: true,
   miterLimit: 10,
-  dashOffset: 0,
+  lineDashOffset: 0,
   dashArray: [],
   // Shadows
   shadowColor: null,
   shadowBlur: 0,
-  shadowOffset: new Point(),
-  // Selection
-  selectedColor: null
+  shadowOffsetX: 0,
+  shadowOffsetY: 0,
 };
 
 const fontStyles = {
@@ -30,10 +28,13 @@ const fontStyles = {
   justification: 'left'
 };
 
+class Gradient {
+
+}
+
 export default class Style {
-  constructor() {
-
-
+  constructor(options) {
+    Object.assign(this, defaultStyles, options);
   }
 
   equals(style) {
@@ -41,11 +42,11 @@ export default class Style {
     // objects and compare with default fall-back. But in the secondary pass
     // only check against keys that weren't already in the first object:
     function compare(style1, style2, secondary) {
-      var values1 = style1._values,
+      let values1 = style1._values,
         values2 = style2._values,
         defaults2 = style2._defaults;
-      for (var key in values1) {
-        var value1 = values1[key],
+      for (let key in values1) {
+        let value1 = values1[key],
           value2 = values2[key];
         if (!(secondary && key in values2) && !Base.equals(value1,
           value2 === undefined ? defaults2[key] : value2))

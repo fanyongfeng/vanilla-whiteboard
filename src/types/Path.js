@@ -4,6 +4,7 @@ import fitCurve from '../util/fitCurve';
 import smoothCurve from '../util/smoothCurve';
 import { Segment, LineSegment, BezierSegment, MoveSegment, QuadraticSegment, ArcSegment } from './Segment';
 import memoized from '../decorators/memoized'
+import Style from './Style';
 
 /**
  * A full path
@@ -11,19 +12,32 @@ import memoized from '../decorators/memoized'
 class Path {
 
   _segments = [];
+  _style = null;
 
   path2dObj = undefined;
-
   startPoint = null;
   contextPoint = null;
   isClose = false;
 
-  constructor(point) {
-    this.startPoint = point;
+  constructor(options) {
 
+    // this._style = new Style({
+    //   strokeStyle: options.color,
+    //   lineWidth: options.width,
+    //   lineCap: options.strokeLineCap,
+    //   miterLimit: options.strokeMiterLimit,
+    //   lineJoin: options.strokeLineJoin,
+    // });
+
+    //TODO:Use Path2D,
     if (typeof Path2D !== 'undefined') {
       // this.path2dObj = new Path2D();
     }
+  }
+
+
+  get style() {
+    return _style;
   }
 
   static instantiate(segments) {
@@ -45,10 +59,6 @@ class Path {
 
   get segments() {
     return this._segments;
-  }
-
-  get style() {
-
   }
 
   add(segment) {
@@ -163,18 +173,35 @@ class Path {
   }
 
   drawBoundRect() {
-    let { x, y, width, height } = this.bounds;
+    const POINT_WIDTH = 4;
+    const OFFSET = POINT_WIDTH / 2;
+    const boundsPoi = [
+      'topLeft',
+      'topCenter',
+      'topRight',
+      'rightCenter',
+      'bottomRight',
+      'bottomCenter',
+      'bottomLeft',
+      'leftCenter',
+    ];
 
-    this._ctx.beginPath();
-    this._ctx.strokeStyle = '#669'
-    this._ctx.lineCap = "round";
-    this._ctx.lineWidth = 1;
-    this._ctx.moveTo(x, y);
-    this._ctx.lineTo(x + width, y);
-    this._ctx.lineTo(x + width, y + height);
-    this._ctx.lineTo(x, y + height);
-    this._ctx.lineTo(x, y);
-    this._ctx.stroke();
+    let ctx = this._ctx;
+
+    ctx.fillStyle = "#009dec";
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = '#96cef6';
+    ctx.beginPath();
+
+    let lastPoint = this.bounds[boundsPoi[boundsPoi.length -2]];
+    ctx.moveTo(lastPoint.x, lastPoint.y);
+    boundsPoi.forEach(key => {
+      let point = this.bounds[key];
+      ctx.lineTo(point.x, point.y);
+      ctx.fillRect(point.x - OFFSET, point.y - OFFSET, POINT_WIDTH, POINT_WIDTH);
+      lastPoint = point;
+    })
+    ctx.stroke();
   }
 
   toJSON() {
@@ -260,10 +287,10 @@ class Path {
     // ctx.stroke(this.path2dObj);
     ctx.stroke();
 
-    for (let i = 0, len = this.segments.length; i < len; ++i) {
-      segment = this.segments[i];
-      segment.draw(ctx);
-    }
+    // for (let i = 0, len = this.segments.length; i < len; ++i) {
+    //   segment = this.segments[i];
+    //   segment.draw(ctx);
+    // }
   }
 }
 

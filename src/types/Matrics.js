@@ -1,6 +1,16 @@
 //https://github.com/chrisaljoudi/transformatrix.js
 
 /**
+ * 
+ * * Such a coordinate transformation can be represented by a 3 row by 3
+ * column matrix with an implied last row of `[ 0 0 1 ]`. This matrix
+ * transforms source coordinates `(x, y)` into destination coordinates `(x',y')`
+ * by considering them to be a column vector and multiplying the coordinate
+ * vector by the matrix according to the following process:
+ *
+ *     [ x ]   [ a  c  tx ] [ x ]   [ a * x + c * y + tx ]
+ *     [ y ] = [ b  d  ty ] [ y ] = [ b * x + d * y + ty ]
+ *     [ 1 ]   [ 0  0  1  ] [ 1 ]   [         1          ]
  * 变换矩阵，用于transform
  */
 class Matrix {
@@ -87,7 +97,7 @@ class Matrix {
       c = Math.cos(rad),
       s = Math.sin(rad)
 
-    return this.multiply([c, s, -s, c, 0, 0])
+    return this.multiply([c, s, -s, c, 0, 0]);
   }
 
   /**

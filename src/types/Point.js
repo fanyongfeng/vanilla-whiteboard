@@ -3,9 +3,9 @@
  */
 export default class Point {
 
-  static instantiate(point) {
-    if (typeof point === "number") return new Point(point, point)
-    return point;
+  static instantiate(x, y) {
+    if (typeof point === "number") return new Point(x, y);
+    return x;
   }
 
   constructor(x, y) {

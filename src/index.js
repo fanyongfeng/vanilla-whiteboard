@@ -5,8 +5,11 @@ import playground from './playground'
 /**
  * on('type', handler);
  *  possible-values:
- *  - changed 当白板上元素发生变化是，（返回变更的数据和Hash）
+ *  - changed 当白板上元素发生变化时，（返回变更的数据和Hash）
+ *  - add 当元素新增时
+ *  - remove 当元素删除时
  *  -
+ *
  * options:
  *  - selectionMode: 'bounds', 'path'
  *  - alignToGrid: boolean 对齐到网格

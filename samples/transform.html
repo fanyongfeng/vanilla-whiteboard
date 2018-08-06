@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>vanilla-whiteboard</title>
+  <style>
+    body {
+      padding-top: 30px;
+    }
+
+    canvas {
+      border: 1px dotted #ccc;
+    }
+
+    .btns-group {
+      padding: 20px 0 0 0;
+    }
+
+    .btn-group {
+      padding-right: 20px;
+    }
+
+    .btn span {
+      background: #484848;
+      border-radius: 50%;
+      cursor: pointer;
+      box-sizing: border-box;
+      box-sizing: border-box;
+      display: block;
+      width:15px;
+      height:15px;
+    }
+
+    #btnWidth1 span {
+      width:3px;
+      height:3px;
+    }
+
+    #btnWidth2 span {
+      width:8px;
+      height:8px;
+    }
+
+    button {
+      height: 30px;
+    }
+
+    #btnColor1 span {
+      background: rgb(40, 40, 40);
+    }
+    #btnColor2 span {
+      background: rgb(255, 75, 89);
+    }
+    #btnColor3 span {
+      background: rgb(142, 207, 84);
+    }
+    #btnColor4 span {
+      background: rgb(255, 163, 0);
+    }
+    #btnColor5 span {
+      background: rgb(0, 184, 252);
+    }
+  </style>
+
+  <link rel=stylesheet href="//lib.baomitu.com/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="http://lib.baomitu.com/jquery/2.2.4/jquery.min.js"></script>
+  <script src="http://lib.baomitu.com/stats.js/16/Stats.min.js"></script>
+  <script src="/samples/js/mock-data.js"></script>
+</head>
+
+<body>
+  <div class="container">
+    <h2>选中图形变形操作</h2>
+    <div id="draw-panel">
+    </div>
+    <div class="btns-group">
+      <div class="btn-group">
+        <button id="btnSelect" class="btn btn-default">选择</button>
+        <button id="btnPointer" class="btn btn-default">鼠标手</button>
+        <button id="btnLine" class="btn btn-default">直线</button>
+        <button id="btnEllipse" class="btn btn-default">圆形</button>
+        <button id="btnRect" class="btn btn-default">矩形</button>
+        <button id="btnMarker" class="btn btn-default">Marker</button>
+        <button id="btnHighlighter" class="btn btn-default">Highlighter</button>
+        <button id="btnImage" class="btn btn-default">图片</button>
+      </div>
+
+    </div>
+  </div>
+  <script>
+    var stats = new Stats();
+    stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+    document.body.appendChild(stats.dom);
+
+    function animate() {
+      stats.begin();
+      // monitored code goes here
+
+      stats.end();
+      requestAnimationFrame(animate);
+    }
+    requestAnimationFrame(animate);
+
+    const MILLION = 1000000;
+    const WAN = 100000;
+    $(()=>{
+      $("#btnPerf").click(()=>{
+        let item = items[0];
+
+        if(item) {
+          console.time("perf: get bounds")
+          for(let i = 0; i< WAN; i++) {
+            let w = item.bounds.width;
+          }
+          console.timeEnd("perf: get bounds")
+        }
+      });
+
+    })
+  </script>
+  <!-- built files will be auto injected -->
+
+</body>
+
+</html>

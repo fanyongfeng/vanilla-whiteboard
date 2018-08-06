@@ -1,10 +1,17 @@
 import Point from './Point';
 
-const dirs = [
-  ['Top', 'Left'], ['Top', 'Right'],
-  ['Bottom', 'Left'], ['Bottom', 'Right'],
-  ['Left', 'Center'], ['Top', 'Center'],
-  ['Right', 'Center'], ['Bottom', 'Center']
+const horizontal = ['left', 'centerX', 'right']; //CenterX
+const vertical = ['top', 'centerY', 'bottom']; //CenterY
+
+const boundsPoi = [
+  'topLeft',
+  'topCenter',
+  'topRight',
+  'rightCenter',
+  'bottomRight',
+  'bottomCenter',
+  'bottomLeft',
+  'leftCenter',
 ];
 
 const antiDir = {
@@ -18,8 +25,28 @@ const antiDir = {
   'topCenter': 'bottomCenter',
 };
 
+
+const create = Object.create,
+describe = Object.getOwnPropertyDescriptor,
+define = Object.defineProperty;
+
+const capitalize = (str) => {
+  return str.replace(/\b[a-z]/g, function(match) {
+      return match.toUpperCase();
+  });
+}
+
+const getKey = (y, x, indexY, indexX) => {
+  if(indexY === 1) {
+    if(indexX === 1) return 'center';
+    return x + 'Center';
+  }
+  if(indexX === 1) return y + 'Center';
+  return y + capitalize(x);
+}
+
 /**
- * 
+ *  Type Rect
  */
 class Rect {
 
@@ -27,35 +54,85 @@ class Rect {
     if(typeof x === "number") return new Rect(x, y, width, height)
     return x;
   }
-  
+
   constructor(x, y, width, height) {
     this.x = x;
     this.y = y;
     this.width = width;
     this.height = height;
+
+
+    horizontal.forEach((x, indexX) => {
+      vertical.forEach((y, indexY) => {
+        let key = getKey(y, x, indexY, indexX);
+
+        define(this, key, {
+          enumerable: true,
+          configurable: true,
+          get: function(){
+            return new Point(this[x], this[y]);
+          },
+          set: function(point){
+            this[x] = point.x;
+            this[y] = point.y;
+            // A special setter where we allow chaining, because it comes in handy
+            // in a couple of places in core.
+            return this;
+          },
+        });
+      });
+    });
   }
 
+  assign(rect) {
+    this.x = rect.x;
+    this.y = rect.y;
+    this.width = rect.width;
+    this.height = rect.height;
+  }
+
+  /** The coordinate of the top, left, right, bottom. */
+
   /**
-   * The coordinate of the top, left, right, bottom.
+   * The coordinate of the top.
    *
-   * @bean
    * @type Number
-   * @ignore
+   *
    */
   get top() { return this.y; }
-  get left() { return this.x; }
-  get bottom() { return this.y + this.height; }
-  get right() { return this.x + this.width; }
+  set top(top) { this.y = top;}
 
-  get topRight() { return new Point(this.right, this.top); }
+  /**
+   * The coordinate of the left.
+   *
+   * @type Number
+   *
+   */
+  get left() { return this.x; }
+  set left(left) { this.x = left; }
+
+  /**
+   * The coordinate of bottom, getter && setter
+   *
+   * @type Number
+   *
+   */
+  get bottom() { return this.y + this.height; }
+  set bottom(bottom) {  this.y = bottom - this.height; }
+
+  /**
+   * The coordinate of right, getter && setter
+   *
+   * @type Number
+   */
+  get right() { return this.x + this.width; }
+  set right(right) { this.x  = right - this.width; }
 
 
   /**
    * The center-x coordinate of the rectangle.
    *
-   * @bean
    * @type Number
-   * @ignore
    */
   get centerX() {
     return this.x + this.width / 2;
@@ -68,9 +145,7 @@ class Rect {
   /**
    * The center-y coordinate of the rectangle.
    *
-   * @bean
    * @type Number
-   * @ignore
    */
   get centerY() {
     return this.y + this.height / 2;
@@ -80,16 +155,13 @@ class Rect {
     this.y = val - this.height / 2;
   }
 
-  /**
-   * The center point coordinate of the rectangle.
-   *
-   * @bean
-   * @type Point
-   * @ignore
-   */
-  get center() {
-    return new Point(this.centerX, this.centerY);
+  //alias for
+  setCenter(x, y) {
+    let point = Point.instantiate(point);
+    this.center = point;
+    return this;
   }
+
 
   /**
    * The area of the rectangle.
@@ -126,8 +198,8 @@ class Rect {
     // or the passed array:
     return arg && arg.width !== undefined
       || (Array.isArray(arg) ? arg : arguments).length === 4
-      ? this._containsRectangle(Rectangle.read(arguments))
-      : this._containsPoint(Point.read(arguments));
+      ? this.containsRectangle(Rect.instantiate(arguments))
+      : this.containsPoint(Point.instantiate(arguments));
   }
 
   /**
@@ -164,7 +236,7 @@ class Rect {
 
   /**
    * Returns a copy of the rectangle.
-   * 
+   *
    * @function
    * @type Point
    */
@@ -194,5 +266,7 @@ class Rect {
       + ' }';
   }
 }
+
+window.Rect = Rect;
 
 export default Rect;

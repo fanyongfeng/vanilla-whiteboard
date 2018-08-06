@@ -1,22 +1,36 @@
 
 import items from '../store/items';
-import canvasStatus from '../canvasStatus'
+import canvasStatus from '../canvasStatus';
+import Rect from '../graphic/shape/Rect';
 
-export default class Selection { 
-  
+const cursorMap =  [
+  'n-resize',
+  'ne-resize',
+  'e-resize',
+  'se-resize',
+  's-resize',
+  'sw-resize',
+  'w-resize',
+  'nw-resize'
+];
+
+
+export default class Selection {
+
   constructor(canvas){
-    this.canvas = document.getElementById('canvas');
+    this.canvas = document.getElementById('opcanvas');
+    this.ctx = this.canvas.getContext('2d')
   }
 
-  onMouseDown(event) {
-    this.moveOnPoint(event);
+  setCursor =  (value) => {
+    this.canvas.style.cursor = value;
   }
 
   moveOnElement(event){
 
     let hover;
     //  hover = items.items.find(item => item.bounds.containsPoint(event.point));
-     hover = items.items.find(item => item.path.containPoint(event.point)); 
+     hover = items.items.find(item => item.path.containPoint(event.point));
     //  hover = items.items.find(item => {
     //   console.log(document.getElementById('canvas').getContext('2d').isPointInStroke(item.path.path2dObj, event.point.x, event.point.y))
     // });
@@ -40,7 +54,7 @@ export default class Selection {
 
       let segments = items.items[i].path.segments;
 
-      for(let j=0; j<segments.length; j++ ) { 
+      for(let j=0; j<segments.length; j++ ) {
         let seg = segments[j];
         if(seg.command !== 'C') continue;
 
@@ -74,12 +88,23 @@ export default class Selection {
 
           canvasStatus.isSelectionMode = false;
         }
-        
+
       }
     }
 
-    point = items.items.find(item => item.path.segments); 
+    point = items.items.find(item => item.path.segments);
 
+  }
+
+  onMouseDown(event) {
+    this.moveOnPoint(event);
+
+    this.selectionRect = new Rect();
+
+    // strokeColor: '#ccc',
+    // strokeWidth: 1,
+    // dashArray: [5, 2],
+    this.selectionRect.startPoint = this.selectionRect.endPoint = event.point;
   }
 
   onMouseDrag(event){
@@ -87,17 +112,43 @@ export default class Selection {
       if(this.segp == '1') this.seg.control1.assign(event.point);
       else if(this.segp == '2') this.seg.control2.assign(event.point);
       else this.seg.point.assign(event.point);
-
     }
+
+    this._drawSelectArea(event);
+
+  }
+
+  moveOnController(event){
+
   }
 
   onMouseMove(event) {
-    // this.moveOnElement(event);
 
-    this.moveOnPoint(event);
+    // this.moveOnElement(event);
+    // this.moveOnPoint(event);
+
+    this.moveOnController(event);
+  }
+
+  _drawSelectArea(event){
+    var ctx = this.ctx;
+    ctx.clearRect(0,0,this.canvas.width, this.canvas.height);
+
+    this.selectionRect.endPoint = event.point;
+
+    this.selectionRect.path.clear();
+    this.selectionRect.buildPath();
+    this.selectionRect.draw(ctx)
+
+  }
+
+  _multiSelecting(event){
+
   }
 
   onMouseUp(event) {
+    var ctx = this.ctx;
+    ctx.clearRect(0,0,this.canvas.width, this.canvas.height);
   }
 
   set styles(value){

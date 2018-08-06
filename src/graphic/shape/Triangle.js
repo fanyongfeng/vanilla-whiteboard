@@ -18,6 +18,6 @@ export default class Triangle extends Shape {
       .lineTo(sp)
       .closePath();
 
-    return;
+    return this;
   }
 }

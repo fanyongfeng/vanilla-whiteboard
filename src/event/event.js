@@ -31,12 +31,12 @@ let handlers = {
 
   isDragging: false,
   isMouseDown: false,
-  selection: new Selection,
 
   bind(canvas) {
 
-    this.currentTool = new ShapeDrawing,
-    // this.currentTool = new FreeDrawing,
+    // this.currentTool = new ShapeDrawing,
+    this.currentTool = new FreeDrawing,
+    this.selection = new Selection;
 
     this.canvas = canvas;
 
@@ -99,9 +99,7 @@ let handlers = {
   _handleDown(event) {
     if(canvasStatus.isSelectionMode){
       this.selection.onMouseDown(event);
-
     } else {
-
       this.currentTool.onMouseDown(event);
     }
   },
@@ -122,6 +120,7 @@ let handlers = {
 
   _handleUp(event) {
     this.currentTool.onMouseUp(event);
+    this.selection.onMouseUp(event);
   }
 }
 
