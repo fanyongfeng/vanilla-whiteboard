@@ -1,7 +1,7 @@
-import Element from "../Element"
-import Point from "../../types/Point"
+import Path from "../Path"
+import Point from "../types/Point"
 
-export default class Signature extends Element {
+export default class Signature extends Path {
 
   type = 'signature';
 

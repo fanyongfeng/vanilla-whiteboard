@@ -1,4 +1,7 @@
 
+/**
+ * default style settings of path
+ */
 const defaultStyles = {
   // Paths
   fillColor: null,
@@ -18,6 +21,9 @@ const defaultStyles = {
   shadowOffsetY: 0,
 };
 
+/**
+ * default font=style settings of fillText
+ */
 const fontStyles = {
   // Characters
   fontFamily: 'sans-serif',
@@ -29,11 +35,30 @@ const fontStyles = {
 };
 
 class Gradient {
+  mode = 'linear';
+  constructor() {
+
+  }
+  get stops() {
+
+  }
+  set stops(val) {
+
+  }
+
+  get radial() {
+    return this._radial;
+  }
+
+  set radial(radial) {
+      this._radial = radial;
+      this._changed();
+  }
 
 }
 
 export default class Style {
-  constructor(options) {
+  constructor(options = {}) {
     Object.assign(this, defaultStyles, options);
   }
 
@@ -61,22 +86,31 @@ export default class Style {
       || false;
   }
 
-  hasStroke() {
-    var color = this.strokeColor;
-    return !!color && color.alpha > 0 && this.getStrokeWidth() > 0;
+  /**
+   * If has stroke.
+   */
+  get hasStroke() {
+    let color = this.strokeColor;
+    return !!color && color.alpha > 0 && this.lineWidth > 0;
   }
 
-  hasFill() {
-    var color = this.fillColor;
+  /**
+   * If has stroke.
+   */
+  get hasFill() {
+    let color = this.fillColor;
     return !!color && color.alpha > 0;
   }
 
-  hasShadow() {
-    var color = this.getShadowColor();
+  /**
+   * If has shadow.
+   */
+  get hasShadow() {
+    let color = this.shadowColor;
     // In order to draw a shadow, we need either a shadow blur or an
     // offset, or both.
-    return !!color && color.alpha > 0 && (this.getShadowBlur() > 0
-      || !this.getShadowOffset().isZero());
+    return !!color && color.alpha > 0 && (this.shadowBlur > 0
+      || !(this.shadowOffsetX === 0 && this.shadowOffsetY === 0));
   }
 
   toString() {

@@ -14,13 +14,14 @@ export class Segment {
   nearby() {
     return false;
   }
+
   get points() {
     return [this.point];
   }
 
 
   get strokeBounds() {
-
+    return this.bounds.expand(this.style.strokeWidth) / 2;
   }
 
   get bounds() {
@@ -474,7 +475,7 @@ function normalizeRadian(angle) {
  * @param  {number}  y
  * @return {Boolean}
  */
-function containStroke(
+export function containStrokeArc(
   cx, cy, r, startAngle, endAngle, anticlockwise,
   lineWidth, x, y
 ) {

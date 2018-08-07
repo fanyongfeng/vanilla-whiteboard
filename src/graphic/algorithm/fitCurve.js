@@ -1,6 +1,6 @@
 import Point from '../types/Point';
 
-import {BezierSegment} from '../types/Segment';
+import { BezierSegment } from '../types/Segment';
 
 /**
  *  @preserve  JavaScript implementation of
@@ -11,20 +11,20 @@ import {BezierSegment} from '../types/Segment';
  *  The MIT License (MIT)
  *
  *  https://github.com/soswow/fit-curves
- * 
+ *
  * Refactor paper.js PathFitter.js to pure-function
- * 
+ *
  * 输入: 多个点的数组
  * 输出: 优化好的曲线列表
- * 
+ *
  */
 
- const EPSILON = 1e-12;
+const EPSILON = 1e-12;
 /**
- * 
+ *
  */
 function fitCurve(points, maxError) {
-  if(points.length <= 1) return[];
+  if (points.length <= 1) return [];
 
   let _points = [],
     curves, length;
@@ -53,13 +53,13 @@ function fitCubic(points, error, first, last, tan1, tan2) {
       pt2 = points[last],
       dist = pt1.getDistance(pt2) / 3;
 
-    
+
     let seg = new BezierSegment(
       pt1.add(tan1.normalize(dist)),
-      pt2.add(tan2.normalize(dist)), 
+      pt2.add(tan2.normalize(dist)),
       pt2
     );
-      seg.contextPoint = pt1;
+    seg.contextPoint = pt1;
 
     return [seg];
   }
@@ -119,8 +119,8 @@ function generateBezier(points, first, last, uPrime, tan1, tan2) {
       a1 = tan1.normalize(b1),
       a2 = tan2.normalize(b2),
       tmp = points[first + i]
-      .subtract(pt1.multiply(b0 + b1))
-      .subtract(pt2.multiply(b2 + b3));
+        .subtract(pt1.multiply(b0 + b1))
+        .subtract(pt2.multiply(b2 + b3));
     C[0][0] += a1.dot(a1);
     C[0][1] += a1.dot(a2);
     // C[1][0] += a1.dot(a2);
@@ -147,7 +147,7 @@ function generateBezier(points, first, last, uPrime, tan1, tan2) {
       c1 = C[1][0] + C[1][1];
     alpha1 = alpha2 = abs(c0) > epsilon ? X[0] / c0 :
       abs(c1) > epsilon ? X[1] / c1 :
-      0;
+        0;
   }
 
   // If alpha negative, use the Wu/Barsky heuristic (see text)

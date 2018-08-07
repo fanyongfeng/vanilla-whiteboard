@@ -1,11 +1,11 @@
-import Element from './Element';
-import Point from '../types/Point';
-import Rect from '../types/Rect';
+import Path from './Path';
+import Point from './types/Point';
+import Rect from './types/Rect';
 
 /**
  * The base class of shapes that build with start-point & end-point.
  */
-export default class Shape extends Element {
+export default class Shape extends Path {
 
   static instantiate([sp, ep]) {
     let startPoint = new Point(sp[0], sp[1]);

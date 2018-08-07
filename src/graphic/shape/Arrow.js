@@ -1,5 +1,5 @@
 import Shape from "../Shape"
-import Point from "../../types/Point";
+import Point from "../types/Point";
 
 function calcArrow(sp, ep) {
   let points = [];
@@ -23,12 +23,12 @@ export default class Arrow extends Shape {
 
     let points = calcArrow(this.startPoint, this.endPoint);
 
-    this.path.moveTo(this.startPoint)
+    this.moveTo(this.startPoint)
       .lineTo(this.endPoint)
       .moveTo(points[0])
       .lineTo(points[1])
       .lineTo(points[2]);
 
-    this.path.closePath();
+    this.closePath();
   }
 }

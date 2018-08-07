@@ -1,6 +1,6 @@
-import Element from "../Element"
+import Path from "../Path"
 
-export default class Arc extends Element {
+export default class Arc extends Path {
   type = 'arc';
   shape = {
       cx: 100,
@@ -12,7 +12,7 @@ export default class Arc extends Element {
   }
 
   buildPath(ctx, shape) {
-    
+
     let x = shape.cx;
     let y = shape.cy;
     let r = Math.max(shape.r, 0);

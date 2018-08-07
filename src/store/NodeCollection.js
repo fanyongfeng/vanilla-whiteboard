@@ -12,27 +12,27 @@ class NodeCollection extends Array {
   constructor(){
     super(arguments)
   }
-  
+
   add(item) {
     this.push(item);
   }
 
   selectAll() {
-    this.forEach(item => item.path.selected = true);
+    this.forEach(item => item.selected = true);
   }
 
   antiSelectAll() {
-    this.forEach(item => item.path.selected = !item.path.selected);
+    this.forEach(item => item.selected = !item.selected);
   }
 
   deselectAll() {
-    this.forEach(item => item.path.selected = false);
+    this.forEach(item => item.selected = false);
   }
 
   deleteSelect(){
     let deletedItems = new NodeCollection;
     // this = this.filter(item => {
-    //   if (item.path.selected !== true) return true;
+    //   if (item.selected !== true) return true;
 
     //   deletedItems.push(item.hash);
     //   item.remove();

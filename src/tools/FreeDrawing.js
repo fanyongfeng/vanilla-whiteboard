@@ -19,8 +19,8 @@ export default class FreeDrawing {
     this.currentShape = new Writing();
     items.add(this.currentShape);
 
-    this.currentShape.path.moveTo(event.point);
-    
+    this.currentShape.moveTo(event.point);
+
     this.lastPoint = event.point;
   }
 
@@ -29,10 +29,10 @@ export default class FreeDrawing {
    * @param {Object} pointer
    */
   onMouseMove(event) {
-    
+
     var point = event.point;
     var midPoint = point.midPointFrom(this.lastPoint);
-    this.currentShape.path.quadraticCurveTo(this.lastPoint, midPoint);
+    this.currentShape.quadraticCurveTo(this.lastPoint, midPoint);
     this.lastPoint = point;
   }
 

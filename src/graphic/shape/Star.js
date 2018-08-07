@@ -2,7 +2,7 @@
 
 
 import Shape from "../Shape";
-import Point from "../../types/Point";
+import Point from "../types/Point";
 
 export default class Star extends Shape {
 

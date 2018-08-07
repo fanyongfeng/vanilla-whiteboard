@@ -1,15 +1,20 @@
-import Point from './Point';
-import Rect from './Rect';
-import fitCurve from '../util/fitCurve';
-import smoothCurve from '../util/smoothCurve';
-import { Segment, LineSegment, BezierSegment, MoveSegment, QuadraticSegment, ArcSegment } from './Segment';
+import Point from './types/Point';
+import Rect from './types/Rect';
+import { LineSegment, BezierSegment, MoveSegment, QuadraticSegment, ArcSegment } from './types/Segment';
+import Style from './types/Style';
+import Matrix from './types/Matrix';
+
+import fitCurve from './algorithm/fitCurve';
+import smoothCurve from './algorithm/smoothCurve';
 import memoized from '../decorators/memoized'
-import Style from './Style';
-import Matrix from './Matrix';
-import hookable from '../decorators/hookable'
+import hookable from '../decorators/hookable';
+
+import {tsid} from '../util/id';
+
+const _selected = Symbol('selected');
 
 /**
- * A full path
+ * A full path and base class of all single path shapes.
  */
 @hookable
 class Path {
@@ -23,14 +28,10 @@ class Path {
   isClose = false;
 
   constructor(options) {
+    this.id = tsid();
 
-    // this._style = new Style({
-    //   strokeStyle: options.color,
-    //   lineWidth: options.width,
-    //   lineCap: options.strokeLineCap,
-    //   miterLimit: options.strokeMiterLimit,
-    //   lineJoin: options.strokeLineJoin,
-    // });
+    let style = options && options.style;
+    this._style = new Style(style);
 
     //TODO:Use Path2D,
     if (typeof Path2D !== 'undefined') {
@@ -38,25 +39,16 @@ class Path {
     }
   }
 
-  static instantiate(segments) {
-
-    let path = new Path;
-
-    segments.forEach(seg => {
-      let segment;
-      if (seg.length == 1) {
-        segment = new MoveSegment(new Point(seg[0][0], seg[0][1]) );
-      } else if (seg.length == 4) {
-        segment = new BezierSegment(new Point(seg[1][0], seg[1][1]), new Point(seg[2][0], seg[2][1]), new Point(seg[3][0], seg[3][1]));
-      }
-      path.add(segment)
-    });
-
-    return path;
-  }
-
   get segments() {
     return this._segments;
+  }
+
+  get selected() {
+    return this[_selected];
+  }
+
+  set selected(val) {
+    this[_selected] = val;
   }
 
   /**
@@ -177,6 +169,10 @@ class Path {
 
   }
 
+  get strokeBounds() {
+    return this.bounds.expand(this.style.strokeWidth) / 2;
+  }
+
   drawBoundRect() {
     const POINT_WIDTH = 4;
     const OFFSET = POINT_WIDTH / 2;
@@ -209,15 +205,6 @@ class Path {
     ctx.stroke();
   }
 
-  toJSON() {
-    return this.segments.map(item => item.toJSON());
-  }
-
-  toString() {
-    let segmentSVG = this.segments.map(item => item.toString()).join(' ');
-    return `<path d="${segmentSVG} ${this.isClose ? 'z' : ''}"></path>`;
-  }
-
   simplify() {
     let segments = fitCurve(this.segments.map(item => item.point), 1);
     this._segments = ([this._segments[0]]).concat(segments);
@@ -240,7 +227,7 @@ class Path {
     ctx.lineCap = "round";
     ctx.fillStyle = "blue";
     ctx.lineJoin = "round";
-    ctx.lineWidth = 2;
+    ctx.lineWidth = 10;
     ctx.beginPath();
   }
 
@@ -336,7 +323,18 @@ class Path {
       segment = this.segments[i];
       segment.draw(ctx);
     }
+
+    // if(this.selected) this.drawBoundRect();
     this.drawBoundRect();
+  }
+
+  toJSON() {
+    return this.segments.map(item => item.toJSON());
+  }
+
+  toString() {
+    let segmentSVG = this.segments.map(item => item.toString()).join(' ');
+    return `<path d="${segmentSVG} ${this.isClose ? 'z' : ''}"></path>`;
   }
 }
 

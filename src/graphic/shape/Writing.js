@@ -1,29 +1,26 @@
-import Element from "../Element"
-import Point from "../../types/Point"
-import fitCurve from "../../util/fitCurve";
-
-import Path from "../../types/Path"
+import Path from "../Path"
+import Point from '../types/Point';
+import { BezierSegment, MoveSegment } from '../types/Segment';
 
 /**
  * Shapes create by: pen, marker, highlighter, etc.
  */
-export default class Writing extends Element {
-  static instantiate(segments) {
-    let ins = new Writing;
-    ins.path = Path.instantiate(segments);;
-    return ins;
-  }
-
+export default class Writing extends Path {
   type = 'writing';
-  points = [];
 
-  buildPath(){}
+  static instantiate(segments) {
+    let instance = new Writing;
 
-  curveTo(point){
+    segments.forEach(seg => {
+      let segment;
+      if (seg.length == 1) {
+        segment = new MoveSegment(new Point(seg[0][0], seg[0][1]) );
+      } else if (seg.length == 4) {
+        segment = new BezierSegment(new Point(seg[1][0], seg[1][1]), new Point(seg[2][0], seg[2][1]), new Point(seg[3][0], seg[3][1]));
+      }
+      instance.add(segment)
+    });
 
-  }
-
-  _drawSegment(p1, p2){
-
+    return instance;
   }
 }

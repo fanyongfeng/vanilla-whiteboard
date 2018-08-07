@@ -39,6 +39,10 @@ export default class Text {
 
   }
 
+  onKeyDown(event) {
+
+  }
+
   _calcTextareaPosition(){
 
   }

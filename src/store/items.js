@@ -51,15 +51,15 @@ export default {
   },
 
   selectAll() {
-    items.forEach(item => item.path.selected = true);
+    items.forEach(item => item.selected = true);
   },
 
   antiSelectAll(id) {
-    items.forEach(item => item.path.selected = !item.path.selected);
+    items.forEach(item => item.selected = !item.selected);
   },
 
   deselectAll(id) {
-    items.forEach(item => item.path.selected = false);
+    items.forEach(item => item.selected = false);
   },
 
   /**
@@ -68,7 +68,7 @@ export default {
   deleteSelect(){
     let deletedItems = [];
     items = items.filter(item => {
-      if (item.path.selected === true) {
+      if (item.selected === true) {
         deletedItems.push(item.hash);
         item.remove();
         return false;

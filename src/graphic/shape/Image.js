@@ -1,8 +1,8 @@
-import Element from "../Element"
-import Rect from '../../types/Rect';
-import Point from '../../types/Point';
+import Path from "../Path"
+import Rect from '../types/Rect';
+import Point from '../types/Point';
 
-export default class Image extends Element {
+export default class Image extends Path {
 
   _src = null;
   loaded = false;
@@ -106,7 +106,7 @@ export default class Image extends Element {
         this.drawImage(ctx);
         this.renderStroke(ctx);
       });
-      
+
     }
   }
 }

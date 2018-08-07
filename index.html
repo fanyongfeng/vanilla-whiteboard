@@ -111,6 +111,7 @@
     <div class="btns-group">
         <div class="btn-group">
             <button id="btnCurve" class="btn btn-default">绘制曲线</button>
+            <button id="btnCompoundPath" class="btn btn-default">绘制复合图形</button>
         </div>
       </div>
 
@@ -170,6 +171,12 @@
         canvas.refresh();
       });
 
+      //btnCompoundPath
+      $("#btnCompoundPath").click(()=>{
+        canvas.add(compoundPath1);
+        canvas.refresh();
+      });
+
       $("#btnSaveImg").click(()=>{
         canvas.saveImage();
       });
@@ -187,9 +194,9 @@
         canvas.refresh();
       });
 
-      $("#btnSimp").click(()=>{ 
+      $("#btnSimp").click(()=>{
         items.forEach(element => {
-          element.path.simplify();
+          element.simplify();
         });
         canvas.refresh();
       });

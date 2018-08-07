@@ -1,7 +1,7 @@
 
 function getAngleXAxis(x, y){
-  var radian = Math.atan2(y, x); 
-  if(radian<0) return radian+ 2*Math.PI; 
+  var radian = Math.atan2(y, x);
+  if(radian<0) return radian+ 2*Math.PI;
   return radian;
 }
 
@@ -20,9 +20,11 @@ export function getAngle(){
   //angle in degrees
   var resultDegree = resultRadian * 180 / Math.PI;
 
+  return resultDegree;
+
 }
 
-export function getAngle2(){ 
+export function getAngle2(){
   var cp = new Point(0, 0);
   var sp = new Point(0, 200);
   var ep = new Point(-300, 300 + i);

@@ -1,4 +1,4 @@
-export default class Text extends Element {
+export default class Text extends Path {
 
   type = 'text';
 

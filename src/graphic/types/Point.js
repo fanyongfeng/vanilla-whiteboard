@@ -4,7 +4,9 @@
 export default class Point {
 
   static instantiate(x, y) {
-    if (typeof x === "number") return new Point(x, y);
+    if (typeof x === "number") {
+      return typeof y === "number" ? new Point(x, y) : new Point(x, x);
+    }
     return x;
   }
 
@@ -147,7 +149,7 @@ export default class Point {
   }
 
   /**
-   * Get Angle In Radians
+   * Get Angle In Radians, Vector
    */
   get angle() {
     if (this.length) return 0;

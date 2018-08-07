@@ -68,17 +68,18 @@ export default class CanvasMgr {
   refresh() {
     requestAnimationFrame(() => {
       this.ctx.clearRect(0, 0, this.width, this.height);
-      this.items.items.forEach(item => item.render(this.ctx));
+      this.items.items.forEach(item => item.draw(this.ctx));
     });
   }
 
   get data() {
-    return this.items.items.map(item => item.path.toJSON());
+    return this.items.items.map(item => item.toJSON());
   }
 
   add(segments) {
     let ins = Writing.instantiate(segments);
     this.items.add(ins);
+    // this.refresh();
   }
 
   addImage(src) {
@@ -90,6 +91,10 @@ export default class CanvasMgr {
   }
 
   refreshAll() {
+
+  }
+
+  set tool(val){
 
   }
 

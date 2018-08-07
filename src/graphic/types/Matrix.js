@@ -158,7 +158,7 @@ class Matrix {
     point.x = x * this.m[0] + y * this.m[2] + this.m[4];
     point.y = x * this.m[1] + y * this.m[3] + this.m[5];
 
-    return point;
+    return this;
   }
 
   /**
@@ -172,7 +172,7 @@ class Matrix {
     point.x = x * this.m[0] + y * this.m[2];
     point.y = x * this.m[1] + y * this.m[3];
 
-    return point;
+    return this;
   }
 }
 

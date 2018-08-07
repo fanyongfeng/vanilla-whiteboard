@@ -1,16 +1,13 @@
 //A playground of this proj
 import CanvasMgr from "./whiteboard/canvas";
-import Path from "./types/Path";
 
+import Path from "./graphic/Path";
+import Point from "./graphic/types/Point";
 
-import Rect from "./types/Rect";
-import Point from "./types/Point";
 import ease from './animate/ease'
-import fitCurve from './util/fitCurve'
 import Grid from './component/Grid'
 import Axes from './component/Axes'
 
-window.paths = [];
 
 export default {
 

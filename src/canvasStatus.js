@@ -1,3 +1,3 @@
 export default {
-  isSelectionMode: true
+  isSelectionMode: false
 }

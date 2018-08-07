@@ -6,7 +6,7 @@ import Ellipse from '../graphic/shape/Ellipse';
 
 import items from '../store/items';
 
-export default class ShapeTool {
+export default class ShapeDrawing {
 
   constructor(name){
     this.shapeCtor = name;
@@ -23,7 +23,7 @@ export default class ShapeTool {
 
     this.currentShape.endPoint = event.point;
 
-    this.currentShape.path.clear();
+    this.currentShape.clear();
     this.currentShape.buildPath();
   }
 
