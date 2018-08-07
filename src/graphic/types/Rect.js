@@ -4,12 +4,24 @@ const horizontal = ['left', 'centerX', 'right']; //CenterX
 const vertical = ['top', 'centerY', 'bottom']; //CenterY
 const define = Object.defineProperty;
 
+
+/**
+ * 首字幕大写
+ * @param { } str
+ */
 const capitalize = (str) => {
   return str.replace(/\b[a-z]/g, function(match) {
       return match.toUpperCase();
   });
 }
 
+/**
+ * 获取属性名
+ * @param {*} y
+ * @param {*} x
+ * @param {*} indexY
+ * @param {*} indexX
+ */
 const getKey = (y, x, indexY, indexX) => {
   if(indexY === 1) {
     if(indexX === 1) return 'center';
@@ -24,6 +36,9 @@ const getKey = (y, x, indexY, indexX) => {
  */
 class Rect {
 
+  /**
+   * static method to create instance from params
+   */
   static instantiate(x, y, width, height) {
     if(typeof x === "number") return new Rect(x, y, width, height)
     return x;
@@ -59,6 +74,10 @@ class Rect {
     });
   }
 
+  /**
+   * Assign x, y, width, height from other rect.
+   * @param {Rect} rect
+   */
   assign(rect) {
     this.x = rect.x;
     this.y = rect.y;
@@ -166,11 +185,12 @@ class Rect {
     return new Rectangle(x1, y1, x2 - x1, y2 - y1);
   }
 
-
+  /**
+   * Detect rectangles either by checking for 'width' on the passed object
+   * or by looking at the amount of elements in the arguments list,
+   * or the passed array:
+   */
   contains(arg) {
-    // Detect rectangles either by checking for 'width' on the passed object
-    // or by looking at the amount of elements in the arguments list,
-    // or the passed array:
     return arg && arg.width !== undefined
       || (Array.isArray(arg) ? arg : arguments).length === 4
       ? this.containsRectangle(Rect.instantiate(arguments))
@@ -219,6 +239,11 @@ class Rect {
     return new Rect(this.x, this.y, this.width, this.height);
   }
 
+  /**
+   * Expend width, height. as same keep center
+   * @param {Number} width
+   * @param {Number} height
+   */
   expand(width, height) {
     if (typeof height === 'undefined') height = width;
 
@@ -233,6 +258,9 @@ class Rect {
     return [this.x , this.y, this.width, this.height];
   }
 
+  /**
+   * return string format.
+   */
   toString() {
     return '{ x: ' + this.x
       + ', y: ' + this.y
@@ -241,7 +269,5 @@ class Rect {
       + ' }';
   }
 }
-
-window.Rect = Rect;
 
 export default Rect;

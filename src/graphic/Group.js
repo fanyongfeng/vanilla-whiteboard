@@ -1,5 +1,5 @@
 
 export default class Group {
-  items = []
+  _children = []
   constructor(){}
 }

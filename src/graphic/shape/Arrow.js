@@ -16,8 +16,7 @@ function calcArrow(sp, ep) {
   ];
 }
 export default class Arrow extends Shape {
-
-  type = 'arrow';
+  static type = 'arrow';
 
   buildPath() {
 
@@ -27,8 +26,7 @@ export default class Arrow extends Shape {
       .lineTo(this.endPoint)
       .moveTo(points[0])
       .lineTo(points[1])
-      .lineTo(points[2]);
-
-    this.closePath();
+      .lineTo(points[2])
+      .closePath();
   }
 }

@@ -14,12 +14,13 @@ export default class Shape extends Path {
     return new ctor(startPoint, endPoint);
   }
 
-  constructor(sp, ep) {
-    super();
+  constructor(sp, ep, style) {
+    super(style);
     this.startPoint = sp;
     this.endPoint = ep;
   }
 
+  // override bounds for dragging-shapes
   get bounds() {
     let frm = this.startPoint,
       x = frm.x,
@@ -43,7 +44,7 @@ export default class Shape extends Path {
   }
 
   toJSON() {
-    return [this.name, [
+    return [this.type, [
       [this.startPoint.x, this.startPoint.y],
       [this.endPoint.x, this.endPoint.y],
     ]];

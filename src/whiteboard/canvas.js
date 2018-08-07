@@ -11,18 +11,23 @@ import handler from '../event/event';
 import Writing from '../graphic/shape/Writing';
 import saveImage from '../util/saveImage';
 import Image from '../graphic/shape/Image';
+import {tools} from '../tools';
 
 
 @hookable
 export default class CanvasMgr {
+  static instances = [];
+
   items = items;
-
   constructor(options) {
-
     let { container, width, height } = options;
 
-    this.wrapper = container;
+    /** 一个container不能加载两个白板*/
+    CanvasMgr.instances.find(instance => {
+      if(instance.wrapper === container) throw new Error("Can't instance at same container twice!");
+    })
 
+    this.wrapper = container;
     setStyle(container, {
       width: `${width}px`,
       height: `${height}px`,
@@ -41,6 +46,8 @@ export default class CanvasMgr {
 
     handler.bind(this.operateCanvas);
     handler.refreshCanvas = this.refresh.bind(this);
+
+    CanvasMgr.instances.push(this)
   }
 
   createAndApplyCanvasAttr(id) {
@@ -94,8 +101,18 @@ export default class CanvasMgr {
 
   }
 
-  set tool(val){
+  _toolName = '';
 
+  set tool(val){
+    this._toolName = val;
+  }
+
+  get tools(){
+    return tools;
+  }
+
+  get tool(){
+    return tools[this._toolName];
   }
 
   dispose() {
@@ -146,3 +163,5 @@ export default class CanvasMgr {
   renderAll() { }
   scale() { }
 }
+
+window.CanvasMgr = CanvasMgr;

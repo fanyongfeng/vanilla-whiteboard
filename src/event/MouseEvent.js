@@ -2,7 +2,7 @@
  * Custom Mouse Event Class
  */
 
- import Point from '../types/Point';
+ import Point from '../graphic/types/Point';
 
 export default class MouseEvent {
   constructor(originEvent){

@@ -2,7 +2,7 @@ import Shape from "../Shape"
 import Point from "../types/Point";
 
 export default class Ellipse extends Shape {
-  type = 'ellipse';
+  static type = 'ellipse';
 
   buildPath() {
 
@@ -21,10 +21,9 @@ export default class Ellipse extends Shape {
       .bezierCurveTo(new Point(x - a, y - oy), new Point(x - ox, y - b), new Point(x, y - b))
       .bezierCurveTo(new Point(x + ox, y - b), new Point(x + a, y - oy), new Point(x + a, y))
       .bezierCurveTo(new Point(x + a, y + oy), new Point(x + ox, y + b), new Point(x, y + b))
-      .bezierCurveTo(new Point(x - ox, y + b), new Point(x - a, y + oy), new Point(x - a, y));
+      .bezierCurveTo(new Point(x - ox, y + b), new Point(x - a, y + oy), new Point(x - a, y))
+      .closePath();
 
-    this.closePath();
-
-    return;
+    return this;
   }
 }

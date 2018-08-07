@@ -17,6 +17,7 @@ export default class Star extends Shape {
         step = 360 / points,
         vector = new Point(0, -1),
         segments = new Array(points);
+
     for (var i = 0; i < points; i++)
         segments[i] = new Segment(center.add(vector.rotate(step * i)
                 .multiply(i % 2 ? radius2 : radius1)));

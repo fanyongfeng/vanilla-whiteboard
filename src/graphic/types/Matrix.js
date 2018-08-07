@@ -176,4 +176,4 @@ class Matrix {
   }
 }
 
-export default Matrix
+export default Matrix;

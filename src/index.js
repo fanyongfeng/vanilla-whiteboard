@@ -63,7 +63,9 @@ class Whiteboard {
 let nebula = typeof nebula !== 'undefined' ? nebula : {};
 nebula.Whiteboard = Whiteboard;
 
-new Whiteboard;
+window.wb1 = new Whiteboard;
+window.wb2 = new Whiteboard;
+
 window.nebula = nebula;
 // export const Whiteboard = Whiteboard;
 

@@ -3,7 +3,7 @@ import Point from "../types/Point"
 
 export default class Signature extends Path {
 
-  type = 'signature';
+  static type = 'signature';
 
   buildPath() {
   }

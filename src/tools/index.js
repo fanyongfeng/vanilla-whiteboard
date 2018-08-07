@@ -5,25 +5,22 @@ import ArcDrawing from './ArcDrawing';
 import FreeDrawing from './FreeDrawing';
 import ShapeDrawing from './ShapeDrawing';
 
-let tools = [];
+let tools = {};
 
 const freeDrawingTools = ["marker", "highlighter"];
 const shapeDrawingTools = ["rectangle", "triangle", "ellipse", "arrow", "line"];
 
 function create(){
-  freeDrawingTools.forEach(toolName =>{
-    let tool = new FreeDrawing(toolName);
-    tools.push(tool);
-  });
-
-  shapeDrawingTools.forEach(toolName =>{
-    let tool = new ShapeDrawing(toolName);
-    tools.push(tool);
-  });
+  freeDrawingTools.forEach(toolName => registerTool(toolName, FreeDrawing));
+  shapeDrawingTools.forEach(toolName => registerTool(toolName, ShapeDrawing));
 }
 
 function registerTool(name, ctor){
-  tools.push(new ctor(name));
+  return tools[name] = new ctor(name)
 }
 
-export default registerTool;
+create();
+
+export default {
+  registerTool, tools
+};

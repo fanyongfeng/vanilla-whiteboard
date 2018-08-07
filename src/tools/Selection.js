@@ -45,7 +45,10 @@ export default class Selection {
   constructor(canvas) {
     this.canvas = document.getElementById('opcanvas');
     this.ctx = this.canvas.getContext('2d')
-    window.selectionRect = this.selectionRect = new Rect();
+    this.selectionRect = new Rect();
+    this.selectionRect.style.strokeStyle = '#ccc';
+    this.selectionRect.style.lineWidth = 1;
+    this.selectionRect.style.dashArray = [5, 2];
   }
 
   setCursor = (value) => {
@@ -165,16 +168,12 @@ export default class Selection {
   onMouseMove({ point }) {
     if(!(this.pointOnPoint(point) || this.pointOnResize(point)|| this.pointOnElement(point))) {
       this.mode = 'select';
-      this.selectionRect.startPoint = point;
     }
 
     console.log(this.mode);
   }
 
   _drawSelectArea(event) {
-    // strokeColor: '#ccc',
-    // strokeWidth: 1,
-    // dashArray: [5, 2],
     var ctx = this.ctx;
     ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 

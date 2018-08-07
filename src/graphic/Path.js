@@ -7,40 +7,29 @@ import Matrix from './types/Matrix';
 import fitCurve from './algorithm/fitCurve';
 import smoothCurve from './algorithm/smoothCurve';
 import memoized from '../decorators/memoized'
-import hookable from '../decorators/hookable';
 
 import {tsid} from '../util/id';
 
 const _selected = Symbol('selected');
+const _segments = Symbol('_segments');
 
 /**
  * A full path and base class of all single path shapes.
  */
-@hookable
 class Path {
 
-  _segments = [];
-  _style = null;
-
-  path2dObj = undefined;
+  [_segments] = [];
   startPoint = null;
   contextPoint = null;
   isClose = false;
 
-  constructor(options) {
+  constructor(style) {
     this.id = tsid();
-
-    let style = options && options.style;
     this._style = new Style(style);
-
-    //TODO:Use Path2D,
-    if (typeof Path2D !== 'undefined') {
-      // this.path2dObj = new Path2D();
-    }
   }
 
   get segments() {
-    return this._segments;
+    return this[_segments];
   }
 
   get selected() {
@@ -55,7 +44,12 @@ class Path {
    * style of current path
    */
   get style() {
-    return _style;
+    return this._style;
+  }
+
+  set style(value) {
+    this._style = value;
+    //mark-as-dirty
   }
 
   add(segment) {
@@ -72,7 +66,7 @@ class Path {
   }
 
   clear() {
-    this._segments = [];
+    this[_segments] = [];
   }
 
   arc(x, y, r, sa, ea) {
@@ -170,7 +164,7 @@ class Path {
   }
 
   get strokeBounds() {
-    return this.bounds.expand(this.style.strokeWidth) / 2;
+    return this.bounds.expand(this.style.lineWidth) / 2;
   }
 
   drawBoundRect() {
@@ -194,41 +188,38 @@ class Path {
     ctx.strokeStyle = '#96cef6';
     ctx.beginPath();
 
-    let lastPoint = this.bounds[boundsPoi[boundsPoi.length -2]];
+    let lastPoint = this.bounds[boundsPoi[boundsPoi.length -2]], point;
     ctx.moveTo(lastPoint.x, lastPoint.y);
     boundsPoi.forEach(key => {
-      let point = this.bounds[key];
+      point = this.bounds[key];
       ctx.lineTo(point.x, point.y);
       ctx.fillRect(point.x - OFFSET, point.y - OFFSET, POINT_WIDTH, POINT_WIDTH);
       lastPoint = point;
     })
+    let tc = this.bounds['topCenter'];
+    ctx.moveTo(tc.x, tc.y);
+    point = tc.add(new Point(0, -50));
+    ctx.lineTo(point.x, point.y);
+    ctx.fillRect(point.x - OFFSET, point.y - OFFSET, POINT_WIDTH, POINT_WIDTH);
+
     ctx.stroke();
   }
 
   simplify() {
     let segments = fitCurve(this.segments.map(item => item.point), 1);
-    this._segments = ([this._segments[0]]).concat(segments);
+    this[_segments] = ([this[_segments][0]]).concat(segments);
     return this;
   }
 
   smooth() {
     let segment = smoothCurve(this.segments, this.isClose);
-    this._segments = segment;
-    return this._segments;
+    this[_segments] = segment;
+    return this;
   }
 
   containPoint(point) {
-    let seg = this.segments.find(item => item.containPoint(point, 30));
+    let seg = this.segments.find(item => item.containPoint(point, this.style.lineWidth));
     return !!seg;
-  }
-
-  applyStyle(ctx) {
-    ctx.strokeStyle = '#c69'
-    ctx.lineCap = "round";
-    ctx.fillStyle = "blue";
-    ctx.lineJoin = "round";
-    ctx.lineWidth = 10;
-    ctx.beginPath();
   }
 
   get position(){
@@ -275,55 +266,46 @@ class Path {
   }
 
   draw(ctx) {
-    let segment;
-
     this._ctx = ctx;
 
     ctx.beginPath();
-    this.applyStyle(ctx);
+    this.style.apply(ctx);
 
-    let ctxOrPath = this.path2dObj || ctx;
-
-    for (let i = 0, len = this.segments.length; i < len; ++i) {
+    for (let i = 0, segment, len = this.segments.length; i < len; ++i) {
 
       segment = this.segments[i];
 
       switch (segment.command) { // first letter
         case 'm':
         case 'M': // moveTo, absolute
-          ctxOrPath.moveTo(segment.point.x, segment.point.y);
+          ctx.moveTo(segment.point.x, segment.point.y);
           break;
         case 'a':
         case 'A':
-          // ctxOrPath.arc.apply(ctxOrPath, [...segment.arc]);
-          ctxOrPath.arcTo.apply(ctxOrPath, segment.args);
+          // ctx.arc.apply(ctx, [...segment.arc]);
+          ctx.arcTo.apply(ctx, segment.args);
           break;
         case 'l':
         case 'L': // lineto, absolute
-          ctxOrPath.lineTo.apply(ctxOrPath, segment.args);
+          ctx.lineTo.apply(ctx, segment.args);
           break;
         case 'q':
         case 'Q':
-          ctxOrPath.quadraticCurveTo.apply(ctxOrPath, segment.args);
+          ctx.quadraticCurveTo.apply(ctx, segment.args);
           break;
         case 'c':
         case 'C':
-          ctxOrPath.bezierCurveTo.apply(ctxOrPath, segment.args);
+          ctx.bezierCurveTo.apply(ctx, segment.args);
           break;
         case 'z':
         case 'Z':
-          ctxOrPath.closePath();
+          ctx.closePath();
       }
     }
 
-    // ctx.stroke(this.path2dObj);
-    ctx.stroke();
+    ctx.fill();
 
-    for (let i = 0, len = this.segments.length; i < len; ++i) {
-      segment = this.segments[i];
-      segment.draw(ctx);
-    }
-
+    this.segments.forEach(segment=>segment.draw(ctx));
     // if(this.selected) this.drawBoundRect();
     this.drawBoundRect();
   }

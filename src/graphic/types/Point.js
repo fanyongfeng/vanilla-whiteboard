@@ -3,6 +3,9 @@
  */
 export default class Point {
 
+  /**
+   * static method to create instance from params
+   */
   static instantiate(x, y) {
     if (typeof x === "number") {
       return typeof y === "number" ? new Point(x, y) : new Point(x, x);
@@ -86,7 +89,6 @@ export default class Point {
     return this;
   }
 
-
   /**
    * If the point coord is equal to the other point.
    * @param {Point} other
@@ -118,6 +120,10 @@ export default class Point {
     return this.lerp(other);
   }
 
+  /**
+   * Returns distance from other point.
+   * @param {point} other
+   */
   getDistance(other) {
     let dx = this.x - other.x,
       dy = this.y - other.y;

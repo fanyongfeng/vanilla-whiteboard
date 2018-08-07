@@ -1,6 +1,6 @@
 export default class Text extends Path {
 
-  type = 'text';
+  static type = 'text';
 
   draw(ctx) {
 

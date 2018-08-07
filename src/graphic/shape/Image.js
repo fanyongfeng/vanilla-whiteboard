@@ -3,7 +3,6 @@ import Rect from '../types/Rect';
 import Point from '../types/Point';
 
 export default class Image extends Path {
-
   _src = null;
   loaded = false;
   strokeDashArray = [0, 1];
@@ -23,7 +22,6 @@ export default class Image extends Path {
   get src() {
     return this._src;
   }
-
 
   get bounds() {
     return new Rect(this.x, this.y, this.width, this.height);

@@ -4,16 +4,15 @@
  */
 const defaultStyles = {
   // Paths
-  fillColor: null,
+  fillStyle: '#c69',
   fillRule: 'nonzero',
-  strokeColor: null,
-  lineWidth: 1,
+  strokeStyle: '#c69',
+  lineWidth: 3,
   lineCap: 'round',
   lineJoin: 'round',
-  strokeScaling: true,
   miterLimit: 10,
   lineDashOffset: 0,
-  dashArray: [],
+  dashArray: [], // for: setLineDash, getLineDash
   // Shadows
   shadowColor: null,
   shadowBlur: 0,
@@ -26,64 +25,40 @@ const defaultStyles = {
  */
 const fontStyles = {
   // Characters
-  fontFamily: 'sans-serif',
-  fontWeight: 'normal',
-  fontSize: 12,
+  font: 'sans-serif',
   leading: null,
-  // Paragraphs
+  textAlign: 'left',
   justification: 'left'
 };
-
-class Gradient {
-  mode = 'linear';
-  constructor() {
-
-  }
-  get stops() {
-
-  }
-  set stops(val) {
-
-  }
-
-  get radial() {
-    return this._radial;
-  }
-
-  set radial(radial) {
-      this._radial = radial;
-      this._changed();
-  }
-
-}
 
 export default class Style {
   constructor(options = {}) {
     Object.assign(this, defaultStyles, options);
   }
 
+  apply(ctx) {
+    ctx.strokeStyle = this.strokeStyle;
+    ctx.lineWidth = this.lineWidth;
+    ctx.fillStyle = this.fillStyle;
+    if(this.dashArray) {
+      ctx.setLineDash(this.dashArray)
+    }
+  }
+
   equals(style) {
-    // Since we're dealing with defaults, loop through style values in both
-    // objects and compare with default fall-back. But in the secondary pass
-    // only check against keys that weren't already in the first object:
     function compare(style1, style2, secondary) {
-      let values1 = style1._values,
-        values2 = style2._values,
-        defaults2 = style2._defaults;
+      let values1 = style1.values,
+        values2 = style2.values;
+
       for (let key in values1) {
         let value1 = values1[key],
           value2 = values2[key];
-        if (!(secondary && key in values2) && !Base.equals(value1,
-          value2 === undefined ? defaults2[key] : value2))
-          return false;
+        if (value1 !== value2) return false;
       }
       return true;
     }
 
-    return style === this || style && this._class === style._class
-      && compare(this, style)
-      && compare(style, this, true)
-      || false;
+    return style === this || compare(this, style) || false;
   }
 
   /**

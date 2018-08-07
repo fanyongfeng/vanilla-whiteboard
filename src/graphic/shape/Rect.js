@@ -3,9 +3,9 @@ import Point from "../types/Point";
 
 export default class Rect extends Shape {
 
-  type = 'rectangle';
+  static type = 'rectangle';
 
-  radius = 10;
+  radius = 0;
 
   buildPath() {
 
@@ -35,7 +35,6 @@ export default class Rect extends Shape {
     isRounded && this.arcTo(new Point(x, y), new Point(x + radius, y), radius);
     this.closePath();
 
-
-    return;
+    return this;
   }
 }

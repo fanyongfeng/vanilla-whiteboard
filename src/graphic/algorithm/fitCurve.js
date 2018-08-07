@@ -275,6 +275,4 @@ function findMaxError(points, first, last, curve, u) {
   };
 }
 
-window.fitCurve = fitCurve;
-
 export default fitCurve;
