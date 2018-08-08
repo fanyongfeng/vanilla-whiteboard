@@ -11,7 +11,9 @@ import animate from './animate/animate';
 import easing from './animate/easing';
 import animateColor from './animate/animateColor';
 
+import PathCollection from './store/PathCollection'
 
+window.PathCollection = PathCollection;
 export default {
 
   init(){
@@ -30,6 +32,10 @@ export default {
   drawAxes(){
     let grid = new Axes();
     grid.draw(this.canvas.bgCtx, this.canvas.width, this.canvas.height);
+  },
+
+  drawMultiRect(){
+
   },
 
 
@@ -105,7 +111,7 @@ export default {
 
     animate({
       startValue: 0,
-      endValue: 360,
+      endValue: 1350,
       duration: 1000,
       easing: ease,
       onChange(value, valueProgress, timeProgress){

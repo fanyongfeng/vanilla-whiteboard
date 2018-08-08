@@ -18,6 +18,7 @@ export default class Shape extends Path {
     super(style);
     this.startPoint = sp;
     this.endPoint = ep;
+
   }
 
   // override bounds for dragging-shapes
@@ -40,7 +41,11 @@ export default class Shape extends Path {
       y = to.y;
       height = -height;
     }
-    return new Rect(x, y, width, height);
+    return new Rect(x, y, width, height, this);
+  }
+
+  setPosition(x, y){
+    super.setPosition(x, y);
   }
 
   toJSON() {

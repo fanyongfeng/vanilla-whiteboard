@@ -29,18 +29,18 @@
       box-sizing: border-box;
       box-sizing: border-box;
       display: block;
-      width:15px;
-      height:15px;
+      width: 15px;
+      height: 15px;
     }
 
     #btnWidth1 span {
-      width:3px;
-      height:3px;
+      width: 3px;
+      height: 3px;
     }
 
     #btnWidth2 span {
-      width:8px;
-      height:8px;
+      width: 8px;
+      height: 8px;
     }
 
     button {
@@ -50,15 +50,19 @@
     #btnColor1 span {
       background: rgb(40, 40, 40);
     }
+
     #btnColor2 span {
       background: rgb(255, 75, 89);
     }
+
     #btnColor3 span {
       background: rgb(142, 207, 84);
     }
+
     #btnColor4 span {
       background: rgb(255, 163, 0);
     }
+
     #btnColor5 span {
       background: rgb(0, 184, 252);
     }
@@ -87,16 +91,32 @@
         <button id="btnImage" class="btn btn-default">图片</button>
       </div>
       <div class="btn-group">
-          <button id="btnWidth1" class="btn btn-default"><span></span></button>
-          <button id="btnWidth2" class="btn btn-default"><span></span></button>
-          <button id="btnWidth3" class="btn btn-default"><span></span></button>
+        <button id="btnWidth1" class="btn btn-default">
+          <span></span>
+        </button>
+        <button id="btnWidth2" class="btn btn-default">
+          <span></span>
+        </button>
+        <button id="btnWidth3" class="btn btn-default">
+          <span></span>
+        </button>
       </div>
       <div class="btn-group color">
-          <button id="btnColor1" class="btn btn-default"><span></span></button>
-          <button id="btnColor2" class="btn btn-default"><span></span></button>
-          <button id="btnColor3" class="btn btn-default"><span></span></button>
-          <button id="btnColor4" class="btn btn-default"><span></span></button>
-          <button id="btnColor5" class="btn btn-default"><span></span></button>
+        <button id="btnColor1" class="btn btn-default">
+          <span></span>
+        </button>
+        <button id="btnColor2" class="btn btn-default">
+          <span></span>
+        </button>
+        <button id="btnColor3" class="btn btn-default">
+          <span></span>
+        </button>
+        <button id="btnColor4" class="btn btn-default">
+          <span></span>
+        </button>
+        <button id="btnColor5" class="btn btn-default">
+          <span></span>
+        </button>
       </div>
     </div>
 
@@ -110,22 +130,23 @@
     </div>
 
     <div class="btns-group">
-        <div class="btn-group">
-            <button id="btnCurve" class="btn btn-default">绘制曲线</button>
-            <button id="btnCompoundPath" class="btn btn-default">绘制复合图形</button>
-        </div>
+      <div class="btn-group">
+        <button id="btnCurve" class="btn btn-default">绘制曲线</button>
+        <button id="btnRects" class="btn btn-default">绘制多个矩形</button>
+        <button id="btnCompoundPath" class="btn btn-default">绘制复合图形</button>
       </div>
+    </div>
 
     <div class="btns-group">
-        <div class="btn-group">
-          <button id="btnRdm" class="btn btn-default">绘制随机图形</button>
-          <button id="btnSave" class="btn btn-default">保存当前图形</button>
-          <button id="btnPaths" class="btn btn-default">绘制保存图形</button>
-          <button id="btnSaveImg" class="btn btn-default">保存为图片</button>
-          <button id="btnPerf" class="btn btn-default">性能</button>
-          <button id="btnSimp" class="btn btn-default">简化</button>
-        </div>
+      <div class="btn-group">
+        <button id="btnRdm" class="btn btn-default">绘制随机图形</button>
+        <button id="btnSave" class="btn btn-default">保存当前图形</button>
+        <button id="btnPaths" class="btn btn-default">绘制保存图形</button>
+        <button id="btnSaveImg" class="btn btn-default">保存为图片</button>
+        <button id="btnPerf" class="btn btn-default">性能</button>
+        <button id="btnSimp" class="btn btn-default">简化</button>
       </div>
+    </div>
 
   </div>
   <script>
@@ -144,50 +165,62 @@
 
     const MILLION = 1000000;
     const WAN = 100000;
-    $(()=>{
-      $("#btnPerf").click(()=>{
+    $(() => {
+      $("#btnPerf").click(() => {
         let item = items[0];
 
-        if(item) {
+        if (item) {
           console.time("perf: get bounds")
-          for(let i = 0; i< WAN; i++) {
+          for (let i = 0; i < WAN; i++) {
             let w = item.bounds.width;
           }
           console.timeEnd("perf: get bounds")
         }
       });
 
-      $("#btnImage").click(()=>{
+      $("#btnImage").click(() => {
         canvas.addImage(images[0]);
         canvas.refresh();
       });
 
 
-      $("#btnClear").click(()=>{
+      $("#btnClear").click(() => {
         canvas.clear();
       });
 
-      $("#btnCurve").click(()=>{
+      $("#btnCurve").click(() => {
         canvas.add(curve1);
         canvas.refresh();
       });
 
-      //btnCompoundPath
-      $("#btnCompoundPath").click(()=>{
+      $("#btnRects").click(() => {
+        for (let i = 0; i < 100; i++) {
+          let xi = i % 10, yi = parseInt(i / 10),
+          sx = xi * 100 + 25,
+          sy = yi * 100 + 25,
+          ex = xi * 100 + 75,
+          ey = yi * 100 + 75;
+
+          canvas.addRect(sx, sy, ex, ey);
+        }
+        canvas.refresh();
+      });
+
+      $("#btnCompoundPath").click(() => {
         canvas.add(compoundPath1);
         canvas.refresh();
       });
 
-      $("#btnSaveImg").click(()=>{
+      $("#btnSaveImg").click(() => {
         canvas.saveImage();
       });
       //btnSaveImg
 
-      $("#btnSave").click(()=>{
+      $("#btnSave").click(() => {
         localStorage.setItem("_VANILLA_WHITEBOARD_1", JSON.stringify(canvas.data));
       });
 
-      $("#btnPaths").click(()=>{
+      $("#btnPaths").click(() => {
         const PATHS = JSON.parse(localStorage.getItem("_VANILLA_WHITEBOARD_1"));
         PATHS.forEach(element => {
           canvas.add(element);
@@ -195,7 +228,7 @@
         canvas.refresh();
       });
 
-      $("#btnSimp").click(()=>{
+      $("#btnSimp").click(() => {
         items.forEach(element => {
           element.simplify();
         });

@@ -19,6 +19,7 @@ const _segments = Symbol('_segments');
 class Path {
 
   [_segments] = [];
+  [_selected] = false;
   startPoint = null;
   contextPoint = null;
   isClose = false;
@@ -164,45 +165,16 @@ class Path {
   }
 
   get strokeBounds() {
-    return this.bounds.expand(this.style.lineWidth) / 2;
+    return this.bounds.expand(this.style.lineWidth / 2);
   }
 
   drawBoundRect() {
-    const POINT_WIDTH = 4;
-    const OFFSET = POINT_WIDTH / 2;
-    const boundsPoi = [
-      'topLeft',
-      'topCenter',
-      'topRight',
-      'rightCenter',
-      'bottomRight',
-      'bottomCenter',
-      'bottomLeft',
-      'leftCenter',
-    ];
-
     let ctx = this._ctx;
-
-    ctx.fillStyle = "#009dec";
+    ctx.save();
+    ctx.strokeStyle = '#009dec';
     ctx.lineWidth = 1;
-    ctx.strokeStyle = '#96cef6';
-    ctx.beginPath();
-
-    let lastPoint = this.bounds[boundsPoi[boundsPoi.length -2]], point;
-    ctx.moveTo(lastPoint.x, lastPoint.y);
-    boundsPoi.forEach(key => {
-      point = this.bounds[key];
-      ctx.lineTo(point.x, point.y);
-      ctx.fillRect(point.x - OFFSET, point.y - OFFSET, POINT_WIDTH, POINT_WIDTH);
-      lastPoint = point;
-    })
-    let tc = this.bounds['topCenter'];
-    ctx.moveTo(tc.x, tc.y);
-    point = tc.add(new Point(0, -50));
-    ctx.lineTo(point.x, point.y);
-    ctx.fillRect(point.x - OFFSET, point.y - OFFSET, POINT_WIDTH, POINT_WIDTH);
-
-    ctx.stroke();
+    ctx.strokeRect.apply(ctx, this.strokeBounds.toJSON());
+    ctx.restore();
   }
 
   simplify() {
@@ -227,7 +199,7 @@ class Path {
   }
 
   set position(value){
-    this.translate(value.subtract(this.position));
+    this.setPosition(value.x, value.y);
   }
 
   setPosition(x, y){
@@ -307,8 +279,7 @@ class Path {
     ctx.stroke();
 
     this.segments.forEach(segment=>segment.draw(ctx));
-    // if(this.selected) this.drawBoundRect();
-    this.drawBoundRect();
+    if(this.selected) this.drawBoundRect();
   }
 
   toJSON() {

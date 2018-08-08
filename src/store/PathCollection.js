@@ -1,9 +1,10 @@
 /**
  * path collection of canvas.
+ * Behavior like an array. (without push, pop)
  */
-const _item = Symbol('_item');
+const _items = Symbol('_items');
 class PathCollection {
-  [_item] = [];
+  [_items] = [];
 
   static diff(left, right) {
     if (left.length !== right.length) return true;
@@ -18,14 +19,23 @@ class PathCollection {
 
   }
 
+  get length() { return this[_items].length; }
+
   constructor(owner){
-    super(arguments)
     this.owner = owner;
-    ['forEach', 'map', 'find', 'reduce', 'filter'].forEach(method => this[method] = () => Array.prototype[forEach].bind(this[_item]))
+
+    ['forEach', 'map', 'find', 'reduce', 'filter']
+      .forEach(method => this[method] = Array.prototype[method].bind(this[_items]));
+  }
+
+  *[Symbol.iterator]() {
+    for (let i = 0, len = this[_items].length; i < len; i++) {
+      yield this[_items][i];
+    }
   }
 
   add(item) {
-    this.push(item);
+    this[_items].push(item);
   }
 
   selectAll() {
@@ -42,7 +52,7 @@ class PathCollection {
 
   deleteSelect(){
     let deletedItems = new NodeCollection;
-    this[_item] = this[_item].filter(item => {
+    this[_items] = this.filter(item => {
       if (item.selected !== true) return true;
 
       deletedItems.push(item.hash);
@@ -55,7 +65,7 @@ class PathCollection {
   delete(ids) {
     if (!Array.isArray(ids)) ids = [ids];
 
-    this[_item] = this[_item].filter(item => {
+    this[_items] = this.filter(item => {
       if (!includes(ids, item.id)) return true;
       item.remove();
       return false;
@@ -63,7 +73,7 @@ class PathCollection {
   }
 }
 
-export default items;
+export default PathCollection;
 export function createInstance(){
   return new PathCollection();
 }

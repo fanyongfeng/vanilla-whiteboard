@@ -2,6 +2,7 @@
 import items from '../store/items';
 import canvasStatus from '../canvasStatus';
 import Rect from '../graphic/shape/Rect';
+import Point from '../graphic/types/Point';
 
 const cursorMap = {
   'topLeft': 'nw-resize',
@@ -36,7 +37,7 @@ const antiDir = {
   'topCenter': 'bottomCenter',
 };
 
-let realTimeSize;
+let realTimeSize, lastSelected = [];
 
 export default class Selection {
 
@@ -57,10 +58,41 @@ export default class Selection {
 
   onMouseDown(event) {
     let point = event.point;
-    if(!(this.pointOnPoint(point) || this.pointOnResize(point)|| this.pointOnElement(point))) {
+
+    if(this.pointOnElement(point)) {
+      return this.target.selected = true;
+    }
+
+    if(!(this.pointOnPoint(point) || this.pointOnResize(point))) {
       this.mode = 'select';
       this.selectionRect.startPoint = point;
     }
+  }
+
+  drawControlRect(ctx, bounds) {
+    const POINT_WIDTH = 4;
+    const OFFSET = POINT_WIDTH / 2;
+
+    ctx.fillStyle = "#009dec";
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = '#96cef6';
+    ctx.beginPath();
+
+    let lastPoint = bounds[boundsPoi[boundsPoi.length -2]], point;
+    ctx.moveTo(lastPoint.x, lastPoint.y);
+    boundsPoi.forEach(key => {
+      point = bounds[key];
+      ctx.lineTo(point.x, point.y);
+      ctx.fillRect(point.x - OFFSET, point.y - OFFSET, POINT_WIDTH, POINT_WIDTH);
+      lastPoint = point;
+    })
+    let tc = bounds['topCenter'];
+    ctx.moveTo(tc.x, tc.y);
+    point = tc.add(new Point(0, -50));
+    ctx.lineTo(point.x, point.y);
+    ctx.fillRect(point.x - OFFSET, point.y - OFFSET, POINT_WIDTH, POINT_WIDTH);
+
+    ctx.stroke();
   }
 
   onMouseUp(event) {
@@ -73,20 +105,23 @@ export default class Selection {
     if (this.mode === 'mutate') {
       this.targetPoint.assign(event.point);
     } if (this.mode === 'select') {
-
       this._drawSelectArea(event);
 
-      let selected = items.items.filter(item => this.selectionRect.bounds.containsRectangle(item));
-      let selectedBounds;
+      let selected = items.items.filter(
+        item => item.selected = this.selectionRect.bounds.containsRectangle(item.bounds)
+      ), selectedBounds;
 
-      if (items.diff(selected, [])) {
+      if (items.diff(selected, lastSelected)) {
+
+        lastSelected = selected;
         selected.forEach(item => {
           if (selectedBounds) {
-            selectedBounds = this.selectionRect.unite(item.bounds);
+            selectedBounds = selectedBounds.unite(item.bounds);
           } else {
             selectedBounds = item.bounds;
           }
         });
+        this.drawControlRect(this.ctx, selectedBounds);
       }
 
     } else if (this.mode === 'resize') {
@@ -96,6 +131,7 @@ export default class Selection {
 
       let sx = 1.0,
         sy = 1.0;
+
       if (Math.abs(realTimeSize.x) > 0.0000001 && this.resizeDir !== 'topCenter' && this.resizeDir !== 'bottomCenter')
         sx = size.x / realTimeSize.x;
       if (Math.abs(realTimeSize.y) > 0.0000001 && this.resizeDir !== 'leftCenter' && this.resizeDir !== 'rightCenter')
@@ -169,8 +205,6 @@ export default class Selection {
     if(!(this.pointOnPoint(point) || this.pointOnResize(point)|| this.pointOnElement(point))) {
       this.mode = 'select';
     }
-
-    console.log(this.mode);
   }
 
   _drawSelectArea(event) {

@@ -1,6 +1,6 @@
 import Point from './Point';
 import Rect from './Rect';
-import { containStroke, containStrokeArc, calcBoundsOfBezier } from '../algorithm/calcCurve';
+import { containStroke, containStrokeArc, containStrokeLine, calcBoundsOfBezier } from '../algorithm/calcCurve';
 
 const POINT_WIDTH = 4;
 const OFFSET = POINT_WIDTH / 2;
@@ -122,6 +122,14 @@ export class LineSegment extends Segment {
   constructor(point) {
     super();
     this.point = point;
+  }
+
+  containPoint(point, lineWidth) {
+    return containStrokeLine(
+      this.contextPoint.x, this.contextPoint.y,
+      this.point.x, this.point.y,
+      lineWidth, point.x, point.y
+    );
   }
 
   get bounds() {

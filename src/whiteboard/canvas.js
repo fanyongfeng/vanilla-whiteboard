@@ -11,6 +11,8 @@ import handler from '../event/event';
 import Writing from '../graphic/shape/Writing';
 import saveImage from '../util/saveImage';
 import Image from '../graphic/shape/Image';
+import Rect from '../graphic/shape/Rect';
+import Point from '../graphic/types/Point';
 import {tools} from '../tools';
 
 
@@ -87,6 +89,16 @@ export default class CanvasMgr {
     let ins = Writing.instantiate(segments);
     this.items.add(ins);
     // this.refresh();
+  }
+
+  addPath(instance){
+    this.items.add(instance);
+  }
+
+  addRect(x1, y1, x2, y2){
+    let instance = new Rect(new Point(x1, y1),new Point(x2, y2));
+    instance.buildPath();
+    this.items.add(instance);
   }
 
   addImage(src) {

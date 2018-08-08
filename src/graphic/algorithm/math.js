@@ -1,5 +1,6 @@
 export const epsilon = 1e-6;
 export const epsilon2 = 1e-12;
+export const epsilon3 = Number.EPSILON; //2.2204460492503130808472633361816E-16
 export const pi = Math.PI;
 export const halfPi = pi / 2;
 export const quarterPi = pi / 4;

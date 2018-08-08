@@ -181,8 +181,8 @@ class Rect {
    * Returns a new rectangle representing the union of this rectangle with the
    * specified rectangle.
    *
-   * @param {Rectangle} rect the rectangle to be combined with this rectangle
-   * @return {Rectangle} the smallest rectangle containing both the specified
+   * @param {Rect} rect the rectangle to be combined with this rectangle
+   * @return {Rect} the smallest rectangle containing both the specified
    * rectangle and this rectangle
    */
   unite(rect) {
@@ -191,7 +191,7 @@ class Rect {
       x2 = Math.max(this.x + this.width, rect.x + rect.width),
       y2 = Math.max(this.y + this.height, rect.y + rect.height);
 
-    return new Rectangle(x1, y1, x2 - x1, y2 - y1);
+    return new Rect(x1, y1, x2 - x1, y2 - y1);
   }
 
   /**

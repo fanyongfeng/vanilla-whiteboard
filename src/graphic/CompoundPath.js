@@ -29,7 +29,7 @@ class CompoundPath {
   get bounds(){
     let rect;
     this.children.forEach(path => {
-      if(rect) rect.unite(path.bounds);
+      if(rect) return rect.unite(path.bounds);
       rect = path.bounds;
     });
     return rect;
