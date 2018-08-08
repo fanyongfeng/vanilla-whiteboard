@@ -71,9 +71,10 @@ class PathCollection {
       return false;
     });
   }
+
+  toJSON(){
+    return this.map(item => item.toJSON());
+  }
 }
 
 export default PathCollection;
-export function createInstance(){
-  return new PathCollection();
-}

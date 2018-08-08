@@ -35,8 +35,8 @@ class Whiteboard {
     /**
      * draw background
      */
-    playground.drawGrid();
-    playground.drawAxes();
+    // playground.drawGrid();
+    // playground.drawAxes();
 
     // playground.drawPolyline('cubicInOut');
     // playground.drawPolyline('circularInOut');

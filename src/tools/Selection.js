@@ -1,6 +1,5 @@
 
 import items from '../store/items';
-import canvasStatus from '../canvasStatus';
 import Rect from '../graphic/shape/Rect';
 import Point from '../graphic/types/Point';
 
@@ -44,8 +43,9 @@ export default class Selection {
   mode = 'move'; //resize, rotate, mutate, select
 
   constructor(canvas) {
-    this.canvas = document.getElementById('opcanvas');
-    this.ctx = this.canvas.getContext('2d')
+    // this.canvas = document.getElementById('opcanvas');
+    // this.ctx = this.canvas.getContext('2d');
+    // this.ctx1 =  document.getElementById('canvas').getContext('2d');
     this.selectionRect = new Rect();
     this.selectionRect.style.strokeStyle = '#ccc';
     this.selectionRect.style.lineWidth = 1;
@@ -102,26 +102,28 @@ export default class Selection {
   }
 
   onMouseDrag(event) {
+    let point = event.point;
     if (this.mode === 'mutate') {
-      this.targetPoint.assign(event.point);
+      this.targetPoint.assign(point);
     } if (this.mode === 'select') {
-      this._drawSelectArea(event);
+      this._drawSelectArea(this.ctx, point);
 
       let selected = items.items.filter(
         item => item.selected = this.selectionRect.bounds.containsRectangle(item.bounds)
-      ), selectedBounds;
+      );
+
+      if(!selected.length) return;
 
       if (items.diff(selected, lastSelected)) {
 
         lastSelected = selected;
         selected.forEach(item => {
-          if (selectedBounds) {
-            selectedBounds = selectedBounds.unite(item.bounds);
+          if (this.selectedBounds) {
+            this.selectedBounds = this.selectedBounds.unite(item.bounds);
           } else {
-            selectedBounds = item.bounds;
+            this.selectedBounds = item.bounds;
           }
         });
-        this.drawControlRect(this.ctx, selectedBounds);
       }
 
     } else if (this.mode === 'resize') {
@@ -207,14 +209,16 @@ export default class Selection {
     }
   }
 
-  _drawSelectArea(event) {
-    var ctx = this.ctx;
+  _drawSelectArea(ctx, point) {
     ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-    this.selectionRect.endPoint = event.point;
+    this.selectionRect.endPoint = point;
     this.selectionRect.clear();
     this.selectionRect.buildPath();
     this.selectionRect.draw(ctx);
+
+
+    this.selectedBounds && this.drawControlRect(ctx, this.selectedBounds);
   }
 
   _multiSelecting(event) {

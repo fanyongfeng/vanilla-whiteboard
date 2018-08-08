@@ -133,6 +133,7 @@
       <div class="btn-group">
         <button id="btnCurve" class="btn btn-default">绘制曲线</button>
         <button id="btnRects" class="btn btn-default">绘制多个矩形</button>
+        <button id="btnRectss" class="btn btn-default">绘制海量矩形</button>
         <button id="btnCompoundPath" class="btn btn-default">绘制复合图形</button>
       </div>
     </div>
@@ -200,6 +201,19 @@
           sy = yi * 100 + 25,
           ex = xi * 100 + 75,
           ey = yi * 100 + 75;
+
+          canvas.addRect(sx, sy, ex, ey);
+        }
+        canvas.refresh();
+      });
+
+      $("#btnRectss").click(() => {
+        for (let i = 0; i < 10000; i++) {
+          let xi = i % 100, yi = parseInt(i / 100),
+          sx = xi * 10 + 100,
+          sy = yi * 10 + 100,
+          ex = xi * 10 + 70,
+          ey = yi * 10 + 70;
 
           canvas.addRect(sx, sy, ex, ey);
         }

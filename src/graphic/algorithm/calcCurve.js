@@ -123,7 +123,7 @@ function containStroke(x0, y0, x1, y1, x2, y2, x3, y3, lineWidth, x, y) {
   if (lineWidth === 0) {
     return false;
   }
-  var _l = lineWidth;
+  let _l = lineWidth;
   // Quick reject
   if (
     (y > y0 + _l && y > y1 + _l && y > y2 + _l && y > y3 + _l)
@@ -133,7 +133,7 @@ function containStroke(x0, y0, x1, y1, x2, y2, x3, y3, lineWidth, x, y) {
   ) {
     return false;
   }
-  var d = cubicProjectPoint(
+  let d = cubicProjectPoint(
     x0, y0, x1, y1, x2, y2, x3, y3,
     x, y, null
   );
@@ -172,11 +172,11 @@ function containStrokeArc(
   if (lineWidth === 0) {
     return false;
   }
-  var _l = lineWidth;
+  let _l = lineWidth;
 
   x -= cx;
   y -= cy;
-  var d = Math.sqrt(x * x + y * y);
+  let d = Math.sqrt(x * x + y * y);
 
   if ((d - _l > r) || (d + _l < r)) {
     return false;
@@ -186,7 +186,7 @@ function containStrokeArc(
     return true;
   }
   if (anticlockwise) {
-    var tmp = startAngle;
+    let tmp = startAngle;
     startAngle = normalizeRadian(endAngle);
     endAngle = normalizeRadian(tmp);
   } else {
@@ -197,7 +197,7 @@ function containStrokeArc(
     endAngle += PI2;
   }
 
-  var angle = Math.atan2(y, x);
+  let angle = Math.atan2(y, x);
   if (angle < 0) {
     angle += PI2;
   }
@@ -287,9 +287,9 @@ function containStrokeLine(x0, y0, x1, y1, lineWidth, x, y) {
   if (lineWidth === 0) {
       return false;
   }
-  var _l = lineWidth;
-  var _a = 0;
-  var _b = x0;
+  let _l = lineWidth;
+  let _a = 0;
+  let _b = x0;
   // Quick reject
   if (
       (y > y0 + _l && y > y1 + _l)
@@ -307,8 +307,8 @@ function containStrokeLine(x0, y0, x1, y1, lineWidth, x, y) {
   else {
       return Math.abs(x - x0) <= _l / 2;
   }
-  var tmp = _a * x - y + _b;
-  var _s = tmp * tmp / (_a * _a + 1);
+  let tmp = _a * x - y + _b;
+  let _s = tmp * tmp / (_a * _a + 1);
   return _s <= _l / 2 * _l / 2;
 }
 

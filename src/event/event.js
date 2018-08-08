@@ -15,8 +15,8 @@ import ShapeDrawing from '../tools/ShapeDrawing';
 
 import Selection from '../tools/Selection';
 
-import {addListener, removeListener} from '../util/dom'
-import canvasStatus from '../canvasStatus'
+import {addListener, removeListener} from '../util/dom';
+
 //绑定流程和一般拖拽类似
 
 function throttleDistance(dis){
@@ -32,7 +32,7 @@ let handlers = {
 
     this.currentTool = new ShapeDrawing('rectangle'),
     // this.currentTool = new FreeDrawing,
-    this.selection = new Selection;
+    // this.selection = new Selection;
     this.canvas = canvas;
     this.onMouseDown = this.onMouseDown.bind(this);
     this.onMouseMove = this.onMouseMove.bind(this);

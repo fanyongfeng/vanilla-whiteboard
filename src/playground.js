@@ -1,5 +1,5 @@
 //A playground of this proj
-import CanvasMgr from "./whiteboard/canvas";
+import Whiteboard from "./Whiteboard";
 
 import Path from "./graphic/Path";
 import Point from "./graphic/types/Point";
@@ -17,7 +17,7 @@ window.PathCollection = PathCollection;
 export default {
 
   init(){
-    window.canvas = this.canvas = new CanvasMgr({
+    window.whiteboard = this.whiteboard = new Whiteboard({
       container:document.getElementById('draw-panel'),
       width: 1000,
       height: 800,

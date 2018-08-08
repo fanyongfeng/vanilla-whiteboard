@@ -4,8 +4,6 @@ import Arrow from '../graphic/shape/Arrow';
 import Triangle from '../graphic/shape/Triangle';
 import Ellipse from '../graphic/shape/Ellipse';
 
-import items from '../store/items';
-
 const ctorList = [Rect, Line, Arrow, Triangle, Ellipse];
 export default class ShapeDrawing {
 
