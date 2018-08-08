@@ -192,7 +192,7 @@ export class BezierSegment extends Segment {
   }
 
   get bounds() {
-    return calcBoundsOfBezier(this.fullArgs);
+    return calcBoundsOfBezier.apply(null, this.fullArgs);
   }
 
   get points() {

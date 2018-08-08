@@ -32,6 +32,20 @@ const getKey = (y, x, indexY, indexX) => {
 }
 
 /**
+ * Cross product
+ * @param {Array} a1
+ * @param {Array} a2
+ * @param {Function} itor
+ */
+const cross = (a1, a2, itor) => {
+  a1.forEach((i1, i1Idx) => {
+    a2.forEach((i2, i2Idx) => {
+      itor.apply(null, [i1, i2, i1Idx, i2Idx]);
+    });
+  });
+}
+
+/**
  *  Type Rect
  */
 class Rect {
@@ -51,27 +65,22 @@ class Rect {
     this.height = height;
     this.owner = owner;
 
-
-    horizontal.forEach((x, indexX) => {
-      vertical.forEach((y, indexY) => {
-        let key = getKey(y, x, indexY, indexX);
-
-        define(this, key, {
-          enumerable: true,
-          configurable: true,
-          get: function(){
-            return new Point(this[x], this[y]);
-          },
-          set: function(point){
-            this[x] = point.x;
-            this[y] = point.y;
-            // A special setter where we allow chaining, because it comes in handy
-            // in a couple of places in core.
-            return this;
-          },
-        });
-      });
-    });
+    cross(horizontal, vertical, (x, y, indexX, indexY)=>
+      define(this, getKey(y, x, indexY, indexX), {
+        get(){
+          return new Point(this[x], this[y]);
+        },
+        set(point){
+          this[x] = point.x;
+          this[y] = point.y;
+          // A special setter where we allow chaining, because it comes in handy
+          // in a couple of places in core.
+          return this;
+        },
+        enumerable: true,
+        configurable: true,
+      })
+    );
   }
 
   /**

@@ -2,7 +2,7 @@
  * path collection of canvas.
  */
 const _item = Symbol('_item');
-class PathCollection extends Array {
+class PathCollection {
   [_item] = [];
 
   static diff(left, right) {

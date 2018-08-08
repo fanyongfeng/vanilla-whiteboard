@@ -303,7 +303,8 @@ class Path {
       }
     }
 
-    ctx.fill();
+    //ctx.fill();
+    ctx.stroke();
 
     this.segments.forEach(segment=>segment.draw(ctx));
     // if(this.selected) this.drawBoundRect();

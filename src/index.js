@@ -13,6 +13,8 @@ import playground from './playground'
  * options:
  *  - selectionMode: 'bounds', 'path'
  *  - alignToGrid: boolean 对齐到网格
+ *  - loop / notify
+ *  -
  *
  */
 
@@ -36,20 +38,9 @@ class Whiteboard {
     playground.drawGrid();
     playground.drawAxes();
 
-
-    // playground.drawPolyline();
     // playground.drawPolyline('cubicInOut');
     // playground.drawPolyline('circularInOut');
     // playground.drawPolyline('bounceInOut');
-
-  }
-
-  on(type, fn){
-
-  }
-
-  off(type, fn){
-
   }
 
   export(){
@@ -64,7 +55,8 @@ let nebula = typeof nebula !== 'undefined' ? nebula : {};
 nebula.Whiteboard = Whiteboard;
 
 window.wb1 = new Whiteboard;
-window.wb2 = new Whiteboard;
+// window.wb2 = new Whiteboard;
+window.playground = playground;
 
 window.nebula = nebula;
 // export const Whiteboard = Whiteboard;
