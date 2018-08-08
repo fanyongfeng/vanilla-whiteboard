@@ -11,7 +11,7 @@ import animate from './animate/animate';
 import easing from './animate/easing';
 import animateColor from './animate/animateColor';
 
-import PathCollection from './store/PathCollection'
+import PathCollection from './Whiteboard/PathCollection'
 
 window.PathCollection = PathCollection;
 export default {
@@ -26,12 +26,12 @@ export default {
 
   drawGrid(){
     let grid = new Grid(true);
-    grid.draw(this.canvas.bgCtx, this.canvas.width, this.canvas.height);
+    grid.draw(this.whiteboard.backgroundLayer.ctx, this.whiteboard.width, this.whiteboard.height);
   },
 
   drawAxes(){
     let grid = new Axes();
-    grid.draw(this.canvas.bgCtx, this.canvas.width, this.canvas.height);
+    grid.draw(this.whiteboard.backgroundLayer.ctx, this.whiteboard.width, this.whiteboard.height);
   },
 
   drawMultiRect(){
@@ -50,7 +50,7 @@ export default {
 
     // p1.simplify();
 
-    p1.draw(this.canvas.ctx);
+    p1.draw(this.whiteboard.ctx);
     window.paths.push(p1)
   },
 

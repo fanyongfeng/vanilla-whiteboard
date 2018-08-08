@@ -10,7 +10,7 @@
       padding-top: 30px;
     }
 
-    canvas {
+    whiteboard {
       border: 1px dotted #ccc;
     }
 
@@ -180,18 +180,18 @@
       });
 
       $("#btnImage").click(() => {
-        canvas.addImage(images[0]);
-        canvas.refresh();
+        whiteboard.addImage(images[0]);
+        whiteboard.refresh();
       });
 
 
       $("#btnClear").click(() => {
-        canvas.clear();
+        whiteboard.clear();
       });
 
       $("#btnCurve").click(() => {
-        canvas.add(curve1);
-        canvas.refresh();
+        whiteboard.add(curve1);
+        whiteboard.refresh();
       });
 
       $("#btnRects").click(() => {
@@ -202,9 +202,9 @@
           ex = xi * 100 + 75,
           ey = yi * 100 + 75;
 
-          canvas.addRect(sx, sy, ex, ey);
+          whiteboard.addRect(sx, sy, ex, ey);
         }
-        canvas.refresh();
+        whiteboard.refresh();
       });
 
       $("#btnRectss").click(() => {
@@ -215,38 +215,38 @@
           ex = xi * 10 + 70,
           ey = yi * 10 + 70;
 
-          canvas.addRect(sx, sy, ex, ey);
+          whiteboard.addRect(sx, sy, ex, ey);
         }
-        canvas.refresh();
+        whiteboard.refresh();
       });
 
       $("#btnCompoundPath").click(() => {
-        canvas.add(compoundPath1);
-        canvas.refresh();
+        whiteboard.add(compoundPath1);
+        whiteboard.refresh();
       });
 
       $("#btnSaveImg").click(() => {
-        canvas.saveImage();
+        whiteboard.saveImage();
       });
       //btnSaveImg
 
       $("#btnSave").click(() => {
-        localStorage.setItem("_VANILLA_WHITEBOARD_1", JSON.stringify(canvas.data));
+        localStorage.setItem("_VANILLA_WHITEBOARD_1", JSON.stringify(whiteboard.data));
       });
 
       $("#btnPaths").click(() => {
         const PATHS = JSON.parse(localStorage.getItem("_VANILLA_WHITEBOARD_1"));
         PATHS.forEach(element => {
-          canvas.add(element);
+          whiteboard.add(element);
         });
-        canvas.refresh();
+        whiteboard.refresh();
       });
 
       $("#btnSimp").click(() => {
         items.forEach(element => {
           element.simplify();
         });
-        canvas.refresh();
+        whiteboard.refresh();
       });
     })
   </script>

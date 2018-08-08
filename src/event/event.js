@@ -23,17 +23,21 @@ function throttleDistance(dis){
 
 }
 
+const canvasStatus = {
+  isSelectionMode:  true
+}
+
 let handlers = {
 
   isDragging: false,
   isMouseDown: false,
 
-  bind(canvas) {
+  bind(layer) {
 
     this.currentTool = new ShapeDrawing('rectangle'),
     // this.currentTool = new FreeDrawing,
-    // this.selection = new Selection;
-    this.canvas = canvas;
+    this.selection = new Selection(this.context);
+    let canvas = this.canvas = layer.el;
     this.onMouseDown = this.onMouseDown.bind(this);
     this.onMouseMove = this.onMouseMove.bind(this);
     this.onMouseUp = this.onMouseUp.bind(this);

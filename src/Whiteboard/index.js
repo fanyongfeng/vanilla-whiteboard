@@ -16,7 +16,7 @@ import { tools } from '../tools';
 const _createContext = Symbol('_createContext');
 
 @hookable
-export default class CanvasMgr {
+export default class Whiteboard {
 
   static instances = [];
 
@@ -28,7 +28,7 @@ export default class CanvasMgr {
     let { container, width, height } = options;
 
     /** 一个container不能加载两个白板*/
-    CanvasMgr.instances.find(instance => {
+    Whiteboard.instances.find(instance => {
       if (instance.wrapper === container)
         throw new Error("Can't instance at same container twice!");
     })
@@ -44,10 +44,11 @@ export default class CanvasMgr {
     this.height = height;
     this.context = this[_createContext]();
 
+    handler.context = this.context;
     handler.bind(this.operateLayer);
     handler.refreshCanvas = this.refresh.bind(this);
 
-    CanvasMgr.instances.push(this)
+    Whiteboard.instances.push(this)
   }
 
   /**
@@ -82,8 +83,8 @@ export default class CanvasMgr {
 
   refresh() {
     requestAnimationFrame(() => {
-      this.ctx.clearRect(0, 0, this.width, this.height);
-      this.items.forEach(item => item.draw(this.ctx));
+      this.activeLayer.clear();
+      this.items.forEach(item => item.draw(this.activeLayer.ctx));
     });
   }
 
@@ -141,8 +142,8 @@ export default class CanvasMgr {
   }
 
   clear() {
-    this.items.removeAll();
-    this.ctx.clearRect(0, 0, this.width, this.height);
+    this.items.clear();
+    this.activeLayer.clear();
     return this;
   }
 

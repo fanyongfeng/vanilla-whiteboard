@@ -1,8 +1,11 @@
 /**
  * path collection of canvas.
- * Behavior like an array. (without push, pop)
+ * Behavior like an array. (without push, pop, slice, splice)
  */
 const _items = Symbol('_items');
+
+const arr = Array.prototype;
+
 class PathCollection {
   [_items] = [];
 
@@ -19,13 +22,24 @@ class PathCollection {
 
   }
 
-  get length() { return this[_items].length; }
+  // get length() { return this[_items].length; }
 
-  constructor(owner){
-    this.owner = owner;
+  constructor(items) {
 
-    ['forEach', 'map', 'find', 'reduce', 'filter']
-      .forEach(method => this[method] = Array.prototype[method].bind(this[_items]));
+    if (items) this[_items] = items;
+
+    ['forEach', 'find', 'reduce']
+      .forEach(method =>
+        this[method] = function() {
+        return arr[method].apply(this[_items], arguments);
+      });
+
+
+    ['map', 'filter']
+      .forEach(method =>
+        this[method] = function () {
+          return new PathCollection(arr[method].apply(this[_items], arguments));
+        });
   }
 
   *[Symbol.iterator]() {
@@ -34,45 +48,61 @@ class PathCollection {
     }
   }
 
+  get length(){
+    return this[_items].length;
+  }
+
+  diff(other) {
+    PathCollection.diff(this, other);
+  }
+
+  get(index) {
+    return this[_items][index];
+  }
+
   add(item) {
     this[_items].push(item);
+  }
+
+  clear(){
+    this[_items] = [];
   }
 
   selectAll() {
     this.forEach(item => item.selected = true);
   }
 
-  antiSelectAll() {
+  antiSelect() {
     this.forEach(item => item.selected = !item.selected);
   }
 
-  deSelectAll() {
+  deSelect() {
     this.forEach(item => item.selected = false);
   }
 
-  deleteSelect(){
-    let deletedItems = new NodeCollection;
-    this[_items] = this.filter(item => {
+  deleteSelected() {
+    let deletedItems = new PathCollection;
+    this[_items] = this[_items].filter(item => {
       if (item.selected !== true) return true;
 
-      deletedItems.push(item.hash);
-      item.remove();
+      deletedItems.add(item.hash);
       return false;
     });
     return deletedItems;
   }
 
   delete(ids) {
+
     if (!Array.isArray(ids)) ids = [ids];
 
-    this[_items] = this.filter(item => {
+    this[_items] = this[_items].filter(item => {
       if (!includes(ids, item.id)) return true;
       item.remove();
       return false;
     });
   }
 
-  toJSON(){
+  toJSON() {
     return this.map(item => item.toJSON());
   }
 }

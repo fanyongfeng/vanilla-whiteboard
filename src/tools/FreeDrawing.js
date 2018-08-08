@@ -1,10 +1,13 @@
 import Writing from '../graphic/shape/Writing';
-import items from '../store/items';
+
+
 // values: Marker & Highlighter
 export default class FreeDrawing {
   _style = {};
 
-  constructor(name){
+  constructor(whiteboardCtx, name){
+
+    this.items = whiteboardCtx.items;
     if(name === 'highlighter') this.alpha = 0.5;
   }
 
@@ -15,7 +18,7 @@ export default class FreeDrawing {
     */
   onMouseDown(event) {
     this.currentShape = new Writing();
-    items.add(this.currentShape);
+    this.items.add(this.currentShape);
 
     this.currentShape.moveTo(event.point);
     this.lastPoint = event.point;

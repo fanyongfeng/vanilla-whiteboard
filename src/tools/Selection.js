@@ -1,5 +1,4 @@
 
-import items from '../store/items';
 import Rect from '../graphic/shape/Rect';
 import Point from '../graphic/types/Point';
 
@@ -42,10 +41,11 @@ export default class Selection {
 
   mode = 'move'; //resize, rotate, mutate, select
 
-  constructor(canvas) {
-    // this.canvas = document.getElementById('opcanvas');
-    // this.ctx = this.canvas.getContext('2d');
-    // this.ctx1 =  document.getElementById('canvas').getContext('2d');
+  constructor(whiteboardCtx) {
+    this.layer = whiteboardCtx.operateLayer;
+    this.items = whiteboardCtx.items;
+    this.ctx = this.layer.ctx;
+
     this.selectionRect = new Rect();
     this.selectionRect.style.strokeStyle = '#ccc';
     this.selectionRect.style.lineWidth = 1;
@@ -53,7 +53,7 @@ export default class Selection {
   }
 
   setCursor = (value) => {
-    this.canvas.style.cursor = value;
+    this.layer.el.style.cursor = value;
   }
 
   onMouseDown(event) {
@@ -96,8 +96,7 @@ export default class Selection {
   }
 
   onMouseUp(event) {
-    var ctx = this.ctx;
-    ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.layer.clear();
     this.mode = 'move';
   }
 
@@ -108,13 +107,13 @@ export default class Selection {
     } if (this.mode === 'select') {
       this._drawSelectArea(this.ctx, point);
 
-      let selected = items.items.filter(
+      let selected = this.items.filter(
         item => item.selected = this.selectionRect.bounds.containsRectangle(item.bounds)
       );
 
       if(!selected.length) return;
 
-      if (items.diff(selected, lastSelected)) {
+      if (selected.diff(lastSelected)) {
 
         lastSelected = selected;
         selected.forEach(item => {
@@ -149,7 +148,7 @@ export default class Selection {
 
   pointOnElement(point) {
     let item;
-    if (item = items.items.find(item => item.containPoint(point))) {
+    if (item = this.items.find(item => item.containPoint(point))) {
       this.setCursor('pointer');
       this.mode = 'move';
       this.target = item;
@@ -160,8 +159,8 @@ export default class Selection {
 
   pointOnPoint(point) {
     let nearbyPoint, seg;
-    for (let i = 0; i < items.items.length; i++) {
-      let segments = items.items[i].segments;
+    for (let i = 0; i < this.items.length; i++) {
+      let segments = this.items.get(i).segments;
 
       for (let j = 0; j < segments.length; j++) {
         seg = segments[j];
@@ -184,8 +183,8 @@ export default class Selection {
 
   pointOnResize(point) {
     let corner, bounds;
-    for (let i = 0; i < items.items.length; i++) {
-      bounds = items.items[i].bounds;
+    for (let i = 0; i < this.items.length; i++) {
+      bounds = this.items.get(i).bounds;
       if (corner = boundsPoi.find(key => point.nearby(bounds[key]))) break;
     }
     if (!corner) {
@@ -210,7 +209,7 @@ export default class Selection {
   }
 
   _drawSelectArea(ctx, point) {
-    ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.layer.clear();
 
     this.selectionRect.endPoint = point;
     this.selectionRect.clear();

@@ -13,6 +13,7 @@ import {tsid} from '../util/id';
 const _selected = Symbol('selected');
 const _segments = Symbol('_segments');
 
+
 /**
  * A full path and base class of all single path shapes.
  */
@@ -168,15 +169,6 @@ class Path {
     return this.bounds.expand(this.style.lineWidth / 2);
   }
 
-  drawBoundRect() {
-    let ctx = this._ctx;
-    ctx.save();
-    ctx.strokeStyle = '#009dec';
-    ctx.lineWidth = 1;
-    ctx.strokeRect.apply(ctx, this.strokeBounds.toJSON());
-    ctx.restore();
-  }
-
   simplify() {
     let segments = fitCurve(this.segments.map(item => item.point), 1);
     this[_segments] = ([this[_segments][0]]).concat(segments);
@@ -238,7 +230,6 @@ class Path {
   }
 
   draw(ctx) {
-    this._ctx = ctx;
 
     ctx.beginPath();
     this.style.apply(ctx);
@@ -279,7 +270,15 @@ class Path {
     ctx.stroke();
 
     this.segments.forEach(segment=>segment.draw(ctx));
-    if(this.selected) this.drawBoundRect();
+    if(this.selected) this.drawBoundRect(ctx);
+  }
+
+  drawBoundRect(ctx) {
+    ctx.save();
+    ctx.strokeStyle = '#009dec';
+    ctx.lineWidth = 1;
+    ctx.strokeRect.apply(ctx, this.strokeBounds.toJSON());
+    ctx.restore();
   }
 
   toJSON() {

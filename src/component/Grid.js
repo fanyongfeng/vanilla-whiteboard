@@ -11,7 +11,6 @@ export default class Grid {
   }
 
   draw(ctx, width, height) {
-    this._ctx = ctx
     ctx.save();
     //preset context2d styles
     ctx.lineWidth = 1;
