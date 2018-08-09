@@ -267,6 +267,13 @@ class Rect {
     return [this.x , this.y, this.width, this.height];
   }
 
+    /**
+   * transform point
+   */
+  transform(matrix){
+    matrix.transformRect(this);
+  }
+
   /**
    * return string format.
    */

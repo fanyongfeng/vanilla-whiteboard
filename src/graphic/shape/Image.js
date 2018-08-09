@@ -1,6 +1,7 @@
 import Path from "../Path"
 import Rect from '../types/Rect';
 import Point from '../types/Point';
+import Matrix from '../types/Matrix';
 
 /**
  * The Raster item represents an image.
@@ -14,6 +15,7 @@ export default class Image extends Path {
   y = 100;
   _bounds = null;
   align = 'center'; // start.
+  matrix = new Matrix;
 
   constructor(src) {
     super();
@@ -136,7 +138,10 @@ export default class Image extends Path {
   drawImageAndStroke(ctx) {
     let { x, y, width, height } = this.bounds;
 
+    ctx.save();
+    this.matrix.applyToContext(ctx);
     ctx.drawImage(this._image, x, y, width, height);
+    ctx.restore();
 
     if(this.selected) this.drawBoundRect(ctx);
   }

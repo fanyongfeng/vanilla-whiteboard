@@ -1,5 +1,5 @@
 import Point from "./Point";
-import Rect from "../shape/Rect";
+// import Rect from "../shape/Rect";
 
 //https://github.com/chrisaljoudi/transformatrix.js
 
@@ -151,7 +151,7 @@ class Matrix {
     return this;
   }
 
-  transformBounds(bounds) {
+  transformRect(bounds) {
 
     let { x, y, width, height } = bounds;
     let pointTL = new Point(x, y);
