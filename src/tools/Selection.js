@@ -148,7 +148,7 @@ export default class Selection {
 
   pointOnElement(point) {
     let item;
-    if (item = this.items.find(item => item.containPoint(point))) {
+    if (item = this.items.find(item => item.containsPoint(point))) {
       this.setCursor('pointer');
       this.mode = 'move';
       this.target = item;

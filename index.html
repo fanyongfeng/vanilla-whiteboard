@@ -180,7 +180,7 @@
       });
 
       $("#btnImage").click(() => {
-        whiteboard.addImage(images[0]);
+        whiteboard.addImage(images[parseInt(Math.random() * images.length)]);
         whiteboard.refresh();
       });
 

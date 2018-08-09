@@ -1,13 +1,13 @@
 'use strict'
 const path = require('path')
 const utils = require('./utils')
-const webpack = require('webpack')
+const webpack = require('../../../../../Library/Caches/typescript/2.9/node_modules/@types/webpack')
 const config = require('../config')
-const merge = require('webpack-merge')
+const merge = require('../../../../../Library/Caches/typescript/2.9/node_modules/@types/webpack-merge')
 const baseWebpackConfig = require('./webpack.base.conf')
-const CopyWebpackPlugin = require('copy-webpack-plugin')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
+const CopyWebpackPlugin = require('../../../../../Library/Caches/typescript/2.9/node_modules/@types/copy-webpack-plugin')
+const HtmlWebpackPlugin = require('../../../../../Library/Caches/typescript/2.9/node_modules/@types/html-webpack-plugin')
+const OptimizeCSSPlugin = require('../../../../../Library/Caches/typescript/2.9/node_modules/@types/optimize-css-assets-webpack-plugin')
 
 const env = require('../config/prod.env')
 
@@ -108,7 +108,7 @@ const webpackConfig = merge(baseWebpackConfig, {
 })
 
 if (config.build.productionGzip) {
-  const CompressionWebpackPlugin = require('compression-webpack-plugin')
+  const CompressionWebpackPlugin = require('../../../../../Library/Caches/typescript/2.9/node_modules/@types/compression-webpack-plugin')
 
   webpackConfig.plugins.push(
     new CompressionWebpackPlugin({
@@ -126,7 +126,7 @@ if (config.build.productionGzip) {
 }
 
 if (config.build.bundleAnalyzerReport) {
-  const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+  const BundleAnalyzerPlugin = require('../../../../../Library/Caches/typescript/2.9/node_modules/@types/webpack-bundle-analyzer').BundleAnalyzerPlugin
   webpackConfig.plugins.push(new BundleAnalyzerPlugin())
 }
 

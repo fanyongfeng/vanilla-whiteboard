@@ -1,3 +1,6 @@
+import Point from "./Point";
+import Rect from "../shape/Rect";
+
 //https://github.com/chrisaljoudi/transformatrix.js
 
 /**
@@ -148,6 +151,20 @@ class Matrix {
     return this;
   }
 
+  transformBounds(bounds) {
+
+    let { x, y, width, height } = bounds;
+    let pointTL = new Point(x, y);
+    let pointBR = new Point(x + width, y + height);
+
+    this.transformPoint(pointTL)
+      .transformPoint(pointBR);
+
+    //FIXME: 优化算法
+    return new Rect(pointTL.x, pointTL.y, pointBR.x - pointTL.x, pointBR.y - pointTL.y);
+
+  }
+
   /**
    * 变形一个点
    * @param {*} point
@@ -173,6 +190,15 @@ class Matrix {
     point.y = x * this.m[1] + y * this.m[3];
 
     return this;
+  }
+
+  /**
+   * Applies this matrix to the specified Canvas Context.
+   *
+   * @param {CanvasRenderingContext2D} ctx
+   */
+  applyToContext(ctx) {
+    ctx.transform.apply(ctx, this.m);
   }
 }
 

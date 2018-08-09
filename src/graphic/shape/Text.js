@@ -24,7 +24,7 @@ export default class Text extends Path {
         ctx.strokeText(line, 0, 0);
       }
 
-      ctx.translate(0, leading);
+      ctx.translate(0, leading); //绘制行高
     }
   }
 

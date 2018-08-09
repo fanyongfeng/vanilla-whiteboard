@@ -181,8 +181,8 @@ class Path {
     return this;
   }
 
-  containPoint(point) {
-    let seg = this.segments.find(item => item.containPoint(point, this.style.lineWidth));
+  containsPoint(point) {
+    let seg = this.segments.find(item => item.containsPoint(point, this.style.lineWidth));
     return !!seg;
   }
 

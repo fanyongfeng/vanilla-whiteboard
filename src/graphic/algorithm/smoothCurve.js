@@ -1,3 +1,9 @@
+/**
+ * Adapt from https://github.com/paperjs/paper.js
+ *
+ * @param {*} segments
+ * @param {Boolean} closed
+ */
 export default function smooth(segments, closed) {
   let opts = options || {},
     asymmetric = opts.asymmetric, // asymmetric or continuous;

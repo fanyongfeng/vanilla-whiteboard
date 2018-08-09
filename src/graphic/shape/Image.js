@@ -2,12 +2,18 @@ import Path from "../Path"
 import Rect from '../types/Rect';
 import Point from '../types/Point';
 
+/**
+ * The Raster item represents an image.
+ */
 export default class Image extends Path {
+
   _src = null;
   loaded = false;
   strokeDashArray = [0, 1];
-  x = 10;
-  y = 10;
+  x = 100;
+  y = 100;
+  _bounds = null;
+  align = 'center'; // start.
 
   constructor(src) {
     super();
@@ -24,87 +30,124 @@ export default class Image extends Path {
   }
 
   get bounds() {
-    return new Rect(this.x, this.y, this.width, this.height);
+    return this._bounds;
   }
 
-  loadImage(url, callback, context) {
-    if (!url) {
-      callback && callback.call(context, url);
-      return;
-    }
+  loadImage(url, ctx) {
+    if (!url) return;
 
+    // let img = new window.Image;
     let img = document.createElement('img');
     img.setAttribute('crossOrigin', 'anonymous');
     img.src = url;
 
     img.onload = () => {
-      this.loaded = true;
-      this.width = img ? img.naturalWidth || img.width : 0;
-      this.height = img ? img.naturalHeight || img.height : 0;
+      console.log('load', this.loaded);
 
-      callback && callback.call(context, img);
+      this.loaded = img && img.src && img.complete;
+      this.naturalWidth = img ? img.naturalWidth || img.width : 0;
+      this.naturalHeight = img ? img.naturalHeight || img.height : 0;
+
+      //TODO:Emit load event
+      this._bounds = this.calcInitBounds();
+
+
+      let { x, y, width, height } = this._bounds;
+          //draw stroke;
+      this.moveTo(new Point(x, y))
+        .lineTo(new Point(x + width, y))
+        .lineTo(new Point(x + width, y + height))
+        .lineTo(new Point(x, y + height))
+        .lineTo(new Point(x, y));
+
+      this.drawImageAndStroke(ctx);
       img = img.onload = img.onerror = null;
     };
 
     img.onerror = function () {
-      callback && callback.call(context, null, true);
+      console.warn(`can't load image${img.src}`);
+      //TODO:Emit error event
       img = img.onload = img.onerror = null;
     };
 
     this._image = img;
   }
 
-  drawDashedLine() {
-
-  }
-
   getImageData() {
-    return this._ctx.getImageData(this.x, this.y,this.width, this.height);
+    let { x, y, width, height } = this.bounds;
+    return this._ctx.getImageData(x, y, width, height);
   }
 
   setImageData(data) {
-    this._ctx.putImageData(data, this.x, this.y);
+    let { x, y } = this.bounds;
+    this._ctx.putImageData(data, x, y);
   }
 
-  toJSON(){
+  toJSON() {
     return [this.src];
   }
 
-  renderStroke(ctx) {
+  /**
+   * 通过图像原始大小，算出宽高及起始位置，并返回bounds.(保持图片原始宽高比)
+   */
+  calcInitBounds() {
 
-    let x = -this.width / 2,
-      y = -this.height / 2,
-      w = this.width,
-      h = this.height;
+    const viewWidth = 1000;
+    const viewHeight = 800;
+    const viewRadio = viewWidth / viewHeight;
+    const imgRadio = this.naturalWidth / this.naturalHeight;
 
-    ctx.save();
-    // this._setStrokeStyles(ctx, this);
+    let x, y, width, height;
 
-    ctx.beginPath();
-    this.drawDashedLine(ctx, x, y, x + w, y, this.strokeDashArray);
-    this.drawDashedLine(ctx, x + w, y, x + w, y + h, this.strokeDashArray);
-    this.drawDashedLine(ctx, x + w, y + h, x, y + h, this.strokeDashArray);
-    this.drawDashedLine(ctx, x, y + h, x, y, this.strokeDashArray);
-    ctx.closePath();
-    ctx.restore();
+    if (this.naturalHeight < viewHeight && this.naturalWidth < viewWidth) {
+      width = this.naturalWidth;
+      height = this.naturalHeight;
+      x = this.align === 'center' ? (viewWidth - width) / 2 : 0;
+      y = this.align === 'center' ? (viewHeight - height) / 2 : 0;
+    } else if(imgRadio > viewRadio) {
+      width = viewWidth;
+      height = viewWidth / imgRadio;
+      x = 0
+      y = this.align === 'center' ? (viewHeight - height) / 2 : 0;
+    } else {
+      height = viewHeight;
+      width = height * imgRadio;
+      y = 0;
+      x = this.align === 'center' ? (viewWidth - width) / 2 : 0;
+    }
+
+    return new Rect(x, y, width, height, this);
   }
 
-  drawImage(ctx) {
-    ctx.drawImage(this._image, this.x, this.y);
+  containsPoint(point) {
+    return this.bounds.containsPoint(point);
+  }
+
+  /**
+   * 参考
+   * https://developer.mozilla.org/zh-CN/docs/Web/API/CanvasRenderingContext2D/drawImage
+   *
+   * void ctx.drawImage(image, dx, dy); // 画布起始位置
+   * void ctx.drawImage(image, dx, dy, dWidth, dHeight);// 画布起始位置，和绘制大小（用于缩放）
+   * void ctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight); // 原始图片其实位置及大小
+   *
+   * @param {CanvasRenderingContext2D} ctx
+   */
+  drawImageAndStroke(ctx) {
+    let { x, y, width, height } = this.bounds;
+
+    ctx.drawImage(this._image, x, y, width, height);
+
+    if(this.selected) this.drawBoundRect(ctx);
   }
 
   draw(ctx) {
     this._ctx = ctx;
 
     if (this.loaded) {
-      this.drawImage(ctx);
-      this.renderStroke(ctx);
+      this.drawImageAndStroke(ctx);
     } else {
-      this.loadImage(this._src, () => {
-        this.drawImage(ctx);
-        this.renderStroke(ctx);
-      });
-
+      this.loadImage(this._src, ctx);
     }
   }
 }

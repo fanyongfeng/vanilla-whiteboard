@@ -1,24 +1,25 @@
+import {max, min} from './math'
 
 /**
- *  Adapted from <a href="https://rawgithub.com/mjijackson/mjijackson.github.com/master/2008/02/rgb-to-hsl-and-rgb-to-hsv-color-model-conversion-algorithms-in-javascript.html">https://github.com/mjijackson</a>
+ *  Adapt from <a href="https://rawgithub.com/mjijackson/mjijackson.github.com/master/2008/02/rgb-to-hsl-and-rgb-to-hsv-color-model-conversion-algorithms-in-javascript.html">https://github.com/mjijackson</a>
 * @param {Number} r Red color value
 * @param {Number} g Green color value
 * @param {Number} b Blue color value
 * @return {Array} hsl color
  */
 function rgb2hsl(r, g, b) {
-  var max = Math.max(r, g, b),
-    min = Math.min(r, g, b),
-    delta = max - min,
+  var maxc = max(r, g, b),
+    minc = min(r, g, b),
+    delta = maxc - minc,
     achromatic = delta === 0,
     h = achromatic ? 0
-      : (max == r ? (g - b) / delta + (g < b ? 6 : 0)
-        : max == g ? (b - r) / delta + 2
-          : (r - g) / delta + 4) * 60, // max == b
-    l = (max + min) / 2,
+      : (maxc == r ? (g - b) / delta + (g < b ? 6 : 0)
+        : maxc == g ? (b - r) / delta + 2
+          : (r - g) / delta + 4) * 60, // maxc == b
+    l = (maxc + minc) / 2,
     s = achromatic ? 0 : l < 0.5
-      ? delta / (max + min)
-      : delta / (2 - max - min);
+      ? delta / (maxc + minc)
+      : delta / (2 - maxc - minc);
   return [h, s, l];
 }
 
@@ -48,7 +49,7 @@ function hsl2rgb(h, s, l) {
 
 function rgb2gray(r, g, b) {
   // Using the standard NTSC conversion formula that is used for
-  // calculating the effective luminance of an RGB color:
+  // calculating the effective lumincance of an RGB color:
   // http://www.mathworks.com/support/solutions/en/data/1-1ASCU/index.html?solution=1-1ASCU
   return [r * 0.2989 + g * 0.587 + b * 0.114];
 }

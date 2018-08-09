@@ -10,6 +10,7 @@ import Path from './Path';
  */
 class CompoundPath {
   _children = [];
+
   constructor(paths) {
     if(paths) this._children = paths;
   }

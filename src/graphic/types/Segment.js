@@ -45,7 +45,7 @@ export class Segment {
     }
   }
 
-  containPoint() { return false; }
+  containsPoint() { return false; }
 
   drawPoint(ctx, point) {
     if (!point) return;
@@ -124,7 +124,7 @@ export class LineSegment extends Segment {
     this.point = point;
   }
 
-  containPoint(point, lineWidth) {
+  containsPoint(point, lineWidth) {
     return containStrokeLine(
       this.contextPoint.x, this.contextPoint.y,
       this.point.x, this.point.y,
@@ -178,7 +178,7 @@ export class BezierSegment extends Segment {
     this.point = point;
   }
 
-  containPoint(point, lineWidth) {
+  containsPoint(point, lineWidth) {
     let ret = containStroke(
       this.contextPoint.x, this.contextPoint.y,
       this.control1.x, this.control1.y,
