@@ -7,7 +7,6 @@ export default class Ellipse extends Shape {
   buildPath() {
 
     /* "magic number" for bezier approximations of arcs (http://itc.ktu.lt/itc354/Riskus354.pdf) */
-
     let kappa = 0.5522848;
     let x = this.bounds.center.x;
     let y = this.bounds.center.y;

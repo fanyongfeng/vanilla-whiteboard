@@ -1,10 +1,12 @@
 
 import { setStyle } from '../util/dom';
 
+const _items = Symbol('_items');
 /**
  * Create canvas layer, and Manage all canvas of whiteboard.
  */
 export default class Layer {
+  [_items] = null;
 
   /**
    * Move items from one to other

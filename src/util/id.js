@@ -1,6 +1,10 @@
 const letters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 const dateTS = 1000 * 3600 * 3; // 3 hours
 
+/**
+ * Generate ID as format [0-9a-zA-Z]+
+ * @param {Number} num
+ */
 function genMixId (num) {
   if(num < 62) return letters[num];
   let rem = num % 62; return genMixId(parseInt(num / 62)) + letters[rem];
