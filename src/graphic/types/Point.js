@@ -1,4 +1,4 @@
-import {isZero} from '../algorithm/math'
+import { isZero } from '../algorithm/math'
 /**
  * The base type of graphic ,(location & vector)
  */
@@ -19,7 +19,7 @@ export default class Point {
     this.y = y;
   }
 
-  isZero(){
+  isZero() {
     return isZero(this.x) && isZero(this.y);
   }
 
@@ -170,9 +170,37 @@ export default class Point {
   /**
    * transform point
    */
-  transform(matrix){
+  transform(matrix) {
     matrix.transformPoint(this);
     return this;
+  }
+
+  /**
+ * Rotates the point by the given angle around an optional center point.
+ * The object itself is not modified.
+ *
+ * Read more about angle units and orientation in the description of the
+ * {@link #angle} property.
+ *
+ * @param {Number} angle the rotation angle
+ * @param {Point} center the center point of the rotation
+ * @return {Point} the rotated point
+ */
+  rotate(angle, center) {
+    if (angle === 0)
+      return this.clone();
+    angle = angle * Math.PI / 180;
+
+    let point = center ? this.subtract(center) : this,
+      sin = Math.sin(angle),
+      cos = Math.cos(angle);
+
+    point = new Point(
+      point.x * cos - point.y * sin,
+      point.x * sin + point.y * cos
+    );
+
+    return center ? point.add(center) : point;
   }
 
   /**

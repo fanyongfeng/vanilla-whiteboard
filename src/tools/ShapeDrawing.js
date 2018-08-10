@@ -3,8 +3,9 @@ import Line from '../graphic/shape/Line';
 import Arrow from '../graphic/shape/Arrow';
 import Triangle from '../graphic/shape/Triangle';
 import Ellipse from '../graphic/shape/Ellipse';
+import Star from '../graphic/shape/Star';
 
-const ctorList = [Rect, Line, Arrow, Triangle, Ellipse];
+const ctorList = [Rect, Line, Arrow, Triangle, Ellipse, Star];
 export default class ShapeDrawing {
 
   _style = {};
@@ -20,7 +21,10 @@ export default class ShapeDrawing {
 
   onMouseDown(event) {
     let options = this.style;
-    this.currentShape = new this.pathCtor(options);
+    // this.currentShape = new this.pathCtor(options);
+    // this.currentShape = new Ellipse(options);
+
+    this.currentShape = new Star(options);
     this.currentShape.startPoint = this.currentShape.endPoint = event.point;
     items.add(this.currentShape);
   }

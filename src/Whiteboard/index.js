@@ -7,6 +7,7 @@ import Layer from './Layer';
 import { setStyle } from '../util/dom';
 import handler from '../event/event';
 import Writing from '../graphic/shape/Writing';
+import Text from '../graphic/shape/Text';
 import saveImage from '../util/saveImage';
 import Image from '../graphic/shape/Image';
 import Rect from '../graphic/shape/Rect';
@@ -118,6 +119,10 @@ export default class Whiteboard {
     let ins = Writing.instantiate(segments);
     this.items.add(ins);
     // this.refresh();
+  }
+
+  addText(text){
+    this.items.add(new Text(text));
   }
 
   addPath(instance) {

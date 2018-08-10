@@ -7,6 +7,13 @@ const _items = Symbol('_items');
 const arr = Array.prototype;
 
 class PathCollection {
+
+// 下面4方法使PathCollection 更像是数组
+  // splice = Array.prototype.splice;
+  // push = Array.prototype.push;
+  // sort = Array.prototype.sort;
+  // length = Array.prototype.length;
+
   [_items] = [];
 
   static diff(left, right) {
@@ -26,7 +33,7 @@ class PathCollection {
     this.layer.refresh();
   }
 
-  // get length() { return this[_items].length; }
+  get length() { return this[_items].length; }
 
   constructor(items) {
 
@@ -52,9 +59,9 @@ class PathCollection {
     }
   }
 
-  get length(){
-    return this[_items].length;
-  }
+  // get length(){
+  //   return this[_items].length;
+  // }
 
   diff(other) {
     PathCollection.diff(this, other);
@@ -66,6 +73,8 @@ class PathCollection {
 
   add(item) {
     this[_items].push(item);
+    let index = this[_items].length - 1;
+    this[index] = item;
   }
 
   clear(){

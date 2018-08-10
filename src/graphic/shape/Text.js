@@ -1,18 +1,56 @@
-export default class Text extends Path {
+import Path from '../Path';
+import Rect from '../types/Rect'
 
+/**
+ * Text Item;
+ */
+export default class Text extends Path {
   static type = 'text';
+
+  _lines = [];
+  constructor(text) {
+    super();
+    this.text = text;
+    this._lines = text.split(/\r|\n/);
+  }
+
+  get bounds() {
+    let style = this.style,
+      lines = this._lines,
+      numLines = lines.length,
+      leading = style.leading || 18,
+      width = this.getView().getTextWidth(style.font, lines),
+      x = 0;
+
+    return new Rect(x, numLines ? - 0.75 * leading : 0, width, numLines * leading)
+  }
+
+  getTextWidth(font, lines) {
+    let ctx = this._ctx,
+      prevFont = ctx.font,
+      width = 0;
+
+    ctx.font = font;
+    // 测量text宽度, 但Canvas无法测量文字高度，只能通过leading 设定
+    for (var i = 0, l = lines.length; i < l; i++)
+      width = Math.max(width, ctx.measureText(lines[i]).width);
+    ctx.font = prevFont;
+
+    return width;
+  }
 
   draw(ctx) {
 
-    let style = this.style,
+    let lines = this._lines,
+      style = this.style,
       hasFill = style.hasFill,
       hasStroke = style.hasStroke,
-      leading = style.leading,
+      leading = style.leading || 18,
       shadowColor = ctx.shadowColor;
 
     ctx.font = style.fontStyle;
     ctx.textAlign = style.justification;
-    for (var i = 0, l = lines.length; i < l; i++) {
+    for (let i = 0, l = lines.length; i < l; i++) {
       // See Path._draw() for explanation about ctx.shadowColor
       ctx.shadowColor = shadowColor;
       var line = lines[i];
@@ -133,7 +171,7 @@ export default class Text extends Path {
     }
   }
 
-  _animateCursor() {
+  blinkCursor() {
 
   }
 }

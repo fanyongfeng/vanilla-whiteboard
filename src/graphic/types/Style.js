@@ -65,15 +65,16 @@ export default class Style {
    * If has stroke.
    */
   get hasStroke() {
-    let color = this.strokeColor;
-    return !!color && color.alpha > 0 && this.lineWidth > 0;
+    let color = this.strokeStyle;
+    return !!color;
+    // return !!color && color.alpha > 0 && this.lineWidth > 0;
   }
 
   /**
    * If has stroke.
    */
   get hasFill() {
-    let color = this.fillColor;
+    let color = this.fillStyle;
     return !!color && color.alpha > 0;
   }
 

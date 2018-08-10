@@ -143,6 +143,8 @@ export default class Image extends Path {
     ctx.drawImage(this._image, x, y, width, height);
     ctx.restore();
 
+    //TODO: transform bounds.
+
     if(this.selected) this.drawBoundRect(ctx);
   }
 

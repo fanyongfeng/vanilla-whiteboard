@@ -4,23 +4,33 @@
 import Shape from "../Shape";
 import Point from "../types/Point";
 
+const radio = 0.5;
+/**
+ * Shape star
+ */
 export default class Star extends Shape {
-
   type = 'star';
-  anti = false;
 
   buildPath() {
-    let center = Point.readNamed(arguments, 'center'),
-        points = Base.readNamed(arguments, 'points') * 2,
-        radius1 = Base.readNamed(arguments, 'radius1'),
-        radius2 = Base.readNamed(arguments, 'radius2'),
-        step = 360 / points,
-        vector = new Point(0, -1),
-        segments = new Array(points);
+    let center = this.startPoint.midPointFrom(this.endPoint),
+      points = 20,
+      radius1 = this.startPoint.getDistance(this.endPoint) / 2,
+      radius2 = radius1 * radio,
+      step = 360 / points,
+      vector = new Point(0, -1),
+      firstPoint;
 
-    for (var i = 0; i < points; i++)
-        segments[i] = new Segment(center.add(vector.rotate(step * i)
-                .multiply(i % 2 ? radius2 : radius1)));
-    return createPath(segments, true, arguments);
+    for (let i = 0; i < points; i++) {
+      let point = center.add(vector.rotate(step * i).multiply(i % 2 ? radius2 : radius1));
+
+      if(i === 0) {
+        this.moveTo(point);
+        firstPoint = point;
+        continue;
+      }
+      this.lineTo(point);
+    }
+    this.lineTo(firstPoint);
+    this.closePath();
   }
 }
