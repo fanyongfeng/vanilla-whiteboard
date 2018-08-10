@@ -19,7 +19,7 @@ export default class Text extends Path {
       lines = this._lines,
       numLines = lines.length,
       leading = style.leading || 18,
-      width = this.getView().getTextWidth(style.font, lines),
+      width = this.getTextWidth(style.font, lines),
       x = 0;
 
     return new Rect(x, numLines ? - 0.75 * leading : 0, width, numLines * leading)
@@ -32,7 +32,7 @@ export default class Text extends Path {
 
     ctx.font = font;
     // 测量text宽度, 但Canvas无法测量文字高度，只能通过leading 设定
-    for (var i = 0, l = lines.length; i < l; i++)
+    for (let i = 0, l = lines.length; i < l; i++)
       width = Math.max(width, ctx.measureText(lines[i]).width);
     ctx.font = prevFont;
 
@@ -48,12 +48,14 @@ export default class Text extends Path {
       leading = style.leading || 18,
       shadowColor = ctx.shadowColor;
 
+    ctx.save();
+
     ctx.font = style.fontStyle;
     ctx.textAlign = style.justification;
     for (let i = 0, l = lines.length; i < l; i++) {
       // See Path._draw() for explanation about ctx.shadowColor
       ctx.shadowColor = shadowColor;
-      var line = lines[i];
+      let line = lines[i];
       if (hasFill) {
         ctx.fillText(line, 0, 0);
         ctx.shadowColor = 'rgba(0,0,0,0)';
@@ -64,12 +66,14 @@ export default class Text extends Path {
 
       ctx.translate(0, leading); //绘制行高
     }
+
+    ctx.restore();
   }
 
   renderCursorOrSelection() {
     if (!this.isEditing || !this.canvas) return;
 
-    var boundaries = this._getCursorBoundaries(), ctx;
+    let boundaries = this._getCursorBoundaries(), ctx;
 
     if (this.canvas && this.canvas.contextTop) {
       ctx = this.canvas.contextTop;
@@ -115,7 +119,7 @@ export default class Text extends Path {
   }
 
   renderSelection() {
-    var selectionStart = this.inCompositionMode ? this.hiddenTextarea.selectionStart : this.selectionStart,
+    let selectionStart = this.inCompositionMode ? this.hiddenTextarea.selectionStart : this.selectionStart,
       selectionEnd = this.inCompositionMode ? this.hiddenTextarea.selectionEnd : this.selectionEnd,
       isJustify = this.textAlign.indexOf('justify') !== -1,
       start = this.get2DCursorLocation(selectionStart),
@@ -125,8 +129,8 @@ export default class Text extends Path {
       startChar = start.charIndex < 0 ? 0 : start.charIndex,
       endChar = end.charIndex < 0 ? 0 : end.charIndex;
 
-    for (var i = startLine; i <= endLine; i++) {
-      var lineOffset = this._getLineLeftOffset(i) || 0,
+    for (let i = startLine; i <= endLine; i++) {
+      let lineOffset = this._getLineLeftOffset(i) || 0,
         lineHeight = this.getHeightOfLine(i),
         realLineHeight = 0, boxStart = 0, boxEnd = 0;
 
@@ -141,7 +145,7 @@ export default class Text extends Path {
           boxEnd = this.__charBounds[endLine][endChar].left;
         }
         else {
-          var charSpacing = this._getWidthOfCharSpacing();
+          let charSpacing = this._getWidthOfCharSpacing();
           boxEnd = this.__charBounds[endLine][endChar - 1].left
             + this.__charBounds[endLine][endChar - 1].width - charSpacing;
         }

@@ -34,14 +34,14 @@ export class Segment {
       control1 = this.control1 || null,
       control2 = this.control2 || null;
 
-    matrix.transformPoint(point);
+    matrix.applyToPoint(point);
 
     if (control1) {
-      matrix.transformPoint(control1);
+      matrix.applyToPoint(control1);
     }
 
     if (control2) {
-      matrix.transformPoint(control2);
+      matrix.applyToPoint(control2);
     }
   }
 

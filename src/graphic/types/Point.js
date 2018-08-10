@@ -41,7 +41,8 @@ export default class Point {
    * @return {Point} the transformed point
    */
   transform(matrix) {
-    return matrix ? matrix._transformPoint(this) : this;
+    matrix.applyToPoint(this);
+    return this;
   }
 
   /**
@@ -165,14 +166,6 @@ export default class Point {
   get angle() {
     if (!this.length) return 0;
     return Math.atan2(this.y, this.x);
-  }
-
-  /**
-   * transform point
-   */
-  transform(matrix) {
-    matrix.transformPoint(this);
-    return this;
   }
 
   /**

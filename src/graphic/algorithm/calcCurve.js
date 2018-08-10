@@ -5,7 +5,7 @@ import Rect from '../types/Rect';
  * 向量距离平方
  * @param {Vector2} v1
  * @param {Vector2} v2
- * @return {number}
+ * @return {Number}
  */
 function distanceSquare(v1, v2) {
   return (v1[0] - v2[0]) * (v1[0] - v2[0])
@@ -20,18 +20,18 @@ function cubicAt(p0, p1, p2, p3, t) {
 /**
  * 投射点到三次贝塞尔曲线上，返回投射距离。
  * 投射点有可能会有一个或者多个，这里只返回其中距离最短的一个。
- * @param {number} x0
- * @param {number} y0
- * @param {number} x1
- * @param {number} y1
- * @param {number} x2
- * @param {number} y2
- * @param {number} x3
- * @param {number} y3
- * @param {number} x
- * @param {number} y
- * @param {Array.<number>} [out] 投射点
- * @return {number}
+ * @param {Number} x0
+ * @param {Number} y0
+ * @param {Number} x1
+ * @param {Number} y1
+ * @param {Number} x2
+ * @param {Number} y2
+ * @param {Number} x3
+ * @param {Number} y3
+ * @param {Number} x
+ * @param {Number} y
+ * @param {Array.<Number>} [out] 投射点
+ * @return {Number}
  */
 function cubicProjectPoint(x1, y1, x2, y2, x3, y3, x4, y4, x, y, out) {
   let t;
@@ -106,18 +106,18 @@ function cubicProjectPoint(x1, y1, x2, y2, x3, y3, x4, y4, x, y, out) {
 
 /**
  * 三次贝塞尔曲线描边包含判断
- * @param  {number}  x0
- * @param  {number}  y0
- * @param  {number}  x1
- * @param  {number}  y1
- * @param  {number}  x2
- * @param  {number}  y2
- * @param  {number}  x3
- * @param  {number}  y3
- * @param  {number}  lineWidth
- * @param  {number}  x
- * @param  {number}  y
- * @return {boolean}
+ * @param  {Number}  x0
+ * @param  {Number}  y0
+ * @param  {Number}  x1
+ * @param  {Number}  y1
+ * @param  {Number}  x2
+ * @param  {Number}  y2
+ * @param  {Number}  x3
+ * @param  {Number}  y3
+ * @param  {Number}  lineWidth
+ * @param  {Number}  x
+ * @param  {Number}  y
+ * @return {Boolean}
  */
 function containStroke(x0, y0, x1, y1, x2, y2, x3, y3, lineWidth, x, y) {
   if (lineWidth === 0) {
@@ -153,15 +153,15 @@ function normalizeRadian(angle) {
 
 /**
  * 圆弧描边包含判断
- * @param  {number}  cx
- * @param  {number}  cy
- * @param  {number}  r
- * @param  {number}  startAngle
- * @param  {number}  endAngle
- * @param  {boolean}  anticlockwise
- * @param  {number} lineWidth
- * @param  {number}  x
- * @param  {number}  y
+ * @param  {Number}  cx
+ * @param  {Number}  cy
+ * @param  {Number}  r
+ * @param  {Number}  startAngle
+ * @param  {Number}  endAngle
+ * @param  {Boolean}  anticlockwise
+ * @param  {Number} lineWidth
+ * @param  {Number}  x
+ * @param  {Number}  y
  * @return {Boolean}
  */
 function containStrokeArc(
@@ -169,18 +169,16 @@ function containStrokeArc(
   lineWidth, x, y
 ) {
 
-  if (lineWidth === 0) {
-    return false;
-  }
+  if (lineWidth === 0) return false;
+
   let _l = lineWidth;
 
   x -= cx;
   y -= cy;
   let d = Math.sqrt(x * x + y * y);
 
-  if ((d - _l > r) || (d + _l < r)) {
-    return false;
-  }
+  if ((d - _l > r) || (d + _l < r)) return false;
+
   if (Math.abs(startAngle - endAngle) % PI2 < 1e-4) {
     // Is a circle
     return true;
@@ -264,7 +262,6 @@ function calcBoundsOfBezier(x0, y0, x1, y1, x2, y2, x3, y3) {
   bounds[0].length = bounds[1].length = jlen + 2;
 
   let x = Math.min.apply(0, bounds[0]);
-
   let y = Math.min.apply(0, bounds[1]);
   let w = Math.max.apply(0, bounds[0]) - x;
   let h = Math.max.apply(0, bounds[1]) - y;
@@ -274,38 +271,38 @@ function calcBoundsOfBezier(x0, y0, x1, y1, x2, y2, x3, y3) {
 
 /**
  * 线段包含判断
- * @param  {number}  x0
- * @param  {number}  y0
- * @param  {number}  x1
- * @param  {number}  y1
- * @param  {number}  lineWidth
- * @param  {number}  x
- * @param  {number}  y
- * @return {boolean}
+ * @param  {Number}  x0
+ * @param  {Number}  y0
+ * @param  {Number}  x1
+ * @param  {Number}  y1
+ * @param  {Number}  lineWidth
+ * @param  {Number}  x
+ * @param  {Number}  y
+ * @return {Boolean}
  */
 function containStrokeLine(x0, y0, x1, y1, lineWidth, x, y) {
   if (lineWidth === 0) {
-      return false;
+    return false;
   }
   let _l = lineWidth;
   let _a = 0;
   let _b = x0;
   // Quick reject
   if (
-      (y > y0 + _l && y > y1 + _l)
-      || (y < y0 - _l && y < y1 - _l)
-      || (x > x0 + _l && x > x1 + _l)
-      || (x < x0 - _l && x < x1 - _l)
+    (y > y0 + _l && y > y1 + _l)
+    || (y < y0 - _l && y < y1 - _l)
+    || (x > x0 + _l && x > x1 + _l)
+    || (x < x0 - _l && x < x1 - _l)
   ) {
-      return false;
+    return false;
   }
 
   if (x0 !== x1) {
-      _a = (y0 - y1) / (x0 - x1);
-      _b = (x0 * y1 - x1 * y0) / (x0 - x1) ;
+    _a = (y0 - y1) / (x0 - x1);
+    _b = (x0 * y1 - x1 * y0) / (x0 - x1);
   }
   else {
-      return Math.abs(x - x0) <= _l / 2;
+    return Math.abs(x - x0) <= _l / 2;
   }
   let tmp = _a * x - y + _b;
   let _s = tmp * tmp / (_a * _a + 1);

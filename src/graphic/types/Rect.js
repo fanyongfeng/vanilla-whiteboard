@@ -212,7 +212,7 @@ class Rect {
  * transform point
  */
   transform(matrix) {
-    matrix.transformRect(this);
+    matrix.applyToRect(this);
   }
 
   /**

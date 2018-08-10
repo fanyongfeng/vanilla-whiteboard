@@ -10,11 +10,11 @@ export default class ShapeDrawing {
 
   _style = {};
 
-  constructor(type){
+  constructor(type) {
     let pathCtor = ctorList.find(ctor => {
       return ctor.type === type
     });
-    if(!pathCtor) throw new Error("Can't find specified shape");
+    if (!pathCtor) throw new Error("Can't find specified shape");
 
     this.pathCtor = pathCtor;
   }
@@ -39,11 +39,11 @@ export default class ShapeDrawing {
     this.currentShape = null;
   }
 
-  set styles(value){
-    this._style  = value;
+  set styles(value) {
+    this._style = value;
   }
 
-  get styles(){
+  get styles() {
     return this._style;
   }
 }

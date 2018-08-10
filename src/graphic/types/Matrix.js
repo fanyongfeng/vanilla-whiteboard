@@ -151,14 +151,18 @@ class Matrix {
     return this;
   }
 
-  transformRect(bounds) {
+  /**
+   * 变形边界矩阵
+   * @param {*} bounds
+   */
+  applyToRect(bounds) {
 
     let { x, y, width, height } = bounds;
     let pointTL = new Point(x, y);
     let pointBR = new Point(x + width, y + height);
 
-    this.transformPoint(pointTL)
-      .transformPoint(pointBR);
+    this.applyToPoint(pointTL)
+      .applyToPoint(pointBR);
 
     //FIXME: 优化算法
     return new Rect(pointTL.x, pointTL.y, pointBR.x - pointTL.x, pointBR.y - pointTL.y);
@@ -169,7 +173,7 @@ class Matrix {
    * 变形一个点
    * @param {*} point
    */
-  transformPoint(point) {
+  applyToPoint(point) {
     let { x, y } = point;
 
     point.x = x * this.m[0] + y * this.m[2] + this.m[4];
@@ -183,7 +187,7 @@ class Matrix {
    * 去除位移相关变换
    * @param {*} point
    */
-  transformVector(point) {
+  applyToVector(point) {
     let { x, y } = point;
 
     point.x = x * this.m[0] + y * this.m[2];

@@ -7,6 +7,7 @@ import Matrix from './types/Matrix';
 import fitCurve from './algorithm/fitCurve';
 import smoothCurve from './algorithm/smoothCurve';
 import memoized from '../decorators/memoized'
+import Item from './Item';
 
 import {tsid} from '../util/id';
 

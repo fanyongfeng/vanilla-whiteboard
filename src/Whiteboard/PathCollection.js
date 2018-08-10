@@ -1,7 +1,8 @@
 import {mixin} from '../decorators/mixin';
 /**
  * path collection of canvas.
- * Behavior like an array. (without push, pop, slice, splice)
+ * Behavior like an array.
+ *
  */
 
 const arrMethods = {};
@@ -13,6 +14,12 @@ class PathCollection {
 
   length = 0;
 
+  /**
+   * Compare 2 PathCollection by id
+   *
+   * @param {PathCollection} left
+   * @param {PathCollection} right
+   */
   static diff(left, right) {
     if (left.length !== right.length) return true;
 
@@ -26,49 +33,82 @@ class PathCollection {
     return !!collection.find(i => i === item);
   }
 
-  changed(){
-    this.layer.refresh();
-  }
-
-  filter(){
-    return new PathCollection(Array.prototype.filter.apply(this, arguments));
-  }
-
   constructor(items) {
     if (items) items.forEach(item=> this.add(item));
   }
 
+  /**
+   * All items-collection change ,will trigger whiteboard re-draw.
+   */
+  changed(){
+    this.layer.refresh();
+  }
+
+  /**
+   * return filtered PathCollection
+   */
+  filter(){
+    return new PathCollection(Array.prototype.filter.apply(this, arguments));
+  }
+
+  /**
+   * support iterator
+   */
   *[Symbol.iterator]() {
     for (let i = 0, len = this.length; i < len; i++) {
       yield this[i];
     }
   }
 
+  /**
+   * Compare with other PathCollection.
+   * @param {PathCollection} other
+   */
   diff(other) {
     PathCollection.diff(this, other);
   }
 
+  /**
+   * Get item via index, equal to this[index]
+   * @param {Number} index
+   */
   get(index) {
     return this[index];
   }
 
+  /**
+   * Add whiteboard item.
+   * @param {*} item
+   */
   add(item) {
     return this.push(item);
   }
 
+  /**
+   * Clear whiteboard item.
+   */
   clear(){
     return this.splice(0, this.length);
   }
 
+  /**
+   * Select All items, support keyboard event Ctrl+A.
+   */
   selectAll() {
     this.forEach(item => item.selected = true);
   }
 
+  /**
+   * anti-select current collection.
+   */
   antiSelect() {
     this.forEach(item => item.selected = !item.selected);
   }
 
-  deSelect() {
+  /**
+   * unselect all items.
+   */
+  unselect() {
     this.forEach(item => item.selected = false);
   }
 
@@ -91,14 +131,25 @@ class PathCollection {
     return deleted;
   }
 
+  /**
+   *
+   * Delete selected items of current collection.
+   */
   deleteSelected() {
     return this.delete((item)=>item.selected);
   }
 
+  /**
+   * Delete items by ids.
+   * @param {Array} ids
+   */
   deleteById(ids) {
     return this.delete((item)=>PathCollection.includes(ids, item.id));
   }
 
+  /**
+   * Return the JSON-format information of current collection.
+   */
   toJSON() {
     return this.map(item => item.toJSON());
   }

@@ -1,11 +1,11 @@
 
-import {addListener, removeListener} from '../util/dom'
+import { addListener, removeListener } from '../util/dom'
 
 /**
  * Tool to input text on whiteboard
  */
 export default class Text {
-  _createShadowTextArea(){
+  _createShadowTextArea() {
     let hiddenText;
     this.hiddenTextarea = hiddenText = document.createElement('textarea');
 
@@ -18,8 +18,8 @@ export default class Text {
     var style = this._calcTextareaPosition();
 
     hiddenText.style.cssText = 'position: absolute; top: ' + style.top +
-    '; left: ' + style.left + '; z-index: -999; opacity: 0; width: 1px; height: 1px; font-size: 1px;' +
-    ' line-height: 1px; paddingｰtop: ' + style.fontSize + ';';
+      '; left: ' + style.left + '; z-index: -999; opacity: 0; width: 1px; height: 1px; font-size: 1px;' +
+      ' line-height: 1px; paddingｰtop: ' + style.fontSize + ';';
 
     document.body.appendChild(hiddenText);
 
@@ -43,7 +43,7 @@ export default class Text {
 
   }
 
-  _calcTextareaPosition(){
+  _calcTextareaPosition() {
 
   }
 

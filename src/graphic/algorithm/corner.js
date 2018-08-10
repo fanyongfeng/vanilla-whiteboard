@@ -11,18 +11,13 @@ const horizontal = ['right', 'centerX', 'left']; //index order sensitive
 // y方向，对应坐标 -1, 0, 1
 const vertical = ['bottom', 'centerY', 'top']; //index order sensitive
 
-
-const boundsPoi = [];
-const antiDir = {};
-const props = {}; //set to rect prototype
-
 /**
  * 首字幕大写
  * @param { } str
  */
 const capitalize = (str) => {
-  return str.replace(/\b[a-z]/g, function(match) {
-      return match.toUpperCase();
+  return str.replace(/\b[a-z]/g, function (match) {
+    return match.toUpperCase();
   });
 }
 
@@ -32,11 +27,11 @@ const capitalize = (str) => {
  * @param {*} indexX
  */
 const getDirection = (indexY, indexX) => { // 将centerX, centerY, 简写为center。
-  if(indexY === 0) {
-    if(indexX === 0) return 'center';
+  if (indexY === 0) {
+    if (indexX === 0) return 'center';
     return horizontal[++indexX] + 'Center';
   }
-  if(indexX === 0) return vertical[++indexY] + 'Center';
+  if (indexX === 0) return vertical[++indexY] + 'Center';
   return vertical[++indexY] + capitalize(horizontal[++indexX]);
 }
 
@@ -54,25 +49,26 @@ const cross = (a1, a2, itor) => {
   });
 }
 
-(function(){
+//export constants
+const boundsPoi = [];
+const antiDir = {};
+const props = {}; //set to rect prototype
 
+(() => {
   let _tempBounds = [];
 
   //控制点临时数组
   cross(horizontal, vertical, (x, y, coordX, coordY) => {
-
     let dir = getDirection(coordY, coordX);
     let anti = getDirection(-coordY, -coordX);
     let vector = new Point(coordX, coordY);
-
-    _tempBounds.push({ x, y, dir, anti, vector});
+    _tempBounds.push({ x, y, dir, anti, vector });
   });
 
   //控制点按矢量进行排序，确保顺时针
-  _tempBounds.sort((l, r)=>l.vector.angle > r.vector.angle ? -1 : 1);
+  _tempBounds.sort((l, r) => l.vector.angle > r.vector.angle ? -1 : 1);
 
-  _tempBounds.forEach(({x, y, dir, anti, vector}) => {
-
+  _tempBounds.forEach(({ x, y, dir, anti, vector }) => {
     props[dir] = {
       get() {
         return new Point(this[x], this[y]);
@@ -86,14 +82,12 @@ const cross = (a1, a2, itor) => {
       configurable: true,
     }
 
-    if(vector.isZero()) return;
+    if (vector.isZero()) return;
     boundsPoi.push(dir);
     antiDir[dir] = anti;
-
   });
-  console.log(props, boundsPoi, antiDir);
 
-}());
+})();
 
 export {
   boundsPoi,

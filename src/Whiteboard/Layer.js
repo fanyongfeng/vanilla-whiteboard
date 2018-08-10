@@ -2,9 +2,20 @@
 import { setStyle } from '../util/dom';
 
 /**
- * Create canvas layer
+ * Create canvas layer, and Manage all canvas of whiteboard.
  */
 export default class Layer {
+
+  /**
+   * Move items from one to other
+   */
+  static elevator(source, target, fn){
+    target.forEach(element => {
+      top.remove(element);
+      bottom.add(element);
+    });
+    refreshAll();
+  }
 
   wrapper = null;
 

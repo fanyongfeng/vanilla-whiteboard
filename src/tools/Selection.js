@@ -1,7 +1,7 @@
 
 import Rect from '../graphic/shape/Rect';
 import Point from '../graphic/types/Point';
-import { boundsPoi, antiDir } from  '../graphic/algorithm/corner';
+import { boundsPoi, antiDir } from '../graphic/algorithm/corner';
 
 const cursorMap = {
   'topLeft': 'nw-resize',

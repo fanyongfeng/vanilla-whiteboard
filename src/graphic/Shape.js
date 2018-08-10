@@ -41,6 +41,7 @@ export default class Shape extends Path {
       y = to.y;
       height = -height;
     }
+
     return new Rect(x, y, width, height, this);
   }
 

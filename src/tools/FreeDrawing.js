@@ -1,6 +1,5 @@
 import Writing from '../graphic/shape/Writing';
 
-
 // values: Marker & Highlighter
 export default class FreeDrawing {
   _style = {};

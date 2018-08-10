@@ -20,8 +20,11 @@ import { BezierSegment } from '../types/Segment';
  */
 
 const EPSILON = 1e-12;
+
 /**
- *
+ * 优化曲线的点
+ * @param {Array} points
+ * @param {Number} maxError
  */
 function fitCurve(points, maxError) {
   if (points.length <= 1) return [];
