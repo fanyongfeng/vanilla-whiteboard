@@ -22,6 +22,10 @@ class PathCollection {
 
   }
 
+  changed(){
+    this.layer.refresh();
+  }
+
   // get length() { return this[_items].length; }
 
   constructor(items) {

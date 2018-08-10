@@ -29,7 +29,7 @@ function animateColor(fromColor, toColor, duration, options) {
 
   options = options || {};
 
-  animate(fabric.util.object.extend(options, {
+  animate(Object.assign(options, {
     duration: duration || 500,
     startValue: startColor,
     endValue: endColor,

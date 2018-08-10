@@ -4,8 +4,8 @@ import Whiteboard from "./Whiteboard";
 import Path from "./graphic/Path";
 import Point from "./graphic/types/Point";
 
-import Grid from './component/Grid'
-import Axes from './component/Axes'
+import Grid from './graphic/component/Grid';
+import Axes from './graphic/component/Axes';
 
 import animate from './animate/animate';
 import easing from './animate/easing';
@@ -14,6 +14,7 @@ import animateColor from './animate/animateColor';
 import PathCollection from './Whiteboard/PathCollection'
 
 window.PathCollection = PathCollection;
+window.animation = animate;
 export default {
 
   init(){
@@ -65,12 +66,13 @@ export default {
     let lastValue = 1;
 
     animate({
-      startValue: 1,
-      endValue: 0.3,
+      startValue: 0,
+      endValue: 720,
       duration: 400,
       easing: ease,
       onChange(value, valueProgress, timeProgress){
-        item.scale(value / lastValue, value / lastValue);
+        // item.scale(value / lastValue, value / lastValue);
+        item.rotate(value);
         lastValue = value;
         canvas.refresh();
       },

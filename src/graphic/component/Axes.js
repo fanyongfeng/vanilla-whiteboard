@@ -1,5 +1,5 @@
 
-const default_options = {
+const defaultOptions = {
   showX: true,
   showY: true,
   mode: "numeric",
@@ -14,7 +14,7 @@ const gap = 50;
 export default class Axes {
 
   constructor(options = {}) {
-    this.options = Object.assign({}, default_options, options);
+    this.options = Object.assign({}, defaultOptions, options);
   }
 
   renderXAxis(ctx, width, height) {

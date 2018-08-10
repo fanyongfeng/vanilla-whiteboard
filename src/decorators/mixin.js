@@ -26,4 +26,5 @@ export function mixin(...srcs) {
     return target;
   });
 }
+
 export default mixin;

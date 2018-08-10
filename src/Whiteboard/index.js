@@ -14,18 +14,39 @@ import Point from '../graphic/types/Point';
 import { tools } from '../tools';
 
 const _createContext = Symbol('_createContext');
+const defaultOptions = {
+  selectionMode: "bounds",
+  alignToGrid: false,
+  refreshMode: 'loop',
+  readonly: false,
+  width: 1000,
+  height: 800,
+  showGrid: false,
+  showAxes: false,
+};
 
-@hookable
+/**
+ *
+ * Options:
+ *
+ *  - selectionMode: 'bounds', 'path'
+ *  - alignToGrid: boolean 对齐到网格
+ *  - loop / notify
+ *  - readonly
+ *  -
+ */
+@hookable()
 export default class Whiteboard {
-
   static instances = [];
 
   backgroundLayer = null;
   activeLayer = null;
   operateLayer = null;
 
-  constructor(options) {
-    let { container, width, height } = options;
+  constructor(options = {}) {
+    this.options = Object.assign({}, defaultOptions ,options);
+
+    let { container, width, height } = this.options;
 
     /** 一个container不能加载两个白板*/
     Whiteboard.instances.find(instance => {
@@ -72,6 +93,7 @@ export default class Whiteboard {
       activeLayer,
       operateLayer,
       currentMode: null,
+      settings: this.options,
     }
 
     // 将context 属性赋值白板实例
