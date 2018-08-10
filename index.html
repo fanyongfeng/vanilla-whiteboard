@@ -133,9 +133,13 @@
       <div class="btn-group">
         <button id="btnCurve" class="btn btn-default">绘制曲线</button>
         <button id="btnRects" class="btn btn-default">绘制多个矩形</button>
-        <button id="btnAnim" class="btn btn-default">一起转</button>
         <button id="btnRectss" class="btn btn-default">绘制海量矩形</button>
         <button id="btnCompoundPath" class="btn btn-default">绘制复合图形</button>
+        <button id="btnText" class="btn btn-default">绘制文字</button>
+      </div>
+
+      <div class="btn-group">
+        <button id="btnAnim" class="btn btn-default">一起转</button>
       </div>
     </div>
 
@@ -195,6 +199,11 @@
         whiteboard.refresh();
       });
 
+      $("#btnText").click(() => {
+        whiteboard.add(curve1);
+        whiteboard.refresh();
+      });
+
       $("#btnRects").click(() => {
         for (let i = 0; i < 100; i++) {
           let xi = i % 10, yi = parseInt(i / 10),
@@ -211,10 +220,10 @@
       $("#btnRectss").click(() => {
         for (let i = 0; i < 10000; i++) {
           let xi = i % 100, yi = parseInt(i / 100),
-            sx = xi * 10 + 100,
-            sy = yi * 10 + 100,
-            ex = xi * 10 + 70,
-            ey = yi * 10 + 70;
+            sx = xi * 8 + 30,
+            sy = yi * 8 + 30,
+            ex = xi * 8 + 24,
+            ey = yi * 8 + 24;
 
           whiteboard.addRect(sx, sy, ex, ey);
         }

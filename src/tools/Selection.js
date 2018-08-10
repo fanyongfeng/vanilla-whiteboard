@@ -1,6 +1,7 @@
 
 import Rect from '../graphic/shape/Rect';
 import Point from '../graphic/types/Point';
+import { boundsPoi, antiDir } from  '../graphic/algorithm/corner';
 
 const cursorMap = {
   'topLeft': 'nw-resize',
@@ -11,28 +12,6 @@ const cursorMap = {
   'bottomCenter': 's-resize',
   'bottomLeft': 'sw-resize',
   'leftCenter': 'w-resize',
-};
-
-const boundsPoi = [
-  'topLeft',
-  'topCenter',
-  'topRight',
-  'rightCenter',
-  'bottomRight',
-  'bottomCenter',
-  'bottomLeft',
-  'leftCenter',
-];
-
-const antiDir = {
-  'bottomRight': 'topLeft',
-  'topLeft': 'bottomRight',
-  'bottomLeft': 'topRight',
-  'topRight': 'bottomLeft',
-  'rightCenter': 'leftCenter',
-  'leftCenter': 'rightCenter',
-  'bottomCenter': 'topCenter',
-  'topCenter': 'bottomCenter',
 };
 
 let realTimeSize, lastSelected = [];
@@ -59,11 +38,11 @@ export default class Selection {
   onMouseDown(event) {
     let point = event.point;
 
-    if(this.pointOnElement(point)) {
+    if (this.pointOnElement(point)) {
       return this.target.selected = true;
     }
 
-    if(!(this.pointOnPoint(point) || this.pointOnResize(point))) {
+    if (!(this.pointOnPoint(point) || this.pointOnResize(point))) {
       this.mode = 'select';
       this.selectionRect.startPoint = point;
     }
@@ -78,7 +57,7 @@ export default class Selection {
     ctx.strokeStyle = '#96cef6';
     ctx.beginPath();
 
-    let lastPoint = bounds[boundsPoi[boundsPoi.length -2]], point;
+    let lastPoint = bounds[boundsPoi[boundsPoi.length - 2]], point;
     ctx.moveTo(lastPoint.x, lastPoint.y);
     boundsPoi.forEach(key => {
       point = bounds[key];
@@ -111,7 +90,7 @@ export default class Selection {
         item => item.selected = this.selectionRect.bounds.containsRectangle(item.bounds)
       );
 
-      if(!selected.length) return;
+      if (!selected.length) return;
 
       if (selected.diff(lastSelected)) {
 
@@ -171,7 +150,7 @@ export default class Selection {
       if (nearbyPoint) break;
     }
 
-    if(nearbyPoint) {
+    if (nearbyPoint) {
       this.mode = 'mutate';
       this.setCursor('pointer');
       this.target = seg.owner;
@@ -203,7 +182,7 @@ export default class Selection {
   }
 
   onMouseMove({ point }) {
-    if(!(this.pointOnPoint(point) || this.pointOnResize(point)|| this.pointOnElement(point))) {
+    if (!(this.pointOnPoint(point) || this.pointOnResize(point) || this.pointOnElement(point))) {
       this.mode = 'select';
     }
   }

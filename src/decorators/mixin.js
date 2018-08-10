@@ -27,4 +27,18 @@ export function mixin(...srcs) {
   });
 }
 
+/**
+ *
+ * Mixins property into the classes prototype.
+ * @param {Map} props
+ */
+export function mixinProps(props) { //Object.defineProperty
+  return ((target) => {
+    for(let key in props) {
+      Object.defineProperty(target.prototype, key, props[key]);
+    }
+    return target;
+  });
+}
+
 export default mixin;

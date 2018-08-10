@@ -1,6 +1,12 @@
 //A playground of this proj
 import Whiteboard from "./Whiteboard";
 
+import {
+  boundsPoi,
+  antiDir,
+  getters
+} from './graphic/algorithm/corner';
+
 import Path from "./graphic/Path";
 import Point from "./graphic/types/Point";
 

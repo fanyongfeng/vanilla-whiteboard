@@ -1,8 +1,11 @@
-/**
- * Dom helpers
- */
+//Dom helpers
 
-export const setStyle = (element, styles) => {
+/**
+ *
+ * @param {*} element
+ * @param {*} styles
+ */
+export function setStyle(element, styles){
 
   let elementStyle = element.style;
   if (!elementStyle) {
@@ -19,10 +22,11 @@ export const setStyle = (element, styles) => {
   return element;
 }
 
-
-
 /**
- * Bind Events
+ * Remove listeners to element.
+ * @param {DomElement} element
+ * @param {String} eventType, e.g. "mousemove", "mousemove mousedown"
+ * @param {Function} handler
  */
 export function addListener(element, eventType, handler) {
   if (!element) return;
@@ -44,6 +48,12 @@ export function addListener(element, eventType, handler) {
   }
 }
 
+/**
+ * Remove listeners from element.
+ * @param {DomElement} element
+ * @param {String} eventType, e.g. "mousemove", "mousemove mousedown"
+ * @param {Function} handler
+ */
 export function removeListener(element, eventType, handler) {
   if (!element) return;
 

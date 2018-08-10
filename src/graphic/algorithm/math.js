@@ -34,3 +34,7 @@ export function asin(x) {
 export function haversin(x) {
   return (x = sin(x / 2)) * x;
 }
+
+export function isZero(val){
+  return val >= -epsilon2 && val <= epsilon2;
+}

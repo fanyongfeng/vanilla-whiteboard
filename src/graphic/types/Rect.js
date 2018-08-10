@@ -1,60 +1,18 @@
 import Point from './Point';
-
-const horizontal = ['left', 'centerX', 'right']; //CenterX
-const vertical = ['top', 'centerY', 'bottom']; //CenterY
-const define = Object.defineProperty;
-
-
-/**
- * 首字幕大写
- * @param { } str
- */
-const capitalize = (str) => {
-  return str.replace(/\b[a-z]/g, function(match) {
-      return match.toUpperCase();
-  });
-}
-
-/**
- * 获取属性名
- * @param {*} y
- * @param {*} x
- * @param {*} indexY
- * @param {*} indexX
- */
-const getKey = (y, x, indexY, indexX) => {
-  if(indexY === 1) {
-    if(indexX === 1) return 'center';
-    return x + 'Center';
-  }
-  if(indexX === 1) return y + 'Center';
-  return y + capitalize(x);
-}
-
-/**
- * Cross product
- * @param {Array} a1
- * @param {Array} a2
- * @param {Function} itor
- */
-const cross = (a1, a2, itor) => {
-  a1.forEach((i1, i1Idx) => {
-    a2.forEach((i2, i2Idx) => {
-      itor.apply(null, [i1, i2, i1Idx, i2Idx]);
-    });
-  });
-}
+import { props } from '../algorithm/corner';
+import { mixinProps } from '../../decorators/mixin';
 
 /**
  *  Type Rect
  */
+@mixinProps(props)
 class Rect {
 
   /**
    * static method to create instance from params
    */
   static instantiate(x, y, width, height) {
-    if(typeof x === "number") return new Rect(x, y, width, height)
+    if (typeof x === "number") return new Rect(x, y, width, height)
     return x;
   }
 
@@ -64,23 +22,6 @@ class Rect {
     this.width = width;
     this.height = height;
     this.owner = owner;
-
-    cross(horizontal, vertical, (x, y, indexX, indexY)=>
-      define(this, getKey(y, x, indexY, indexX), {
-        get(){
-          return new Point(this[x], this[y]);
-        },
-        set(point){
-          this[x] = point.x;
-          this[y] = point.y;
-          // A special setter where we allow chaining, because it comes in handy
-          // in a couple of places in core.
-          return this;
-        },
-        enumerable: true,
-        configurable: true,
-      })
-    );
   }
 
   /**
@@ -103,7 +44,7 @@ class Rect {
    *
    */
   get top() { return this.y; }
-  set top(top) { this.y = top;}
+  set top(top) { this.y = top; }
 
   /**
    * The coordinate of the left.
@@ -121,7 +62,7 @@ class Rect {
    *
    */
   get bottom() { return this.y + this.height; }
-  set bottom(bottom) {  this.y = bottom - this.height; }
+  set bottom(bottom) { this.y = bottom - this.height; }
 
   /**
    * The coordinate of right, getter && setter
@@ -129,7 +70,7 @@ class Rect {
    * @type Number
    */
   get right() { return this.x + this.width; }
-  set right(right) { this.x  = right - this.width; }
+  set right(right) { this.x = right - this.width; }
 
 
   /**
@@ -141,7 +82,7 @@ class Rect {
     return this.x + this.width / 2;
   }
 
-  set centerX(val){
+  set centerX(val) {
     this.x = val - this.width / 2;
   }
 
@@ -154,7 +95,7 @@ class Rect {
     return this.y + this.height / 2;
   }
 
-  set centerY(val){
+  set centerY(val) {
     this.y = val - this.height / 2;
   }
 
@@ -263,14 +204,14 @@ class Rect {
   /**
    * return point data as JSON-format: [x, y, width, height]
    */
-  toJSON(){
-    return [this.x , this.y, this.width, this.height];
+  toJSON() {
+    return [this.x, this.y, this.width, this.height];
   }
 
-    /**
-   * transform point
-   */
-  transform(matrix){
+  /**
+ * transform point
+ */
+  transform(matrix) {
     matrix.transformRect(this);
   }
 
@@ -285,5 +226,5 @@ class Rect {
       + ' }';
   }
 }
-
+window.Rect = Rect;
 export default Rect;

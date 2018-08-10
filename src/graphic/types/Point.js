@@ -1,3 +1,4 @@
+import {isZero} from '../algorithm/math'
 /**
  * The base type of graphic ,(location & vector)
  */
@@ -16,6 +17,10 @@ export default class Point {
   constructor(x, y) {
     this.x = x;
     this.y = y;
+  }
+
+  isZero(){
+    return isZero(this.x) && isZero(this.y);
   }
 
   /**
@@ -158,7 +163,7 @@ export default class Point {
    * Get Angle In Radians, Vector
    */
   get angle() {
-    if (this.length) return 0;
+    if (!this.length) return 0;
     return Math.atan2(this.y, this.x);
   }
 

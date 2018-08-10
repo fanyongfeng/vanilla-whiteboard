@@ -312,5 +312,10 @@ function containStrokeLine(x0, y0, x1, y1, lineWidth, x, y) {
   return _s <= _l / 2 * _l / 2;
 }
 
-export {containStroke, containStrokeArc, containStrokeLine, calcBoundsOfBezier};
+export {
+  containStroke,
+  containStrokeArc,
+  containStrokeLine,
+  calcBoundsOfBezier
+};
 
