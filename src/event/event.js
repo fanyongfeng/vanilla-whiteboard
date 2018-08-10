@@ -24,7 +24,7 @@ function throttleDistance(point, distance = 10){
 }
 
 const canvasStatus = {
-  isSelectionMode:  false
+  isSelectionMode:  true
 }
 
 let handlers = {

@@ -1,20 +1,17 @@
+import {mixin} from '../decorators/mixin';
 /**
  * path collection of canvas.
  * Behavior like an array. (without push, pop, slice, splice)
  */
-const _items = Symbol('_items');
 
-const arr = Array.prototype;
+const arrMethods = {};
+['splice', 'push', 'sort', 'map','forEach', 'find', 'reduce', 'reduceRight']
+  .forEach(method=>arrMethods[method] = Array.prototype[method]);
 
+@mixin(arrMethods)
 class PathCollection {
 
-// 下面4方法使PathCollection 更像是数组
-  // splice = Array.prototype.splice;
-  // push = Array.prototype.push;
-  // sort = Array.prototype.sort;
-  // length = Array.prototype.length;
-
-  [_items] = [];
+  length = 0;
 
   static diff(left, right) {
     if (left.length !== right.length) return true;
@@ -25,60 +22,42 @@ class PathCollection {
     return false;
   }
 
-  static includes() {
-
+  static includes(collection, item) {
+    return !!collection.find(i => i === item);
   }
 
   changed(){
     this.layer.refresh();
   }
 
-  get length() { return this[_items].length; }
+  filter(){
+    return new PathCollection(Array.prototype.filter.apply(this, arguments));
+  }
 
   constructor(items) {
-
-    if (items) this[_items] = items;
-
-    ['forEach', 'find', 'reduce']
-      .forEach(method =>
-        this[method] = function() {
-        return arr[method].apply(this[_items], arguments);
-      });
-
-
-    ['map', 'filter']
-      .forEach(method =>
-        this[method] = function () {
-          return new PathCollection(arr[method].apply(this[_items], arguments));
-        });
+    if (items) items.forEach(item=> this.add(item));
   }
 
   *[Symbol.iterator]() {
-    for (let i = 0, len = this[_items].length; i < len; i++) {
-      yield this[_items][i];
+    for (let i = 0, len = this.length; i < len; i++) {
+      yield this[i];
     }
   }
-
-  // get length(){
-  //   return this[_items].length;
-  // }
 
   diff(other) {
     PathCollection.diff(this, other);
   }
 
   get(index) {
-    return this[_items][index];
+    return this[index];
   }
 
   add(item) {
-    this[_items].push(item);
-    let index = this[_items].length - 1;
-    this[index] = item;
+    return this.push(item);
   }
 
   clear(){
-    this[_items] = [];
+    return this.splice(0, this.length);
   }
 
   selectAll() {
@@ -93,26 +72,31 @@ class PathCollection {
     this.forEach(item => item.selected = false);
   }
 
-  deleteSelected() {
-    let deletedItems = new PathCollection;
-    this[_items] = this[_items].filter(item => {
-      if (item.selected !== true) return true;
+  /**
+   * Delete items of current collection.
+   * It will trigger canvas-redraw;
+   * @param {Function} fn, filter determine which item should be removed.
+   */
+  delete(fn){
+    let deleted = new PathCollection;
 
-      deletedItems.add(item.hash);
-      return false;
-    });
-    return deletedItems;
+    for(let i=0, len = this.length; i<len; i++) {
+      let item = this.get(i);
+      if(fn(item)) {
+        this.splice(i--, 1); // delete one item and re-assign current index
+        len--; //re-assign collection length
+        deleted.push(item);
+      }
+    }
+    return deleted;
   }
 
-  delete(ids) {
+  deleteSelected() {
+    return this.delete((item)=>item.selected);
+  }
 
-    if (!Array.isArray(ids)) ids = [ids];
-
-    this[_items] = this[_items].filter(item => {
-      if (!includes(ids, item.id)) return true;
-      item.remove();
-      return false;
-    });
+  deleteById(ids) {
+    return this.delete((item)=>PathCollection.includes(ids, item.id));
   }
 
   toJSON() {
