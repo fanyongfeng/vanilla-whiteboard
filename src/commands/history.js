@@ -4,18 +4,16 @@
  * options.change : callback on redo/undo action
  */
 
- const noop = ()=>{};
+const noop = () => { };
 export default class History {
   constructor(options) {
     this.clear();
     this.options = Object.assign({
-        maxStack: 100,
-        change: noop
-      },
-      options
-    );
+      maxStack: 100,
+      change: noop
+    }, options);
 
-    this.lastRecord = +new Date();
+    this.lastRecord = +new Date;
   }
 
   /**

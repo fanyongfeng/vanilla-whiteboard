@@ -152,7 +152,14 @@ class Path extends Item {
     return this;
   }
 
+  /**
+   * If point in path.
+   * @param {Point} point
+   */
   containsPoint(point) {
+    // If point not in bounds of path, return false.
+    if(!super.containsPoint(point)) return false;
+
     let seg = this.segments.find(item => item.containsPoint(point, this.style.lineWidth));
     return !!seg;
   }
@@ -163,7 +170,7 @@ class Path extends Item {
     });
   }
 
-  draw(ctx) {
+  _draw(ctx) {
 
     ctx.beginPath();
     this.style.apply(ctx);
@@ -202,17 +209,7 @@ class Path extends Item {
 
     //ctx.fill();
     ctx.stroke();
-
     this.segments.forEach(segment=>segment.draw(ctx));
-    if(this.selected) this.drawBoundRect(ctx);
-  }
-
-  drawBoundRect(ctx) {
-    ctx.save();
-    ctx.strokeStyle = '#009dec';
-    ctx.lineWidth = 1;
-    ctx.strokeRect.apply(ctx, this.strokeBounds.toJSON());
-    ctx.restore();
   }
 
   toJSON() {

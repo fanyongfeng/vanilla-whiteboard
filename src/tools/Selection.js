@@ -141,6 +141,8 @@ export default class Selection {
     for (let i = 0; i < this.items.length; i++) {
       let segments = this.items.get(i).segments;
 
+      if(!segments) continue;
+
       for (let j = 0; j < segments.length; j++) {
         seg = segments[j];
         if (seg.command !== 'C') continue;

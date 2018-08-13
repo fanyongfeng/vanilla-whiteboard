@@ -8,7 +8,7 @@ export default class Group extends Item {
 
   _children = [];
   martix = null;
-  
+
   constructor(items) {
 
   }
@@ -33,7 +33,7 @@ export default class Group extends Item {
     this.children.forEach(item => item.transformContent());
   }
 
-  draw(ctx) {
+  _draw(ctx) {
     this.children.forEach(path => path.draw(ctx));
   }
 

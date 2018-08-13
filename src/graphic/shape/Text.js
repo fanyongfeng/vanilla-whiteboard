@@ -1,14 +1,17 @@
-import Path from '../Path';
+import Item from '../Item';
 import Rect from '../types/Rect'
 
 /**
  * Text Item;
  */
-export default class Text extends Path {
+export default class Text extends Item {
   static type = 'text';
 
   _lines = [];
   _text = "";
+  _mode = "canvas"; //textarea
+  _autoBreak = true; // if _autoBreak is true, Text line will break if out of canvas bounds.
+
   constructor(text) {
     super();
     this._text = text;
@@ -31,14 +34,14 @@ export default class Text extends Path {
       width = this.getTextWidth(style.font, lines),
       x = 0;
 
-    return new Rect(x, numLines ? - 0.75 * leading : 0, width, numLines * leading)
+    return new Rect(x + 100, (numLines ? - 0.75 * leading : 0) + 100, width, numLines * leading)
   }
 
   /**
    * 获取文字宽度
-   * 
-   * @param {String} font 
-   * @param {Array} lines 
+   *
+   * @param {String} font
+   * @param {Array} lines
    */
   getTextWidth(font, lines) {
     let ctx = this._ctx,
@@ -54,7 +57,7 @@ export default class Text extends Path {
     return width;
   }
 
-  draw(ctx) {
+  _draw(ctx) {
 
     this._ctx = ctx;
     let lines = this._lines,
@@ -64,9 +67,11 @@ export default class Text extends Path {
       leading = style.leading || 18,
       shadowColor = ctx.shadowColor;
 
+    this.selected = true;
+
     ctx.save();
 
-    ctx.font = style.fontStyle;
+    ctx.font = style.font;
     ctx.textAlign = style.justification;
     for (let i = 0, l = lines.length; i < l; i++) {
       // See Path._draw() for explanation about ctx.shadowColor
@@ -81,10 +86,11 @@ export default class Text extends Path {
       }
       ctx.translate(0, leading); //绘制行高
     }
+
     ctx.restore();
   }
 
-  _getCursorBoundaries(){
+  _getCursorBounds(){
     if (typeof position === 'undefined') {
       position = this.selectionStart;
     }

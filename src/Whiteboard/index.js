@@ -89,7 +89,7 @@ export default class Whiteboard {
     operateLayer.appendTo(this.wrapper);
 
     let whiteboardCtx = {
-      items: new PathCollection,
+      items: activeLayer.items,
       backgroundLayer,
       activeLayer,
       operateLayer,
@@ -108,8 +108,7 @@ export default class Whiteboard {
     if (this._isLoop === true) throw new Error("Can't watch twice!");
 
     const drawDirtyLayer = () => {
-      console.log('--tick--');
-      if(this.activeLayer.isDirty) this.activeLayer.redraw();
+      if(this.activeLayer.isDirty) this.activeLayer.refresh();
       requestAnimationFrame(drawDirtyLayer);
     }
 

@@ -1,9 +1,11 @@
 /**
  *
- * Make Class support Event-Emitter:  'on', 'off', 'once' ,'emit'.
+ * Make Class support event-emitter:  'on', 'off', 'once' ,'emit'.
  *
  * Code example:
  *
+ * declare:
+ * @emitter()
  * Class DecoratedClass { change(){ this.emit('changed') } }
  * let ins = new DecoratedClass();
  * ins.on('changed', (event)=>{ //dosomething });

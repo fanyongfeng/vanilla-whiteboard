@@ -53,15 +53,6 @@ export default class Image extends Item {
       //TODO:Emit load event
       this._bounds = this.calcInitBounds();
 
-
-      let { x, y, width, height } = this._bounds;
-          //draw stroke;
-      this.moveTo(new Point(x, y))
-        .lineTo(new Point(x + width, y))
-        .lineTo(new Point(x + width, y + height))
-        .lineTo(new Point(x, y + height))
-        .lineTo(new Point(x, y));
-
       this.drawImageAndStroke(ctx);
       img = img.onload = img.onerror = null;
     };
@@ -73,6 +64,18 @@ export default class Image extends Item {
     };
 
     this._image = img;
+  }
+
+  drawStroke() {
+    let rect = this.strokeRect = new Path();
+
+    let { x, y, width, height } = this._bounds;
+    //draw stroke;
+    rect.moveTo(new Point(x, y))
+      .lineTo(new Point(x + width, y))
+      .lineTo(new Point(x + width, y + height))
+      .lineTo(new Point(x, y + height))
+      .lineTo(new Point(x, y));
   }
 
   getImageData() {
@@ -106,7 +109,7 @@ export default class Image extends Item {
       height = this.naturalHeight;
       x = this.align === 'center' ? (viewWidth - width) / 2 : 0;
       y = this.align === 'center' ? (viewHeight - height) / 2 : 0;
-    } else if(imgRadio > viewRadio) {
+    } else if (imgRadio > viewRadio) {
       width = viewWidth;
       height = viewWidth / imgRadio;
       x = 0
@@ -145,10 +148,10 @@ export default class Image extends Item {
 
     //TODO: transform bounds.
 
-    if(this.selected) this.drawBoundRect(ctx);
+    if (this.selected) this.drawBoundRect(ctx);
   }
 
-  draw(ctx) {
+  _draw(ctx) {
     this._ctx = ctx;
 
     if (this.loaded) {

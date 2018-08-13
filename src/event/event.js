@@ -59,7 +59,7 @@ let handlers = {
     this.onMouseDown = this.onMouseDown.bind(this);
     // this.onMouseMove = this.onMouseMove.bind(this);
 
-    this.onMouseMove = throttle(this.onMouseMove, 10).bind(this); //
+    this.onMouseMove = throttle(this.onMouseMove, 0).bind(this); //
 
     this.onMouseUp = this.onMouseUp.bind(this);
 
@@ -145,7 +145,7 @@ let handlers = {
     event.preventDefault();
 
     let ev = new MouseEvent(event);
-    if(!throttleDistance(ev.point, 10)) return;
+    // if(!throttleDistance(ev.point, 10)) return;
     lastPoint = ev.point;
 
     if (typeof event.touches !== 'undefined' && event.touches.length > 1) {

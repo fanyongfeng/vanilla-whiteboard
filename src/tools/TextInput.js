@@ -36,7 +36,9 @@ export default class Text {
   }
 
   onMouseDown(event) {
+    if(!this.target) return;
 
+    this.target.setCursor();
   }
 
   onKeyDown(event) {

@@ -25,8 +25,7 @@ const defaultStyles = {
  */
 const fontStyles = {
   // Characters
-  font: 'sans-serif',
-  leading: null,
+  fontSize: 16,
   textAlign: 'left',
   justification: 'left'
 };
@@ -59,6 +58,14 @@ export default class Style {
     }
 
     return style === this || compare(this, style) || false;
+  }
+
+  get font(){
+    return `${this.fontSize}px sans-serif`;
+  }
+
+  get leading(){
+    return this.fontSize * 1.4;
   }
 
   /**

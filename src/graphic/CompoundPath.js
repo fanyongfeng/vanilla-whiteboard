@@ -36,7 +36,7 @@ class CompoundPath extends Item {
     return rect;
   }
 
-  draw(ctx) {
+  _draw(ctx) {
     this.children.forEach(path => path.draw(ctx));
   }
 }

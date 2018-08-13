@@ -1,13 +1,13 @@
 
 import { setStyle } from '../util/dom';
-import PathCollection from './PathCollection';
+import ItemCollection from './ItemCollection';
 
 const _items = Symbol('_items');
 /**
  * Create canvas layer, and Manage all canvas of whiteboard.
  */
 export default class Layer {
-  [_items] = new PathCollection;
+  [_items] = new ItemCollection(null, this);
   wrapper = null;
   _isDirty = true;
 
@@ -24,15 +24,15 @@ export default class Layer {
 
   /**
    * Layer.
-   * 
-   * @param {Number} width 
-   * @param {Number} height 
-   * @param {String} role 
+   *
+   * @param {Number} width
+   * @param {Number} height
+   * @param {String} role
    */
   constructor(width, height, role){
     let el = document.createElement('canvas');
     el.setAttribute('data-role', role);
-
+    this.role = role;
     this.el = el;
     this.ctx = el.getContext('2d');
     this.width = width;
@@ -52,7 +52,7 @@ export default class Layer {
     }
   }
 
-  redraw(){
+  refresh(){
     this.clear();
     console.log("--refresh triggered!--");
     this[_items].forEach(item => item.draw(this.ctx));
@@ -60,15 +60,11 @@ export default class Layer {
   }
 
   get items(){
-    return [_items];
+    return this[_items];
   }
 
   get deviceRatio() {
     return window.devicePixelRatio || 1;
-  }
-
-  get isDirty(){
-    return this._isDirty;
   }
 
   get pixelRadio() {
@@ -83,6 +79,14 @@ export default class Layer {
       return this.deviceRatio / backingStoreRatio;
     }
     return this.deviceRatio;
+  }
+
+  get isDirty(){
+    return this._isDirty;
+  }
+
+  markAsDirty(){
+    this._isDirty = true;
   }
 
   applyRatio() {

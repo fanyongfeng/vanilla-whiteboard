@@ -17,9 +17,7 @@ import animate from './animate/animate';
 import easing from './animate/easing';
 import animateColor from './animate/animateColor';
 
-import PathCollection from './Whiteboard/PathCollection'
 
-window.PathCollection = PathCollection;
 window.animation = animate;
 export default {
 
@@ -35,7 +33,7 @@ export default {
 
     window.items = window.whiteboard.items;
 
-    // this.whiteboard.watch();
+    this.whiteboard.watch();
   },
 
   drawGrid(){

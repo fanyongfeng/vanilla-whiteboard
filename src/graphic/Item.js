@@ -1,4 +1,4 @@
-import {tsid} from '../util/id';
+import { tsid } from '../util/id';
 import Style from './types/Style';
 import Matrix from './types/Matrix';
 
@@ -13,6 +13,7 @@ export default class Item {
   constructor(style) {
     this.id = tsid();
     this[_style] = new Style(style);
+    this.matrix = new Matrix();
   }
 
   get selected() {
@@ -22,9 +23,9 @@ export default class Item {
   set selected(val) {
     this[_selected] = val;
   }
-    /**
-   * style of current path
-   */
+  /**
+ * style of current path
+ */
   get style() {
     return this[_style];
   }
@@ -38,24 +39,28 @@ export default class Item {
     return null;
   }
 
-  get position(){
+  get strokeBounds(){
+    return this.bounds;
+  }
+
+  get position() {
     return this.bounds.center;
   }
 
-  set position(value){
+  set position(value) {
     this.setPosition(value.x, value.y);
   }
 
-  setPosition(x, y){
+  setPosition(x, y) {
     this.translate(Point.instantiate(x, y).subtract(this.position));
   }
 
-  translate(point){
+  translate(point) {
     let mx = new Matrix();
     return this.transform(mx.translate(point));
   }
 
-  scale(sx, sy, point){
+  scale(sx, sy, point) {
     let mx = new Matrix();
     point = point || this.bounds.center;
     return this.transform(mx.scale(sx, sy, point));
@@ -67,19 +72,12 @@ export default class Item {
     return this.transform(mx.rotate(deg, point));
   }
 
-  /**
-   * 绘制边界矩形
-   * @param {*} ctx 
-   */
-  drawBoundRect(ctx) {
-    ctx.save();
-    ctx.strokeStyle = '#009dec';
-    ctx.lineWidth = 1;
-    ctx.strokeRect.apply(ctx, this.strokeBounds.toJSON());
-    ctx.restore();
-  }
+  transform(matrix) {
+    //TODO: transform stroke & bounds.
 
-  transform(matrix){
+    if(matrix) {
+      this.matrix = this.matrix.multiply(matrix);
+    }
 
     this.transformContent(matrix);
     return this;
@@ -87,7 +85,44 @@ export default class Item {
     //TODO:markAsDrity
   }
 
-  draw(ctx){
-    if(this.selected) this.drawBoundRect(ctx);
+  /**
+   * Transform group & compoundPath & Segment of path;
+   * @param {*} matrix
+   */
+  transformContent(matrix){
+    if(this.children) {
+      this.children.forEach(item=>item.transform(matrix));
+      this.matrix.reset();
+    }
+  }
+
+  containsPoint(point) {
+    return this.bounds.containsPoint(point);
+  }
+
+  _draw(ctx) {
+    throw new Error("Abstract method must be overwrite!");
+  }
+
+  draw(ctx) {
+    ctx.save();
+    this.matrix.applyToContext(ctx);
+    this._draw(ctx);
+    ctx.restore();
+
+    if (this.selected) this.drawBoundRect(ctx);
+    return this;
+  }
+
+  /**
+   * 绘制边界矩形
+   * @param {*} ctx
+   */
+  drawBoundRect(ctx) {
+    ctx.save();
+    ctx.strokeStyle = '#009dec';
+    ctx.lineWidth = 1;
+    ctx.strokeRect.apply(ctx, this.strokeBounds.toJSON());
+    ctx.restore();
   }
 }
