@@ -4,6 +4,7 @@ function assign(target, frm) {
 
 /**
  * Mixins an object into the classes prototype.
+ *
  * @export
  * @param {...Object[]} srcs
  * @returns {ClassDecorator}
@@ -19,6 +20,7 @@ function assign(target, frm) {
  * const myClass = new MyClass();
  *
  * myClass.blorg(); // => 'blorg!'
+ *
  */
 export function mixin(...srcs) {
   return ((target) => {

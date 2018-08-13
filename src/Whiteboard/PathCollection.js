@@ -1,8 +1,9 @@
 import {mixin} from '../decorators/mixin';
 
 const arrMethods = {};
+const arr = Array.prototype;
 ['splice', 'push', 'sort', 'map','forEach', 'find', 'reduce', 'reduceRight']
-  .forEach(method=>arrMethods[method] = Array.prototype[method]);
+  .forEach(method=>arrMethods[method] = arr[method]);
 
 /**
  * path collection of canvas.
@@ -30,9 +31,9 @@ class PathCollection {
   }
 
   /**
-   * 
-   * @param {*} collection 
-   * @param {*} item 
+   *
+   * @param {*} collection
+   * @param {*} item
    */
   static includes(ids, id) {
     return !!ids.find(i => i === id);

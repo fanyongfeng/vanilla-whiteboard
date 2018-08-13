@@ -28,9 +28,14 @@ export default {
       container:document.getElementById('draw-panel'),
       width: 1000,
       height: 800,
+      zoom: 1,
+      selectionMode: 'contains', // cross
+
     });
 
     window.items = window.whiteboard.items;
+
+    // this.whiteboard.watch();
   },
 
   drawGrid(){

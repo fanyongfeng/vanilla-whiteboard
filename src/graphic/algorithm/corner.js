@@ -82,7 +82,8 @@ const props = {}; //set to rect prototype
       configurable: true,
     }
 
-    if (vector.isZero()) return;
+    if (vector.isZero()) return; // ignore center.
+
     boundsPoi.push(dir);
     antiDir[dir] = anti;
   });

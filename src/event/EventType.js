@@ -38,5 +38,4 @@ export class KeyEvent {
   constructor(originEvent) {
     this.originEvent = originEvent;
   }
-
 }

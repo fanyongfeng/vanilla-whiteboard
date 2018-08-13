@@ -2,7 +2,7 @@
  *
  */
 
-import hookable from '../decorators/hookable';
+import emitter from '../decorators/emitter';
 import Layer from './Layer';
 import { setStyle } from '../util/dom';
 import handler from '../event/event';
@@ -36,7 +36,7 @@ const defaultOptions = {
  *  - readonly
  *  -
  */
-@hookable()
+@emitter()
 export default class Whiteboard {
   static instances = [];
 
@@ -104,8 +104,8 @@ export default class Whiteboard {
     return whiteboardCtx;
   }
 
-  loop() {
-    if (this._isLoop === true) throw new Error("Can't loop twice!");
+  watch() {
+    if (this._isLoop === true) throw new Error("Can't watch twice!");
 
     const drawDirtyLayer = () => {
       console.log('--tick--');

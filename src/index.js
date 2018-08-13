@@ -30,7 +30,7 @@ class Whiteboard {
     /**
      * draw background
      */
-    // playground.drawGrid();
+    playground.drawGrid();
     // playground.drawAxes();
     // playground.drawPolyline('cubicInOut');
     // playground.drawPolyline('circularInOut');
@@ -43,9 +43,8 @@ class Whiteboard {
 let nebula = typeof nebula !== 'undefined' ? nebula : {};
 nebula.Whiteboard = Whiteboard;
 
-new Whiteboard;
+let wb = new Whiteboard;
 window.playground = playground;
-
 window.nebula = nebula;
 // export const Whiteboard = Whiteboard;
 
