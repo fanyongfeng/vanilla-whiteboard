@@ -1,59 +1,28 @@
+
+import { LineSegment, BezierSegment, MoveSegment, QuadraticSegment, ArcSegment } from './types/Segment';
 import Point from './types/Point';
 import Rect from './types/Rect';
-import { LineSegment, BezierSegment, MoveSegment, QuadraticSegment, ArcSegment } from './types/Segment';
-import Style from './types/Style';
-import Matrix from './types/Matrix';
-
 import fitCurve from './algorithm/fitCurve';
 import smoothCurve from './algorithm/smoothCurve';
 import memoized from '../decorators/memoized'
 import Item from './Item';
 
-import {tsid} from '../util/id';
-
-const _selected = Symbol('_selected');
 const _segments = Symbol('_segments');
-
 
 /**
  * A full path and base class of all single path shapes.
  * 所有矢量图形的父类
  */
-class Path {
+class Path extends Item {
 
   [_segments] = [];
-  [_selected] = false;
   startPoint = null;
   contextPoint = null;
   isClose = false;
 
-  constructor(style) {
-    this.id = tsid();
-    this._style = new Style(style);
-  }
 
   get segments() {
     return this[_segments];
-  }
-
-  get selected() {
-    return this[_selected];
-  }
-
-  set selected(val) {
-    this[_selected] = val;
-  }
-
-  /**
-   * style of current path
-   */
-  get style() {
-    return this._style;
-  }
-
-  set style(value) {
-    this._style = value;
-    //mark-as-dirty
   }
 
   add(segment) {
@@ -186,43 +155,6 @@ class Path {
   containsPoint(point) {
     let seg = this.segments.find(item => item.containsPoint(point, this.style.lineWidth));
     return !!seg;
-  }
-
-  get position(){
-    return this.bounds.center;
-  }
-
-  set position(value){
-    this.setPosition(value.x, value.y);
-  }
-
-  setPosition(x, y){
-    this.translate(Point.instantiate(x, y).subtract(this.position));
-  }
-
-  translate(point){
-    let mx = new Matrix();
-    return this.transform(mx.translate(point));
-  }
-
-  scale(sx, sy, point){
-    let mx = new Matrix();
-    point = point || this.bounds.center;
-    return this.transform(mx.scale(sx, sy, point));
-  }
-
-  rotate(deg, point) {
-    let mx = new Matrix();
-    point = point || this.bounds.center;
-    return this.transform(mx.rotate(deg, point));
-  }
-
-  transform(matrix){
-
-    this.transformContent(matrix);
-    return this;
-    // this.emit('changed');
-    //TODO:markAsDrity
   }
 
   transformContent(matrix){

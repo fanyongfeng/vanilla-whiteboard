@@ -17,19 +17,12 @@ class CompoundPath extends Item {
   }
 
   /**
-   * Get children.
-   */
-  get children() {
-    return this._children;
-  }
-
-  /**
    * Get segments
    */
   get segments() {
     let children = this._children,
       segments = [];
-    for (var i = 0, l = children.length; i < l; i++)
+    for (let i = 0, l = children.length; i < l; i++)
       segments.push.apply(segments, children[i].segments);
     return segments;
   }

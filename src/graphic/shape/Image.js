@@ -1,4 +1,4 @@
-import Path from "../Path"
+import Item from "../Item"
 import Rect from '../types/Rect';
 import Point from '../types/Point';
 import Matrix from '../types/Matrix';
@@ -6,7 +6,7 @@ import Matrix from '../types/Matrix';
 /**
  * The Raster item represents an image.
  */
-export default class Image extends Path {
+export default class Image extends Item {
 
   _src = null;
   loaded = false;

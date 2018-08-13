@@ -1,6 +1,7 @@
 
 import playground from './playground'
 
+
 //top-level APIs
 /**
  * on('type', handler);
@@ -17,45 +18,32 @@ import playground from './playground'
  *  -
  *
  */
-
 class Whiteboard {
   // /version = __VERSION__;
-
   mode = 'readonly';
-
   static install(){
 
   }
 
   constructor(options){
-
     playground.init(options);
-
-
     /**
      * draw background
      */
     // playground.drawGrid();
     // playground.drawAxes();
-
     // playground.drawPolyline('cubicInOut');
     // playground.drawPolyline('circularInOut');
     // playground.drawPolyline('bounceInOut');
   }
-
-  export(){
-
-  }
-
+  export(){}
   import(){}
-
 }
 
 let nebula = typeof nebula !== 'undefined' ? nebula : {};
 nebula.Whiteboard = Whiteboard;
 
-window.wb1 = new Whiteboard;
-// window.wb2 = new Whiteboard;
+new Whiteboard;
 window.playground = playground;
 
 window.nebula = nebula;

@@ -45,7 +45,7 @@ export default class Whiteboard {
   operateLayer = null;
 
   constructor(options = {}) {
-    this.options = Object.assign({}, defaultOptions ,options);
+    this.options = Object.assign({}, defaultOptions, options);
 
     let { container, width, height } = this.options;
 
@@ -80,9 +80,9 @@ export default class Whiteboard {
    */
   [_createContext]() {
 
-    let backgroundLayer = new Layer(this.width,this. height, 'background'),
-    activeLayer = new Layer(this.width,this. height, 'active'),
-    operateLayer = new Layer(this.width,this. height, 'operate');
+    let backgroundLayer = new Layer(this.width, this.height, 'background'),
+      activeLayer = new Layer(this.width, this.height, 'active'),
+      operateLayer = new Layer(this.width, this.height, 'operate');
 
     backgroundLayer.appendTo(this.wrapper);
     activeLayer.appendTo(this.wrapper);
@@ -104,6 +104,20 @@ export default class Whiteboard {
     return whiteboardCtx;
   }
 
+  loop() {
+    if (this._isLoop === true) throw new Error("Can't loop twice!");
+
+    const drawDirtyLayer = () => {
+      console.log('--tick--');
+      if(this.activeLayer.isDirty) this.activeLayer.redraw();
+      requestAnimationFrame(drawDirtyLayer);
+    }
+
+    //invoke immediately！
+    drawDirtyLayer();
+    this._isLoop = true;
+  }
+
   refresh() {
     requestAnimationFrame(() => {
       this.activeLayer.clear();
@@ -121,7 +135,7 @@ export default class Whiteboard {
     // this.refresh();
   }
 
-  addText(text){
+  addText(text) {
     this.items.add(new Text(text));
   }
 

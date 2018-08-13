@@ -1,14 +1,14 @@
 import {mixin} from '../decorators/mixin';
-/**
- * path collection of canvas.
- * Behavior like an array.
- *
- */
 
 const arrMethods = {};
 ['splice', 'push', 'sort', 'map','forEach', 'find', 'reduce', 'reduceRight']
   .forEach(method=>arrMethods[method] = Array.prototype[method]);
 
+/**
+ * path collection of canvas.
+ * Behavior like an array.
+ *
+ */
 @mixin(arrMethods)
 class PathCollection {
 
@@ -29,12 +29,18 @@ class PathCollection {
     return false;
   }
 
-  static includes(collection, item) {
-    return !!collection.find(i => i === item);
+  /**
+   * 
+   * @param {*} collection 
+   * @param {*} item 
+   */
+  static includes(ids, id) {
+    return !!ids.find(i => i === id);
   }
 
-  constructor(items) {
+  constructor(items, layer) {
     if (items) items.forEach(item=> this.add(item));
+    this.layer = layer;
   }
 
   /**
@@ -42,6 +48,7 @@ class PathCollection {
    */
   changed(){
     this.layer.refresh();
+    this.layer.isDirty = true;
   }
 
   /**

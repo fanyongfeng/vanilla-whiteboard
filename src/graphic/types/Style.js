@@ -1,4 +1,4 @@
-
+import Color from './Color';
 /**
  * default style settings of path
  */
@@ -33,7 +33,7 @@ const fontStyles = {
 
 export default class Style {
   constructor(options = {}) {
-    Object.assign(this, defaultStyles, options);
+    Object.assign(this, defaultStyles, fontStyles, options);
   }
 
   apply(ctx) {

@@ -1,12 +1,15 @@
 
 import { setStyle } from '../util/dom';
+import PathCollection from './PathCollection';
 
 const _items = Symbol('_items');
 /**
  * Create canvas layer, and Manage all canvas of whiteboard.
  */
 export default class Layer {
-  [_items] = null;
+  [_items] = new PathCollection;
+  wrapper = null;
+  _isDirty = true;
 
   /**
    * Move items from one to other
@@ -19,10 +22,14 @@ export default class Layer {
     refreshAll();
   }
 
-  wrapper = null;
-
+  /**
+   * Layer.
+   * 
+   * @param {Number} width 
+   * @param {Number} height 
+   * @param {String} role 
+   */
   constructor(width, height, role){
-
     let el = document.createElement('canvas');
     el.setAttribute('data-role', role);
 
@@ -45,8 +52,23 @@ export default class Layer {
     }
   }
 
+  redraw(){
+    this.clear();
+    console.log("--refresh triggered!--");
+    this[_items].forEach(item => item.draw(this.ctx));
+    this._isDirty = false;
+  }
+
+  get items(){
+    return [_items];
+  }
+
   get deviceRatio() {
     return window.devicePixelRatio || 1;
+  }
+
+  get isDirty(){
+    return this._isDirty;
   }
 
   get pixelRadio() {

@@ -8,10 +8,19 @@ export default class Text extends Path {
   static type = 'text';
 
   _lines = [];
+  _text = "";
   constructor(text) {
     super();
-    this.text = text;
-    this._lines = text.split(/\r|\n/);
+    this._text = text;
+    this._lines = text.split(/\r\n|\n|\r/mg);
+  }
+
+  set text(value){ d
+    this._text = value;
+  }
+
+  get text(){
+    return this._text;
   }
 
   get bounds() {
@@ -25,6 +34,12 @@ export default class Text extends Path {
     return new Rect(x, numLines ? - 0.75 * leading : 0, width, numLines * leading)
   }
 
+  /**
+   * 获取文字宽度
+   * 
+   * @param {String} font 
+   * @param {Array} lines 
+   */
   getTextWidth(font, lines) {
     let ctx = this._ctx,
       prevFont = ctx.font,
@@ -41,6 +56,7 @@ export default class Text extends Path {
 
   draw(ctx) {
 
+    this._ctx = ctx;
     let lines = this._lines,
       style = this.style,
       hasFill = style.hasFill,
@@ -57,17 +73,32 @@ export default class Text extends Path {
       ctx.shadowColor = shadowColor;
       let line = lines[i];
       if (hasFill) {
-        ctx.fillText(line, 0, 0);
+        ctx.fillText(line, 100, 100);
         ctx.shadowColor = 'rgba(0,0,0,0)';
       }
       if (hasStroke) {
-        ctx.strokeText(line, 0, 0);
+        ctx.strokeText(line, 100, 100);
       }
-
       ctx.translate(0, leading); //绘制行高
     }
-
     ctx.restore();
+  }
+
+  _getCursorBoundaries(){
+    if (typeof position === 'undefined') {
+      position = this.selectionStart;
+    }
+
+    let left = this._getLeftOffset(),
+        top = this._getTopOffset(),
+        offsets = this._getCursorBoundariesOffsets(position);
+
+    return {
+      left: left,
+      top: top,
+      leftOffset: offsets.left,
+      topOffset: offsets.top
+    };
   }
 
   renderCursorOrSelection() {
@@ -75,13 +106,8 @@ export default class Text extends Path {
 
     let boundaries = this._getCursorBoundaries(), ctx;
 
-    if (this.canvas && this.canvas.contextTop) {
-      ctx = this.canvas.contextTop;
-      this.clearContextTop(true);
-    } else {
-      ctx = this.canvas.contextContainer;
-      ctx.save();
-    }
+    ctx.save();
+
     if (this.selectionStart === this.selectionEnd) {
       this.renderCursor(boundaries, ctx);
     } else {
@@ -137,14 +163,13 @@ export default class Text extends Path {
       if (i === startLine) {
         boxStart = this.__charBounds[startLine][startChar].left;
       }
+
       if (i >= startLine && i < endLine) {
         boxEnd = isJustify && !this.isEndOfWrapping(i) ? this.width : this.getLineWidth(i) || 5; // WTF is this 5?
-      }
-      else if (i === endLine) {
+      } else if (i === endLine) {
         if (endChar === 0) {
           boxEnd = this.__charBounds[endLine][endChar].left;
-        }
-        else {
+        } else {
           let charSpacing = this._getWidthOfCharSpacing();
           boxEnd = this.__charBounds[endLine][endChar - 1].left
             + this.__charBounds[endLine][endChar - 1].width - charSpacing;
