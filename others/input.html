@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Input</title>
+</head>
+<body style="background-color: #DDD;">
+<h1>Canvas Text Input</h1>
+<canvas id="canvas" height="300" width="600" class="through" style="cursor: default; background-color: #FFF;">悲剧了，你的浏览器不支持Canvas？！赶快换一个吧！！</canvas>
+<script type="text/javascript" src="./CanvasInput.js"></script>
+<script>
+  var input = new CanvasInput({
+    canvas: document.getElementById('canvas')
+  });
+</script>
+</body>
+</html>

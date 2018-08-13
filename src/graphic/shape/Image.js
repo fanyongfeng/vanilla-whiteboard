@@ -124,10 +124,6 @@ export default class Image extends Item {
     return new Rect(x, y, width, height, this);
   }
 
-  containsPoint(point) {
-    return this.bounds.containsPoint(point);
-  }
-
   /**
    * 参考
    * https://developer.mozilla.org/zh-CN/docs/Web/API/CanvasRenderingContext2D/drawImage
@@ -141,10 +137,12 @@ export default class Image extends Item {
   drawImageAndStroke(ctx) {
     let { x, y, width, height } = this.bounds;
 
-    ctx.save();
-    this.matrix.applyToContext(ctx);
+    ctx.shadowOffsetX = 5;
+    ctx.shadowOffsetY = 5;
+    ctx.shadowBlur = 2;
+    ctx.shadowColor = "rgba(0, 0, 0, 0.3)";
+
     ctx.drawImage(this._image, x, y, width, height);
-    ctx.restore();
 
     //TODO: transform bounds.
 

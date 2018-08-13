@@ -1,5 +1,6 @@
 import Item from '../Item';
 import Rect from '../types/Rect'
+import Point from '../types/Point';
 
 /**
  * Text Item;
@@ -9,20 +10,51 @@ export default class Text extends Item {
 
   _lines = [];
   _text = "";
-  _mode = "canvas"; //textarea
+  _mode = "textarea"; //textarea
   _autoBreak = true; // if _autoBreak is true, Text line will break if out of canvas bounds.
 
   constructor(text) {
     super();
+
+    this.startPoint = new Point(100, 100);
     this._text = text;
     this._lines = text.split(/\r\n|\n|\r/mg);
+
+    if (this._mode === 'textarea') {
+
+      //<div contenteditable="true">
+
+      let input = this.element = document.createElement('div');
+      input.setAttribute('contenteditable', 'true');
+
+      // let input = this.element = document.createElement('textarea');
+      input.setAttribute('style', '');
+      input.setAttribute('autocapitalize', 'off');
+      input.setAttribute('autocorrect', 'off');
+      input.setAttribute('autocomplete', 'off');
+      input.setAttribute('spellcheck', 'false');
+      input.setAttribute('wrap', 'off');
+
+      Object.assign(input.style, {
+        fontFamily: this.style.font || 'sans-serif',
+        'font-weight': 400,
+        'font-style': this.style.italic ? 'italic' : 'normal',
+        'font-size': this.style.fontSize + 'px',
+        'position': 'absolute',
+        'left': 0,
+        'top': 0,
+      });
+
+      document.getElementById('draw-panel').appendChild(input);
+    }
   }
 
-  set text(value){ d
+  set text(value) {
+    d
     this._text = value;
   }
 
-  get text(){
+  get text() {
     return this._text;
   }
 
@@ -31,10 +63,11 @@ export default class Text extends Item {
       lines = this._lines,
       numLines = lines.length,
       leading = style.leading || 18,
-      width = this.getTextWidth(style.font, lines),
-      x = 0;
+      width = this.getTextWidth(style.font, lines);
 
-    return new Rect(x + 100, (numLines ? - 0.75 * leading : 0) + 100, width, numLines * leading)
+    let { x, y } = this.startPoint;
+
+    return new Rect(x, (numLines ? - 0.75 * leading : 0) + y, width, numLines * leading)
   }
 
   /**
@@ -44,6 +77,8 @@ export default class Text extends Item {
    * @param {Array} lines
    */
   getTextWidth(font, lines) {
+
+    if (this.element) return new Rect();
     let ctx = this._ctx,
       prevFont = ctx.font,
       width = 0;
@@ -59,6 +94,29 @@ export default class Text extends Item {
 
   _draw(ctx) {
 
+    if (this._mode === 'textarea') {
+      this.element.innerHTML = this.text;
+
+      let data = '<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200">' +
+        '<foreignObject width="100%" height="100%">' + this.element.outerHTML
+      '</foreignObject>' +
+        '</svg>';
+
+      var DOMURL = window.URL || window.webkitURL || window;
+      let img = new Image();
+      let svg = new Blob([data], { type: 'image/svg+xml;charset=utf-8' });
+      let url = DOMURL.createObjectURL(svg);
+
+      img.onload = function () {
+        ctx.drawImage(img, 0, 0);
+        DOMU.RrevokeObjectURL(url);
+      }
+
+      img.src = url;
+
+      return;
+    }
+
     this._ctx = ctx;
     let lines = this._lines,
       style = this.style,
@@ -66,6 +124,9 @@ export default class Text extends Item {
       hasStroke = style.hasStroke,
       leading = style.leading || 18,
       shadowColor = ctx.shadowColor;
+
+
+    let { x, y } = this.startPoint;
 
     this.selected = true;
 
@@ -78,11 +139,11 @@ export default class Text extends Item {
       ctx.shadowColor = shadowColor;
       let line = lines[i];
       if (hasFill) {
-        ctx.fillText(line, 100, 100);
+        ctx.fillText(line, x, y, 300);
         ctx.shadowColor = 'rgba(0,0,0,0)';
       }
       if (hasStroke) {
-        ctx.strokeText(line, 100, 100);
+        ctx.strokeText(line, x, y, 300);
       }
       ctx.translate(0, leading); //绘制行高
     }
@@ -90,14 +151,14 @@ export default class Text extends Item {
     ctx.restore();
   }
 
-  _getCursorBounds(){
+  _getCursorBounds() {
     if (typeof position === 'undefined') {
       position = this.selectionStart;
     }
 
     let left = this._getLeftOffset(),
-        top = this._getTopOffset(),
-        offsets = this._getCursorBoundariesOffsets(position);
+      top = this._getTopOffset(),
+      offsets = this._getCursorBoundariesOffsets(position);
 
     return {
       left: left,
