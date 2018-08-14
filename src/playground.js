@@ -28,7 +28,6 @@ export default {
       height: 800,
       zoom: 1,
       selectionMode: 'contains', // cross
-
     });
 
     window.items = window.whiteboard.items;
@@ -36,7 +35,7 @@ export default {
 
     this.whiteboard.on('item:add', (arg)=>{
       console.log(arg);
-    }).on('layer:refresh', (arg)=>{
+    }).on('layer:refresh ', (arg)=>{
       console.log(arg);
     });
 

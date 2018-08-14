@@ -12,7 +12,7 @@ import saveImage from '../util/saveImage';
 import Image from '../graphic/shape/Image';
 import Rect from '../graphic/shape/Rect';
 import Point from '../graphic/types/Point';
-import { tools } from '../tools';
+import { getTool } from '../tools';
 
 const _createContext = Symbol('_createContext');
 const defaultOptions = {
@@ -194,10 +194,7 @@ export default class Whiteboard {
   _currentTool = null;
 
   set tool(val) {
-    if(typeof val !== 'string') throw new TypeError("setter value must be string!");
-    if(!(this._currentTool = tools[val])) {
-      throw new Error(`can't specify tool ${val}!`);
-    }
+    this._currentTool = getTool(val);
   }
 
   get tool() {

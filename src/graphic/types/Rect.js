@@ -7,16 +7,16 @@ import { mixinProps } from '../../decorators/mixin';
  */
 @mixinProps(props)
 class Rect {
-
   /**
    * static method to create instance from params
    */
   static instantiate(x, y, width, height) {
+    if (typeof x === "undefined") throw TypeError("Invalid arguments!");
     if (typeof x === "number") return new Rect(x, y, width, height)
     return x;
   }
 
-  constructor(x, y, width, height, owner = null) {
+  constructor(x = 0, y = 0, width = 0, height = 0, owner = null) {
     this.x = x;
     this.y = y;
     this.width = width;

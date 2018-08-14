@@ -68,6 +68,40 @@ function rgb2gray(r, g, b) {
   return [r * 0.2989 + g * 0.587 + b * 0.114];
 }
 
+/**
+ * RGB to HEX.
+ *
+ * @param {Number} r Red color value
+ * @param {Number} g Green color value
+ * @param {Number} b Blue color value
+ */
+function rgb2hex(r, g, b) {
+  var s = (65536 * Math.round(255 * r) + 256 * Math.round(255 * g) + Math.round(255 * b)).toString(16);
+  return "#" + "00000".substr(0, 6 - s.length) + s
+}
+
+function hex2rgb(hex){
+  //TODO: check format.
+  if(hex.length === 4) { //#fff
+    hex = `${hex[1]}${hex[1]}${hex[2]}${hex[2]}${hex[2]}${hex[2]}`;
+  } else if(hex.length === 7) {
+    hex = hex.replace(/^#/, '');
+  } else {
+    throw new TypeError("invalid hex format!");
+  }
+
+  const num = parseInt(hex, 16);
+  const red = num >> 16;
+	const green = (num >> 8) & 255;
+  const blue = num & 255;
+
+  return [red, green, blue];
+}
+
+/**
+ *
+ * @param {*} g
+ */
 function gray2rgb(g) {
   return [g, g, g];
 }
@@ -79,4 +113,4 @@ function gray2hsb(g) {
 /**
  *Color convert helpers.
  */
-export { rgb2hsl, hsl2rgb, rgb2gray, gray2rgb, gray2hsb }
+export { rgb2hsl, hsl2rgb, rgb2gray, gray2rgb, gray2hsb, rgb2hex, hex2rgb }

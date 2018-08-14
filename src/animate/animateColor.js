@@ -24,8 +24,8 @@ function calculateColor(begin, end, pos) {
  * @param {Function} [options.colorEasing] Easing function. Note that this function only take two arguments (currentTime, duration). Thus the regular animation easing functions cannot be used.
  */
 function animateColor(fromColor, toColor, duration, options) {
-  var startColor = new Color(fromColor).getSource(),
-    endColor = new Color(toColor).getSource();
+  var startColor = new Color(fromColor).toJSON(),
+    endColor = new Color(toColor).toJSON();
 
   options = options || {};
 

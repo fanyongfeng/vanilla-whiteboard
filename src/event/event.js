@@ -1,6 +1,5 @@
 import {MouseEvent, KeyEvent} from './EventType';
-import FreeDrawing from '../tools/FreeDrawing';
-import ShapeDrawing from '../tools/ShapeDrawing';
+import tools from '../tools';
 import Selection from '../tools/Selection';
 import throttle from '../util/throttle';
 import {addListener, removeListener} from '../util/dom';
@@ -54,7 +53,7 @@ let handlers = {
 
   bind(layer) {
 
-    this.currentTool = new ShapeDrawing('rectangle'),
+    // this.currentTool = new ShapeDrawing('rectangle'),
     // this.currentTool = new FreeDrawing,
     this.selection = new Selection(this.context);
     let canvas = this.canvas = layer.el;

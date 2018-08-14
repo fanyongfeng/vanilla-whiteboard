@@ -1,10 +1,13 @@
-
-import playground from './playground';
-
 import Point from './graphic/types/Point';
 import Rect from './graphic/types/Rect';
 import Style from './graphic/types/Style';
+import Color from './graphic/types/Color';
 import Path from './graphic/Path';
+import Whiteboard from './Whiteboard';
+import playground from './playground'; // for debug,
+// import keyCode from '';
+
+import { rgb2hsl, hsl2rgb, rgb2gray, gray2rgb, gray2hsb } from './graphic/algorithm/color';
 
 
 //top-level APIs
@@ -23,45 +26,27 @@ import Path from './graphic/Path';
  *  -
  *
  */
-class Whiteboard {
-  // /version = __VERSION__;
-  mode = 'readonly';
-  static install(){
 
-  }
-
-  constructor(options){
-    playground.init(options);
-    /**
-     * draw background
-     */
-    playground.drawGrid();
-    // playground.drawAxes();
-    // playground.drawPolyline('cubicInOut');
-    // playground.drawPolyline('circularInOut');
-    // playground.drawPolyline('bounceInOut');
-  }
-  export(){}
-  import(){}
-}
-
-let nebula = typeof nebula !== 'undefined' ? nebula : {};
-nebula.Whiteboard = Whiteboard;
-
-//mount graphic on namespace.
-[Point, Rect, Style, Path].forEach(type => nebula[type.name] = type);
+//mount graphic on namespace (top-level).
+let nebula = typeof nebula !== 'undefined' ? nebula : { Point, Rect, Style, Path, Color };
 
 //mount util on namespace.
-nebula.util = {};
+nebula.util = { rgb2hsl, hsl2rgb, rgb2gray, gray2rgb, gray2hsb };
+
+//mount Whiteboard constructor on namespace.
+nebula.Whiteboard = Whiteboard;
 
 //mount enum on namespace.
-nebula.keyCode = null;
+// nebula.enum = { keyCode };
 
+export default nebula;
+export { Whiteboard, Point, Rect, Style, Path }
 
-let wb = new Whiteboard;
-
-window.playground = playground;
+//tmp for debug
+playground.init();
+playground.drawGrid();
 window.nebula = nebula;
-// export const Whiteboard = Whiteboard;
+console.log('---init complete--');
+
 
 

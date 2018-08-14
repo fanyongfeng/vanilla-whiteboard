@@ -8,17 +8,21 @@ export default class Point {
    * static method to create instance from params
    */
   static instantiate(x, y) {
+    if (typeof x === "undefined") throw TypeError("Invalid arguments!");
     if (typeof x === "number") {
       return typeof y === "number" ? new Point(x, y) : new Point(x, x);
     }
     return x;
   }
 
-  constructor(x, y) {
+  constructor(x = 0, y = 0) {
     this.x = x;
     this.y = y;
   }
 
+  /**
+   * 返回是否小于极小值
+   */
   isZero() {
     return isZero(this.x) && isZero(this.y);
   }
