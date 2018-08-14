@@ -1,5 +1,14 @@
 import { rgb2hsl } from '../algorithm/color'
 
+
+/**
+ * normalize color to rgba.
+ * hex => rgba;
+ */
+const normalizeColor = function normalizeColor(){
+
+}
+
 class Color {
   //4 channels.
   red = 0;
@@ -13,14 +22,6 @@ class Color {
 
   toHSL(){
     return rgb2hsl(this.red, this.green, this.blue);
-  }
-
-  /**
-   * normalize color to rgba.
-   * hex => rgba;
-   */
-  normalizeColor() {
-
   }
 
   toString() {

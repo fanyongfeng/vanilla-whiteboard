@@ -66,6 +66,10 @@ export default class Whiteboard {
     this.height = height;
     this.context = this[_createContext]();
 
+    this.backgroundLayer.appendTo(this);
+    this.activeLayer.appendTo(this);
+    this.operateLayer.appendTo(this);
+
     handler.context = this.context;
     handler.bind(this.operateLayer);
     handler.refreshCanvas = this.refresh.bind(this);
@@ -74,19 +78,16 @@ export default class Whiteboard {
   }
 
   /**
-   * 注意，要区分白板实例的context，和canvas getContext,
-   * @param {} width
-   * @param {*} height
+   * 白板实例的context, 每个白板唯一
+   * context 可以被layers, item-collection, tools访问
+   * 注意，要区分白板实例的context，和canvas getContext
+   *
    */
   [_createContext]() {
 
     let backgroundLayer = new Layer(this.width, this.height, 'background'),
       activeLayer = new Layer(this.width, this.height, 'active'),
       operateLayer = new Layer(this.width, this.height, 'operate');
-
-    backgroundLayer.appendTo(this.wrapper);
-    activeLayer.appendTo(this.wrapper);
-    operateLayer.appendTo(this.wrapper);
 
     let whiteboardCtx = {
       items: activeLayer.items,
@@ -95,6 +96,7 @@ export default class Whiteboard {
       operateLayer,
       currentMode: null,
       settings: this.options,
+      emit: this.emit.bind(this)
     }
 
     // 将context 属性赋值白板实例
@@ -104,11 +106,15 @@ export default class Whiteboard {
     return whiteboardCtx;
   }
 
+  /**
+   * Watch mode. Redraw layer if it mark as dirty in every tick.
+   *
+   */
   watch() {
     if (this._isLoop === true) throw new Error("Can't watch twice!");
 
     const drawDirtyLayer = () => {
-      if(this.activeLayer.isDirty) this.activeLayer.refresh();
+      if (this.activeLayer.isDirty) this.activeLayer.refresh();
       requestAnimationFrame(drawDirtyLayer);
     }
 
@@ -117,21 +123,36 @@ export default class Whiteboard {
     this._isLoop = true;
   }
 
+  /**
+   * refresh activeLayer in next tick.
+   * Ensure redraw only once in every tick.
+   */
   refresh() {
-    requestAnimationFrame(() => {
-      this.activeLayer.clear();
-      this.items.forEach(item => item.draw(this.activeLayer.ctx));
-    });
+    requestAnimationFrame(() => this.activeLayer.refresh());
   }
 
+  /**
+   * refresh all layers in next tick.
+   * Ensure redraw only once in every tick.
+   */
+  refreshAll() {
+    requestAnimationFrame(() => this.layers.forEach(layer => layer.refresh()));
+  }
+
+
+  /**
+   * get data of items in all layers.
+   */
   get data() {
     return this.items.map(item => item.toJSON());
   }
 
+  zoom() { }
+
   add(segments) {
-    let ins = Writing.instantiate(segments);
-    this.items.add(ins);
-    // this.refresh();
+    let instance = Writing.instantiate(segments);
+    this.items.add(instance);
+    this.emit('item:add', { instance });
   }
 
   addText(text) {
@@ -152,12 +173,21 @@ export default class Whiteboard {
     this.items.add(new Image(src));
   }
 
-  saveImage() {
-    return saveImage(this.activeLayer);
+  get layers() {
+    return [
+      this.backgroundLayer,
+      this.activeLayer,
+      this.operateLayer
+    ];
   }
 
-  refreshAll() {
+  saveImage() {
+    //创建离屏canvas，绘制三个layer；
+    let offscreenCanvas = new Layer(this.width, this.height);
+    let ctx = offscreenCanvas.ctx;
 
+    this.layers.forEach(layer => ctx.drawImage(layer.el, 0, 0, this.width, this.height));
+    return saveImage(offscreenCanvas.el);
   }
 
   _toolName = '';
@@ -176,7 +206,7 @@ export default class Whiteboard {
 
   dispose() {
     let wrapper = this.wrapper;
-    //TODO: remove all object.
+    //TODO: remove all canvas DOM.
     wrapper.removeChild(this.backgroundLayer);
     wrapper.removeChild(this.activeLayer);
   }
@@ -186,8 +216,5 @@ export default class Whiteboard {
     this.activeLayer.clear();
     return this;
   }
-
-  renderAll() { }
-  scale() { }
 }
 

@@ -1,14 +1,17 @@
 import { tsid } from '../util/id';
 import Style from './types/Style';
 import Matrix from './types/Matrix';
+import { memoizable, changed } from '../decorators/memoized';
 
 const _selected = Symbol('_selected');
 const _style = Symbol('_style');
 
 // 白板所有元素的父类
-export default class Item {
+@memoizable()
+class Item {
 
   [_selected] = false;
+  owner = null;
 
   constructor(style) {
     this.id = tsid();
@@ -20,6 +23,7 @@ export default class Item {
     return this[_selected];
   }
 
+  @changed()
   set selected(val) {
     this[_selected] = val;
   }
@@ -30,6 +34,7 @@ export default class Item {
     return this[_style];
   }
 
+  @changed()
   set style(value) {
     this[_style] = value;
     //mark-as-dirty
@@ -39,7 +44,7 @@ export default class Item {
     return null;
   }
 
-  get strokeBounds(){
+  get strokeBounds() {
     return this.bounds;
   }
 
@@ -75,23 +80,22 @@ export default class Item {
   transform(matrix) {
     //TODO: transform stroke & bounds.
 
-    if(matrix) {
+    if (matrix) {
       this.matrix = this.matrix.multiply(matrix);
     }
 
     this.transformContent(matrix);
+    this.markAsDirty();
     return this;
-    // this.emit('changed');
-    //TODO:markAsDrity
   }
 
   /**
    * Transform group & compoundPath & Segment of path;
    * @param {*} matrix
    */
-  transformContent(matrix){
-    if(this.children) {
-      this.children.forEach(item=>item.transform(matrix));
+  transformContent(matrix) {
+    if (this.children) {
+      this.children.forEach(item => item.transform(matrix));
       this.matrix.reset();
     }
   }
@@ -115,6 +119,13 @@ export default class Item {
   }
 
   /**
+   * remove from owner-collection;
+   */
+  remove() {
+    this.owner && this.owner.delete(this);
+  }
+
+  /**
    * 绘制边界矩形
    * @param {*} ctx
    */
@@ -126,3 +137,5 @@ export default class Item {
     ctx.restore();
   }
 }
+
+export default Item;

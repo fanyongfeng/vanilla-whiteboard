@@ -101,6 +101,7 @@ class ItemCollection {
     if (!item instanceof Item)
       throw new Error('Only Item can add to Collection!');
 
+    item.owner = this;
     this.push(item);
     this.changed();
     return this;
@@ -140,6 +141,14 @@ class ItemCollection {
     this.forEach(item => item.selected = false);
     this.changed();
     return this;
+  }
+
+  /**
+   * Remove specified item from list.
+   * @param {Item} item1
+   */
+  remove(item1) {
+    this.delete(item2 => item2 === item1);
   }
 
   /**

@@ -54,7 +54,10 @@ export default class Layer {
 
   refresh(){
     this.clear();
-    console.log("--refresh triggered!--");
+    this.whiteboardCtx.emit('layer:refresh', {
+      layer: this,
+    });
+
     this[_items].forEach(item => item.draw(this.ctx));
     this._isDirty = false;
   }
@@ -95,7 +98,10 @@ export default class Layer {
     this.ctx.scale(this.deviceRatio, this.deviceRatio);
   }
 
-  resetTransform(canvas) {
+  /**
+   * reset transform for initial state.
+   */
+  resetTransform() {
     this.ctx.setTransform(this.deviceRatio, 0, 0, this.deviceRatio, 0, 0);
   }
 
@@ -103,9 +109,13 @@ export default class Layer {
     this.ctx.clearRect(0, 0, this.width, this.height);
   }
 
-  appendTo(wrapper) {
-    this.wrapper = wrapper;
-    wrapper.appendChild(this.el);
+  appendTo(whiteboard) {
+    //appendTo wrapper.
+    this.wrapper = whiteboard.wrapper;
+    this.wrapper.appendChild(this.el);
+
+    //ref whiteboard context.
+    this.whiteboardCtx = whiteboard.context;
   }
 
   dispose(){

@@ -168,6 +168,7 @@ class Path extends Item {
     this.segments.forEach(item=>{
       item.transformCoordinates(matrix);
     });
+    this.matrix.reset();
   }
 
   _draw(ctx) {

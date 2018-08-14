@@ -17,6 +17,7 @@ export default class FreeDrawing {
     */
   onMouseDown(event) {
     this.currentShape = new Writing();
+    this.currentShape.style = this.style.clone();
     this.items.add(this.currentShape);
 
     this.currentShape.moveTo(event.point);

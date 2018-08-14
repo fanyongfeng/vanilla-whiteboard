@@ -33,6 +33,13 @@ export default {
 
     window.items = window.whiteboard.items;
 
+
+    this.whiteboard.on('item:add', (arg)=>{
+      console.log(arg);
+    }).on('layer:refresh', (arg)=>{
+      console.log(arg);
+    });
+
     this.whiteboard.watch();
   },
 

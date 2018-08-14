@@ -176,7 +176,6 @@ let handlers = {
     } else {
       this.currentTool.onMouseMove(event);
     }
-    this.refreshCanvas();
   },
 
   _handleMove(event) {

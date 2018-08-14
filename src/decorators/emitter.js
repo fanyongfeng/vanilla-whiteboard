@@ -7,6 +7,8 @@
  * declare:
  * @emitter()
  * Class DecoratedClass { change(){ this.emit('changed') } }
+ *
+ * use:
  * let ins = new DecoratedClass();
  * ins.on('changed', (event)=>{ //dosomething });
  *
@@ -84,7 +86,7 @@ export default function emitter() {
       let handlers = this.__callbacks[name];
       if (!handlers) return;
 
-      let args = slice(arguments, 1);
+      let args = slice.call(arguments, 1);
       for (let i = 0, len = handlers.length; i < len; i++) {
         let fn = handlers[i];
 

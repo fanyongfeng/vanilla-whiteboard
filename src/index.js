@@ -1,5 +1,10 @@
 
-import playground from './playground'
+import playground from './playground';
+
+import Point from './graphic/types/Point';
+import Rect from './graphic/types/Rect';
+import Style from './graphic/types/Style';
+import Path from './graphic/Path';
 
 
 //top-level APIs
@@ -43,7 +48,18 @@ class Whiteboard {
 let nebula = typeof nebula !== 'undefined' ? nebula : {};
 nebula.Whiteboard = Whiteboard;
 
+//mount graphic on namespace.
+[Point, Rect, Style, Path].forEach(type => nebula[type.name] = type);
+
+//mount util on namespace.
+nebula.util = {};
+
+//mount enum on namespace.
+nebula.keyCode = null;
+
+
 let wb = new Whiteboard;
+
 window.playground = playground;
 window.nebula = nebula;
 // export const Whiteboard = Whiteboard;
