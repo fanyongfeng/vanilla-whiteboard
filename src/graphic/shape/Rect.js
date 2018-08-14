@@ -7,7 +7,7 @@ export default class Rect extends Shape {
 
   radius = 0;
 
-  buildPath() {
+  _buildPath() {
 
     let { x, y, width, height } = this.bounds;
 

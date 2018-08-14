@@ -120,8 +120,8 @@ class Matrix {
    *
    *  语法糖倾斜，
    *  可以根据基准点倾斜，默认是 基于0，0
-      (1, tx, 0)
-      (ty, 1, 0)
+   *  (1, tx, 0)
+   *  (ty, 1, 0)
    */
   skew(degX, degY, point = null) {
 
@@ -141,8 +141,8 @@ class Matrix {
   /**
    * 缩放
    * 可以根据基准点缩放，默认是 基于0，0
-    (sx, 0, 0)
-    (0, sy, 0)
+   * (sx, 0, 0)
+   * (0, sy, 0)
    */
   scale(sx, sy, point = null) {
     if (point) this.translate(point);

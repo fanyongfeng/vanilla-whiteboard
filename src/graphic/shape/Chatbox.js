@@ -11,7 +11,7 @@ export default class Line extends Shape {
     // this.style.dash = dash;
   }
 
-  buildPath() {
+  _buildPath() {
 
     // ctx.moveTo(75,25);
     // ctx.quadraticCurveTo(25,25,25,62.5);

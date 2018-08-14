@@ -4,7 +4,7 @@ import Point from "../types/Point";
 export default class Ellipse extends Shape {
   static type = 'ellipse';
 
-  buildPath() {
+  _buildPath() {
 
     /* "magic number" for bezier approximations of arcs (http://itc.ktu.lt/itc354/Riskus354.pdf) */
     let kappa = 0.5522848;

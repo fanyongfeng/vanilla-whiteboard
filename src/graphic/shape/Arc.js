@@ -11,7 +11,7 @@ export default class Arc extends Path {
       clockwise: true
   }
 
-  buildPath(ctx, shape) {
+  _buildPath(ctx, shape) {
 
     let x = shape.cx;
     let y = shape.cy;

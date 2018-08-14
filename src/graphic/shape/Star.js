@@ -11,7 +11,7 @@ const radio = 0.5;
 export default class Star extends Shape {
   type = 'star';
 
-  buildPath() {
+  _buildPath() {
     let center = this.startPoint.midPointFrom(this.endPoint),
       points = 20,
       radius1 = this.startPoint.getDistance(this.endPoint) / 2,

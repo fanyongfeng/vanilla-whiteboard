@@ -10,7 +10,7 @@ export default class Line extends Shape {
     // this.style.dash = dash;
   }
 
-  buildPath() {
+  _buildPath() {
     this.moveTo(this.startPoint)
       .lineTo(this.endPoint)
       .closePath();

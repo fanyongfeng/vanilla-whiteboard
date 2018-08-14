@@ -82,12 +82,16 @@
       <div class="btn-group">
         <button id="btnSelect" class="btn btn-default">选择</button>
         <button id="btnPointer" class="btn btn-default">鼠标手</button>
+
+
+        <button id="btnArrow" class="btn btn-default">箭头</button>
         <button id="btnLine" class="btn btn-default">直线</button>
         <button id="btnEllipse" class="btn btn-default">圆形</button>
-        <button id="btnRect" class="btn btn-default">矩形</button>
-        <button id="btnTri" class="btn btn-default">三角形</button>
+        <button id="btnRectangle" class="btn btn-default">矩形</button>
+        <button id="btnTriangle" class="btn btn-default">三角形</button>
         <button id="btnMarker" class="btn btn-default">Marker</button>
         <button id="btnHighlighter" class="btn btn-default">Highlighter</button>
+        <button id="btnSignature" class="btn btn-default">签名</button>
         <button id="btnImage" class="btn btn-default">图片</button>
       </div>
       <div class="btn-group">
@@ -125,7 +129,9 @@
         <button id="btnClear" class="btn btn-default">Clear</button>
         <button id="btnRedo" class="btn btn-default">Redo</button>
         <button id="btnUndo" class="btn btn-default">Undo</button>
-        <button id="btnScale" class="btn btn-default">缩放</button>
+        <button id="btnDelete" class="btn btn-default">Delete</button>
+        <button id="btnScale+" class="btn btn-default">缩放+</button>
+        <button id="btnScale-" class="btn btn-default">缩放+</button>
       </div>
     </div>
 
@@ -172,6 +178,16 @@
     const MILLION = 1000000;
     const WAN = 100000;
     $(() => {
+
+      //shape tools
+      const btns = ["btnArrow", "btnLine", "btnEllipse", "btnRectangle", "btnTriangle", "btnMarker", "btnHighlighter", "btnSignature"];
+      btns.forEach(btn=>{
+        $('#' + btn).click(() => {
+          whiteboard.tool = btn.slice(3).toLowerCase();
+        });
+      })
+
+
       $("#btnPerf").click(() => {
         let item = items[0];
 

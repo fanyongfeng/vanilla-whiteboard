@@ -21,17 +21,15 @@ export default class ShapeDrawing {
 
   onMouseDown(event) {
     let options = this.style;
-    // this.currentShape = new this.pathCtor(options);
+    this.currentShape = new this.pathCtor(options);
     // this.currentShape = new Ellipse(options);
-
-    this.currentShape = new Star(options);
+    // this.currentShape = new Star(options);
     this.currentShape.startPoint = this.currentShape.endPoint = event.point;
     items.add(this.currentShape);
   }
 
   onMouseMove(event) {
     this.currentShape.endPoint = event.point;
-    this.currentShape.clear();
     this.currentShape.buildPath();
   }
 

@@ -19,6 +19,7 @@ class Path extends Item {
   startPoint = null;
   contextPoint = null;
   isClose = false;
+  showAuxiliary = false;
 
 
   get segments() {
@@ -30,6 +31,7 @@ class Path extends Item {
     segment.contextPoint = this.contextPoint;
     this.segments.push(segment);
     this.contextPoint = segment.point;
+    this.markAsDirty();
   }
 
   *[Symbol.iterator]() {
@@ -143,6 +145,7 @@ class Path extends Item {
   simplify() {
     let segments = fitCurve(this.segments.map(item => item.point), 1);
     this[_segments] = ([this[_segments][0]]).concat(segments);
+    this.markAsDirty();
     return this;
   }
 
@@ -202,15 +205,16 @@ class Path extends Item {
         case 'C':
           ctx.bezierCurveTo.apply(ctx, segment.args);
           break;
-        case 'z':
-        case 'Z':
-          ctx.closePath();
       }
     }
 
+    if(this.isClose) ctx.closePath();
+
     //ctx.fill();
     ctx.stroke();
-    this.segments.forEach(segment=>segment.draw(ctx));
+
+    if(this.showAuxiliary)
+      this.segments.forEach(segment=>segment.draw(ctx));
   }
 
   toJSON() {

@@ -18,7 +18,7 @@ function calcArrow(sp, ep) {
 export default class Arrow extends Shape {
   static type = 'arrow';
 
-  buildPath() {
+  _buildPath() {
 
     let points = calcArrow(this.startPoint, this.endPoint);
 

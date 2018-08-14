@@ -10,7 +10,7 @@ import Writing from '../graphic/shape/Writing';
 import Text from '../graphic/shape/Text';
 import saveImage from '../util/saveImage';
 import Image from '../graphic/shape/Image';
-import Rect from '../graphic/shape/Rect';
+import Rect from '../graphic/types/Rect';
 import Point from '../graphic/types/Point';
 import { getTool } from '../tools';
 
@@ -97,6 +97,7 @@ export default class Whiteboard {
       operateLayer,
       currentMode: null,
       settings: this.options,
+      bounds: new Rect(0 ,0 ,this.width, this.height),
       emit: this.emit.bind(this)
     }
 
@@ -164,14 +165,26 @@ export default class Whiteboard {
     this.items.add(instance);
   }
 
-  addRect(x1, y1, x2, y2) {
-    let instance = new Rect(new Point(x1, y1), new Point(x2, y2));
-    instance.buildPath();
-    this.items.add(instance);
-  }
+  // addRect(x1, y1, x2, y2) {
+  //   let instance = new Rect(new Point(x1, y1), new Point(x2, y2));
+  //   instance.buildPath();
+  //   this.items.add(instance);
+  // }
 
   addImage(src) {
     this.items.add(new Image(src));
+  }
+
+
+  _currentTool = null;
+
+  set tool(val) {
+    this._currentTool = getTool(val);
+    handler.tool = this._currentTool;
+  }
+
+  get tool() {
+    return this._currentTool;
   }
 
   get layers() {
@@ -189,16 +202,6 @@ export default class Whiteboard {
 
     this.layers.forEach(layer => ctx.drawImage(layer.el, 0, 0, this.width, this.height));
     return saveImage(offscreenCanvas.el);
-  }
-
-  _currentTool = null;
-
-  set tool(val) {
-    this._currentTool = getTool(val);
-  }
-
-  get tool() {
-    return this._currentTool;
   }
 
   dispose() {

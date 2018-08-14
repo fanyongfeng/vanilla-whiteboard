@@ -7,7 +7,7 @@ export default class Triangle extends Shape {
   static type = 'triangle';
   anti = false;
 
-  buildPath() {
+  _buildPath() {
 
     let sp = new Point(this.startPoint.x, this.endPoint.y);
     let to = new Point((this.startPoint.x + this.endPoint.x) / 2, this.startPoint.y);
@@ -26,7 +26,7 @@ export class RightTriangle extends Shape {
   static type = 'rightTriangle';
   anti = false;
 
-  buildPath() {
+  _buildPath() {
     let sp ,to;
     if(this.anti) {
       sp = this.startPoint;

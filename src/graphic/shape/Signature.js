@@ -5,7 +5,7 @@ export default class Signature extends Path {
 
   static type = 'signature';
 
-  buildPath() {
-    
+  _buildPath() {
+
   }
 }

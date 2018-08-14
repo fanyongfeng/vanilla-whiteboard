@@ -40,6 +40,9 @@ class Color {
     if(typeof color[3] !== "undefined") this.alpha = color[3];
   }
 
+  /**
+   * Convert to HSL format
+   */
   toHSL() {
     return rgb2hsl(this.red, this.green, this.blue);
   }
@@ -48,6 +51,9 @@ class Color {
     return [this.red, this.green, this.blue, this.alpha];
   }
 
+  /**
+   * Convert to RGBA string (css format).
+   */
   toString() {
     return `rgba(${this.toJSON().join(',')})`;
   }

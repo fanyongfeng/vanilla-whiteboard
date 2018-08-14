@@ -21,6 +21,16 @@ export default class Shape extends Path {
 
   }
 
+  _buildPath(){
+    throw new Error('must overwrite!');
+  }
+
+  buildPath(){
+    this.clear();
+    this._buildPath();
+    this.markAsDirty();
+  }
+
   // override bounds for dragging-shapes
   get bounds() {
     let frm = this.startPoint,

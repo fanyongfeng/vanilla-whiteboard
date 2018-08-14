@@ -43,7 +43,7 @@ function throttleDistance(point, distance = 10){
 }
 
 const canvasStatus = {
-  isSelectionMode:  true
+  isSelectionMode:  false
 }
 
 let handlers = {
@@ -51,9 +51,12 @@ let handlers = {
   isDragging: false,
   isMouseDown: false,
 
+  set tool(tool){
+    this.currentTool = tool;
+  },
+
   bind(layer) {
 
-    // this.currentTool = new ShapeDrawing('rectangle'),
     // this.currentTool = new FreeDrawing,
     this.selection = new Selection(this.context);
     let canvas = this.canvas = layer.el;
@@ -144,9 +147,16 @@ let handlers = {
   onMouseMove(event) {
     event.preventDefault();
 
-    let ev = new MouseEvent(event);
-    // if(!throttleDistance(ev.point, 10)) return;
-    lastPoint = ev.point;
+    let ev = new MouseEvent(event),
+      point = ev.point;
+
+    // if(!throttleDistance(point, 10)) return;
+
+    if(ev.target !== this.canvas) return;
+
+    let contain = this.context.bounds.containsPoint(point);
+
+    if(!contain) return;
 
     if (typeof event.touches !== 'undefined' && event.touches.length > 1) {
       return;
@@ -159,6 +169,7 @@ let handlers = {
       this._handleMove(ev);
     }
 
+    lastPoint = point;
   },
 
   _handleDown(event) {
