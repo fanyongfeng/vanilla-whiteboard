@@ -111,7 +111,7 @@ class Path extends Item {
   /**
    * get bounds of path. It's a memoized getter for performance.
    */
-  // @memoized()
+  @memoized()
   get bounds() {
     let x1 = Infinity,
       x2 = -x1,

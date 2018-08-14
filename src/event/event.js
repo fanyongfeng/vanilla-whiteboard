@@ -33,6 +33,8 @@ const keyCode = {
   NUMPAD_DOT: 110
 }
 
+const keyModifiers = {};
+
 
 //绑定流程和一般拖拽类似
 let lastPoint;
@@ -60,7 +62,6 @@ let handlers = {
     // this.onMouseMove = this.onMouseMove.bind(this);
 
     this.onMouseMove = throttle(this.onMouseMove, 0).bind(this); //
-
     this.onMouseUp = this.onMouseUp.bind(this);
 
     addListener(canvas, 'mousedown', this.onMouseDown);
@@ -104,8 +105,8 @@ let handlers = {
       }
     }
 
-    if(event.key === keyCode.DELETE) {
-      items.deleteSelect();
+    if(event.keyCode === keyCode.DELETE) {
+      items.deleteSelected();
     }
   },
 

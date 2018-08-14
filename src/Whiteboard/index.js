@@ -66,13 +66,14 @@ export default class Whiteboard {
     this.height = height;
     this.context = this[_createContext]();
 
+    this.operateLayer.el.tabIndex = 1; //make container focusable.
+
     this.backgroundLayer.appendTo(this);
     this.activeLayer.appendTo(this);
     this.operateLayer.appendTo(this);
 
     handler.context = this.context;
     handler.bind(this.operateLayer);
-    handler.refreshCanvas = this.refresh.bind(this);
 
     Whiteboard.instances.push(this)
   }
@@ -190,18 +191,17 @@ export default class Whiteboard {
     return saveImage(offscreenCanvas.el);
   }
 
-  _toolName = '';
+  _currentTool = null;
 
   set tool(val) {
-    this._toolName = val;
-  }
-
-  get tools() {
-    return tools;
+    if(typeof val !== 'string') throw new TypeError("setter value must be string!");
+    if(!(this._currentTool = tools[val])) {
+      throw new Error(`can't specify tool ${val}!`);
+    }
   }
 
   get tool() {
-    return tools[this._toolName];
+    return this._currentTool;
   }
 
   dispose() {
