@@ -27,11 +27,12 @@ function registerTool(name, ctor){
   return tools[name] = new ctor(name);
 }
 
-create();
-
 function getTool(name){
   if(typeof name !== 'string') throw new TypeError("setter value must be string!");
-  if(!tools[name]) throw new Error(`can't specify tool ${val}!`);
+  if(!tools[name]) throw new Error(`can't specify tool ${name}!`);
   return tools[name];
 }
+
+create();
+
 export { registerTool, getTool};

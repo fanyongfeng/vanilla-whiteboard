@@ -1,5 +1,5 @@
 
-import Rect from '../graphic/shape/Rect';
+import Rectangle from '../graphic/shape/Rectangle';
 import Point from '../graphic/types/Point';
 import { boundsPoi, antiDir } from '../graphic/algorithm/corner';
 
@@ -25,7 +25,7 @@ export default class Selection {
     this.items = whiteboardCtx.items;
     this.ctx = this.layer.ctx;
 
-    this.selectionRect = new Rect();
+    this.selectionRect = new Rectangle();
     this.selectionRect.style.strokeStyle = '#ccc';
     this.selectionRect.style.lineWidth = 1;
     this.selectionRect.style.dashArray = [5, 2];

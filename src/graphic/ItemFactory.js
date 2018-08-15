@@ -1,4 +1,4 @@
-import Rect from './shape/Rect';
+import Rectangle from './shape/Rectangle';
 import Line from './shape/Line';
 import Arrow from './shape/Arrow';
 import Triangle from './shape/Triangle';
@@ -6,11 +6,29 @@ import Ellipse from './shape/Ellipse';
 import Star from './shape/Star';
 import Writing from './shape/Writing';
 
+//https://www-stage.tutormeetplus.com/v2/static/media/pen.3ec0e0e7.png
 const installCtor = {
 
 }
 
 //magic numbers map to shapes
+export const toolTypes = {
+  POINTER: 0,
+  PEN: 1,
+  MARKER: 2,
+  ELLIPSE: 3,
+  LINE: 4,
+  TRIANGLE: 5,
+  RECTANGLE: 6,
+  ARROW: 7,
+  TEXT: 8,
+  IMAGE: 9,
+  SELECTOR: 10,
+  ERASER: 11,
+  DASHED: 12,
+  RIGHTTRIANGLE: 13,
+  CIRCLE: 14,
+};
 const idForCtor = {
 
 }

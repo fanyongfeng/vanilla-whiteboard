@@ -4,6 +4,11 @@ import Writing from '../graphic/shape/Writing';
 export default class FreeDrawing {
   _style = {};
 
+  brush = 'https://www-stage.tutormeetplus.com/v2/static/media/pen.3ec0e0e7.png';
+    // https://www-stage.tutormeetplus.com/v2/static/media/mouse_pointer.64a36561.png
+    // https://www-stage.tutormeetplus.com/v2/static/media/eraser.352bd893.png
+    // https://www-stage.tutormeetplus.com/v2/static/media/mark_pen.901db183.png
+
   constructor(whiteboardCtx, name){
 
     this.items = whiteboardCtx.items;

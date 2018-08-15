@@ -1,7 +1,7 @@
 import Shape from "../Shape"
 import Point from "../types/Point";
 
-export default class Rect extends Shape {
+export default class Rectangle extends Shape {
 
   static type = 'rectangle';
 

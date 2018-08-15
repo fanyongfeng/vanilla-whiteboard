@@ -1,11 +1,11 @@
-import Rect from '../graphic/shape/Rect';
+import Rectangle from '../graphic/shape/Rectangle';
 import Line from '../graphic/shape/Line';
 import Arrow from '../graphic/shape/Arrow';
 import Triangle from '../graphic/shape/Triangle';
 import Ellipse from '../graphic/shape/Ellipse';
 import Star from '../graphic/shape/Star';
 
-const ctorList = [Rect, Line, Arrow, Triangle, Ellipse, Star];
+const ctorList = [Rectangle, Line, Arrow, Triangle, Ellipse, Star];
 export default class ShapeDrawing {
 
   _style = {};
