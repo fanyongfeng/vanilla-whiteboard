@@ -1,5 +1,6 @@
 import { tsid } from '../util/id';
 import Style from './types/Style';
+import Point from './types/Point';
 import Matrix from './types/Matrix';
 import { memoizable, changed } from '../decorators/memoized';
 
@@ -85,6 +86,7 @@ class Item {
     }
 
     this.transformContent(matrix);
+
     this.markAsDirty();
     return this;
   }
@@ -110,7 +112,9 @@ class Item {
 
   draw(ctx) {
     ctx.save();
-    this.matrix.applyToContext(ctx);
+
+    let matrix = (new Matrix).multiply(this.matrix);
+    matrix.applyToContext(ctx);
     this._draw(ctx);
     ctx.restore();
 

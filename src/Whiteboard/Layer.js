@@ -1,6 +1,7 @@
 
 import { setStyle } from '../util/dom';
 import ItemCollection from './ItemCollection';
+import Matrix from '../graphic/types/Matrix';
 
 const _items = Symbol('_items');
 /**
@@ -10,6 +11,7 @@ export default class Layer {
   [_items] = new ItemCollection(null, this);
   wrapper = null;
   _isDirty = true;
+  matrix = new Matrix;
 
   /**
    * Move items from one to other
@@ -95,7 +97,9 @@ export default class Layer {
   applyRatio() {
     this.el.width = this.width * this.deviceRatio;
     this.el.height = this.height * this.deviceRatio;
-    this.ctx.scale(this.deviceRatio, this.deviceRatio);
+    this.matrix
+      .scale(this.deviceRatio, this.deviceRatio)
+      .applyToContext(this.ctx);
   }
 
   /**

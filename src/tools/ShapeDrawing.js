@@ -4,13 +4,15 @@ import Arrow from '../graphic/shape/Arrow';
 import Triangle from '../graphic/shape/Triangle';
 import Ellipse from '../graphic/shape/Ellipse';
 import Star from '../graphic/shape/Star';
+import Tool from './Tool';
 
 const ctorList = [Rectangle, Line, Arrow, Triangle, Ellipse, Star];
-export default class ShapeDrawing {
+export default class ShapeDrawing extends Tool{
 
   _style = {};
 
   constructor(type) {
+    super();
     let pathCtor = ctorList.find(ctor => {
       return ctor.type === type
     });
@@ -28,9 +30,13 @@ export default class ShapeDrawing {
     items.add(this.currentShape);
   }
 
-  onMouseMove(event) {
+  onMouseDrag(event) {
     this.currentShape.endPoint = event.point;
     this.currentShape.buildPath();
+  }
+
+  onMouseMove(event){
+
   }
 
   onMouseUp(event) {

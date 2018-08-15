@@ -3,8 +3,12 @@ import Rect from '../types/Rect';
 import Point from '../types/Point';
 import Matrix from '../types/Matrix';
 
+
+const viewWidth = 1000;
+const viewHeight = 800;
 /**
  * The Raster item represents an image.
+ * Image transform 完全靠 transform , 而非指定的初始x, y;
  */
 export default class Image extends Item {
 
@@ -32,10 +36,17 @@ export default class Image extends Item {
   }
 
   get bounds() {
-    return this._bounds;
+    let bound = this._initBounds.clone();
+    this.matrix.applyToRect(bound);
+    return bound;
   }
 
-  loadImage(url, ctx) {
+  /**
+   * Load image & trigger callback;
+   * @param {String} url image url string.
+   * @param {Function} fn callback
+   */
+  loadImage(url, fn) {
     if (!url) return;
 
     // let img = new window.Image;
@@ -44,16 +55,16 @@ export default class Image extends Item {
     img.src = url;
 
     img.onload = () => {
-      console.log('load', this.loaded);
+      console.log('load');
 
       this.loaded = img && img.src && img.complete;
       this.naturalWidth = img ? img.naturalWidth || img.width : 0;
       this.naturalHeight = img ? img.naturalHeight || img.height : 0;
 
       //TODO:Emit load event
-      this._bounds = this.calcInitBounds();
+      this._initBounds = this.calcInitBounds();
 
-      this.drawImageAndStroke(ctx);
+      fn && fn.call(this, img);
       img = img.onload = img.onerror = null;
     };
 
@@ -66,39 +77,12 @@ export default class Image extends Item {
     this._image = img;
   }
 
-  drawStroke() {
-    let rect = this.strokeRect = new Path();
-
-    let { x, y, width, height } = this._bounds;
-    //draw stroke;
-    rect.moveTo(new Point(x, y))
-      .lineTo(new Point(x + width, y))
-      .lineTo(new Point(x + width, y + height))
-      .lineTo(new Point(x, y + height))
-      .lineTo(new Point(x, y));
-  }
-
-  getImageData() {
-    let { x, y, width, height } = this.bounds;
-    return this._ctx.getImageData(x, y, width, height);
-  }
-
-  setImageData(data) {
-    let { x, y } = this.bounds;
-    this._ctx.putImageData(data, x, y);
-  }
-
-  toJSON() {
-    return [this.src];
-  }
 
   /**
    * 通过图像原始大小，算出宽高及起始位置，并返回bounds.(保持图片原始宽高比)
    */
   calcInitBounds() {
 
-    const viewWidth = 1000;
-    const viewHeight = 800;
     const viewRadio = viewWidth / viewHeight;
     const imgRadio = this.naturalWidth / this.naturalHeight;
 
@@ -124,6 +108,21 @@ export default class Image extends Item {
     return new Rect(x, y, width, height, this);
   }
 
+  getImageData() {
+    let { x, y, width, height } = this.bounds;
+    return this._ctx.getImageData(x, y, width, height);
+  }
+
+  setImageData(data) {
+    let { x, y } = this.bounds;
+    this._ctx.putImageData(data, x, y);
+  }
+
+  toJSON() {
+    return [this.src];
+  }
+
+
   /**
    * 参考
    * https://developer.mozilla.org/zh-CN/docs/Web/API/CanvasRenderingContext2D/drawImage
@@ -135,12 +134,12 @@ export default class Image extends Item {
    * @param {CanvasRenderingContext2D} ctx
    */
   drawImageAndStroke(ctx) {
-    let { x, y, width, height } = this.bounds;
+    let { x, y, width, height } = this._initBounds;
 
-    ctx.shadowOffsetX = 5;
-    ctx.shadowOffsetY = 5;
-    ctx.shadowBlur = 2;
-    ctx.shadowColor = "rgba(0, 0, 0, 0.3)";
+    // ctx.shadowOffsetX = 5;
+    // ctx.shadowOffsetY = 5;
+    // ctx.shadowBlur = 2;
+    // ctx.shadowColor = "rgba(0, 0, 0, 0.3)";
 
     ctx.drawImage(this._image, x, y, width, height);
 
@@ -155,7 +154,7 @@ export default class Image extends Item {
     if (this.loaded) {
       this.drawImageAndStroke(ctx);
     } else {
-      this.loadImage(this._src, ctx);
+      this.loadImage(this._src, ()=> this.drawImageAndStroke(ctx));
     }
   }
 }

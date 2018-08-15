@@ -82,6 +82,7 @@
       <div class="btn-group">
         <button id="btnSelect" class="btn btn-default">选择</button>
         <button id="btnPointer" class="btn btn-default">鼠标手</button>
+        <button id="btnEraser" class="btn btn-default">橡皮</button>
 
 
         <button id="btnArrow" class="btn btn-default">箭头</button>
@@ -180,8 +181,14 @@
     $(() => {
 
       //shape tools
-      const btns = ["btnArrow", "btnLine", "btnEllipse", "btnRectangle", "btnTriangle", "btnMarker", "btnHighlighter", "btnSignature"];
-      btns.forEach(btn=>{
+      const btns = [
+        "btnPointer", "btnEraser", "btnArrow",
+        "btnLine", "btnEllipse", "btnRectangle",
+        "btnTriangle", "btnMarker", "btnHighlighter",
+        "btnSignature"
+      ];
+
+      btns.forEach(btn => {
         $('#' + btn).click(() => {
           whiteboard.tool = btn.slice(3).toLowerCase();
         });

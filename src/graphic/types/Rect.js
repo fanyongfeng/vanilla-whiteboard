@@ -28,7 +28,8 @@ class Rect {
    * Assign x, y, width, height from other rect.
    * @param {Rect} rect
    */
-  assign(rect) {
+  assign(x, y, width, height) {
+    let rect = Rect.instantiate(x, y, width, height);
     this.x = rect.x;
     this.y = rect.y;
     this.width = rect.width;

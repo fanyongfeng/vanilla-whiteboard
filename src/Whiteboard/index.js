@@ -91,7 +91,7 @@ export default class Whiteboard {
       operateLayer = new Layer(this.width, this.height, 'operate');
 
     let whiteboardCtx = {
-      items: activeLayer.items,
+      whiteboard: this,
       backgroundLayer,
       activeLayer,
       operateLayer,
@@ -117,6 +117,7 @@ export default class Whiteboard {
 
     const drawDirtyLayer = () => {
       if (this.activeLayer.isDirty) this.activeLayer.refresh();
+      if (this.operateLayer.isDirty) this.operateLayer.refresh();
       requestAnimationFrame(drawDirtyLayer);
     }
 
@@ -175,11 +176,19 @@ export default class Whiteboard {
     this.items.add(new Image(src));
   }
 
+  /**
+   * Items of activeLayer is whiteboard 'real' items.
+   * It's read-only.
+   */
+  get items(){
+    return this.activeLayer.items;
+  }
 
   _currentTool = null;
 
   set tool(val) {
     this._currentTool = getTool(val);
+    this._currentTool.layer = this.operateLayer;
     handler.tool = this._currentTool;
   }
 

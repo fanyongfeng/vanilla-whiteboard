@@ -1,7 +1,8 @@
 import Writing from '../graphic/shape/Writing';
+import Tool from './Tool';
 
 // values: Marker & Highlighter
-export default class FreeDrawing {
+export default class FreeDrawing extends Tool {
   _style = {};
 
   brush = 'https://www-stage.tutormeetplus.com/v2/static/media/pen.3ec0e0e7.png';
@@ -10,7 +11,7 @@ export default class FreeDrawing {
     // https://www-stage.tutormeetplus.com/v2/static/media/mark_pen.901db183.png
 
   constructor(whiteboardCtx, name){
-
+    super();
     this.items = whiteboardCtx.items;
     if(name === 'highlighter') this.alpha = 0.5;
   }
@@ -33,7 +34,7 @@ export default class FreeDrawing {
    * Invoked on mouse move
    * @param {Object} pointer
    */
-  onMouseMove(event) {
+  onMouseDrag(event) {
     var point = event.point;
     var midPoint = point.midPointFrom(this.lastPoint);
     this.currentShape.quadraticCurveTo(this.lastPoint, midPoint);
@@ -46,6 +47,10 @@ export default class FreeDrawing {
   onMouseUp(event) {
     this.currentShape.simplify();
     this.currentShape = null;
+  }
+
+  onMouseMove(event){
+
   }
 
   set styles(value){

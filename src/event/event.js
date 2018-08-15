@@ -34,13 +34,14 @@ const keyCode = {
 
 const keyModifiers = {};
 
-
 //绑定流程和一般拖拽类似
 let lastPoint;
 function throttleDistance(point, distance = 10){
   if(!lastPoint) return true;
   return !point.nearby(lastPoint, distance);
 }
+
+let wasInView = false;
 
 const canvasStatus = {
   isSelectionMode:  false
@@ -151,16 +152,16 @@ let handlers = {
       point = ev.point;
 
     // if(!throttleDistance(point, 10)) return;
-
     if(ev.target !== this.canvas) return;
 
     let contain = this.context.bounds.containsPoint(point);
-
     if(!contain) return;
 
     if (typeof event.touches !== 'undefined' && event.touches.length > 1) {
       return;
     }
+
+ // mouseenter, mouseleave.
 
     if (this.isMouseDown) {
       this.isDragging = true;
@@ -185,12 +186,12 @@ let handlers = {
     if(canvasStatus.isSelectionMode){
       this.selection.onMouseDrag(event);
     } else {
-      this.currentTool.onMouseMove(event);
+      this.currentTool.onMouseDrag(event);
     }
   },
 
   _handleMove(event) {
-    this.selection.onMouseMove(event);
+    this.currentTool && this.currentTool.onMouseMove(event);
   },
 
   _handleUp(event) {

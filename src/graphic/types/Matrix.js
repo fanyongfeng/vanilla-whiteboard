@@ -152,6 +152,18 @@ class Matrix {
   }
 
   /**
+   * transform Coordinate
+   * @param {*} x
+   * @param {*} y
+   */
+  transformCoordinate(x, y) {
+    return [
+      x * this.m[0] + y * this.m[2] + this.m[4],
+      x * this.m[1] + y * this.m[3] + this.m[5]
+    ];
+  }
+
+  /**
    * 变形边界矩阵
    * @param {*} bounds
    */
@@ -159,13 +171,19 @@ class Matrix {
 
     let { x, y, width, height } = bounds;
     let pointTL = new Point(x, y);
+    let pointTR = new Point(x, y + height);
+    let pointBL = new Point(x + width, y);
     let pointBR = new Point(x + width, y + height);
 
     this.applyToPoint(pointTL)
+      .applyToPoint(pointTR)
+      .applyToPoint(pointBL)
       .applyToPoint(pointBR);
 
+    bounds.assign(pointTL.x, pointTL.y, pointBR.x - pointTL.x, pointBR.y - pointTL.y);
+
     //FIXME: 优化算法
-    return new Rect(pointTL.x, pointTL.y, pointBR.x - pointTL.x, pointBR.y - pointTL.y);
+    return this;
 
   }
 
@@ -203,6 +221,7 @@ class Matrix {
    */
   applyToContext(ctx) {
     ctx.transform.apply(ctx, this.m);
+    //ctx.setTransform.apply(ctx, this.m);
   }
 }
 
