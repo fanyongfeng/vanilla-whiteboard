@@ -9,7 +9,6 @@ const radio = 0.5;
  * Shape star
  */
 export default class Star extends Shape {
-  type = 'star';
 
   _buildPath() {
     let center = this.startPoint.midPointFrom(this.endPoint),

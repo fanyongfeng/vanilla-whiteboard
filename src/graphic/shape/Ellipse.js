@@ -2,7 +2,6 @@ import Shape from "../Shape"
 import Point from "../types/Point";
 
 export default class Ellipse extends Shape {
-  static type = 'ellipse';
 
   _buildPath() {
 

@@ -3,10 +3,11 @@ import Color from './Color';
  * default style settings of path
  */
 const defaultStyles = {
+
+  fillStyle: new Color('#c69'),
+  strokeStyle: new Color('#c69'),
   // Paths
-  fillStyle: '#c69',
   fillRule: 'nonzero',
-  strokeStyle: '#c69',
   lineWidth: 3,
   lineCap: 'round',
   lineJoin: 'round',
@@ -31,14 +32,17 @@ const fontStyles = {
 };
 
 export default class Style {
+
   constructor(options = {}) {
     Object.assign(this, defaultStyles, fontStyles, options);
   }
 
   apply(ctx) {
-    ctx.strokeStyle = this.strokeStyle;
+    ctx.strokeStyle = this.strokeStyle.toString() ;
     ctx.lineWidth = this.lineWidth;
     ctx.fillStyle = this.fillStyle;
+    ctx.lineJoin = this.lineJoin;
+    ctx.lineCap = this.lineCap;
     if(this.dashArray) {
       ctx.setLineDash(this.dashArray)
     }
@@ -94,6 +98,14 @@ export default class Style {
     // offset, or both.
     return !!color && color.alpha > 0 && (this.shadowBlur > 0
       || !(this.shadowOffsetX === 0 && this.shadowOffsetY === 0));
+  }
+
+  toShortJSON(){
+    return {
+      "c": this.strokeStyle.toHexString(),
+      "w": this.lineWidth,
+      "f": this.fontSize
+    }
   }
 
   toString() {

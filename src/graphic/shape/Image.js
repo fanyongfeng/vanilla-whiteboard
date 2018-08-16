@@ -118,7 +118,7 @@ export default class Image extends Item {
     this._ctx.putImageData(data, x, y);
   }
 
-  toJSON() {
+  _toJSON() {
     return [this.src];
   }
 

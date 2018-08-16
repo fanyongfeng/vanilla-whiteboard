@@ -6,7 +6,6 @@ import Point from '../types/Point';
  * Text Item;
  */
 export default class Text extends Item {
-  static type = 'text';
 
   _lines = [];
   _text = "";

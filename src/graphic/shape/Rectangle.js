@@ -3,15 +3,13 @@ import Point from "../types/Point";
 
 export default class Rectangle extends Shape {
 
-  static type = 'rectangle';
-
   radius = 0;
 
   _buildPath() {
 
     let { x, y, width, height } = this.bounds;
 
-    let radius = this.radius;
+    let radius = this.radius || 0;
 
     let shortLine = Math.min(width, height);
     if (radius > shortLine / 2) radius = shortLine / 2;
@@ -38,3 +36,5 @@ export default class Rectangle extends Shape {
     return this;
   }
 }
+
+window.Rectangle = Rectangle

@@ -41,10 +41,24 @@ class Color {
   }
 
   /**
-   * Convert to HSL format
+   * Convert to HSL format.
    */
   toHSL() {
     return rgb2hsl(this.red, this.green, this.blue);
+  }
+
+  /**
+   * Convert to HEX number.
+   */
+  toHex(){
+    return this.red << 16 + this.green << 8 + this.blue;
+  }
+
+  /**
+   * Convert to HEX string.
+   */
+  toHexString() {
+    return `#${this.red.toString(16)}${this.green.toString(16)}${this.blue.toString(16)}`;
   }
 
   /**

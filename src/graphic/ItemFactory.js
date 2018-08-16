@@ -5,10 +5,31 @@ import Triangle from './shape/Triangle';
 import Ellipse from './shape/Ellipse';
 import Star from './shape/Star';
 import Path from './Path';
+import Color from './types/Color';
 
+/**
+ * magic numbers map to shapes,
+ * pointer: 0,
+  marker: 1,
+  highlighter: 2,
+  ellipse: 3,
+  line: 4,
+  triangle: 5,
+  rectangle: 6,
+  arrow: 7,
+  text: 8,
+  image: 9,
+  selector: 10,
+  eraser: 11,
+  dashed: 12,
+  rightTriangle: 13,
+  circle: 14,
+ */
 function findShape() {
 
 }
+
+
 
 //magic numbers map to shapes
 export const shapeTypes = {
@@ -32,24 +53,16 @@ export const shapeTypes = {
 
 const idMap = {};
 for (let key in shapeTypes) { idMap[shapeTypes[key].id] = key; }
-//magic numbers map to shapes
-// export const shapeTypes = {
-//   pointer: 0,
-//   marker: 1,
-//   highlighter: 2,
-//   ellipse: 3,
-//   line: 4,
-//   triangle: 5,
-//   rectangle: 6,
-//   arrow: 7,
-//   text: 8,
-//   image: 9,
-//   selector: 10,
-//   eraser: 11,
-//   dashed: 12,
-//   rightTriangle: 13,
-//   circle: 14,
-// };
+
+function normalizeStyle(style){
+  let ret = {};
+  if(!style) return ret;
+
+  style.c && (ret.strokeStyle = new Color(style.c));
+  style.w && (ret.lineWidth = style.w);
+  style.f && (ret.fontSize = style.f);
+  return ret;
+}
 
 /**
  * format [type, id, dataArr, style]
@@ -66,14 +79,14 @@ export function createItemViaJSON(json) {
   if (!shape || !(ctor = shape.ctor)) throw new TypeError(`Invalid json!`);
 
   let preset = {
-    typeId, type, id,
+    typeId, type, id, style:normalizeStyle(style)
   };
 
   if(shape.preset) {
     Object.assign(preset, shape.preset);
   }
 
-  return ctor.instantiate(preset, [id, data, style]);
+  return ctor.instantiate(preset, data);
 }
 
 /**
@@ -81,7 +94,7 @@ export function createItemViaJSON(json) {
  * @param {*} type
  * @param {*} data
  */
-export default function createItem(type, data) { // attach to nebula!
+export default function createItem(type, style = {}) { // attach to nebula!
   let shape = shapeTypes[type],
     ctor = shape.ctor,
     typeId = shape.id;
@@ -89,20 +102,28 @@ export default function createItem(type, data) { // attach to nebula!
   if (!ctor) throw new Error(`Can't find specified graphic '${type}'!`);
 
   let preset = {
-    typeId, type, ...shape.preset
+    typeId, type, style
   };
 
-  return new ctor(data);
+  if(shape.preset) {
+    Object.assign(preset, shape.preset);
+  }
+
+  return new ctor(preset);
 }
 
 
+/**
+ * registry shapes
+ * @param {*} type
+ * @param {*} ctor
+ * @param {*} id
+ */
 export function registerShape(type, ctor, id) {
-  if (installCtor.findIndex(tool => tool.type === type) !== -1)
+  if (shapeTypes[type])
     throw new Error(`Shape '${type}' already exist!`);
 
-  id = typeof id === 'number' ? id : shapeTypes[type];
-  ctor.typeid = id;
-  installCtor.push({ type, ctor, id });
+  shapeTypes[type] = { ctor, id };
 }
 
 

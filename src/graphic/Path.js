@@ -19,15 +19,19 @@ class Path extends Item {
    * 用与从JSON构造出Path实例
    * @param {*} segments
    */
-  static instantiate(segments) {
+  static instantiate(preset, segments) {
     let instance = new Path;
 
     segments.forEach(seg => {
       let segment;
       if (seg.length == 1) {
-        segment = new MoveSegment(new Point(seg[0][0], seg[0][1]) );
+        segment = new MoveSegment(new Point(seg[0][0], seg[0][1]));
       } else if (seg.length == 4) {
-        segment = new BezierSegment(new Point(seg[1][0], seg[1][1]), new Point(seg[2][0], seg[2][1]), new Point(seg[3][0], seg[3][1]));
+        segment = new BezierSegment(
+          new Point(seg[1][0], seg[1][1]),
+          new Point(seg[2][0], seg[2][1]),
+          new Point(seg[3][0], seg[3][1])
+        );
       }
       instance.add(segment)
     });
@@ -181,14 +185,14 @@ class Path extends Item {
    */
   containsPoint(point) {
     // If point not in bounds of path, return false.
-    if(!super.containsPoint(point)) return false;
+    if (!super.containsPoint(point)) return false;
 
     let seg = this.segments.find(item => item.containsPoint(point, this.style.lineWidth));
     return !!seg;
   }
 
-  transformContent(matrix){
-    this.segments.forEach(item=>{
+  transformContent(matrix) {
+    this.segments.forEach(item => {
       item.transformCoordinates(matrix);
     });
     this.matrix.reset();
@@ -197,7 +201,6 @@ class Path extends Item {
   _draw(ctx) {
 
     ctx.beginPath();
-    this.style.apply(ctx);
 
     for (let i = 0, segment, len = this.segments.length; i < len; ++i) {
 
@@ -228,16 +231,16 @@ class Path extends Item {
       }
     }
 
-    if(this.isClose) ctx.closePath();
+    if (this.isClose) ctx.closePath();
 
     //ctx.fill();
     ctx.stroke();
 
-    if(this.showAuxiliary)
-      this.segments.forEach(segment=>segment.draw(ctx));
+    if (this.showAuxiliary)
+      this.segments.forEach(segment => segment.draw(ctx));
   }
 
-  toJSON() {
+  _toJSON() {
     return this.segments.map(item => item.toJSON());
   }
 

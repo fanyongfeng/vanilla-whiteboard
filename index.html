@@ -139,6 +139,7 @@
     <div class="btns-group">
       <div class="btn-group">
         <button id="btnCurve" class="btn btn-default">绘制曲线</button>
+        <button id="btnRect" class="btn btn-default">绘制一个矩形</button>
         <button id="btnRects" class="btn btn-default">绘制多个矩形</button>
         <button id="btnRectss" class="btn btn-default">绘制海量矩形</button>
         <button id="btnCompoundPath" class="btn btn-default">绘制复合图形</button>
@@ -221,10 +222,16 @@
         whiteboard.add(curve1);
       });
 
+      $("#btnRect").click(() => {
+        whiteboard.add(rect1);
+      });
+
       $("#btnText").click(() => {
         whiteboard.addText(text_cn);
         whiteboard.refresh();
       });
+
+      const area = 1000 * 700;
 
       $("#btnRects").click(() => {
         for (let i = 0; i < 100; i++) {
@@ -234,7 +241,17 @@
             ex = xi * 100 + 75,
             ey = yi * 100 + 75;
 
-          whiteboard.add(sx, sy, ex, ey);
+          let hex = parseInt((sx*sy) * 16777215 / area);
+
+          function toRGB(num){
+            const red = num >> 16;
+            const green = (num >> 8) & 255;
+            const blue = num & 255;
+            return [red, green, blue].join(',');
+            // return `rgb(${})`;
+          }
+
+          whiteboard.add([6,,[[sx, sy], [ex, ey]],{c:toRGB(hex)}]);
         }
         whiteboard.refresh();
       });
@@ -247,7 +264,7 @@
             ex = xi * 8 + 24,
             ey = yi * 8 + 24;
 
-          whiteboard.addRect(sx, sy, ex, ey);
+          whiteboard.add([6,,[[sx, sy], [ex, ey]]]);
         }
         whiteboard.refresh();
       });

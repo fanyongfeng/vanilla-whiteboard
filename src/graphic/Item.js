@@ -15,9 +15,15 @@ class Item {
   [_selected] = false;
   owner = null;
 
-  constructor(style) {
-    this.id = tsid();
-    this[_style] = new Style(style);
+  constructor(preset) {
+    if(preset) {
+      this.type = preset.type;
+      this.typeId = preset.typeId;
+      this.id = preset.id || tsid();
+    }
+
+    this[_style] = new Style(preset && preset.style);
+
     this.matrix = new Matrix();
   }
 
@@ -113,14 +119,22 @@ class Item {
 
   draw(ctx) {
     ctx.save();
-
-    let matrix = (new Matrix).multiply(this.matrix);
-    matrix.applyToContext(ctx);
+    this.style.apply(ctx);
+    this.matrix.applyToContext(ctx);
     this._draw(ctx);
     ctx.restore();
 
     if (this.selected) this.drawBoundRect(ctx);
     return this;
+  }
+
+  toJSON(){
+    return [
+      this.typeId,
+      this.id,
+      this._toJSON(),
+      this.style.toShortJSON()
+    ]
   }
 
   /**

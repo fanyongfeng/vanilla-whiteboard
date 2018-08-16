@@ -148,7 +148,7 @@ export default class Whiteboard {
    * get data of items in all layers.
    */
   get data() {
-    return this.items.map(item => item.toJSON());
+    return this.items.toJSON();
   }
 
   zoom() { }

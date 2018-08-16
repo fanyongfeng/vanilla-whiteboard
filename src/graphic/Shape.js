@@ -8,21 +8,28 @@ import Rect from './types/Rect';
  */
 export default class Shape extends Path {
 
+  startPoint = new Point;
+  endPoint = new Point;
+
   /**
    * 用与从JSON构造出Shape实例
    * @param {*} segments
    */
-  static instantiate([sp, ep]) {
+  static instantiate(preset, [sp, ep]) {
+
     let startPoint = new Point(sp[0], sp[1]);
     let endPoint = new Point(ep[0], ep[1]);
 
-    return new this(startPoint, endPoint);
+
+    return new this(startPoint, endPoint, preset);
   }
 
-  constructor(sp, ep, style) {
-    super(style);
-    this.startPoint = sp;
-    this.endPoint = ep;
+  constructor(sp, ep, preset) {
+    super(preset);
+
+    this.startPoint = sp || new Point;
+    this.endPoint = ep || new Point;
+    this.buildPath();
   }
 
   _buildPath(){
@@ -63,10 +70,10 @@ export default class Shape extends Path {
     super.setPosition(x, y);
   }
 
-  toJSON() {
-    return [this.type, [
+  _toJSON() {
+    return [
       [this.startPoint.x, this.startPoint.y],
       [this.endPoint.x, this.endPoint.y],
-    ]];
+    ];
   }
 }
