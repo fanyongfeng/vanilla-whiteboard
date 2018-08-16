@@ -2,8 +2,7 @@
 import Point from "../types/Point"
 import Shape from "../Shape";
 
-export default class Line extends Shape {
-  static type = 'line';
+export default class Chatbox extends Shape {
 
   dash = [];
   constructor(sp, ep){

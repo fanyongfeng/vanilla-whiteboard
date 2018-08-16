@@ -4,21 +4,25 @@ import Rect from './types/Rect';
 
 /**
  * The base class of shapes that build with start-point & end-point.
+ * 通常情况下，图形都是由拖动行为绘制的
  */
 export default class Shape extends Path {
 
+  /**
+   * 用与从JSON构造出Shape实例
+   * @param {*} segments
+   */
   static instantiate([sp, ep]) {
     let startPoint = new Point(sp[0], sp[1]);
     let endPoint = new Point(ep[0], ep[1]);
 
-    return new ctor(startPoint, endPoint);
+    return new this(startPoint, endPoint);
   }
 
   constructor(sp, ep, style) {
     super(style);
     this.startPoint = sp;
     this.endPoint = ep;
-
   }
 
   _buildPath(){

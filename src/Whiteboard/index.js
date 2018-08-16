@@ -6,13 +6,14 @@ import emitter from '../decorators/emitter';
 import Layer from './Layer';
 import { setStyle } from '../util/dom';
 import handler from '../event/event';
-import Writing from '../graphic/shape/Writing';
+import Path from '../graphic/Path';
 import Text from '../graphic/shape/Text';
 import saveImage from '../util/saveImage';
 import Image from '../graphic/shape/Image';
 import Rect from '../graphic/types/Rect';
 import Point from '../graphic/types/Point';
 import { getTool } from '../tools';
+import {createItemViaJSON} from '../graphic/ItemFactory';
 
 const _createContext = Symbol('_createContext');
 const defaultOptions = {
@@ -152,18 +153,14 @@ export default class Whiteboard {
 
   zoom() { }
 
-  add(segments) {
-    let instance = Writing.instantiate(segments);
+  add(json) {
+    let instance = createItemViaJSON(json);
     this.items.add(instance);
     this.emit('item:add', { instance });
   }
 
   addText(text) {
     this.items.add(new Text(text));
-  }
-
-  addPath(instance) {
-    this.items.add(instance);
   }
 
   // addRect(x1, y1, x2, y2) {

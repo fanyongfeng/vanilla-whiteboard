@@ -13,11 +13,7 @@ export default class ShapeDrawing extends Tool{
 
   constructor(type) {
     super();
-    let pathCtor = ctorList.find(ctor => {
-      return ctor.type === type
-    });
-    if (!pathCtor) throw new Error("Can't find specified shape");
-
+    let pathCtor = Rectangle;
     this.pathCtor = pathCtor;
   }
 

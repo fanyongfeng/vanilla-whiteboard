@@ -11,6 +11,7 @@ const _style = Symbol('_style');
 @memoizable()
 class Item {
 
+  selectable = true;
   [_selected] = false;
   owner = null;
 

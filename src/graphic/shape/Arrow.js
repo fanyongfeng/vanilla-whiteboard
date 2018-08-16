@@ -16,7 +16,6 @@ function calcArrow(sp, ep) {
   ];
 }
 export default class Arrow extends Shape {
-  static type = 'arrow';
 
   _buildPath() {
 

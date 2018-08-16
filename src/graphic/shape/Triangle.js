@@ -4,36 +4,23 @@ import Point from "../types/Point";
 
 export default class Triangle extends Shape {
 
-  static type = 'triangle';
   anti = false;
+  right = false;
 
   _buildPath() {
+    let sp, to;
 
-    let sp = new Point(this.startPoint.x, this.endPoint.y);
-    let to = new Point((this.startPoint.x + this.endPoint.x) / 2, this.startPoint.y);
-
-    this.moveTo(sp)
-      .lineTo(to)
-      .lineTo(this.endPoint)
-      .lineTo(sp)
-      .closePath();
-
-    return this;
-  }
-}
-
-export class RightTriangle extends Shape {
-  static type = 'rightTriangle';
-  anti = false;
-
-  _buildPath() {
-    let sp ,to;
-    if(this.anti) {
-      sp = this.startPoint;
-      to = new Point(this.startPoint.x, this.endPoint.y);
+    if (this.right) {
+      if (this.anti) {
+        sp = this.startPoint;
+        to = new Point(this.startPoint.x, this.endPoint.y);
+      } else {
+        sp = new Point(this.startPoint.x, this.endPoint.y);
+        to = new Point(this.startPoint.y, this.endPoint.x);
+      }
     } else {
       sp = new Point(this.startPoint.x, this.endPoint.y);
-      to = new Point(this.startPoint.y, this.endPoint.x);
+      to = new Point((this.startPoint.x + this.endPoint.x) / 2, this.startPoint.y);
     }
 
     this.moveTo(sp)
@@ -44,5 +31,5 @@ export class RightTriangle extends Shape {
 
     return this;
   }
-
 }
+

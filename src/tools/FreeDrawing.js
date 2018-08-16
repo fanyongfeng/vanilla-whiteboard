@@ -1,4 +1,4 @@
-import Writing from '../graphic/shape/Writing';
+import Path from '../graphic/Path';
 import Tool from './Tool';
 
 // values: Marker & Highlighter
@@ -22,7 +22,7 @@ export default class FreeDrawing extends Tool {
     * @param {Object} pointer
     */
   onMouseDown(event) {
-    this.currentShape = new Writing();
+    this.currentShape = new Path();
     // this.currentShape.style = this.style.clone();
     items.add(this.currentShape);
 

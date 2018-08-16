@@ -3,9 +3,5 @@ import Point from "../types/Point"
 
 export default class Signature extends Path {
 
-  static type = 'signature';
 
-  _buildPath() {
-
-  }
 }

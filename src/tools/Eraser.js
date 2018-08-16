@@ -21,14 +21,13 @@ export default class Eraser {
   onMouseMove({ point, delta }) {
     if(!this.layer.items.length) this.layer.items.add(this.cursor);
     if(this.cursor.loaded) {
-      // this.cursor.translate(delta);
       this.cursor.position = point;
     }
   }
 
   onMouseDrag({ point }) {
     this.selectionRect.endPoint = point;
-    this.selectionRect.position = point;
+    this.selectionRect.buildPath();
   }
 
   onMouseUp(){

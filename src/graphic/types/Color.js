@@ -47,6 +47,9 @@ class Color {
     return rgb2hsl(this.red, this.green, this.blue);
   }
 
+  /**
+   * Convert to JSON format
+   */
   toJSON() {
     return [this.red, this.green, this.blue, this.alpha];
   }

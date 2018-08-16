@@ -223,6 +223,22 @@ class Matrix {
     ctx.transform.apply(ctx, this.m);
     //ctx.setTransform.apply(ctx, this.m);
   }
+
+  /**
+   * Convert to JSON
+   */
+  toJSON(){
+    let m = this.m;
+    return [m[0], m[1], m[2], m[3], m[4], m[5]];
+  }
+
+  /**
+   * Convert to CSS style string.
+   */
+  toString(){
+    let m = this.m;
+    return `matrix(${m[0]}, ${m[1]}, ${m[2]}, ${m[3]}, ${m[4]}, ${m[5]});`;
+  }
 }
 
 export default Matrix;

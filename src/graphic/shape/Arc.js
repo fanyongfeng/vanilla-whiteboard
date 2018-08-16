@@ -1,7 +1,7 @@
 import Path from "../Path"
 
 export default class Arc extends Path {
-  type = 'arc';
+
   shape = {
       cx: 100,
       cy: 100,
