@@ -65,7 +65,7 @@ class ItemCollection {
    * return filtered ItemCollection
    */
   filter() {
-    return new ItemCollection(Array.prototype.filter.apply(this, arguments));
+    return new ItemCollection(arr.filter.apply(this, arguments));
   }
 
   /**

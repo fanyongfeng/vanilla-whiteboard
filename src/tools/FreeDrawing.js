@@ -1,19 +1,18 @@
-import Path from '../graphic/Path';
 import Tool from './Tool';
+import { createItem } from '../graphic/ItemFactory';
 
 // values: Marker & Highlighter
 export default class FreeDrawing extends Tool {
   _style = {};
 
   brush = 'https://www-stage.tutormeetplus.com/v2/static/media/pen.3ec0e0e7.png';
-    // https://www-stage.tutormeetplus.com/v2/static/media/mouse_pointer.64a36561.png
-    // https://www-stage.tutormeetplus.com/v2/static/media/eraser.352bd893.png
-    // https://www-stage.tutormeetplus.com/v2/static/media/mark_pen.901db183.png
+  // https://www-stage.tutormeetplus.com/v2/static/media/mouse_pointer.64a36561.png
+  // https://www-stage.tutormeetplus.com/v2/static/media/eraser.352bd893.png
+  // https://www-stage.tutormeetplus.com/v2/static/media/mark_pen.901db183.png
 
-  constructor(whiteboardCtx, name){
+  constructor(type) {
     super();
-    this.items = whiteboardCtx.items;
-    if(name === 'highlighter') this.alpha = 0.5;
+    this.type = type;
   }
 
   lastPoint = null;
@@ -22,7 +21,7 @@ export default class FreeDrawing extends Tool {
     * @param {Object} pointer
     */
   onMouseDown(event) {
-    this.currentShape = new Path();
+    this.currentShape = createItem(this.type, this.style);
     // this.currentShape.style = this.style.clone();
     items.add(this.currentShape);
 
@@ -49,15 +48,15 @@ export default class FreeDrawing extends Tool {
     this.currentShape = null;
   }
 
-  onMouseMove(event){
+  onMouseMove(event) {
 
   }
 
-  set styles(value){
-    this._style  = value;
+  set styles(value) {
+    this._style = value;
   }
 
-  get styles(){
+  get styles() {
     return this._style;
   }
 }

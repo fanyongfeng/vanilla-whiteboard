@@ -41,11 +41,13 @@ function fitCurve(points, maxError) {
 
   length = _points.length;
 
-  curves = fitCubic(_points, maxError, 0, length - 1,
-    // Left Tangent
-    points[1].subtract(points[0]),
-    // Right Tangent
-    points[length - 2].subtract(points[length - 1]));
+  if(length > 1) {
+    curves = fitCubic(_points, maxError, 0, length - 1,
+      // Left Tangent
+      points[1].subtract(points[0]),
+      // Right Tangent
+      points[length - 2].subtract(points[length - 1]));
+  }
 
   return curves;
 }

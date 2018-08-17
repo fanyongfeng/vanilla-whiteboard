@@ -1,27 +1,17 @@
-import Rectangle from '../graphic/shape/Rectangle';
-import Line from '../graphic/shape/Line';
-import Arrow from '../graphic/shape/Arrow';
-import Triangle from '../graphic/shape/Triangle';
-import Ellipse from '../graphic/shape/Ellipse';
-import Star from '../graphic/shape/Star';
 import Tool from './Tool';
+import {createItem}  from '../graphic/ItemFactory';
 
-const ctorList = [Rectangle, Line, Arrow, Triangle, Ellipse, Star];
 export default class ShapeDrawing extends Tool{
 
   _style = {};
 
   constructor(type) {
     super();
-    let pathCtor = Rectangle;
-    this.pathCtor = pathCtor;
+    this.type = type;
   }
 
   onMouseDown(event) {
-    let options = this.style;
-    this.currentShape = new this.pathCtor(options);
-    // this.currentShape = new Ellipse(options);
-    // this.currentShape = new Star(options);
+    this.currentShape = createItem(this.type, this.style);
     this.currentShape.startPoint = this.currentShape.endPoint = event.point;
     items.add(this.currentShape);
   }

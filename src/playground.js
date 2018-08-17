@@ -34,9 +34,9 @@ export default {
 
 
     this.whiteboard.on('item:add', (arg)=>{
-      console.log(arg);
+      // console.log(arg);
     }).on('layer:refresh ', (arg)=>{
-      console.log(arg);
+      // console.log(arg);
     });
 
     this.whiteboard.watch();

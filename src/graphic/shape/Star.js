@@ -12,7 +12,7 @@ export default class Star extends Shape {
 
   _buildPath() {
     let center = this.startPoint.midPointFrom(this.endPoint),
-      points = 20,
+      points = 10,
       radius1 = this.startPoint.getDistance(this.endPoint) / 2,
       radius2 = radius1 * radio,
       step = 360 / points,

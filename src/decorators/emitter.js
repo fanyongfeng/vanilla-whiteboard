@@ -14,7 +14,6 @@
  *
  */
 
-const slice = Array.prototype.slice;
 
 export default function emitter() {
   return function (target) {
@@ -82,11 +81,10 @@ export default function emitter() {
      *
      * @param {String} name Name of Event.
      */
-    target.prototype.emit = function (name) {
+    target.prototype.emit = function (name, ...args) {
       let handlers = this.__callbacks[name];
       if (!handlers) return;
 
-      let args = slice.call(arguments, 1);
       for (let i = 0, len = handlers.length; i < len; i++) {
         let fn = handlers[i];
 

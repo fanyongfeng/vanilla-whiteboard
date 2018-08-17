@@ -8,8 +8,8 @@ import Path from './Path';
 import Color from './types/Color';
 
 /**
- * magic numbers map to shapes,
- * pointer: 0,
+ * magic numbers map to shapes, copy from milkyway.
+  pointer: 0,
   marker: 1,
   highlighter: 2,
   ellipse: 3,
@@ -25,13 +25,7 @@ import Color from './types/Color';
   rightTriangle: 13,
   circle: 14,
  */
-function findShape() {
 
-}
-
-
-
-//magic numbers map to shapes
 export const shapeTypes = {
   pointer: { id: 0, ctor: Image },
   marker: { id: 1, ctor: Path },
@@ -58,7 +52,10 @@ function normalizeStyle(style){
   let ret = {};
   if(!style) return ret;
 
-  style.c && (ret.strokeStyle = new Color(style.c));
+  if(style.c) {
+    ret.fillStyle = new Color(style.c);
+    ret.strokeStyle = new Color(style.c);
+  };
   style.w && (ret.lineWidth = style.w);
   style.f && (ret.fontSize = style.f);
   return ret;
@@ -85,7 +82,6 @@ export function createItemViaJSON(json) {
   if(shape.preset) {
     Object.assign(preset, shape.preset);
   }
-
   return ctor.instantiate(preset, data);
 }
 
@@ -94,7 +90,7 @@ export function createItemViaJSON(json) {
  * @param {*} type
  * @param {*} data
  */
-export default function createItem(type, style = {}) { // attach to nebula!
+export function createItem(type, style = {}) { // attach to nebula!
   let shape = shapeTypes[type],
     ctor = shape.ctor,
     typeId = shape.id;

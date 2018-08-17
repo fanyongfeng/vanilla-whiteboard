@@ -20,7 +20,7 @@ class Path extends Item {
    * @param {*} segments
    */
   static instantiate(preset, segments) {
-    let instance = new Path;
+    let instance = new Path(preset);
 
     segments.forEach(seg => {
       let segment;
@@ -37,6 +37,11 @@ class Path extends Item {
     });
 
     return instance;
+  }
+  constructor(preset) {
+    super(preset);
+    if(preset)
+      this.style.strokeStyle.alpha = preset.alpha || 1;
   }
 
   [_segments] = [];
@@ -167,6 +172,9 @@ class Path extends Item {
   }
 
   simplify() {
+    //不优化小于3个点的曲线
+    if(this.segments.length < 3) return this;
+
     let segments = fitCurve(this.segments.map(item => item.point), 1);
     this[_segments] = ([this[_segments][0]]).concat(segments);
     this.markAsDirty();
@@ -233,7 +241,7 @@ class Path extends Item {
 
     if (this.isClose) ctx.closePath();
 
-    //ctx.fill();
+    // ctx.fill();
     ctx.stroke();
 
     if (this.showAuxiliary)

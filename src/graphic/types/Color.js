@@ -10,6 +10,11 @@ class Color {
   blue = 0;
   alpha = 1;
 
+  /**
+   *
+   * @param {String?} colorStr . CSS color
+   *  e.g. #fff, #ac78bf, rgb(30, 30, 30), rgba(30, 30, 30, 0.5)
+   */
   constructor(colorStr) {
     if (typeof colorStr !== 'string') return;
     this.normalizeColor(colorStr);
@@ -41,6 +46,28 @@ class Color {
   }
 
   /**
+   * If equals other style.
+   * @param {Style} other
+   */
+  equals(other) {
+    return this === other || (
+      this.red === other.red &&
+      this.green === other.green &&
+      this.blue === other.blue &&
+      this.alpha === other.alpha
+    );
+  }
+
+  /**
+   * Return a new duplicate of this instance.
+   */
+  clone(){
+    let ret = new Color;
+    Object.assign(ret, ...this); // ...this, remain red, blue, green, alpha.
+    return ret;
+  }
+
+  /**
    * Convert to HSL format.
    */
   toHSL() {
@@ -51,14 +78,15 @@ class Color {
    * Convert to HEX number.
    */
   toHex(){
-    return this.red << 16 + this.green << 8 + this.blue;
+    return (this.red << 16) + (this.green << 8) + this.blue;
   }
 
   /**
    * Convert to HEX string.
    */
   toHexString() {
-    return `#${this.red.toString(16)}${this.green.toString(16)}${this.blue.toString(16)}`;
+    let colorStr = this.toHex().toString(16);
+    return '#000000'.substr(0, 7 - colorStr.length) + colorStr;;
   }
 
   /**

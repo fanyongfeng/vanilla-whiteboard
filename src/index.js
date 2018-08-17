@@ -2,6 +2,7 @@ import Point from './graphic/types/Point';
 import Rect from './graphic/types/Rect';
 import Style from './graphic/types/Style';
 import Color from './graphic/types/Color';
+import Matrix from './graphic/types/Matrix';
 import Path from './graphic/Path';
 import Whiteboard from './Whiteboard';
 import playground from './playground'; // for debug,
@@ -28,7 +29,7 @@ import { rgb2hsl, hsl2rgb, rgb2gray, gray2rgb, gray2hsb } from './graphic/algori
  */
 
 //mount graphic on namespace (top-level).
-let nebula = typeof nebula !== 'undefined' ? nebula : { Point, Rect, Style, Path, Color };
+let nebula = typeof nebula !== 'undefined' ? nebula : { Point, Rect, Style, Path, Color, Matrix };
 
 //mount util on namespace.
 nebula.util = { rgb2hsl, hsl2rgb, rgb2gray, gray2rgb, gray2hsb };
@@ -46,7 +47,6 @@ export { Whiteboard, Point, Rect, Style, Path }
 playground.init();
 playground.drawGrid();
 window.nebula = nebula;
-console.log('---init complete--');
 
 
 

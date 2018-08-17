@@ -1,4 +1,4 @@
-import { max, min } from './math'
+import { max, min } from './math';
 
 /**
 * Adapt from <a href="https://rawgithub.com/mjijackson/mjijackson.github.com/master/2008/02/rgb-to-hsl-and-rgb-to-hsv-color-model-conversion-algorithms-in-javascript.html">https://github.com/mjijackson</a>

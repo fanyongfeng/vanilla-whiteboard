@@ -1,4 +1,4 @@
-const dirtyCheckKey =  '__is_dirty';
+const dirtyCheckKey = '__is_dirty';
 const privateKey = Symbol(dirtyCheckKey);
 
 /**
@@ -9,7 +9,8 @@ export default function memoized(cacheKey) {
 
   return function (target, name, descriptor) {
 
-    if (typeof descriptor.get !== 'function') throw new Error(`Can't decorate ${name}, Only used for getter~`);
+    if (typeof descriptor.get !== 'function')
+      throw new Error(`Can't decorate ${name}, Only used for getter~`);
 
     cacheKey = cacheKey || `__cache__${name}`;
     target[cacheKey] = null;
@@ -30,14 +31,16 @@ export default function memoized(cacheKey) {
  */
 export function changed() {
   return function (target, name, descriptor) {
-      if (typeof descriptor.set !== 'function') throw new Error(`Can't decorate ${name}, Only used for setter~`);
+    if (typeof descriptor.set !== 'function')
+      throw new Error(`Can't decorate ${name}, Only used for setter~`);
 
-      const { set } = descriptor;
-      descriptor.set = function () {
-        this.markAsDirty();
-        return set.apply(this, arguments);
-      }
-      return descriptor;
+    const { set } = descriptor;
+    descriptor.set = function () {
+      this.markAsDirty();
+      return set.apply(this, arguments);
+    }
+
+    return descriptor;
   }
 }
 
@@ -49,7 +52,7 @@ export function memoizable() {
 
   return function (target) {
 
-    if(typeof target.prototype.markAsDirty === 'function')
+    if (typeof target.prototype.markAsDirty === 'function')
       throw new Error(`can't decorate memoizable twice!`);
 
     target.prototype.__cachedProps = [];
@@ -59,7 +62,7 @@ export function memoizable() {
         return this[privateKey];
       },
       set(val) {
-        if(this.owner) {
+        if (this.owner) {
           this.owner.changed();
         }
         this[privateKey] = val;
@@ -69,7 +72,7 @@ export function memoizable() {
       configurable: true,
     });
 
-    target.prototype.markAsDirty = function(){
+    target.prototype.markAsDirty = function () {
       this[dirtyCheckKey] = true;
     }
 

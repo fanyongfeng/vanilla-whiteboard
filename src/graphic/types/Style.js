@@ -37,6 +37,10 @@ export default class Style {
     Object.assign(this, defaultStyles, fontStyles, options);
   }
 
+  /**
+   * Apply styles on canvas context.
+   * @param {CanvasRenderingContext2D} ctx, canvas context.
+   */
   apply(ctx) {
     ctx.strokeStyle = this.strokeStyle.toString() ;
     ctx.lineWidth = this.lineWidth;
@@ -46,9 +50,27 @@ export default class Style {
     if(this.dashArray) {
       ctx.setLineDash(this.dashArray)
     }
+    //TODO: implement rest props.
   }
 
-  equals(style) {
+  /**
+   * Return a new duplicate of this instance.
+   */
+  clone(){
+    let ret = new Style();
+    let {strokeStyle, fillStyle, ...rest} = this;
+    Object.assign(ret, rest);
+
+    ret.fillStyle = fillStyle.clone();
+    ret.strokeStyle = strokeStyle.clone();
+    return ret;
+  }
+
+  /**
+   * If equals other style.
+   * @param {Style} style
+   */
+  equals(other) {
     function compare(style1, style2, secondary) {
       let values1 = style1.values,
         values2 = style2.values;
@@ -61,14 +83,18 @@ export default class Style {
       return true;
     }
 
-    return style === this || compare(this, style) || false;
+    return other === this || compare(this, other) || false;
   }
 
   get font(){
     return `${this.fontSize}px sans-serif`;
   }
 
+  /**
+   * Get line-height of fonts
+   */
   get leading(){
+    //hard-code as 1.4 times of fontSize.
     return this.fontSize * 1.4;
   }
 

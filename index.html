@@ -90,6 +90,7 @@
         <button id="btnEllipse" class="btn btn-default">圆形</button>
         <button id="btnRectangle" class="btn btn-default">矩形</button>
         <button id="btnTriangle" class="btn btn-default">三角形</button>
+        <button id="btnStar" class="btn btn-default">星星</button>
         <button id="btnMarker" class="btn btn-default">Marker</button>
         <button id="btnHighlighter" class="btn btn-default">Highlighter</button>
         <button id="btnSignature" class="btn btn-default">签名</button>
@@ -186,7 +187,7 @@
         "btnPointer", "btnEraser", "btnArrow",
         "btnLine", "btnEllipse", "btnRectangle",
         "btnTriangle", "btnMarker", "btnHighlighter",
-        "btnSignature"
+        "btnSignature", "btnStar"
       ];
 
       btns.forEach(btn => {
@@ -231,7 +232,13 @@
         whiteboard.refresh();
       });
 
-      const area = 1000 * 700;
+      function toRGB(num) {
+        const red = num >> 16;
+        const green = (num >> 8) & 255;
+        const blue = num & 255;
+        return [red, green, blue].join(',');
+        // return `rgb(${})`;
+      }
 
       $("#btnRects").click(() => {
         for (let i = 0; i < 100; i++) {
@@ -241,17 +248,9 @@
             ex = xi * 100 + 75,
             ey = yi * 100 + 75;
 
-          let hex = parseInt((sx*sy) * 16777215 / area);
+          let hex = parseInt(i * 16777215 / 100);
 
-          function toRGB(num){
-            const red = num >> 16;
-            const green = (num >> 8) & 255;
-            const blue = num & 255;
-            return [red, green, blue].join(',');
-            // return `rgb(${})`;
-          }
-
-          whiteboard.add([6,,[[sx, sy], [ex, ey]],{c:toRGB(hex)}]);
+          whiteboard.add([6, , [[sx, sy], [ex, ey]], { c: 'rgb(' + toRGB(hex) + ')' }]);
         }
         whiteboard.refresh();
       });
@@ -264,7 +263,9 @@
             ex = xi * 8 + 24,
             ey = yi * 8 + 24;
 
-          whiteboard.add([6,,[[sx, sy], [ex, ey]]]);
+        let hex = parseInt(i * 16777215 / 10000);
+
+          whiteboard.add([6, , [[sx, sy], [ex, ey]], { c: 'rgb(' + toRGB(hex) + ')' }]);
         }
         whiteboard.refresh();
       });

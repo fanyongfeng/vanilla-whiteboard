@@ -25,6 +25,8 @@ export const sin = Math.sin;
 export const sign = Math.sign || function(x) { return x > 0 ? 1 : x < 0 ? -1 : 0; };
 export const sqrt = Math.sqrt;
 export const tan = Math.tan;
+export const max = Math.max;
+export const min = Math.min;
 
 export function acos(x) {
   return x > 1 ? 0 : x < -1 ? pi : Math.acos(x);
