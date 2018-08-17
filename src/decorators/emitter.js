@@ -13,8 +13,6 @@
  * ins.on('changed', (event)=>{ //dosomething });
  *
  */
-
-
 export default function emitter() {
   return function (target) {
 

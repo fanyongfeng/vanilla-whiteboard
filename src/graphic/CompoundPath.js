@@ -1,6 +1,6 @@
-import {memoized} from '../decorators/memoized'
+import { memoized } from '../decorators/memoized'
 import Item from './Item';
-import {createItemViaJSON} from './ItemFactory'
+import { createItemViaJSON } from './ItemFactory'
 
 /**
  * @class A compound path is a complex path that is made up of one or more
@@ -13,22 +13,19 @@ import {createItemViaJSON} from './ItemFactory'
 class CompoundPath extends Item {
   _children = [];
 
-  static instantiate(preset, paths){
-
-    let instance = new CompoundPath(preset);
-
-    paths.forEach(path=> instance.add(createItemViaJSON(path)));
-
+  static instantiate(options, paths) {
+    let instance = new CompoundPath(options);
+    paths.forEach(path => instance.add(createItemViaJSON(path)));
     return instance;
 
   }
 
-  constructor(preset, paths) {
-    super(preset);
-    if(paths) this._children = paths;
+  constructor(options, paths = []) {
+    super(options);
+    this._children = paths;
   }
 
-  add(path){
+  add(path) {
     this._children.push(path);
   }
 
@@ -82,7 +79,7 @@ class CompoundPath extends Item {
     this._children.forEach(path => path.draw(ctx));
   }
 
-  _toJSON(){
+  _toJSON() {
     return this._children.map(item => item.toJSON());
   }
 }

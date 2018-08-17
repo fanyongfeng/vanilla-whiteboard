@@ -44,7 +44,7 @@ export const shapeTypes = {
   rightTriangle: { id: 13, ctor: Triangle, preset: { right: true } },
   circle: 14,
   star: { id: 15, ctor: Star },
-  compoundPath: {id: 100, ctor: CompoundPath}
+  compoundPath: { id: 100, ctor: CompoundPath }
 };
 
 const idMap = {};
@@ -82,14 +82,14 @@ export function createItemViaJSON(json) {
 
   if (!shape || !(ctor = shape.ctor)) throw new TypeError(`Invalid json!`);
 
-  let preset = {
+  let options = {
     typeId, type, id, style: normalizeStyle(style)
   };
 
   if (shape.preset) {
-    Object.assign(preset, shape.preset);
+    Object.assign(options, shape.preset);
   }
-  return ctor.instantiate(preset, data);
+  return ctor.instantiate(options, data);
 }
 
 /**
@@ -104,15 +104,15 @@ export function createItem(type, style = {}) { // attach to nebula!
 
   if (!ctor) throw new Error(`Can't find specified graphic '${type}'!`);
 
-  let preset = {
+  let options = {
     typeId, type, style: normalizeStyle(style)
   };
 
   if (shape.preset) {
-    Object.assign(preset, shape.preset);
+    Object.assign(options, shape.preset);
   }
 
-  return new ctor(preset);
+  return new ctor(options);
 }
 
 

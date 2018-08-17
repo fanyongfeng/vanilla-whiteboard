@@ -4,12 +4,6 @@ import Shape from "../Shape";
 
 export default class Chatbox extends Shape {
 
-  dash = [];
-  constructor(sp, ep){
-    super(sp, ep);
-    // this.style.dash = dash;
-  }
-
   _buildPath() {
 
     // ctx.moveTo(75,25);

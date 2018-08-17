@@ -27,7 +27,7 @@ export function memoized(cacheKey) {
 }
 
 /**
- * mark setter change trigger canvas refresh & mark layer as dirty.
+ * mark setter. if the value changed, it will trigger canvas refresh OR mark layer as dirty.
  */
 export function changed() {
   return function (target, name, descriptor) {
@@ -72,6 +72,9 @@ export function memoizable() {
       configurable: true,
     });
 
+    /**
+     * mark the item instance as 'dirty', it will trigger canvas refresh and re-calc the memozied props.
+     */
     target.prototype.markAsDirty = function () {
       this[dirtyCheckKey] = true;
     }

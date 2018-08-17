@@ -9,6 +9,7 @@ const defaultOptions = {
 const gap = 50;
 
 /**
+ * 简单坐标轴
  * simple axes
  */
 export default class Axes {

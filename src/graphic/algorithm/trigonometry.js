@@ -1,11 +1,19 @@
 import {atan2, pow, acos, pi} from './math';
 
+/**
+ *
+ * @param {*} x
+ * @param {*} y
+ */
 function getAngleXAxis(x, y){
   let radian = atan2(y, x);
   if(radian<0) return radian+ 2* pi;
   return radian;
 }
 
+/**
+ *
+ */
 export function getAngle(){
   let cp = new Point(0, 0);
   let sp = new Point(0, 200);
@@ -21,6 +29,9 @@ export function getAngle(){
   return resultRadian * 180 / pi;;
 }
 
+/**
+ *
+ */
 export function getAngle2(){
   let cp = new Point(0, 0);
   let sp = new Point(0, 200);

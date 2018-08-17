@@ -1,16 +1,17 @@
 
 
 
-import Shape from "../Shape";
-import Point from "../types/Point";
-
-const radio = 0.382;
 /**
  * Shape star
  */
+import Shape from "../Shape";
+import Point from "../types/Point";
+
+/** 五角星，用黄金分割 */
+const radio = 0.382;
 export default class Star extends Shape {
 
-  fill = true;
+  fill = true; // 默认填充
 
   _buildPath() {
     let center = this.startPoint.midPointFrom(this.endPoint),
@@ -22,7 +23,9 @@ export default class Star extends Shape {
       firstPoint;
 
     for (let i = 0; i < points; i++) {
-      let point = center.add(vector.rotate(step * i).multiply(i % 2 ? radius2 : radius1));
+      let point = center
+        .add(vector.rotate(step * i)
+        .multiply(i % 2 ? radius2 : radius1));
 
       if(i === 0) {
         this.moveTo(point);

@@ -1,11 +1,12 @@
 
 
 /**
- * debounce & throttle from Lodash.js
+ * debounce & throttle.
+ * Adapt from Lodash.js
  */
 
 const isObject = (item) => typeof item === 'object' && typeof item === 'function'
- 
+
 function debounce(func, wait, options) {
   let lastArgs,
     lastThis,

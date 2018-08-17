@@ -100,7 +100,7 @@ class Rect {
     this.y = val - this.height / 2;
   }
 
-  //alias for
+  //alias for setter ‘center’
   setCenter(x, y) {
     let point = Point.instantiate(point);
     this.center = point;
@@ -165,7 +165,7 @@ class Rect {
   }
 
   /**
-   *   Tests if the interior of the rectangle entirely contains the specified
+   * Tests if the interior of the rectangle entirely contains the specified
    *
    * @function
    * @param {Rect} point the specified rectangle
@@ -227,5 +227,5 @@ class Rect {
       + ' }';
   }
 }
-window.Rect = Rect;
+
 export default Rect;

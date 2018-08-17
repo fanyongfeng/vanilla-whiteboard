@@ -15,15 +15,14 @@ class Item {
   [_selected] = false;
   owner = null;
 
-  constructor(preset) {
-    if(preset) {
-      this.type = preset.type;
-      this.typeId = preset.typeId;
-      this.id = preset.id || tsid();
+  constructor(options) {
+    if(options) {
+      this.type = options.type;
+      this.typeId = options.typeId;
+      this.id = options.id || tsid();
     }
 
-    this[_style] = new Style(preset && preset.style);
-
+    this[_style] = new Style(options && options.style);
     this.matrix = new Matrix();
   }
 

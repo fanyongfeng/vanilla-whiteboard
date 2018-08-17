@@ -21,8 +21,8 @@ class Path extends Item {
    * 用与从JSON构造出Path实例
    * @param {*} segments
    */
-  static instantiate(preset, segments) {
-    let instance = new Path(preset);
+  static instantiate(options, segments) {
+    let instance = new Path(options);
 
     segments.forEach(seg => {
       let segment;
@@ -40,10 +40,10 @@ class Path extends Item {
 
     return instance;
   }
-  constructor(preset) {
-    super(preset);
-    if(preset)
-      this.style.strokeStyle.alpha = preset.alpha || 1;
+  constructor(options) {
+    super(options);
+    if(options)
+      this.style.strokeStyle.alpha = options.alpha || 1;
   }
 
   [_segments] = [];

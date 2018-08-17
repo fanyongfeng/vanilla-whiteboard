@@ -1,6 +1,7 @@
 
 
 /**
+ * 简单网格
  * Component Grid.
  */
 export default class Grid {

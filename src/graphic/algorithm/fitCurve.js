@@ -1,18 +1,12 @@
 import Point from '../types/Point';
-
 import { BezierSegment } from '../types/Segment';
 
 /**
- *  @preserve  JavaScript implementation of
- *  Algorithm for Automatically Fitting Digitized Curves
- *  by Philip J. Schneider
- *  "Graphics Gems", Academic Press, 1990
- *
- *  The MIT License (MIT)
+ *  Adapt from https://github.com/paperjs/paper.js
  *
  *  https://github.com/soswow/fit-curves
  *
- * Refactor paper.js PathFitter.js to pure-function
+ *   Refactor paper.js PathFitter.js to pure-function
  *
  * 输入: 多个点的数组
  * 输出: 优化好的曲线列表

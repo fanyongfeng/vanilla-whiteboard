@@ -80,6 +80,10 @@ function rgb2hex(r, g, b) {
   return "#" + "00000".substr(0, 6 - s.length) + s
 }
 
+/**
+ * Convert hex color string to rgb.
+ * @param {String} hex e.g. #ffffff, #c19
+ */
 function hex2rgb(hex){
   //TODO: check format.
   if(hex.length === 4) { //#fff
@@ -99,13 +103,17 @@ function hex2rgb(hex){
 }
 
 /**
- *
+ * Convert gray color to rgb.
  * @param {*} g
  */
 function gray2rgb(g) {
   return [g, g, g];
 }
 
+/**
+ * Convert gray color to HSB.
+ * @param {*} g
+ */
 function gray2hsb(g) {
   return [0, 0, g];
 }

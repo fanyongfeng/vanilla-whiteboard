@@ -3,6 +3,9 @@ import { rgb2hsl, hex2rgb } from '../algorithm/color'
 const hexRE = /^#(?:[0-9a-f]{3}|[0-9a-f]{6})$/i;
 const rgbaRE = /^rgba?\((.*)\)$/i;
 
+/**
+ * 所用颜色统一处理为 rgba
+ */
 class Color {
   //4 channels.
   red = 0;

@@ -17,6 +17,10 @@ import Rect from "./Rect";
  * 变换矩阵，用于transform
  */
 class Matrix {
+  /**
+   * Build Matrix via matrix array.
+   * @param {Array} m matrix array, default value: [1, 0, 0, 1, 0, 0].
+   */
   constructor(m) {
     m = m || [1, 0, 0, 1, 0, 0];
     this.m = [m[0], m[1], m[2], m[3], m[4], m[5]];
@@ -28,6 +32,13 @@ class Matrix {
   reset() {
     this.m = [1, 0, 0, 1, 0, 0];
     return this;
+  }
+
+  /**
+   * Return a duplicate matrix.
+   */
+  clone() {
+    return new Matrix(this.m.map(i => i));
   }
 
   /**
@@ -263,7 +274,7 @@ class Matrix {
   /**
    * Convert to JSON
    */
-  toJSON(){
+  toJSON() {
     let m = this.m;
     return [m[0], m[1], m[2], m[3], m[4], m[5]];
   }
@@ -271,7 +282,7 @@ class Matrix {
   /**
    * Convert to CSS style string.
    */
-  toString(){
+  toString() {
     let m = this.m;
     return `matrix(${m[0]}, ${m[1]}, ${m[2]}, ${m[3]}, ${m[4]}, ${m[5]});`;
   }

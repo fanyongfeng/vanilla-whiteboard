@@ -2,6 +2,9 @@
 import Shape from "../Shape";
 import Point from "../types/Point";
 
+/**
+ * 支持等腰，直角三角形
+ */
 export default class Triangle extends Shape {
 
   anti = false;

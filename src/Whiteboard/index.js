@@ -1,19 +1,16 @@
 /**
- *
+ * Entry of whiteboard.
  */
-
 import emitter from '../decorators/emitter';
 import Layer from './Layer';
 import { setStyle } from '../util/dom';
 import handler from '../event/event';
-import Path from '../graphic/Path';
 import Text from '../graphic/shape/Text';
 import saveImage from '../util/saveImage';
 import Image from '../graphic/shape/Image';
 import Rect from '../graphic/types/Rect';
-import Point from '../graphic/types/Point';
 import { getTool } from '../tools';
-import {createItemViaJSON, createItem} from '../graphic/ItemFactory';
+import { createItemViaJSON, createItem } from '../graphic/ItemFactory';
 
 const _createContext = Symbol('_createContext');
 const defaultOptions = {
@@ -98,7 +95,7 @@ export default class Whiteboard {
       operateLayer,
       currentMode: null,
       settings: this.options,
-      bounds: new Rect(0 ,0 ,this.width, this.height),
+      bounds: new Rect(0, 0, this.width, this.height),
       emit: this.emit.bind(this)
     }
 
@@ -153,11 +150,11 @@ export default class Whiteboard {
 
   zoom() { }
 
-  createItem(type, style){
+  createItem(type, style) {
     return createItem(type, style);
   }
 
-  addItem(item){
+  addItem(item) {
     this.items.add(item);
   }
 
@@ -185,7 +182,7 @@ export default class Whiteboard {
    * Items of activeLayer is whiteboard 'real' items.
    * It's read-only.
    */
-  get items(){
+  get items() {
     return this.activeLayer.items;
   }
 

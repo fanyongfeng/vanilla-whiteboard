@@ -1,3 +1,6 @@
+/**
+ * Rectangle support radius.
+ */
 import Shape from "../Shape"
 import Point from "../types/Point";
 

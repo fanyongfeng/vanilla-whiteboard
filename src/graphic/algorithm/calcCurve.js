@@ -1,6 +1,7 @@
 
 
 import Rect from '../types/Rect';
+
 /**
  * 向量距离平方
  * @param {Vector2} v1

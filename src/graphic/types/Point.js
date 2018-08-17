@@ -123,8 +123,8 @@ export default class Point {
 
   /**
    * Returns the point between this point and another one
-   * @param {fabric.Point} other
-   * @return {fabric.Point}
+   * @param {Point} other
+   * @return {Point}
    */
   midPointFrom(other) {
     return this.lerp(other);
