@@ -31,9 +31,12 @@ class Matrix {
   }
 
   /**
-   * 一个矩阵作用于另一个矩阵，支持链式书写
+   *
+   * 一个矩阵作用该矩阵，支持链式书写
+   * 等价于 `(this matrix) * (specified matrix)`.
+   * @param {Matrix} m
    */
-  multiply(m) {
+  append(m) {
     const m1 = this.m;
     let m2;
 
@@ -46,10 +49,10 @@ class Matrix {
     const m11 = m1[0] * m2[0] + m1[2] * m2[1],
       m12 = m1[1] * m2[0] + m1[3] * m2[1],
       m21 = m1[0] * m2[2] + m1[2] * m2[3],
-      m22 = m1[1] * m2[2] + m1[3] * m2[3]
+      m22 = m1[1] * m2[2] + m1[3] * m2[3];
 
     const dx = m1[0] * m2[4] + m1[2] * m2[5] + m1[4],
-      dy = m1[1] * m2[4] + m1[3] * m2[5] + m1[5]
+      dy = m1[1] * m2[4] + m1[3] * m2[5] + m1[5];
 
     m1[0] = m11;
     m1[1] = m12;
@@ -57,6 +60,39 @@ class Matrix {
     m1[3] = m22;
     m1[4] = dx;
     m1[5] = dy;
+
+    return this;
+  }
+  /**
+   * 一个矩阵作用于该矩阵，支持链式书写
+   * 等价于： `(specified matrix) * (this matrix)`.
+   * @param {Matrix} m
+   */
+  prepend(m) {
+    const m1 = this.m;
+    let m2;
+
+    if (m instanceof Matrix) {
+      m2 = m.m;
+    } else {
+      m2 = m;
+    }
+
+    const m11 = m1[0] * m2[0] + m2[2] * m1[1],
+      m12 = m1[0] * m2[1] + m2[3] * m1[1],
+      m21 = m1[2] * m2[0] + m1[3] * m2[2],
+      m22 = m1[2] * m2[1] + m1[3] * m2[3];
+
+    const dx = m2[0] * m1[4] + m2[2] * m1[5] + m2[4],
+      dy = m2[1] * m1[4] + m2[3] * m1[5] + m2[5];
+
+    m1[0] = m11;
+    m1[1] = m12;
+    m1[2] = m21;
+    m1[3] = m22;
+    m1[4] = dx;
+    m1[5] = dy;
+
     return this;
   }
 
@@ -90,7 +126,7 @@ class Matrix {
     (0, 1, sy)
    * */
   translate(point) {
-    return this.multiply([1, 0, 0, 1, point.x, point.y])
+    return this.append([1, 0, 0, 1, point.x, point.y])
   }
 
   /**
@@ -113,7 +149,7 @@ class Matrix {
       ty = y - x * s - y * c;
     }
 
-    return this.multiply([c, s, -s, c, tx, ty]);
+    return this.append([c, s, -s, c, tx, ty]);
   }
 
   /**
@@ -132,7 +168,7 @@ class Matrix {
     const tx = Math.tan(radX),
       ty = Math.tan(radY)
 
-    this.multiply([1, ty, tx, 1, 0, 0])
+    this.append([1, ty, tx, 1, 0, 0])
     if (point) this.translate(point.negate());
 
     return this;
@@ -146,7 +182,7 @@ class Matrix {
    */
   scale(sx, sy, point = null) {
     if (point) this.translate(point);
-    this.multiply([sx, 0, 0, sy, 0, 0])
+    this.append([sx, 0, 0, sy, 0, 0])
     if (point) this.translate(point.negate());
     return this;
   }

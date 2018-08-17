@@ -111,7 +111,8 @@ class Item {
     //TODO: transform stroke & bounds.
 
     if (matrix) {
-      this.matrix = this.matrix.multiply(matrix);
+      //注意矩阵multify 顺序
+      this.matrix = this.matrix.prepend(matrix);
     }
 
     this.transformContent(matrix);
@@ -131,6 +132,10 @@ class Item {
     }
   }
 
+  /**
+   * If point in the bounds of item.
+   * @param {Point} point
+   */
   containsPoint(point) {
     return this.bounds.containsPoint(point);
   }
@@ -139,6 +144,10 @@ class Item {
     throw new Error("Abstract method must be overwrite!");
   }
 
+  /**
+   * Draw item on specified canvas context.
+   * @param {*} ctx
+   */
   draw(ctx) {
     ctx.save();
     this.style.apply(ctx);
@@ -150,6 +159,10 @@ class Item {
     return this;
   }
 
+  /**
+   *  Get JSON format data, in [typeId, id, JSONData, style]
+   *  e.g. [6, 9909959950, [[345, 234], [603, 436]], {"c":"#da64e2","w":5,"f":20}];
+   */
   toJSON(){
     return [
       this.typeId,

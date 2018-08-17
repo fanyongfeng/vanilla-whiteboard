@@ -73,10 +73,6 @@ export default class Shape extends Path {
     super.transformContent(matrix);
   }
 
-  setPosition(x, y){
-    super.setPosition(x, y);
-  }
-
   _toJSON() {
     return [
       [this.startPoint.x, this.startPoint.y],

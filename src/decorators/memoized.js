@@ -5,7 +5,7 @@ const privateKey = Symbol(dirtyCheckKey);
  * mark getter as memoized prop, the value is cached till the instance mark as dirty,
  * @param {String} dirtyCheckKey
  */
-export default function memoized(cacheKey) {
+export function memoized(cacheKey) {
 
   return function (target, name, descriptor) {
 

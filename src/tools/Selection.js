@@ -22,7 +22,7 @@ export default class Selection {
 
   constructor(whiteboardCtx) {
     this.layer = whiteboardCtx.operateLayer;
-    this.items = whiteboardCtx.items;
+    this.items = whiteboardCtx.activeLayer.items;
     this.ctx = this.layer.ctx;
 
     this.selectionRect = new Rectangle();
@@ -133,6 +133,8 @@ export default class Selection {
       this.target = item;
       return true;
     }
+
+    console.log(item);
     return false;
   }
 

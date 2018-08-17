@@ -4,7 +4,7 @@ import Point from './types/Point';
 import Rect from './types/Rect';
 import fitCurve from './algorithm/fitCurve';
 import smoothCurve from './algorithm/smoothCurve';
-import memoized from '../decorators/memoized'
+import { memoized, changed} from '../decorators/memoized'
 import Item from './Item';
 
 const _segments = Symbol('_segments');
@@ -15,7 +15,7 @@ const _segments = Symbol('_segments');
  */
 class Path extends Item {
 
-  fill = false;
+  _fill = true;
 
   /**
    * 用与从JSON构造出Path实例
@@ -55,6 +55,18 @@ class Path extends Item {
 
   get segments() {
     return this[_segments];
+  }
+
+  get fill(){
+    return this._fill;
+  }
+
+  @changed()
+  set fill(val){
+    if(typeof val!== 'boolean') throw new TypeError("ensure boolean!");
+
+    this._fill = val;
+    return this;
   }
 
   add(segment) {

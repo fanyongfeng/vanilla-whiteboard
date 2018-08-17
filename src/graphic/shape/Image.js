@@ -37,6 +37,7 @@ export default class Image extends Item {
 
   get bounds() {
     let bound = this._initBounds.clone();
+    bound.owner = this;
     this.matrix.applyToRect(bound);
     return bound;
   }
@@ -145,7 +146,6 @@ export default class Image extends Item {
 
     //TODO: transform bounds.
 
-    if (this.selected) this.drawBoundRect(ctx);
   }
 
   _draw(ctx) {

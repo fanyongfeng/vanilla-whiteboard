@@ -44,7 +44,7 @@ function throttleDistance(point, distance = 10){
 let wasInView = false;
 
 const canvasStatus = {
-  isSelectionMode:  false
+  isSelectionMode:  true
 }
 
 let handlers = {
@@ -192,10 +192,11 @@ let handlers = {
 
   _handleMove(event) {
     this.currentTool && this.currentTool.onMouseMove(event);
+    this.selection.onMouseMove(event);
   },
 
   _handleUp(event) {
-    this.currentTool.onMouseUp(event);
+    // this.currentTool.onMouseUp(event);
     this.selection.onMouseUp(event);
   }
 }
