@@ -21,10 +21,10 @@ export default class Shape extends Path {
     let endPoint = new Point(ep[0], ep[1]);
 
 
-    return new this(startPoint, endPoint, preset);
+    return new this(preset, startPoint, endPoint);
   }
 
-  constructor(sp, ep, preset) {
+  constructor(preset, sp, ep) {
     super(preset);
 
     this.startPoint = sp || new Point;
@@ -64,6 +64,13 @@ export default class Shape extends Path {
     }
 
     return new Rect(x, y, width, height, this);
+  }
+
+  transformContent(matrix) {
+    // also apply to start & end point.
+    matrix.applyToPoint(this.startPoint);
+    matrix.applyToPoint(this.endPoint);
+    super.transformContent(matrix);
   }
 
   setPosition(x, y){

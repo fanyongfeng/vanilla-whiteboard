@@ -4,11 +4,13 @@
 import Shape from "../Shape";
 import Point from "../types/Point";
 
-const radio = 0.5;
+const radio = 0.382;
 /**
  * Shape star
  */
 export default class Star extends Shape {
+
+  fill = true;
 
   _buildPath() {
     let center = this.startPoint.midPointFrom(this.endPoint),
@@ -29,7 +31,7 @@ export default class Star extends Shape {
       }
       this.lineTo(point);
     }
-    this.lineTo(firstPoint);
+    this.lineTo(firstPoint.clone()); // clone first point. avoid reference error.
     this.closePath();
   }
 }

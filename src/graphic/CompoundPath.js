@@ -1,5 +1,6 @@
 import Path from './Path';
 import Item from './Item';
+import {createItemViaJSON} from './ItemFactory'
 
 /**
  * @class A compound path is a complex path that is made up of one or more
@@ -12,8 +13,30 @@ import Item from './Item';
 class CompoundPath extends Item {
   _children = [];
 
-  constructor(paths) {
+  static instantiate(preset, paths){
+
+    let instance = new CompoundPath(preset);
+
+    paths.forEach(path=> instance.add(createItemViaJSON(path)));
+
+    return instance;
+
+  }
+
+  constructor(preset, paths) {
+    super(preset);
     if(paths) this._children = paths;
+  }
+
+  add(path){
+    this._children.push(path);
+  }
+
+  /**
+   * Get children.
+   */
+  get children() {
+    return this._children;
   }
 
   /**
@@ -29,7 +52,7 @@ class CompoundPath extends Item {
 
   get bounds(){
     let rect;
-    this.children.forEach(path => {
+    this._children.forEach(path => {
       if(rect) return rect.unite(path.bounds);
       rect = path.bounds;
     });
@@ -37,7 +60,11 @@ class CompoundPath extends Item {
   }
 
   _draw(ctx) {
-    this.children.forEach(path => path.draw(ctx));
+    this._children.forEach(path => path.draw(ctx));
+  }
+
+  _toJSON(){
+    return this._children.map(item => item.toJSON());
   }
 }
 

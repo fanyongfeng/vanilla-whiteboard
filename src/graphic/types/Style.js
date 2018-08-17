@@ -3,9 +3,6 @@ import Color from './Color';
  * default style settings of path
  */
 const defaultStyles = {
-
-  fillStyle: new Color('#c69'),
-  strokeStyle: new Color('#c69'),
   // Paths
   fillRule: 'nonzero',
   lineWidth: 3,
@@ -32,6 +29,9 @@ const fontStyles = {
 };
 
 export default class Style {
+
+  fillStyle = new Color('#c69');
+  strokeStyle = new Color('#c69');
 
   constructor(options = {}) {
     Object.assign(this, defaultStyles, fontStyles, options);

@@ -196,6 +196,26 @@
         });
       })
 
+      const widthBtns = ['btnWidth1', 'btnWidth2', 'btnWidth3'];
+
+      widthBtns.forEach((btn, idx) => {
+        let widths = [3, 6, 9];
+        $('#' + btn).click(() => {
+          let w = widths[idx];
+          whiteboard.tool.style.width = w;
+        });
+      });
+
+      const colorBtns = ['btnColor1', 'btnColor2', 'btnColor3', 'btnColor4', 'btnColor5'];
+
+      colorBtns.forEach((btn, idx) => {
+        let colors = ['rgb(40, 40, 40)', 'rgb(255, 75, 89)', 'rgb(142, 207, 84)', 'rgb(255, 163, 0)', 'rgb(0, 184, 252)'];
+        $('#' + btn).click(() => {
+          let c = colors[idx];
+          whiteboard.tool.style.color = c;
+        });
+      });
+
 
       $("#btnPerf").click(() => {
         let item = items[0];
@@ -263,7 +283,7 @@
             ex = xi * 8 + 24,
             ey = yi * 8 + 24;
 
-        let hex = parseInt(i * 16777215 / 10000);
+          let hex = parseInt(i * 16777215 / 10000);
 
           whiteboard.add([6, , [[sx, sy], [ex, ey]], { c: 'rgb(' + toRGB(hex) + ')' }]);
         }
@@ -297,8 +317,9 @@
       });
 
       $("#btnCompoundPath").click(() => {
-        whiteboard.add(compoundPath1);
-        whiteboard.refresh();
+        let compoundPath1 = drawFlag();
+        whiteboard.addItem(compoundPath1);
+        // whiteboard.refresh();
       });
 
       $("#btnSaveImg").click(() => {
@@ -324,6 +345,80 @@
         });
         whiteboard.refresh();
       });
+
+
+      function drawFlag() {
+        let compoundPath = whiteboard.createItem('compoundPath');
+        let i = 0, j = 0, star, r = 5;
+
+        var width = 380;
+        var height = 200;
+        let flag = whiteboard.createItem('rectangle', { color: '#fff', width: 0 })
+        flag.startPoint = new nebula.Point(0, 0);
+        flag.endPoint = new nebula.Point(width, height);
+        flag.buildPath();
+        flag.fill = true;
+        compoundPath.add(flag)
+
+        for (i = 0; i < 13; i++) {
+          let bar, sx = 0, sy, ex = width, ey;
+          bar = whiteboard.createItem('rectangle', { color: i % 2 == 0 ? '#ff0000' : "#fff", width: 0 });
+
+          sy = height / 13 * i;
+          ey = height / 13 * (i + 1);
+          bar.startPoint = new nebula.Point(sx, sy);
+          bar.endPoint = new nebula.Point(ex, ey);
+          bar.buildPath();
+          bar.fill = true;
+
+
+          compoundPath.add(bar);
+        }
+
+        var D = width / 5 * 2;
+        var C = height / 13 * 7;
+        let top = whiteboard.createItem('rectangle', { color: '#0000ff', width: 0 });
+
+        top.startPoint = new nebula.Point(0, 0);
+        top.endPoint = new nebula.Point(D, C);
+        top.buildPath();
+
+        top.fill = true;
+        compoundPath.add(top);
+
+
+        for (i = 0; i < 6; i++) {
+          for (j = 0; j < 5; j++) {
+            x = D / 12 + 2 * i * D / 12;
+            y = C / 10 + 2 * j * C / 10;
+
+            star = whiteboard.createItem('star', { color: '#fff', width: 0 });
+            star.startPoint = new nebula.Point(x - r, y - r);
+            star.endPoint = new nebula.Point(x + r, y + r);
+            star.buildPath();
+            star.fill = true;
+            compoundPath.add(star);
+          }
+        }
+
+        for (i = 0; i < 5; i++) {
+          for (j = 0; j < 4; j++) {
+
+            x = D / 6 + 2 * i * D / 12;
+            y = C / 5 + 2 * j * C / 10;
+
+            star = whiteboard.createItem('star', { color: '#fff', width: 0 });
+            star.startPoint = new nebula.Point(x - r, y - r);
+            star.endPoint = new nebula.Point(x + r, y + r);
+            star.buildPath();
+
+            star.fill = true;
+            compoundPath.add(star);
+          }
+        }
+
+        return compoundPath;
+      }
     })
   </script>
   <!-- built files will be auto injected -->

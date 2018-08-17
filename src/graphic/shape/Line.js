@@ -12,8 +12,8 @@ export default class Line extends Shape {
   }
 
   _buildPath() {
-    this.moveTo(this.startPoint)
-      .lineTo(this.endPoint)
+    this.moveTo(this.startPoint.clone())
+      .lineTo(this.endPoint.clone())
       .closePath();
 
     return this;

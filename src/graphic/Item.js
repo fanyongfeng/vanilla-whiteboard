@@ -65,21 +65,43 @@ class Item {
   }
 
   setPosition(x, y) {
-    this.translate(Point.instantiate(x, y).subtract(this.position));
+    return this.translate(Point.instantiate(x, y).subtract(this.position));
   }
 
+  /**
+   * Translate to point.
+   * @param {Point} point
+   */
   translate(point) {
     let mx = new Matrix();
     return this.transform(mx.translate(point));
   }
 
-  scale(sx, sy, point) {
+  /**
+   * Scale current item.
+   * @param {Number} sx horizantal
+   * @param {Number | undefined} sy, if it not set, use sx by default.
+   * @param {Point} point Base point.
+   */
+  scale(sx, sy, point = null) {
+    if(typeof sx !== 'number')
+      throw new TypeError("param 'sx' of scale must be number!");
+
     let mx = new Matrix();
+    if(typeof sy === 'undefined') sy = sx;
     point = point || this.bounds.center;
     return this.transform(mx.scale(sx, sy, point));
   }
 
-  rotate(deg, point) {
+  /**
+   * Rotate current item.
+   * @param {Number} deg, degree of Rotation.
+   * @param {Point} point, Base point.
+   */
+  rotate(deg, point = null) {
+    if(typeof deg !== 'number')
+      throw new TypeError("param 'deg' of rotate must be number!");
+
     let mx = new Matrix();
     point = point || this.bounds.center;
     return this.transform(mx.rotate(deg, point));

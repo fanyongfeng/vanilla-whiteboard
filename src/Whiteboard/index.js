@@ -13,7 +13,7 @@ import Image from '../graphic/shape/Image';
 import Rect from '../graphic/types/Rect';
 import Point from '../graphic/types/Point';
 import { getTool } from '../tools';
-import {createItemViaJSON} from '../graphic/ItemFactory';
+import {createItemViaJSON, createItem} from '../graphic/ItemFactory';
 
 const _createContext = Symbol('_createContext');
 const defaultOptions = {
@@ -152,6 +152,14 @@ export default class Whiteboard {
   }
 
   zoom() { }
+
+  createItem(type, style){
+    return createItem(type, style);
+  }
+
+  addItem(item){
+    this.items.add(item);
+  }
 
   add(json) {
     let instance = createItemViaJSON(json);

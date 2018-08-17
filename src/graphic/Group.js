@@ -22,7 +22,7 @@ export default class Group extends Item {
 
   get bounds() {
     let rect;
-    this.children.forEach(path => {
+    this._children.forEach(path => {
       if (rect) return rect.unite(path.bounds);
       rect = path.bounds;
     });
@@ -30,11 +30,11 @@ export default class Group extends Item {
   }
 
   transformContent() {
-    this.children.forEach(item => item.transformContent());
+    this._children.forEach(item => item.transformContent());
   }
 
   _draw(ctx) {
-    this.children.forEach(path => path.draw(ctx));
+    this._children.forEach(path => path.draw(ctx));
   }
 
   unGroup() {

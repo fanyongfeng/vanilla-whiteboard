@@ -6,6 +6,7 @@ import Ellipse from './shape/Ellipse';
 import Star from './shape/Star';
 import Path from './Path';
 import Color from './types/Color';
+import CompoundPath from './CompoundPath';
 
 /**
  * magic numbers map to shapes, copy from milkyway.
@@ -29,7 +30,7 @@ import Color from './types/Color';
 export const shapeTypes = {
   pointer: { id: 0, ctor: Image },
   marker: { id: 1, ctor: Path },
-  highlighter: { id: 2, ctor: Path , preset: { alpha: 0.5 }},
+  highlighter: { id: 2, ctor: Path, preset: { alpha: 0.5 } },
   ellipse: { id: 3, ctor: Ellipse },
   line: { id: 4, ctor: Line, preset: { dash: [10, 12] } },
   triangle: { id: 5, ctor: Triangle },
@@ -43,21 +44,27 @@ export const shapeTypes = {
   rightTriangle: { id: 13, ctor: Triangle, preset: { right: true } },
   circle: 14,
   star: { id: 15, ctor: Star },
+  compoundPath: {id: 100, ctor: CompoundPath}
 };
 
 const idMap = {};
 for (let key in shapeTypes) { idMap[shapeTypes[key].id] = key; }
 
-function normalizeStyle(style){
+function normalizeStyle(style) {
   let ret = {};
-  if(!style) return ret;
+  if (!style) return ret;
 
-  if(style.c) {
-    ret.fillStyle = new Color(style.c);
-    ret.strokeStyle = new Color(style.c);
+  let color = style.c || style.color;
+  let lineWidth = style.w || style.width;
+  let fontSize = style.f || style.fontSize;
+
+  if (color) {
+    ret.fillStyle = new Color(color);
+    ret.strokeStyle = new Color(color);
   };
-  style.w && (ret.lineWidth = style.w);
-  style.f && (ret.fontSize = style.f);
+  lineWidth && (ret.lineWidth = lineWidth);
+  fontSize && (ret.fontSize = fontSize);
+
   return ret;
 }
 
@@ -76,10 +83,10 @@ export function createItemViaJSON(json) {
   if (!shape || !(ctor = shape.ctor)) throw new TypeError(`Invalid json!`);
 
   let preset = {
-    typeId, type, id, style:normalizeStyle(style)
+    typeId, type, id, style: normalizeStyle(style)
   };
 
-  if(shape.preset) {
+  if (shape.preset) {
     Object.assign(preset, shape.preset);
   }
   return ctor.instantiate(preset, data);
@@ -98,10 +105,10 @@ export function createItem(type, style = {}) { // attach to nebula!
   if (!ctor) throw new Error(`Can't find specified graphic '${type}'!`);
 
   let preset = {
-    typeId, type, style
+    typeId, type, style: normalizeStyle(style)
   };
 
-  if(shape.preset) {
+  if (shape.preset) {
     Object.assign(preset, shape.preset);
   }
 

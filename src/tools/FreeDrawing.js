@@ -52,11 +52,11 @@ export default class FreeDrawing extends Tool {
 
   }
 
-  set styles(value) {
+  set style(value) {
     this._style = value;
   }
 
-  get styles() {
+  get style() {
     return this._style;
   }
 }

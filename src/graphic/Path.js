@@ -15,6 +15,8 @@ const _segments = Symbol('_segments');
  */
 class Path extends Item {
 
+  fill = false;
+
   /**
    * 用与从JSON构造出Path实例
    * @param {*} segments
@@ -241,8 +243,7 @@ class Path extends Item {
 
     if (this.isClose) ctx.closePath();
 
-    // ctx.fill();
-    ctx.stroke();
+    this.fill ? ctx.fill() :  ctx.stroke();
 
     if (this.showAuxiliary)
       this.segments.forEach(segment => segment.draw(ctx));

@@ -7,7 +7,10 @@ export default class Rectangle extends Shape {
 
   _buildPath() {
 
-    let { x, y, width, height } = this.bounds;
+    let { x, y } = this.startPoint;
+    let { x: ex, y: ey } = this.endPoint;
+    let width = Math.abs(x - ex);
+    let height = Math.abs(y - ey);
 
     let radius = this.radius || 0;
 
@@ -16,17 +19,17 @@ export default class Rectangle extends Shape {
     let isRounded = radius !== 0;
 
     this.moveTo(new Point(x + radius, y));
-    this.lineTo(new Point(x + width - radius, y));
-    //isRounded && this.arc(x + width - radius, y + radius, radius, -Math.PI / 2, 0);
-    isRounded && this.arcTo(new Point(x + width, y),new Point(x + width, y + radius), radius);
+    this.lineTo(new Point(ex - radius, y));
+    //isRounded && this.arc(ex - radius, y + radius, radius, -Math.PI / 2, 0);
+    isRounded && this.arcTo(new Point(ex, y), new Point(ex, y + radius), radius);
 
-    this.lineTo(new Point(x + width, y + height - radius));
-    // isRounded && this.arc(x + width - radius, y + height - radius, radius, 0, Math.PI / 2);
-    isRounded && this.arcTo(new Point(x + width, y + height), new Point(x + width - radius,  y + height), radius);
+    this.lineTo(new Point(ex, ey - radius));
+    // isRounded && this.arc(ex - radius, ey - radius, radius, 0, Math.PI / 2);
+    isRounded && this.arcTo(new Point(ex, ey), new Point(ex - radius, ey), radius);
 
-    this.lineTo(new Point(x + radius, y + height));
-    //isRounded && this.arc(x + radius, y + height - radius, radius, Math.PI / 2, Math.PI);
-    isRounded && this.arcTo(new Point(x, y + height), new Point(x, y + height - radius), radius);
+    this.lineTo(new Point(x + radius, ey));
+    //isRounded && this.arc(x + radius, ey - radius, radius, Math.PI / 2, Math.PI);
+    isRounded && this.arcTo(new Point(x, ey), new Point(x, ey - radius), radius);
 
     this.lineTo(new Point(x, y + radius));
     // isRounded && this.arc(x + radius, y + radius, radius, Math.PI, Math.PI * 1.5);
