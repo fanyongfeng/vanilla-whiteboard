@@ -2,6 +2,7 @@
 import Rectangle from '../graphic/shape/Rectangle';
 import Point from '../graphic/types/Point';
 import { boundsPoi, antiDir } from '../graphic/algorithm/corner';
+import Tool from './Tool';
 
 const cursorMap = {
   'topLeft': 'nw-resize',
@@ -16,19 +17,20 @@ const cursorMap = {
 
 let realTimeSize, lastSelected = [];
 
-export default class Selection {
+export default class Selection extends Tool {
 
   mode = 'move'; //resize, rotate, mutate, select
 
-  constructor(whiteboardCtx) {
-    this.layer = whiteboardCtx.operateLayer;
-    this.items = whiteboardCtx.activeLayer.items;
-    this.ctx = this.layer.ctx;
-
+  constructor() {
+    super();
     this.selectionRect = new Rectangle();
     this.selectionRect.style.strokeStyle = '#ccc';
     this.selectionRect.style.lineWidth = 1;
     this.selectionRect.style.dashArray = [5, 2];
+  }
+
+  get item(){
+    return this.layer.items;
   }
 
   setCursor = (value) => {
@@ -84,7 +86,7 @@ export default class Selection {
     if (this.mode === 'mutate') {
       this.targetPoint.assign(point);
     } if (this.mode === 'select') {
-      this._drawSelectArea(this.ctx, point);
+      this._drawSelectArea(this.layer.ctx, point);
 
       let selected = this.items.filter(
         item => item.selected = this.selectionRect.bounds.containsRectangle(item.bounds)

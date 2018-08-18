@@ -1,6 +1,6 @@
-import Item from './Item';
-import Rect from './types/Rect';
 import { memoized } from '../decorators/memoized'
+import Rect from './types/Rect';
+import Item from './Item';
 import { createItemViaJSON } from './ItemFactory'
 
 /**

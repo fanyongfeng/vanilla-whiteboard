@@ -38,6 +38,7 @@ const defaultOptions = {
 export default class Whiteboard {
   static instances = [];
 
+  _currentTool = null;
   backgroundLayer = null;
   activeLayer = null;
   operateLayer = null;
@@ -73,6 +74,7 @@ export default class Whiteboard {
     handler.context = this.context;
     handler.bind(this.operateLayer);
 
+    // this.tool = 'selection';
     Whiteboard.instances.push(this)
   }
 
@@ -186,8 +188,6 @@ export default class Whiteboard {
     return this.activeLayer.items;
   }
 
-  _currentTool = null;
-
   set tool(val) {
     this._currentTool = getTool(val);
     this._currentTool.layer = this.operateLayer;
@@ -204,6 +204,10 @@ export default class Whiteboard {
       this.activeLayer,
       this.operateLayer
     ];
+  }
+
+  command(){
+
   }
 
   saveImage() {

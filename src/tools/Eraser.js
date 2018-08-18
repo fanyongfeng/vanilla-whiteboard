@@ -1,9 +1,11 @@
 import Image from '../graphic/shape/Image';
 import Rectangle from '../graphic/shape/Rectangle';
+import Tool from './Tool';
 
-export default class Eraser {
+export default class Eraser extends Tool {
   //
   constructor() {
+    super();
     this.cursor = new Image();
     this.cursor.loadImage("https://www-stage.tutormeetplus.com/v2/static/media/eraser.352bd893.png");
 

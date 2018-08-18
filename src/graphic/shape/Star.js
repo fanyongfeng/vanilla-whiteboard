@@ -11,7 +11,9 @@ import Point from "../types/Point";
 const radio = 0.382;
 export default class Star extends Shape {
 
-  fill = true; // 默认填充
+  // star default fill-mode
+  _fill = true;
+  _stroke = false;
 
   _buildPath() {
     let center = this.startPoint.midPointFrom(this.endPoint),
@@ -25,9 +27,9 @@ export default class Star extends Shape {
     for (let i = 0; i < points; i++) {
       let point = center
         .add(vector.rotate(step * i)
-        .multiply(i % 2 ? radius2 : radius1));
+          .multiply(i % 2 ? radius2 : radius1));
 
-      if(i === 0) {
+      if (i === 0) {
         this.moveTo(point);
         firstPoint = point;
         continue;

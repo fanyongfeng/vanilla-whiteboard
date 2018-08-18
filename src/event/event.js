@@ -1,8 +1,7 @@
-import {MouseEvent, KeyEvent} from './EventType';
+import { MouseEvent, KeyEvent } from './EventType';
 import tools from '../tools';
-import Selection from '../tools/Selection';
 import throttle from '../util/throttle';
-import {addListener, removeListener} from '../util/dom';
+import { addListener, removeListener } from '../util/dom';
 
 let touchEventNames = [
   'touchstart', 'touchend', 'touchmove'
@@ -36,15 +35,15 @@ const keyModifiers = {};
 
 //绑定流程和一般拖拽类似
 let lastPoint;
-function throttleDistance(point, distance = 10){
-  if(!lastPoint) return true;
+function throttleDistance(point, distance = 10) {
+  if (!lastPoint) return true;
   return !point.nearby(lastPoint, distance);
 }
 
 let wasInView = false;
 
 const canvasStatus = {
-  isSelectionMode:  true
+  isSelectionMode: false
 }
 
 let handlers = {
@@ -52,14 +51,13 @@ let handlers = {
   isDragging: false,
   isMouseDown: false,
 
-  set tool(tool){
+  set tool(tool) {
     this.currentTool = tool;
   },
 
   bind(layer) {
 
     // this.currentTool = new FreeDrawing,
-    this.selection = new Selection(this.context);
     let canvas = this.canvas = layer.el;
     this.onMouseDown = this.onMouseDown.bind(this);
     // this.onMouseMove = this.onMouseMove.bind(this);
@@ -108,12 +106,12 @@ let handlers = {
       }
     }
 
-    if(event.keyCode === keyCode.DELETE) {
+    if (event.keyCode === keyCode.DELETE) {
       items.deleteSelected();
     }
   },
 
-  onKeyPress(event) {},
+  onKeyPress(event) { },
   onKeyUp(event) {
     if ((event.key === 'delete' || event.key === 'backspace') && tools.currentTool.type === toolTypes.SELECTOR) {
       if (!toolAvailable) return false;
@@ -152,16 +150,16 @@ let handlers = {
       point = ev.point;
 
     // if(!throttleDistance(point, 10)) return;
-    if(ev.target !== this.canvas) return;
+    if (ev.target !== this.canvas) return;
 
     let contain = this.context.bounds.containsPoint(point);
-    if(!contain) return;
+    if (!contain) return;
 
     if (typeof event.touches !== 'undefined' && event.touches.length > 1) {
       return;
     }
 
- // mouseenter, mouseleave.
+    // mouseenter, mouseleave.
 
     if (this.isMouseDown) {
       this.isDragging = true;
@@ -174,30 +172,20 @@ let handlers = {
   },
 
   _handleDown(event) {
-    if(canvasStatus.isSelectionMode){
-      this.selection.onMouseDown(event);
-    } else {
-      this.currentTool.onMouseDown(event);
-    }
+    this.currentTool.onMouseDown(event);
   },
 
   _handleDragging(event) {
 
-    if(canvasStatus.isSelectionMode){
-      this.selection.onMouseDrag(event);
-    } else {
-      this.currentTool.onMouseDrag(event);
-    }
+    this.currentTool.onMouseDrag(event);
   },
 
   _handleMove(event) {
     this.currentTool && this.currentTool.onMouseMove(event);
-    this.selection.onMouseMove(event);
   },
 
   _handleUp(event) {
-    // this.currentTool.onMouseUp(event);
-    this.selection.onMouseUp(event);
+    this.currentTool && this.currentTool.onMouseUp(event);
   }
 }
 

@@ -4,7 +4,7 @@
 import ArcDrawing from './ArcDrawing';
 import FreeDrawing from './FreeDrawing';
 import ShapeDrawing from './ShapeDrawing';
-// import Selection from './Selection';
+import Selection from './Selection';
 import Pointer from './Pointer';
 import Eraser from './Eraser';
 import TextInput from './TextInput';
@@ -13,12 +13,12 @@ import TextInput from './TextInput';
 const tools = {};
 window.tools = tools;
 const freeDrawingTools = ["marker", "highlighter", "signature"];
-const shapeDrawingTools = ["rectangle", "triangle", "ellipse", "arrow", "line", "star"];
+const shapeDrawingTools = ["rectangle", "triangle", "rightTriangle", "ellipse", "arrow", "line", "dashed", "star"];
 
 function create() {
   freeDrawingTools.forEach(toolName => registerTool(toolName, FreeDrawing));
   shapeDrawingTools.forEach(toolName => registerTool(toolName, ShapeDrawing));
-  // registerTool('selection', Selection);
+  registerTool('selection', Selection);
   registerTool('pointer', Pointer);
   registerTool('text', TextInput);
   registerTool('eraser', Eraser);

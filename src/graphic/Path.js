@@ -4,7 +4,7 @@ import Point from './types/Point';
 import Rect from './types/Rect';
 import fitCurve from './algorithm/fitCurve';
 import smoothCurve from './algorithm/smoothCurve';
-import { memoized, changed} from '../decorators/memoized'
+import { memoized, changed } from '../decorators/memoized'
 import Item from './Item';
 
 const _segments = Symbol('_segments');
@@ -15,57 +15,41 @@ const _segments = Symbol('_segments');
  */
 class Path extends Item {
 
-  _fill = true;
-
-  /**
-   * 用与从JSON构造出Path实例
-   * @param {*} segments
-   */
-  static instantiate(options, segments) {
-    let instance = new Path(options);
-
-    segments.forEach(seg => {
-      let segment;
-      if (seg.length == 1) {
-        segment = new MoveSegment(new Point(seg[0][0], seg[0][1]));
-      } else if (seg.length == 4) {
-        segment = new BezierSegment(
-          new Point(seg[1][0], seg[1][1]),
-          new Point(seg[2][0], seg[2][1]),
-          new Point(seg[3][0], seg[3][1])
-        );
-      }
-      instance.add(segment)
-    });
-
-    return instance;
-  }
-  constructor(options) {
-    super(options);
-    if(options)
-      this.style.strokeStyle.alpha = options.alpha || 1;
-  }
-
+  //props
   [_segments] = [];
   startPoint = null;
   contextPoint = null;
   isClose = false;
   showAuxiliary = false;
 
-
   get segments() {
     return this[_segments];
   }
 
+  _fill = false;
   get fill(){
     return this._fill;
   }
 
   @changed()
   set fill(val){
-    if(typeof val!== 'boolean') throw new TypeError("ensure boolean!");
+    if(typeof val!== 'boolean') throw new TypeError("setter 'fill' accept boolean value!");
 
     this._fill = val;
+    return this;
+  }
+
+
+  _stroke = true; // default is true
+  get stroke(){
+    return this._stroke;
+  }
+
+  @changed()
+  set stroke(val){
+    if(typeof val!== 'boolean') throw new TypeError("setter 'stroke' accept boolean value!");
+
+    this._stroke = val;
     return this;
   }
 
@@ -187,7 +171,7 @@ class Path extends Item {
 
   simplify() {
     //不优化小于3个点的曲线
-    if(this.segments.length < 3) return this;
+    if (this.segments.length < 3) return this;
 
     let segments = fitCurve(this.segments.map(item => item.point), 1);
     this[_segments] = ([this[_segments][0]]).concat(segments);
@@ -253,9 +237,15 @@ class Path extends Item {
       }
     }
 
-    if (this.isClose) ctx.closePath();
+    if (this.isClose)
+      ctx.closePath();
 
-    this.fill ? ctx.fill() :  ctx.stroke();
+    //和svg不同，svg 的fillColor 会自动fill, canvas 则通过API控制
+    if (this.fill && this.style.hasFill) // 如果fill 模式为true, 则 执行fill
+      ctx.fill(this.style.fillRule);
+
+    if (this.stroke && this.style.hasStroke) // 如果stroke 模式为true, 则 执行stroke
+      ctx.stroke();
 
     if (this.showAuxiliary)
       this.segments.forEach(segment => segment.draw(ctx));

@@ -1,10 +1,17 @@
 import Color from './Color';
+
+const fillRule = {
+  nonzero: 'nonzero',
+  evenodd: 'evenodd'
+}
+
 /**
  * default style settings of path
  */
 const defaultStyles = {
+  //reset default value to adapt whiteboard.
   // Paths
-  fillRule: 'nonzero',
+  fillRule: fillRule.nonzero,
   lineWidth: 3,
   lineCap: 'round',
   lineJoin: 'round',
@@ -30,10 +37,10 @@ const fontStyles = {
 
 export default class Style {
 
-  fillStyle = new Color('#c69');
-  strokeStyle = new Color('#c69');
-
   constructor(options = {}) {
+
+    this.strokeStyle = new Color('#c69');
+    this.fillStyle = new Color('#c69');
     Object.assign(this, defaultStyles, fontStyles, options);
   }
 
@@ -42,12 +49,17 @@ export default class Style {
    * @param {CanvasRenderingContext2D} ctx, canvas context.
    */
   apply(ctx) {
-    ctx.strokeStyle = this.strokeStyle.toString() ;
     ctx.lineWidth = this.lineWidth;
-    ctx.fillStyle = this.fillStyle;
     ctx.lineJoin = this.lineJoin;
     ctx.lineCap = this.lineCap;
-    if(this.dashArray) {
+
+    if (this.hasStroke) {
+      ctx.strokeStyle = this.strokeStyle.toString();
+    }
+    if (this.hasFill) {
+      ctx.fillStyle = this.fillStyle.toString();
+    }
+    if (this.dashArray) {
       ctx.setLineDash(this.dashArray)
     }
     //TODO: implement rest props.
@@ -56,9 +68,9 @@ export default class Style {
   /**
    * Return a new duplicate of this instance.
    */
-  clone(){
+  clone() {
     let ret = new Style();
-    let {strokeStyle, fillStyle, ...rest} = this;
+    let { strokeStyle, fillStyle, ...rest } = this;
     Object.assign(ret, rest);
 
     ret.fillStyle = fillStyle.clone();
@@ -86,14 +98,14 @@ export default class Style {
     return other === this || compare(this, other) || false;
   }
 
-  get font(){
+  get font() {
     return `${this.fontSize}px sans-serif`;
   }
 
   /**
    * Get line-height of fonts
    */
-  get leading(){
+  get leading() {
     //hard-code as 1.4 times of fontSize.
     return this.fontSize * 1.4;
   }
@@ -103,12 +115,11 @@ export default class Style {
    */
   get hasStroke() {
     let color = this.strokeStyle;
-    return !!color;
-    // return !!color && color.alpha > 0 && this.lineWidth > 0;
+    return !!color && color.alpha > 0 && this.lineWidth > 0;
   }
 
   /**
-   * If has stroke.
+   * If has fill.
    */
   get hasFill() {
     let color = this.fillStyle;
@@ -126,15 +137,26 @@ export default class Style {
       || !(this.shadowOffsetX === 0 && this.shadowOffsetY === 0));
   }
 
-  toShortJSON(){
+  /**
+   * to JSON format. used for websocket message.
+   */
+  toShortJSON() {
     return {
-      "c": this.strokeStyle.toHexString(),
+      "sc": this.strokeStyle.toHexString(),
+      "fc": this.fillStyle.toHexString(),
       "w": this.lineWidth,
       "f": this.fontSize
     }
   }
 
+  /**
+   * Convert to string.
+   * e.g. 'stokeStyle=rgba(0,0,0,1) lineWidth=10'
+   */
   toString() {
-    return [`${key}=${val}`].join(' ');
+    return Object.keys({ ...this })
+      .filter(key => this[key] && this[key].length !== 0)
+      .map(key =>`${key} = ${this[key].toString()}`)
+      .join(';');
   }
 }

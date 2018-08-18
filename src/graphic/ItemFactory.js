@@ -4,7 +4,7 @@ import Arrow from './shape/Arrow';
 import Triangle from './shape/Triangle';
 import Ellipse from './shape/Ellipse';
 import Star from './shape/Star';
-import Path from './Path';
+import Writing from './shape/Writing';
 import Color from './types/Color';
 import CompoundPath from './CompoundPath';
 
@@ -29,10 +29,10 @@ import CompoundPath from './CompoundPath';
 
 export const shapeTypes = {
   pointer: { id: 0, ctor: Image },
-  marker: { id: 1, ctor: Path },
-  highlighter: { id: 2, ctor: Path, preset: { alpha: 0.5 } },
+  marker: { id: 1, ctor: Writing },
+  highlighter: { id: 2, ctor: Writing, preset: { alpha: 0.5 } },
   ellipse: { id: 3, ctor: Ellipse },
-  line: { id: 4, ctor: Line, preset: { dash: [10, 12] } },
+  line: { id: 4, ctor: Line },
   triangle: { id: 5, ctor: Triangle },
   rectangle: { id: 6, ctor: Rectangle },
   arrow: { id: 7, ctor: Arrow },
@@ -40,9 +40,13 @@ export const shapeTypes = {
   image: { id: 9, ctor: Image },
   selector: { id: 10, ctor: Image },
   eraser: { id: 11, ctor: Image },
-  dashed: { id: 12, ctor: Line },
+  dashed: {
+    id: 12, ctor: Line, preset: {
+      style: { dashArray: [10, 12] }
+    }
+  },
   rightTriangle: { id: 13, ctor: Triangle, preset: { right: true } },
-  circle: 14,
+  circle: { id: 14 },
   star: { id: 15, ctor: Star },
   compoundPath: { id: 100, ctor: CompoundPath }
 };
@@ -52,18 +56,25 @@ for (let key in shapeTypes) { idMap[shapeTypes[key].id] = key; }
 
 function normalizeStyle(style) {
   let ret = {};
+
   if (!style) return ret;
 
-  let color = style.c || style.color;
+  let strokeColor = style.sc || style.strokeColor;
+  let fillColor = style.fc || style.fillColor;
   let lineWidth = style.w || style.width;
   let fontSize = style.f || style.fontSize;
+  let color = style.c || style.color;
 
-  if (color) {
-    ret.fillStyle = new Color(color);
-    ret.strokeStyle = new Color(color);
-  };
-  lineWidth && (ret.lineWidth = lineWidth);
-  fontSize && (ret.fontSize = fontSize);
+  if (strokeColor || color) {
+    ret.strokeStyle = new Color(strokeColor || color); //
+  }
+
+  if (fillColor || color) {
+    ret.fillStyle = new Color(fillColor || color);
+  }
+
+  typeof lineWidth === 'number' && (ret.lineWidth = lineWidth);
+  typeof fontSize === 'number' && (ret.fontSize = fontSize);
 
   return ret;
 }
@@ -78,17 +89,22 @@ export function createItemViaJSON(json) {
   let [typeId, id, data, style] = json,
     type = idMap[typeId],
     shape = shapeTypes[type],
+    preset = shape.preset,
     ctor;
 
   if (!shape || !(ctor = shape.ctor)) throw new TypeError(`Invalid json!`);
 
+  style = normalizeStyle(style);
+
   let options = {
-    typeId, type, id, style: normalizeStyle(style)
+    typeId, type, id, style, preset,
   };
 
-  if (shape.preset) {
-    Object.assign(options, shape.preset);
+  //workaround: if fillColor is true, set fill-mode in shape;
+  if (style.fillColor) {
+    options.fill = true;
   }
+
   return ctor.instantiate(options, data);
 }
 
@@ -100,17 +116,15 @@ export function createItemViaJSON(json) {
 export function createItem(type, style = {}) { // attach to nebula!
   let shape = shapeTypes[type],
     ctor = shape.ctor,
-    typeId = shape.id;
+    typeId = shape.id,
+    preset = shape.preset;
 
   if (!ctor) throw new Error(`Can't find specified graphic '${type}'!`);
 
+  style = normalizeStyle(style);
   let options = {
-    typeId, type, style: normalizeStyle(style)
+    typeId, type, style, preset
   };
-
-  if (shape.preset) {
-    Object.assign(options, shape.preset);
-  }
 
   return new ctor(options);
 }

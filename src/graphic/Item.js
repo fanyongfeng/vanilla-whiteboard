@@ -20,10 +20,22 @@ class Item {
       this.type = options.type;
       this.typeId = options.typeId;
       this.id = options.id || tsid();
+      this.handlePreset(options.preset);
+      this[_style] = new Style(options.style);
+    } else {
+      this[_style] = new Style();
     }
 
-    this[_style] = new Style(options && options.style);
     this.matrix = new Matrix();
+  }
+
+  handlePreset(preset){
+    //FIXME: 优化机制
+    if(!preset) return;
+    Object.keys(preset).forEach(key => {
+      let item = preset[key];
+      this[key] = item;
+    });
   }
 
   get selected() {

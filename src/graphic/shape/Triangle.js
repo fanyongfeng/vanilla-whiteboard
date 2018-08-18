@@ -7,32 +7,30 @@ import Point from "../types/Point";
  */
 export default class Triangle extends Shape {
 
-  anti = false;
-  right = false;
+  // anti = false;
+  // right = false;
 
   _buildPath() {
-    let sp, to;
+    let p1, p2, p3 = this.endPoint.clone();
 
     if (this.right) {
       if (this.anti) {
-        sp = this.startPoint;
-        to = new Point(this.startPoint.x, this.endPoint.y);
+        p1 = new Point(this.startPoint.x, this.endPoint.y);
+        p2 = new Point(this.startPoint.y, this.endPoint.x);
       } else {
-        sp = new Point(this.startPoint.x, this.endPoint.y);
-        to = new Point(this.startPoint.y, this.endPoint.x);
+        p1 = this.startPoint.clone();
+        p2 = new Point(this.startPoint.x, this.endPoint.y);
       }
     } else {
-      sp = new Point(this.startPoint.x, this.endPoint.y);
-      to = new Point((this.startPoint.x + this.endPoint.x) / 2, this.startPoint.y);
+      p1 = new Point(this.startPoint.x, this.endPoint.y);
+      p2 = new Point((this.startPoint.x + this.endPoint.x) / 2, this.startPoint.y);
     }
 
-    this.moveTo(sp)
-      .lineTo(to)
-      .lineTo(this.endPoint)
-      .lineTo(sp)
+    this.moveTo(p1)
+      .lineTo(p2)
+      .lineTo(p3)
+      .lineTo(p1)
       .closePath();
-
-    return this;
   }
 }
 

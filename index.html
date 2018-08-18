@@ -87,9 +87,11 @@
 
         <button id="btnArrow" class="btn btn-default">箭头</button>
         <button id="btnLine" class="btn btn-default">直线</button>
+        <button id="btnDashed" class="btn btn-default">虚线</button>
         <button id="btnEllipse" class="btn btn-default">圆形</button>
         <button id="btnRectangle" class="btn btn-default">矩形</button>
         <button id="btnTriangle" class="btn btn-default">三角形</button>
+        <button id="btnRightTriangle" class="btn btn-default">直角三角形</button>
         <button id="btnStar" class="btn btn-default">星星</button>
         <button id="btnMarker" class="btn btn-default">Marker</button>
         <button id="btnHighlighter" class="btn btn-default">Highlighter</button>
@@ -182,17 +184,29 @@
     const WAN = 100000;
     $(() => {
 
+    /**
+     * 首字幕小写
+     * @param { } str
+     */
+      const camelize = (str) => {
+        return str.replace(/\b[A-Z]/g, function (match) {
+          return match.toLowerCase();
+        });
+      }
+
+
       //shape tools
       const btns = [
         "btnPointer", "btnEraser", "btnArrow",
         "btnLine", "btnEllipse", "btnRectangle",
         "btnTriangle", "btnMarker", "btnHighlighter",
-        "btnSignature", "btnStar"
+        "btnSignature", "btnStar", "btnDashed",
+        "btnRightTriangle"
       ];
 
       btns.forEach(btn => {
         $('#' + btn).click(() => {
-          whiteboard.tool = btn.slice(3).toLowerCase();
+          whiteboard.tool = camelize(btn.slice(3));
         });
       })
 
@@ -345,23 +359,24 @@
 
         var width = 380;
         var height = 200;
-        let flag = whiteboard.createItem('rectangle', { color: '#fff', width: 0 })
+        let flag = whiteboard.createItem('rectangle', { fillColor: '#fff', width: 0 });
         flag.startPoint = new nebula.Point(0, 0);
         flag.endPoint = new nebula.Point(width, height);
         flag.buildPath();
         flag.fill = true;
+        flag.stroke = false;
         compoundPath.add(flag)
 
         for (i = 0; i < 13; i++) {
           let bar, sx = 0, sy, ex = width, ey;
-          bar = whiteboard.createItem('rectangle', { color: i % 2 == 0 ? '#ff0000' : "#fff", width: 0 });
-
+          bar = whiteboard.createItem('rectangle', { fillColor: i % 2 == 0 ? '#ff0000' : "#fff", width: 0 });
+          bar.fill = true;
+          bar.stroke = false;
           sy = height / 13 * i;
           ey = height / 13 * (i + 1);
           bar.startPoint = new nebula.Point(sx, sy);
           bar.endPoint = new nebula.Point(ex, ey);
           bar.buildPath();
-          bar.fill = true;
 
 
           compoundPath.add(bar);
@@ -369,13 +384,13 @@
 
         var D = width / 5 * 2;
         var C = height / 13 * 7;
-        let top = whiteboard.createItem('rectangle', { color: '#0000ff', width: 0 });
+        let top = whiteboard.createItem('rectangle', { fillColor: '#0000ff', width: 0 });
 
         top.startPoint = new nebula.Point(0, 0);
         top.endPoint = new nebula.Point(D, C);
         top.buildPath();
-
         top.fill = true;
+        top.stroke = false;
         compoundPath.add(top);
 
 
@@ -384,7 +399,7 @@
             x = D / 12 + 2 * i * D / 12;
             y = C / 10 + 2 * j * C / 10;
 
-            star = whiteboard.createItem('star', { color: '#fff', width: 0 });
+            star = whiteboard.createItem('star', { fillColor: '#fff', width: 0 });
             star.startPoint = new nebula.Point(x - r, y - r);
             star.endPoint = new nebula.Point(x + r, y + r);
             star.buildPath();
@@ -399,7 +414,7 @@
             x = D / 6 + 2 * i * D / 12;
             y = C / 5 + 2 * j * C / 10;
 
-            star = whiteboard.createItem('star', { color: '#fff', width: 0 });
+            star = whiteboard.createItem('star', { fillColor: '#fff', width: 0 });
             star.startPoint = new nebula.Point(x - r, y - r);
             star.endPoint = new nebula.Point(x + r, y + r);
             star.buildPath();

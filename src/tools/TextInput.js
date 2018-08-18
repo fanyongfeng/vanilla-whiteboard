@@ -1,10 +1,11 @@
 
 import { addListener, removeListener } from '../util/dom'
+import Tool from './Tool';
 
 /**
  * Tool to input text on whiteboard
  */
-export default class Text {
+export default class Text extends Tool{
   _createShadowTextArea() {
     let hiddenText;
     this.hiddenTextarea = hiddenText = document.createElement('textarea');
