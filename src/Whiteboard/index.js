@@ -74,7 +74,7 @@ export default class Whiteboard {
     handler.context = this.context;
     handler.bind(this.operateLayer);
 
-    // this.tool = 'selection';
+    this.tool = 'selection';
     Whiteboard.instances.push(this)
   }
 

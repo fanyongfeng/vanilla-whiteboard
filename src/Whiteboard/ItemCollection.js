@@ -101,7 +101,7 @@ class ItemCollection {
     if (!item instanceof Item)
       throw new Error('Only Item can add to Collection!');
 
-    item.owner = this;
+    item.owner = this.layer;
     this.push(item);
     this.changed();
     return this;

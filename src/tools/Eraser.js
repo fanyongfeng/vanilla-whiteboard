@@ -17,11 +17,11 @@ export default class Eraser extends Tool {
 
   onMouseDown({ point }){
     this.selectionRect.startPoint = point;
-    items.add(this.selectionRect);
+    this.layer.items.add(this.selectionRect);
   }
 
   onMouseMove({ point, delta }) {
-    if(!this.layer.items.length) this.layer.items.add(this.cursor);
+    this.layer.setCursor(this.cursor);
     if(this.cursor.loaded) {
       this.cursor.position = point;
     }

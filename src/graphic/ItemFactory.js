@@ -61,9 +61,10 @@ function normalizeStyle(style) {
 
   let strokeColor = style.sc || style.strokeColor;
   let fillColor = style.fc || style.fillColor;
-  let lineWidth = style.w || style.width;
-  let fontSize = style.f || style.fontSize;
   let color = style.c || style.color;
+
+  let lineWidth = typeof style.w === 'number' ? style.w : style.width;
+  let fontSize = typeof style.f === 'number' ? style.f : style.fontSize;
 
   if (strokeColor || color) {
     ret.strokeStyle = new Color(strokeColor || color); //
@@ -100,12 +101,14 @@ export function createItemViaJSON(json) {
     typeId, type, id, style, preset,
   };
 
-  //workaround: if fillColor is true, set fill-mode in shape;
-  if (style.fillColor) {
-    options.fill = true;
+  let ins = ctor.instantiate(options, data);
+
+  //workaround: if fillStyle is true, set fill-mode in shape;
+  if (style.fillStyle) {
+    ins.fill = true;
   }
 
-  return ctor.instantiate(options, data);
+  return ins;
 }
 
 /**

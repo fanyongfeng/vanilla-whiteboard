@@ -2,6 +2,7 @@
 import { setStyle } from '../util/dom';
 import ItemCollection from './ItemCollection';
 import Matrix from '../graphic/types/Matrix';
+import Item from '../graphic/Item';
 
 const _items = Symbol('_items');
 /**
@@ -22,6 +23,22 @@ export default class Layer {
       bottom.add(element);
     });
     refreshAll();
+  }
+
+  _cursorItem = null;
+  /**
+   * set cursor of layer. Use for operateLayer.
+   * @param {*} value
+   */
+  setCursor(value){
+    if(typeof value === 'string') {
+      this.el.style.cursor = value;
+      this._cursorItem = null;
+    } else {
+      this._cursorItem = value;
+      this.markAsDirty();
+    }
+    // if(!value instanceof Item) throw new TypeError("Must be item");
   }
 
   /**
@@ -61,6 +78,7 @@ export default class Layer {
     });
 
     this[_items].forEach(item => item.draw(this.ctx));
+    if(this._cursorItem) this._cursorItem.draw(this.ctx);
     this._isDirty = false;
   }
 

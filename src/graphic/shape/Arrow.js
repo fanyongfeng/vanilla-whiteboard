@@ -24,8 +24,8 @@ export default class Arrow extends Shape {
 
     let points = calcArrow(this.startPoint, this.endPoint);
 
-    this.moveTo(this.startPoint)
-      .lineTo(this.endPoint)
+    this.moveTo(this.startPoint.clone())
+      .lineTo(this.endPoint.clone())
       .moveTo(points[0])
       .lineTo(points[1])
       .lineTo(points[2])

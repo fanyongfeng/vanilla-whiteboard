@@ -29,12 +29,12 @@ export default class Selection extends Tool {
     this.selectionRect.style.dashArray = [5, 2];
   }
 
-  get item(){
-    return this.layer.items;
+  get items(){
+    return items;
   }
 
   setCursor = (value) => {
-    this.layer.el.style.cursor = value;
+    this.layer.setCursor(value);
   }
 
   onMouseDown(event) {
@@ -129,14 +129,15 @@ export default class Selection extends Tool {
 
   pointOnElement(point) {
     let item;
-    if (item = this.items.find(item => item.containsPoint(point))) {
-      this.setCursor('pointer');
-      this.mode = 'move';
-      this.target = item;
-      return true;
+    for(let len =this.items.length, i = len; i > 0; i--) { // find from right
+      item = this.items[i - 1];
+      if(item.containsPoint(point)) {
+        this.setCursor('pointer');
+        this.mode = 'move';
+        this.target = item;
+        return true;
+      }
     }
-
-    console.log(item);
     return false;
   }
 
