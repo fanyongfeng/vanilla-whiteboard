@@ -42,5 +42,3 @@ export default class Rectangle extends Shape {
     return this;
   }
 }
-
-window.Rectangle = Rectangle

@@ -17,7 +17,6 @@ class Path extends Item {
 
   //props
   [_segments] = [];
-  startPoint = null;
   contextPoint = null;
   isClose = false;
   showAuxiliary = false;

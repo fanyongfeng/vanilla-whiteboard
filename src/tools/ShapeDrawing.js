@@ -13,12 +13,11 @@ export default class ShapeDrawing extends Tool{
   onMouseDown(event) {
     this.currentShape = createItem(this.type, this.style);
     this.currentShape.startPoint = this.currentShape.endPoint = event.point;
-    items.add(this.currentShape);
+    this.items.add(this.currentShape);
   }
 
   onMouseDrag(event) {
     this.currentShape.endPoint = event.point;
-    this.currentShape.buildPath();
   }
 
   onMouseMove(event){

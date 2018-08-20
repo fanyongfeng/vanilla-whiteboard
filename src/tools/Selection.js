@@ -29,14 +29,6 @@ export default class Selection extends Tool {
     this.selectionRect.style.dashArray = [5, 2];
   }
 
-  get items() {
-    return items;
-  }
-
-  setCursor = (value) => {
-    this.layer.setCursor(value);
-  }
-
   onMouseDown(event) {
     let point = event.point;
 
@@ -78,7 +70,7 @@ export default class Selection extends Tool {
 
   onMouseUp(event) {
     this.layer.clear();
-    this.items.deleteSelected();
+    // this.items.deleteSelected();
     this.mode = 'move';
   }
 
@@ -133,7 +125,7 @@ export default class Selection extends Tool {
     for (let len = this.items.length, i = len; i > 0; i--) { // find from right
       item = this.items[i - 1];
       if (item.containsPoint(point)) {
-        this.setCursor('pointer');
+        this.layer.setCursor('pointer');
         this.mode = 'move';
         this.target = item;
         return true;
@@ -160,7 +152,7 @@ export default class Selection extends Tool {
 
     if (nearbyPoint) {
       this.mode = 'mutate';
-      this.setCursor('pointer');
+      this.layer.setCursor('pointer');
       this.target = seg.owner;
       this.targetPoint = nearbyPoint;
       return true
@@ -175,11 +167,11 @@ export default class Selection extends Tool {
       if (corner = boundsPoi.find(key => point.nearby(bounds[key]))) break;
     }
     if (!corner) {
-      this.setCursor('default');
+      this.layer.setCursor('default');
       return false;
     }
     this.mode = 'resize';
-    this.setCursor(cursorMap[corner]);
+    this.layer.setCursor(cursorMap[corner]);
 
     this.basePoint = bounds[antiDir[corner]];
     this.target = bounds.owner;
@@ -199,8 +191,6 @@ export default class Selection extends Tool {
     this.layer.clear();
 
     this.selectionRect.endPoint = point;
-    this.selectionRect.clear();
-    this.selectionRect.buildPath();
     this.selectionRect.draw(ctx);
 
 

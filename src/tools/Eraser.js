@@ -33,7 +33,6 @@ export default class Eraser extends Tool {
 
   onMouseDrag({ point }) {
     this.selectionRect.endPoint = point;
-    this.selectionRect.buildPath();
   }
 
   onMouseUp(){

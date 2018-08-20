@@ -24,7 +24,7 @@ export default class FreeDrawing extends Tool {
   onMouseDown(event) {
     this.currentShape = createItem(this.type, this.style);
     // this.currentShape.style = this.style.clone();
-    items.add(this.currentShape);
+    this.items.add(this.currentShape);
 
     this.currentShape.moveTo(event.point);
     this.lastPoint = event.point;

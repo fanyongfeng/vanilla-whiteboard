@@ -6,7 +6,7 @@ import Layer from './Layer';
  */
 export default class OperatorLayer extends Layer {
 
-  _cursorItem = null;
+  _cursorImage = null;
   /**
    * set cursor of layer. Use for operateLayer.
    * @param {*} value
@@ -14,9 +14,9 @@ export default class OperatorLayer extends Layer {
   setCursor(value) {
     if (typeof value === 'string') {
       this.el.style.cursor = value;
-      this._cursorItem = null;
+      this._cursorImage = null;
     } else {
-      this._cursorItem = value;
+      this._cursorImage = value;
     }
     this.markAsDirty();
     // if(!value instanceof Item) throw new TypeError("Must be item");
@@ -24,7 +24,7 @@ export default class OperatorLayer extends Layer {
 
   _draw() {
     // draw cursor first!
-    if (this._cursorItem) this._cursorItem.draw(this.ctx);
+    if (this._cursorImage) this._cursorImage.draw(this.ctx);
     super._draw();
   }
 }

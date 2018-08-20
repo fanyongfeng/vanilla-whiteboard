@@ -9,6 +9,10 @@ export default class Tool {
 
   }
 
+  get items(){
+    return items;
+  }
+
   set layer(value){
     this._layer = value;
   }

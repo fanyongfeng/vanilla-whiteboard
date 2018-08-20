@@ -24,7 +24,7 @@ export default class Pointer extends Tool {
 
   onMouseDown({ point }){
     this.selectionRect.startPoint = point;
-    items.add(this.selectionRect);
+    this.layer.items.add(this.selectionRect);
   }
 
   onMouseMove({ point, delta }) {
@@ -37,7 +37,6 @@ export default class Pointer extends Tool {
 
   onMouseDrag({ point }) {
     this.selectionRect.endPoint = point;
-    this.selectionRect.buildPath();
   }
 
   onMouseUp(){

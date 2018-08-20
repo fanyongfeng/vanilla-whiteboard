@@ -26,9 +26,27 @@ export default class Shape extends Path {
   constructor(options, sp = null, ep = null) {
     super(options);
 
-    this.startPoint = sp || new Point;
-    this.endPoint = ep || new Point;
+    this._startPoint = sp || new Point;
+    this._endPoint = ep || new Point;
     this.buildPath();
+  }
+
+  set startPoint(point){
+    this._startPoint = point;
+    this.buildPath();
+  }
+
+  get startPoint(){
+    return this._startPoint;
+  }
+
+  set endPoint(point){
+    this._endPoint = point;
+    this.buildPath();
+  }
+
+  get endPoint(){
+    return this._endPoint;
   }
 
   _buildPath(){
