@@ -194,13 +194,11 @@ export default class Whiteboard {
   }
 
   set tool(val) {
-    this._currentTool = getTool(val);
-    this._currentTool.layer = this.operateLayer;
-    this.handler.tool = this._currentTool;
+    this.handler.tool = getTool(val);
   }
 
   get tool() {
-    return this._currentTool;
+    return this.handler.tool;
   }
 
   /**
