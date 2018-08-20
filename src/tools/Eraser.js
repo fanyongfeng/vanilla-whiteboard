@@ -34,9 +34,6 @@ export default class Eraser extends Tool {
   onMouseDrag({ point }) {
     this.selectionRect.endPoint = point;
     this.selectionRect.buildPath();
-    if(this.cursor.loaded) {
-      this.cursor.position = point;
-    }
   }
 
   onMouseUp(){

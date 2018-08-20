@@ -43,17 +43,16 @@ export default class EventHandler {
   bind(layer) {
     this.layer = layer;
     let canvas = this.canvas = layer.el;
-    this.onMouseDown = this.onMouseDown.bind(this);
     this.onMouseMove = throttle(this.onMouseMove, 0).bind(this); //
     this.onMouseUp = this.onMouseUp.bind(this);
 
-    addListener(canvas, 'mousedown', this.onMouseDown);
+    addListener(canvas, 'mousedown', this.onMouseDown.bind(this));
     addListener(canvas, 'mousemove', this.onMouseMove);
-    addListener(canvas, 'mouseenter', this.onMouseEnter);
-    addListener(canvas, 'mouseleave', this.onMouseLeave);
-    addListener(canvas, 'keydown', this.onKeyDown);
-    addListener(canvas, 'keypress', this.onKeyPress);
-    addListener(canvas, 'keyup', this.onKeyUp);
+    addListener(canvas, 'mouseenter', this.onMouseEnter.bind(this));
+    addListener(canvas, 'mouseleave', this.onMouseLeave.bind(this));
+    addListener(canvas, 'keydown', this.onKeyDown.bind(this));
+    addListener(canvas, 'keypress', this.onKeyPress.bind(this));
+    addListener(canvas, 'keyup', this.onKeyUp.bind(this));
   }
 
   onKeyDown(event) {
@@ -123,7 +122,6 @@ export default class EventHandler {
     this.isMouseDown = false;
     this.isDragging = false;
 
-
     this.callToolSlotHandler('onMouseUp', new MouseEvent(event));
 
     removeListener(document, 'mouseup', this.onMouseUp);
@@ -167,14 +165,14 @@ export default class EventHandler {
   }
 
   /**
-   * Call hanlder of tool
-   * @param {String} name Name of hanlder
+   * Call handler of current tool.
+   * @param {String} name Name of handler
    * @param  {...any} args arguments
    */
-  callToolSlotHandler(name, ...args) {
+  callToolSlotHandler(name, event) {
     return this.tool &&
       typeof this.tool[name] === 'function' &&
-      this.tool[name].apply(this.tool, ...args);
+      this.tool[name](event);
   }
 }
 

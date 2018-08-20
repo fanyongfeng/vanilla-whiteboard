@@ -27,7 +27,7 @@ export default class Star extends Shape {
     for (let i = 0; i < points; i++) {
       let point = center
         .add(vector.rotate(step * i)
-          .multiply(i % 2 ? radius2 : radius1));
+        .multiply(i % 2 ? radius2 : radius1));
 
       if (i === 0) {
         this.moveTo(point);

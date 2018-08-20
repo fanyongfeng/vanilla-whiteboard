@@ -12,14 +12,15 @@ export default class Point {
     if (typeof x === "number") {
       return typeof y === "number" ? new Point(x, y) : new Point(x, x);
     }
-    return x;
+    // if x is Point
+    return x.clone();
   }
 
   /**
    * Create Point with x, y
-   * 
-   * @param {Number} x 
-   * @param {Number} y 
+   *
+   * @param {Number} x
+   * @param {Number} y
    */
   constructor(x = 0, y = 0) {
     this.x = x;

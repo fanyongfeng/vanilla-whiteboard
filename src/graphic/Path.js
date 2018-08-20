@@ -20,7 +20,7 @@ class Path extends Item {
   startPoint = null;
   contextPoint = null;
   isClose = false;
-  showAuxiliary = false;
+  showAuxiliary = true;
 
   get segments() {
     return this[_segments];
@@ -86,13 +86,27 @@ class Path extends Item {
     // segment
   }
 
-  moveTo(point) {
+  /**
+   * Append Move segment for current path.
+   *
+   * @param {Number} x
+   * @param {Number} y
+   */
+  moveTo(x, y) {
+    let point = Point.instantiate(x, y);
     let segment = new MoveSegment(point);
     this.add(segment);
     return this;
   }
 
-  lineTo(point) {
+  /**
+   * Append LineTo segment for current path.
+   *
+   * @param {Number} x
+   * @param {Number} y
+   */
+  lineTo(x, y) {
+    let point = Point.instantiate(x, y);
     let segment = new LineSegment(point);
     this.add(segment);
     return this;
@@ -110,6 +124,11 @@ class Path extends Item {
     return this;
   }
 
+  /**
+   *
+   * @param {*} cp
+   * @param {*} point
+   */
   quadraticCurveTo(cp, point) { //二阶转三阶
 
     let current = this.contextPoint;

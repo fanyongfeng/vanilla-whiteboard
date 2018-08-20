@@ -13,7 +13,7 @@ import TextInput from './TextInput';
 const tools = {};
 window.tools = tools;
 const freeDrawingTools = ["marker", "highlighter", "signature"];
-const shapeDrawingTools = ["rectangle", "triangle", "rightTriangle", "ellipse", "arrow", "line", "dashed", "star"];
+const shapeDrawingTools = ["rectangle", "triangle", "rightTriangle", "ellipse", "arrow", "line", "dashed", "star", "chatBox"];
 
 function create() {
   freeDrawingTools.forEach(toolName => registerTool(toolName, FreeDrawing));

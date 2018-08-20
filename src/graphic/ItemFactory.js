@@ -5,6 +5,7 @@ import Triangle from './shape/Triangle';
 import Ellipse from './shape/Ellipse';
 import Star from './shape/Star';
 import Writing from './shape/Writing';
+import ChatBox from './shape/ChatBox';
 import Color from './types/Color';
 import CompoundPath from './CompoundPath';
 
@@ -46,6 +47,7 @@ export const shapeTypes = {
   rightTriangle: { id: 13, ctor: Triangle, preset: { right: true } },
   circle: { id: 14 },
   star: { id: 15, ctor: Star },
+  chatBox: {id:16, ctor: ChatBox},
   compoundPath: { id: 100, ctor: CompoundPath }
 };
 

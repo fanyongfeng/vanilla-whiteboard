@@ -13,7 +13,8 @@ class Rect {
   static instantiate(x, y, width, height) {
     if (typeof x === "undefined") throw TypeError("Invalid arguments!");
     if (typeof x === "number") return new Rect(x, y, width, height)
-    return x;
+    // if x is Rect
+    return x.clone();
   }
 
   constructor(x = 0, y = 0, width = 0, height = 0, owner = null) {
@@ -144,8 +145,8 @@ class Rect {
   contains(arg) {
     return arg && arg.width !== undefined
       || (Array.isArray(arg) ? arg : arguments).length === 4
-      ? this.containsRectangle(Rect.instantiate(arguments))
-      : this.containsPoint(Point.instantiate(arguments));
+      ? this.containsRectangle(Rect.instantiate(...arguments))
+      : this.containsPoint(Point.instantiate(...arguments));
   }
 
   /**

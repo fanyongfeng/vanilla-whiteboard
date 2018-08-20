@@ -8,8 +8,11 @@ export default class Line extends Shape {
   }
 
   _buildPath() {
-    this.moveTo(this.startPoint.clone())
-      .lineTo(this.endPoint.clone());
+    let {x, y} = this.startPoint;
+    let { x: ex, y: ey } = this.endPoint;
+
+    this.moveTo(x, y)
+      .lineTo(ex, ey);
 
     //NOTE: DO NOT 'closePath' on dash-line
     //  this.closePath()
