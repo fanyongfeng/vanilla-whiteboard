@@ -3,6 +3,7 @@ import Rectangle from '../graphic/shape/Rectangle';
 import Point from '../graphic/types/Point';
 import { boundsPoi, antiDir } from '../graphic/algorithm/corner';
 import Tool from './Tool';
+import Group from '../graphic/Group';
 
 const cursorMap = {
   'topLeft': 'nw-resize',
@@ -27,6 +28,8 @@ export default class Selection extends Tool {
     this.selectionRect.style.strokeStyle = '#ccc';
     this.selectionRect.style.lineWidth = 1;
     this.selectionRect.style.dashArray = [5, 2];
+
+    this.selectionGroup = new Group();
   }
 
   onMouseDown(event) {
@@ -84,6 +87,8 @@ export default class Selection extends Tool {
       let selected = this.items.filter(
         item => item.selected = this.selectionRect.bounds.containsRectangle(item.bounds)
       );
+
+      this.selectionGroup.add(selected);
 
       if (!selected.length) return;
 
