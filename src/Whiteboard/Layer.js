@@ -9,6 +9,7 @@ const _items = Symbol('_items');
  * Create canvas layer, and Manage all canvas of whiteboard.
  */
 export default class Layer {
+  
   [_items] = new ItemCollection(null, this);
   wrapper = null;
   _isDirty = true;
@@ -25,20 +26,12 @@ export default class Layer {
     refreshAll();
   }
 
-  _cursorItem = null;
   /**
-   * set cursor of layer. Use for operateLayer.
-   * @param {*} value
+   * Alias of items.append .
+   * @param {Item} item 
    */
-  setCursor(value){
-    if(typeof value === 'string') {
-      this.el.style.cursor = value;
-      this._cursorItem = null;
-    } else {
-      this._cursorItem = value;
-      this.markAsDirty();
-    }
-    // if(!value instanceof Item) throw new TypeError("Must be item");
+  append(item){
+    this.items.add(item);
   }
 
   /**
@@ -71,14 +64,19 @@ export default class Layer {
     }
   }
 
+  _draw(){
+    this[_items].forEach(item => item.draw(this.ctx));
+    if(this._cursorItem) this._cursorItem.draw(this.ctx);
+  }
+
   refresh(){
     this.clear();
     this.whiteboardCtx.emit('layer:refresh', {
       layer: this,
     });
 
-    this[_items].forEach(item => item.draw(this.ctx));
-    if(this._cursorItem) this._cursorItem.draw(this.ctx);
+    this._draw();
+
     this._isDirty = false;
   }
 

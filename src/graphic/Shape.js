@@ -3,14 +3,17 @@ import Point from './types/Point';
 import Rect from './types/Rect';
 
 /**
- * The base class of shapes that build with start-point & end-point.
+ * The base class of 'two points shapes' that build with start-point & end-point.
  * 通常情况下，图形都是由拖动行为绘制的
  */
 export default class Shape extends Path {
 
+
   /**
-   * 用与从JSON构造出Shape实例
-   * @param {*} segments
+   * 用与从JSON构造出Shape实例 
+   * 
+   * @param {Object} options 配置项
+   * @param {Array} points, startPoint , endPoint 
    */
   static instantiate(options, [sp, ep]) {
 

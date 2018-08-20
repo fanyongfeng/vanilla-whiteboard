@@ -62,8 +62,8 @@ export function memoizable() {
         return this[privateKey];
       },
       set(val) {
-        if (this.owner) {
-          this.owner.markAsDirty();
+        if (this.layer) {
+          this.layer.markAsDirty();
         }
         this[privateKey] = val;
         return this;

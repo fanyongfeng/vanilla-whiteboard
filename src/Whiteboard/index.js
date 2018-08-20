@@ -3,8 +3,9 @@
  */
 import emitter from '../decorators/emitter';
 import Layer from './Layer';
+import OperateLayer from './OperateLayer';
 import { setStyle } from '../util/dom';
-import handler from '../event/event';
+import handler from './event';
 import Text from '../graphic/shape/Text';
 import saveImage from '../util/saveImage';
 import Image from '../graphic/shape/Image';
@@ -25,14 +26,17 @@ const defaultOptions = {
 };
 
 /**
- *
+ * 白板的初始化选项。
+ * Initialize options of whiteboard.
  * Options:
  *
  *  - selectionMode: 'bounds', 'path'
  *  - alignToGrid: boolean 对齐到网格
  *  - loop / notify
  *  - readonly
- *  -
+ *  - command-mode: verbose // 当绘制时发送更多的指令
+ * 
+ *  - precision (精度)
  */
 @emitter()
 export default class Whiteboard {
@@ -88,7 +92,7 @@ export default class Whiteboard {
 
     let backgroundLayer = new Layer(this.width, this.height, 'background'),
       activeLayer = new Layer(this.width, this.height, 'active'),
-      operateLayer = new Layer(this.width, this.height, 'operate');
+      operateLayer = new OperateLayer(this.width, this.height, 'operate');
 
     let whiteboardCtx = {
       whiteboard: this,
@@ -141,7 +145,6 @@ export default class Whiteboard {
   refreshAll() {
     requestAnimationFrame(() => this.layers.forEach(layer => layer.refresh()));
   }
-
 
   /**
    * get data of items in all layers.
@@ -198,6 +201,9 @@ export default class Whiteboard {
     return this._currentTool;
   }
 
+  /**
+   * Get Layers of Whiteboard.
+   */
   get layers() {
     return [
       this.backgroundLayer,

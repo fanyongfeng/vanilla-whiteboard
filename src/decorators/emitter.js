@@ -1,3 +1,4 @@
+
 /**
  *
  * Make Class support event-emitter:  'on', 'off', 'once' ,'emit'.
@@ -96,3 +97,9 @@ export default function emitter() {
     return target;
   }
 }
+
+@emitter()
+class Emitter {}
+
+export { Emitter }
+

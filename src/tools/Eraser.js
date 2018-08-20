@@ -10,7 +10,7 @@ export default class Eraser extends Tool {
     this.cursor.loadImage("https://www-stage.tutormeetplus.com/v2/static/media/eraser.352bd893.png");
 
     this.selectionRect = new Rectangle();
-    this.selectionRect.style.strokeStyle = '#ccc';
+    this.selectionRect.style.strokeStyle = '#aaa';
     this.selectionRect.style.lineWidth = 1;
     this.selectionRect.style.dashArray = [5, 2];
   }
@@ -30,9 +30,12 @@ export default class Eraser extends Tool {
   onMouseDrag({ point }) {
     this.selectionRect.endPoint = point;
     this.selectionRect.buildPath();
+    if(this.cursor.loaded) {
+      this.cursor.position = point;
+    }
   }
 
   onMouseUp(){
-
+    this.selectionRect.remove();
   }
 }

@@ -2,15 +2,16 @@ import Shape from "../Shape";
 
 export default class Line extends Shape {
 
-  constructor(sp, ep){
-    super(sp, ep);
+  constructor(...args){
+    super(...args);
+    this.style.dashArray = this.dash || [];
   }
 
   _buildPath() {
     this.moveTo(this.startPoint.clone())
-      .lineTo(this.endPoint.clone())
-      .closePath();
+      .lineTo(this.endPoint.clone());
 
-    return this;
+    //NOTE: DO NOT 'closePath' on dashline
+    //  this.closePath()
   }
 }

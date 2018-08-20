@@ -13,7 +13,7 @@ class Item {
 
   selectable = true;
   [_selected] = false;
-  owner = null;
+  layer = null;  //inject when it is added on layer.
 
   constructor(options) {
     if(options) {
@@ -32,6 +32,7 @@ class Item {
   handlePreset(preset){
     //FIXME: 优化机制
     if(!preset) return;
+
     Object.keys(preset).forEach(key => {
       let item = preset[key];
       this[key] = item;
@@ -184,10 +185,10 @@ class Item {
   }
 
   /**
-   * remove from owner-collection;
+   * remove from collection of layers;
    */
   remove() {
-    this.owner && this.owner.delete(this);
+    this.layer && this.layer.items.remove(this);
   }
 
   /**

@@ -1,14 +1,13 @@
 import Tool from './Tool';
 import { createItem } from '../graphic/ItemFactory';
 
+const markerCursor = 'https://www-stage.tutormeetplus.com/v2/static/media/pen.3ec0e0e7.png';
+const highlighterCursor = 'https://www-stage.tutormeetplus.com/v2/static/media/mouse_pointer.64a36561.png';
+
 // values: Marker & Highlighter
 export default class FreeDrawing extends Tool {
   _style = {};
-
-  brush = 'https://www-stage.tutormeetplus.com/v2/static/media/pen.3ec0e0e7.png';
-  // https://www-stage.tutormeetplus.com/v2/static/media/mouse_pointer.64a36561.png
-  // https://www-stage.tutormeetplus.com/v2/static/media/eraser.352bd893.png
-  // https://www-stage.tutormeetplus.com/v2/static/media/mark_pen.901db183.png
+  brush = markerCursor;
 
   constructor(type) {
     super();

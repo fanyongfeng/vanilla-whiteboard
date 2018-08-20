@@ -23,8 +23,8 @@ export default class Pointer extends Tool {
     items.add(this.selectionRect);
   }
 
-  onMouseMove({ point, delta }) {9
-    if(!this.layer.items.length) this.layer.items.add(this.cursor);
+  onMouseMove({ point, delta }) {
+    this.layer.setCursor(this.cursor);
     if(this.cursor.loaded) {
       this.cursor.position = point;
     }

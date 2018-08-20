@@ -41,9 +41,7 @@ export const shapeTypes = {
   selector: { id: 10, ctor: Image },
   eraser: { id: 11, ctor: Image },
   dashed: {
-    id: 12, ctor: Line, preset: {
-      style: { dashArray: [10, 12] }
-    }
+    id: 12, ctor: Line, preset: { dash: [10, 12] }
   },
   rightTriangle: { id: 13, ctor: Triangle, preset: { right: true } },
   circle: { id: 14 },

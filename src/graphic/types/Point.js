@@ -15,6 +15,12 @@ export default class Point {
     return x;
   }
 
+  /**
+   * Create Point with x, y
+   * 
+   * @param {Number} x 
+   * @param {Number} y 
+   */
   constructor(x = 0, y = 0) {
     this.x = x;
     this.y = y;
@@ -241,8 +247,14 @@ export default class Point {
   /**
    * return point data as JSON-format: [x, y]
    */
-  toJSON() {
-    return [this.x, this.y];
+  toJSON(precision = 5) {
+    if(precision === 0) return [this.x, this.y];
+
+    let multiplier = Math.pow(10, precision);
+    return [
+      Math.round(this.x * multiplier) / multiplier,
+      Math.round(this.y * multiplier) / multiplier
+    ]
   }
 
   /**

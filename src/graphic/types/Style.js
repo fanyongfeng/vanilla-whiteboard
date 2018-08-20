@@ -38,10 +38,40 @@ const fontStyles = {
 export default class Style {
 
   constructor(options = {}) {
-
-    this.strokeStyle = new Color('#c69');
-    this.fillStyle = new Color('#c69');
+    /** new copy of color instance! */
+    this._strokeStyle = new Color('#c69');
+    this._fillStyle = new Color('#c69');
     Object.assign(this, defaultStyles, fontStyles, options);
+  }
+
+  get strokeStyle() {
+    return this._strokeStyle;
+  }
+
+  /**
+   * ensure Color type
+   */
+  set strokeStyle(val) {
+    if (typeof val === 'string') {
+      this._strokeStyle = new Color(val);
+    } else {
+      this._strokeStyle = val;
+    }
+  }
+
+  get fillStyle() {
+    return this._fillStyle;
+  }
+
+  /**
+   * ensure Color type
+   */
+  set fillStyle(val) {
+    if (typeof val === 'string') {
+      this._fillStyle = new Color(val);
+    } else {
+      this._fillStyle = val;
+    }
   }
 
   /**
@@ -59,8 +89,9 @@ export default class Style {
     if (this.hasFill) {
       ctx.fillStyle = this.fillStyle.toString();
     }
-    if (this.dashArray) {
-      ctx.setLineDash(this.dashArray)
+    if (this.dashArray && this.dashArray.length) {
+      ctx.setLineDash(this.dashArray);
+      ctx.lineDashOffset = this.lineDashOffset;
     }
     //TODO: implement rest props.
   }
@@ -156,7 +187,7 @@ export default class Style {
   toString() {
     return Object.keys({ ...this })
       .filter(key => this[key] && this[key].length !== 0)
-      .map(key =>`${key} = ${this[key].toString()}`)
+      .map(key => `${key} = ${this[key].toString()}`)
       .join(';');
   }
 }

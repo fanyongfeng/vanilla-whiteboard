@@ -1,4 +1,4 @@
-import { MouseEvent, KeyEvent } from './EventType';
+import { MouseEvent, KeyEvent, keyCode } from './EventType';
 import tools from '../tools';
 import throttle from '../util/throttle';
 import { addListener, removeListener } from '../util/dom';
@@ -6,35 +6,11 @@ import { addListener, removeListener } from '../util/dom';
 let touchEventNames = [
   'touchstart', 'touchend', 'touchmove'
 ];
-
-const keyCode = {
-  INSERT: 45,
-  DELETE: 46,
-  BACKSPACE: 8,
-  TAB: 9,
-  ENTER: 13,
-  ESC: 27,
-  LEFT: 37,
-  UP: 38,
-  RIGHT: 39,
-  DOWN: 40,
-  END: 35,
-  HOME: 36,
-  SPACEBAR: 32,
-  PAGEUP: 33,
-  PAGEDOWN: 34,
-  F2: 113,
-  F10: 121,
-  F12: 123,
-  NUMPAD_PLUS: 107,
-  NUMPAD_MINUS: 109,
-  NUMPAD_DOT: 110
-}
-
 const keyModifiers = {};
 
 //绑定流程和一般拖拽类似
 let lastPoint;
+
 function throttleDistance(point, distance = 10) {
   if (!lastPoint) return true;
   return !point.nearby(lastPoint, distance);
@@ -57,17 +33,14 @@ let handlers = {
 
   bind(layer) {
 
-    // this.currentTool = new FreeDrawing,
     let canvas = this.canvas = layer.el;
     this.onMouseDown = this.onMouseDown.bind(this);
-    // this.onMouseMove = this.onMouseMove.bind(this);
 
     this.onMouseMove = throttle(this.onMouseMove, 0).bind(this); //
     this.onMouseUp = this.onMouseUp.bind(this);
 
     addListener(canvas, 'mousedown', this.onMouseDown);
     addListener(canvas, 'mousemove', this.onMouseMove);
-
 
     addListener(canvas, 'keydown', this.onKeyDown);
     addListener(canvas, 'keypress', this.onKeyPress);
@@ -111,9 +84,14 @@ let handlers = {
     }
   },
 
-  onKeyPress(event) { },
+  onKeyPress(event) { 
+
+  },
+
   onKeyUp(event) {
-    if ((event.key === 'delete' || event.key === 'backspace') && tools.currentTool.type === toolTypes.SELECTOR) {
+    if ((event.keyCode === keyCode.DELETE || event.keyCode === keyCode.BACKSPACE) && 
+      tools.currentTool.type === toolTypes.SELECTOR) {
+      
       if (!toolAvailable) return false;
       commands.delete();
     }
@@ -171,12 +149,19 @@ let handlers = {
     lastPoint = point;
   },
 
+  _handleMouseEnter(){
+    this.currentTool.cursor;
+  },
+
+  _handleMouseLeave(){
+
+  },
+
   _handleDown(event) {
     this.currentTool.onMouseDown(event);
   },
 
   _handleDragging(event) {
-
     this.currentTool.onMouseDrag(event);
   },
 
@@ -190,6 +175,3 @@ let handlers = {
 }
 
 export default handlers;
-
-
-

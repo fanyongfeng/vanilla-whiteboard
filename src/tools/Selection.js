@@ -78,6 +78,7 @@ export default class Selection extends Tool {
 
   onMouseUp(event) {
     this.layer.clear();
+    this.items.deleteSelected();
     this.mode = 'move';
   }
 
