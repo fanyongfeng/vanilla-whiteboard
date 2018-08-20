@@ -9,7 +9,7 @@ const _items = Symbol('_items');
  * Create canvas layer, and Manage all canvas of whiteboard.
  */
 export default class Layer {
-  
+
   [_items] = new ItemCollection(null, this);
   wrapper = null;
   _isDirty = true;
@@ -28,7 +28,7 @@ export default class Layer {
 
   /**
    * Alias of items.append .
-   * @param {Item} item 
+   * @param {Item} item
    */
   append(item){
     this.items.add(item);
@@ -66,7 +66,6 @@ export default class Layer {
 
   _draw(){
     this[_items].forEach(item => item.draw(this.ctx));
-    if(this._cursorItem) this._cursorItem.draw(this.ctx);
   }
 
   refresh(){
@@ -102,6 +101,9 @@ export default class Layer {
     return this.deviceRatio;
   }
 
+  /**
+   * prop 'isDirty' is readonly
+   */
   get isDirty(){
     return this._isDirty;
   }

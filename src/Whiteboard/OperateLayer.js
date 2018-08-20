@@ -6,25 +6,25 @@ import Layer from './Layer';
  */
 export default class OperatorLayer extends Layer {
 
-    _cursorItem = null;
-    /**
-     * set cursor of layer. Use for operateLayer.
-     * @param {*} value
-     */
-    setCursor(value) {
-        if (typeof value === 'string') {
-            this.el.style.cursor = value;
-            this._cursorItem = null;
-        } else {
-            this._cursorItem = value;
-        }
-        this.markAsDirty();
-        // if(!value instanceof Item) throw new TypeError("Must be item");
+  _cursorItem = null;
+  /**
+   * set cursor of layer. Use for operateLayer.
+   * @param {*} value
+   */
+  setCursor(value) {
+    if (typeof value === 'string') {
+      this.el.style.cursor = value;
+      this._cursorItem = null;
+    } else {
+      this._cursorItem = value;
     }
+    this.markAsDirty();
+    // if(!value instanceof Item) throw new TypeError("Must be item");
+  }
 
-
-    _draw() {
-        super._draw();
-        if (this._cursorItem) this._cursorItem.draw(this.ctx);
-    }
+  _draw() {
+    // draw cursor first!
+    if (this._cursorItem) this._cursorItem.draw(this.ctx);
+    super._draw();
+  }
 }

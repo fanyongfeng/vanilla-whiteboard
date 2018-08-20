@@ -4,6 +4,9 @@
 
 import Point from '../graphic/types/Point';
 
+/**
+ * Mouse Event Class
+ */
 export class MouseEvent {
 
   constructor(originEvent) {
@@ -32,11 +35,20 @@ export class MouseEvent {
 }
 
 /**
- * Mouse Event Class
+ * Keyboard Event Class
  */
 export class KeyEvent {
   constructor(originEvent) {
     this.originEvent = originEvent;
+    this.type = originEvent.type;
+    this.target = originEvent.target;
+  }
+
+  toString() {
+    return "{ type: '" + this.type
+      + "', key: " + this.key
+      + ', target: ' + this.target
+      + ' }';
   }
 }
 

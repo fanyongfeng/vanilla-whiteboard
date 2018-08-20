@@ -5,7 +5,7 @@ import emittable from '../decorators/emitter';
 import Layer from './Layer';
 import OperateLayer from './OperateLayer';
 import { setStyle } from '../util/dom';
-import handler from './event';
+import EventHandler from './EventHandler';
 import Text from '../graphic/shape/Text';
 import saveImage from '../util/saveImage';
 import Image from '../graphic/shape/Image';
@@ -74,6 +74,8 @@ export default class Whiteboard {
     this.backgroundLayer.appendTo(this);
     this.activeLayer.appendTo(this);
     this.operateLayer.appendTo(this);
+
+    let handler = this.handler = new EventHandler();
 
     handler.context = this.context;
     handler.bind(this.operateLayer);
@@ -194,7 +196,7 @@ export default class Whiteboard {
   set tool(val) {
     this._currentTool = getTool(val);
     this._currentTool.layer = this.operateLayer;
-    handler.tool = this._currentTool;
+    this.handler.tool = this._currentTool;
   }
 
   get tool() {

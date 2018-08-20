@@ -3,9 +3,11 @@ import tools from '../tools';
 import throttle from '../util/throttle';
 import { addListener, removeListener } from '../util/dom';
 
-let touchEventNames = [
-  'touchstart', 'touchend', 'touchmove'
-];
+// bind both mouse & touch event.
+const mousedown = 'mousedown touchstart';
+const mousemove = 'mousemove touchmove';
+const mouseup = 'mouseup touchend';
+
 const keyModifiers = {};
 
 //绑定流程和一般拖拽类似
@@ -15,21 +17,19 @@ function throttleDistance(point, distance = 10) {
   if (!lastPoint) return true;
   return !point.nearby(lastPoint, distance);
 }
+export default class EventHandler {
 
-let wasInView = false;
+  isDragging = false;
+  isMouseDown = false;
+  keyModifiers = {}
 
-const canvasStatus = {
-  isSelectionMode: false
-}
+  constructor(){
 
-let handlers = {
-
-  isDragging: false,
-  isMouseDown: false,
+  }
 
   set tool(tool) {
     this.currentTool = tool;
-  },
+  }
 
   bind(layer) {
 
@@ -41,16 +41,13 @@ let handlers = {
 
     addListener(canvas, 'mousedown', this.onMouseDown);
     addListener(canvas, 'mousemove', this.onMouseMove);
-
     addListener(canvas, 'mouseenter', this.onMouseEnter);
     addListener(canvas, 'mouseleave', this.onMouseLeave);
-
     addListener(canvas, 'keydown', this.onKeyDown);
     addListener(canvas, 'keypress', this.onKeyPress);
     addListener(canvas, 'keyup', this.onKeyUp);
-  },
+  }
 
-  keyModifiers: {},
 
   onKeyDown(event) {
 
@@ -85,11 +82,11 @@ let handlers = {
     if (event.keyCode === keyCode.DELETE) {
       items.deleteSelected();
     }
-  },
+  }
 
   onKeyPress(event) {
 
-  },
+  }
 
   onKeyUp(event) {
     if ((event.keyCode === keyCode.DELETE || event.keyCode === keyCode.BACKSPACE) &&
@@ -99,7 +96,7 @@ let handlers = {
       commands.delete();
     }
     keyModifiers[event.key] = false;
-  },
+  }
 
   onMouseDown(event) {
     event.preventDefault();
@@ -109,10 +106,9 @@ let handlers = {
     addListener(document, 'mouseup', this.onMouseUp);
     addListener(document, 'mousemove', this.onMouseMove);
     removeListener(this.canvas, 'mousemove', this.onMouseMove);
-  },
+  }
 
   onMouseUp(event) {
-
     event.preventDefault();
 
     this.isMouseDown = false;
@@ -122,7 +118,7 @@ let handlers = {
     removeListener(document, 'mouseup', this.onMouseUp);
     removeListener(document, 'mousemove', this.onMouseMove);
     addListener(this.canvas, 'mousemove', this.onMouseMove);
-  },
+  }
 
   onMouseMove(event) {
     event.preventDefault();
@@ -150,39 +146,38 @@ let handlers = {
     }
 
     lastPoint = point;
-  },
+  }
 
   onMouseEnter(){
 
-  },
+  }
 
   onMouseLeave(){
 
-  },
+  }
 
   _handleMouseEnter(){
     this.currentTool.cursor;
-  },
+  }
 
   _handleMouseLeave(){
 
-  },
+  }
 
   _handleDown(event) {
     this.currentTool.onMouseDown(event);
-  },
+  }
 
   _handleDragging(event) {
     this.currentTool.onMouseDrag(event);
-  },
+  }
 
   _handleMove(event) {
     this.currentTool && this.currentTool.onMouseMove(event);
-  },
+  }
 
   _handleUp(event) {
     this.currentTool && this.currentTool.onMouseUp(event);
   }
 }
 
-export default handlers;

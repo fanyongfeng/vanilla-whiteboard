@@ -5,14 +5,14 @@
  */
 
 const noop = () => { };
+const defaultOptions = {
+  maxStack: 100,
+  change: noop
+};
 export default class History {
   constructor(options) {
     this.clear();
-    this.options = Object.assign({
-      maxStack: 100,
-      change: noop
-    }, options);
-
+    this.options = Object.assign({}, defaultOptions, options);
     this.lastRecord = +new Date;
   }
 

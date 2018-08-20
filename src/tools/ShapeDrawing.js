@@ -26,6 +26,7 @@ export default class ShapeDrawing extends Tool{
   }
 
   onMouseUp(event) {
+    //this.emit('add', [this.currentShape.toJSON()])
     this.currentShape = null;
   }
 

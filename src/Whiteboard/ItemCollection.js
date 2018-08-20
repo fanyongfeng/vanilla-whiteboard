@@ -40,7 +40,12 @@ class ItemCollection {
     return !!ids.find(i => i === id);
   }
 
-  constructor(items, layer) {
+  /**
+   *
+   * @param {Array} items
+   * @param {Layer} layer
+   */
+  constructor(items = null, layer) {
     if (items) items.forEach(item => this.add(item));
     this.layer = layer;
   }

@@ -30,6 +30,17 @@ export function mixin(...srcs) {
 }
 
 /**
+ * Deep mixins an object into the classes prototype.
+ * @param  {...any} srcs
+ */
+export function deepMixin(...srcs) {
+  return ((target) => {
+    assign(target.prototype, ...srcs);
+    return target;
+  });
+}
+
+/**
  *
  * Mixins property into the classes prototype.
  * @param {Map} props
