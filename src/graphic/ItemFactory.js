@@ -5,6 +5,7 @@ import Triangle from './shape/Triangle';
 import Ellipse from './shape/Ellipse';
 import Star from './shape/Star';
 import Writing from './shape/Writing';
+import Text from './shape/Text';
 import ChatBox from './shape/ChatBox';
 import Color from './types/Color';
 import CompoundPath from './CompoundPath';
@@ -38,6 +39,7 @@ export const shapeTypes = {
   rectangle: { id: 6, ctor: Rectangle },
   arrow: { id: 7, ctor: Arrow },
   text: { id: 8, ctor: Text },
+  textImg: { id: 8, ctor: Text },
   image: { id: 9, ctor: Image },
   selector: { id: 10, ctor: Image },
   eraser: { id: 11, ctor: Image },

@@ -1,272 +1,125 @@
 import Item from '../Item';
 import Rect from '../types/Rect'
 import Point from '../types/Point';
+import { uid } from '../../util/id';
 
 /**
  * Text Item;
  */
 export default class Text extends Item {
 
-  _lines = [];
-  _text = "";
-  _mode = "textarea"; //textarea
+  _texts = [];
+  _mode = 'textarea'; // textarea
   _autoBreak = true; // if _autoBreak is true, Text line will break if out of canvas bounds.
 
-  constructor(text) {
+  constructor() {
     super();
-
-    this.startPoint = new Point(100, 100);
-    this._text = text;
-    this._lines = text.split(/\r\n|\n|\r/mg);
-
-    if (this._mode === 'textarea') {
-
-      //<div contenteditable="true">
-
-      let input = this.element = document.createElement('div');
-      input.setAttribute('contenteditable', 'true');
-
-      // let input = this.element = document.createElement('textarea');
-      input.setAttribute('style', '');
-      input.setAttribute('autocapitalize', 'off');
-      input.setAttribute('autocorrect', 'off');
-      input.setAttribute('autocomplete', 'off');
-      input.setAttribute('spellcheck', 'false');
-      input.setAttribute('wrap', 'off');
-
-      Object.assign(input.style, {
-        fontFamily: this.style.font || 'sans-serif',
-        'font-weight': 400,
-        'font-style': this.style.italic ? 'italic' : 'normal',
-        'font-size': this.style.fontSize + 'px',
-        'position': 'absolute',
-        'left': 0,
-        'top': 0,
-      });
-
-      document.getElementById('draw-panel').appendChild(input);
-    }
-  }
-
-  set text(value) {
-    d
-    this._text = value;
+    // TODO: delete
+    window._texts = this._texts;
+    window.drawText = this.drawText.bind(this);
   }
 
   get text() {
     return this._text;
   }
 
-  get bounds() {
-    let style = this.style,
-      lines = this._lines,
-      numLines = lines.length,
-      leading = style.leading || 18,
-      width = this.getTextWidth(style.font, lines);
+  _buildPath() {
 
-    let { x, y } = this.startPoint;
-
-    return new Rect(x, (numLines ? - 0.75 * leading : 0) + y, width, numLines * leading)
   }
+  buildPath() {
 
-  /**
-   * 获取文字宽度
-   *
-   * @param {String} font
-   * @param {Array} lines
-   */
-  getTextWidth(font, lines) {
-
-    if (this.element) return new Rect();
-    let ctx = this._ctx,
-      prevFont = ctx.font,
-      width = 0;
-
-    ctx.font = font;
-    // 测量text宽度, 但Canvas无法测量文字高度，只能通过leading 设定
-    for (let i = 0, l = lines.length; i < l; i++)
-      width = Math.max(width, ctx.measureText(lines[i]).width);
-    ctx.font = prevFont;
-
-    return width;
   }
 
   _draw(ctx) {
-
-    if (this._mode === 'textarea') {
-      this.element.innerHTML = this.text;
-
-      let data = '<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200">' +
-        '<foreignObject width="100%" height="100%">' + this.element.outerHTML
-      '</foreignObject>' +
-        '</svg>';
-
-      var DOMURL = window.URL || window.webkitURL || window;
-      let img = new Image();
-      let svg = new Blob([data], { type: 'image/svg+xml;charset=utf-8' });
-      let url = DOMURL.createObjectURL(svg);
-
-      img.onload = function () {
-        ctx.drawImage(img, 0, 0);
-        DOMU.RrevokeObjectURL(url);
-      }
-
-      img.src = url;
-
-      return;
-    }
-
     this._ctx = ctx;
-    let lines = this._lines,
-      style = this.style,
-      hasFill = style.hasFill,
-      hasStroke = style.hasStroke,
-      leading = style.leading || 18,
-      shadowColor = ctx.shadowColor;
-
-
-    let { x, y } = this.startPoint;
-
-    this.selected = true;
-
-    ctx.save();
-
-    ctx.font = style.font;
-    ctx.textAlign = style.justification;
-    for (let i = 0, l = lines.length; i < l; i++) {
-      // See Path._draw() for explanation about ctx.shadowColor
-      ctx.shadowColor = shadowColor;
-      let line = lines[i];
-      if (hasFill) {
-        ctx.fillText(line, x, y, 300);
-        ctx.shadowColor = 'rgba(0,0,0,0)';
-      }
-      if (hasStroke) {
-        ctx.strokeText(line, x, y, 300);
-      }
-      ctx.translate(0, leading); //绘制行高
-    }
-
-    ctx.restore();
   }
 
-  _getCursorBounds() {
-    if (typeof position === 'undefined') {
-      position = this.selectionStart;
-    }
+  onMouseMove() {}
 
-    let left = this._getLeftOffset(),
-      top = this._getTopOffset(),
-      offsets = this._getCursorBoundariesOffsets(position);
-
-    return {
-      left: left,
-      top: top,
-      leftOffset: offsets.left,
-      topOffset: offsets.top
-    };
+  onMouseDown(e) {
+    const input = this.createEditableView(e.point);
+    input.focus();
+    this._texts.push({
+      id: `${uid()}text`,
+      input
+    });
   }
 
-  renderCursorOrSelection() {
-    if (!this.isEditing || !this.canvas) return;
+  /**
+   * 每点击一次创建一个可编辑框
+   */
+  createEditableView({ x, y }) {
+    const input = document.createElement('div');
+    input.setAttribute('contenteditable', 'true');
+    input.setAttribute('style', '');
+    input.setAttribute('autocapitalize', 'off');
+    input.setAttribute('autocorrect', 'off');
+    input.setAttribute('autocomplete', 'off');
 
-    let boundaries = this._getCursorBoundaries(), ctx;
-
-    ctx.save();
-
-    if (this.selectionStart === this.selectionEnd) {
-      this.renderCursor(boundaries, ctx);
-    } else {
-      this.renderSelection(boundaries, ctx);
-    }
-
-    ctx.restore();
+    Object.assign(input.style, {
+      fontFamily: this.style.font || 'sans-serif',
+      'min-width': '100px',
+      'font-weight': 400,
+      color: this.style.color,
+      'font-style': this.style.italic ? 'italic' : 'normal',
+      'font-size': `${this.style.fontSize}px`,
+      position: 'absolute',
+      left: `${x}px`,
+      top: `${y}px`
+    });
+    document.getElementById('draw-panel').appendChild(input);
+    this.bindInputEvent(input);
+    return input;
   }
 
-  renderCursor() {
-
-    let cursorLocation = this.get2DCursorLocation(),
-      lineIndex = cursorLocation.lineIndex,
-      charIndex = cursorLocation.charIndex > 0 ? cursorLocation.charIndex - 1 : 0,
-      charHeight = this.getValueOfPropertyAt(lineIndex, charIndex, 'fontSize'),
-      multiplier = this.scaleX * this.canvas.getZoom(),
-      cursorWidth = this.cursorWidth / multiplier,
-      topOffset = boundaries.topOffset,
-      dy = this.getValueOfPropertyAt(lineIndex, charIndex, 'deltaY');
-
-    topOffset += (1 - this._fontSizeFraction) * this.getHeightOfLine(lineIndex) / this.lineHeight
-      - charHeight * (1 - this._fontSizeFraction);
-
-    if (this.inCompositionMode) {
-      this.renderSelection(boundaries, ctx);
-    }
-
-    ctx.fillStyle = this.getValueOfPropertyAt(lineIndex, charIndex, 'fill');
-    ctx.globalAlpha = this.__isMousedown ? 1 : this._currentCursorOpacity;
-    ctx.fillRect(
-      boundaries.left + boundaries.leftOffset - cursorWidth / 2,
-      topOffset + boundaries.top + dy,
-      cursorWidth,
-      charHeight);
+  bindInputEvent(input) {
+    input.addEventListener('input', event => {
+      input.lines = event.target.innerText.split(/\r?\n/);
+    });
   }
 
-  renderSelection() {
-    let selectionStart = this.inCompositionMode ? this.hiddenTextarea.selectionStart : this.selectionStart,
-      selectionEnd = this.inCompositionMode ? this.hiddenTextarea.selectionEnd : this.selectionEnd,
-      isJustify = this.textAlign.indexOf('justify') !== -1,
-      start = this.get2DCursorLocation(selectionStart),
-      end = this.get2DCursorLocation(selectionEnd),
-      startLine = start.lineIndex,
-      endLine = end.lineIndex,
-      startChar = start.charIndex < 0 ? 0 : start.charIndex,
-      endChar = end.charIndex < 0 ? 0 : end.charIndex;
-
-    for (let i = startLine; i <= endLine; i++) {
-      let lineOffset = this._getLineLeftOffset(i) || 0,
-        lineHeight = this.getHeightOfLine(i),
-        realLineHeight = 0, boxStart = 0, boxEnd = 0;
-
-      if (i === startLine) {
-        boxStart = this.__charBounds[startLine][startChar].left;
-      }
-
-      if (i >= startLine && i < endLine) {
-        boxEnd = isJustify && !this.isEndOfWrapping(i) ? this.width : this.getLineWidth(i) || 5; // WTF is this 5?
-      } else if (i === endLine) {
-        if (endChar === 0) {
-          boxEnd = this.__charBounds[endLine][endChar].left;
-        } else {
-          let charSpacing = this._getWidthOfCharSpacing();
-          boxEnd = this.__charBounds[endLine][endChar - 1].left
-            + this.__charBounds[endLine][endChar - 1].width - charSpacing;
-        }
-      }
-      realLineHeight = lineHeight;
-      if (this.lineHeight < 1 || (i === endLine && this.lineHeight > 1)) {
-        lineHeight /= this.lineHeight;
-      }
-      if (this.inCompositionMode) {
-        ctx.fillStyle = this.compositionColor || 'black';
-        ctx.fillRect(
-          boundaries.left + lineOffset + boxStart,
-          boundaries.top + boundaries.topOffset + lineHeight,
-          boxEnd - boxStart,
-          1);
-      }
-      else {
-        ctx.fillStyle = this.selectionColor;
-        ctx.fillRect(
-          boundaries.left + lineOffset + boxStart,
-          boundaries.top + boundaries.topOffset,
-          boxEnd - boxStart,
-          lineHeight);
-      }
-
-      boundaries.topOffset += realLineHeight;
-    }
-  }
-
-  blinkCursor() {
+  /**
+   * TODO:
+   * @param {inputElement} input
+   */
+  updatePosition(input, offset={x: 0, y: 0}) {
 
   }
+
+  replaceAll(target, search, replacement) {
+    return target.replace(new RegExp(search, 'g'), replacement);
+  }
+
+  getStylePropertyValue(target, property) {
+    const style = window.getComputedStyle(target, null);
+    return parseInt(style.getPropertyValue(property), 10);
+  }
+
+  drawText() {
+    this._texts.map(item => {
+      const input = item.input;
+      const width = this.getStylePropertyValue(input, 'width');
+      const height = this.getStylePropertyValue(input, 'height');
+      const left = this.getStylePropertyValue(input, 'left');
+      const top =  this.getStylePropertyValue(input, 'top');
+      const style = input.getAttribute('style').replace(/(.+)(position.+?;)(.+)/, ($1, $2, $3, $4) => $2 + $4); // svg 中加入position 会导致 转 img 失败
+      let content = input.innerHTML;
+      content = this.replaceAll(content, '&nbsp;', ' ');
+      content = this.replaceAll(content, '<br>', '<br></br>');
+      const data = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}"><foreignObject width="100%" height="100%"><div xmlns="http://www.w3.org/1999/xhtml" style="${style}">${content}</div></foreignObject></svg>`;
+
+      const DOM_URL = window.URL || window.webkitURL || window;
+      const img = new Image();
+      const svg = new Blob([data], { type: 'image/svg+xml;charset=utf-8' });
+      const url = DOM_URL.createObjectURL(svg);
+
+      img.onload = () => {
+        this._ctx.drawImage(img, left, top);
+        DOM_URL.revokeObjectURL(url);
+      };
+      // document.body.appendChild(img);
+      img.src = url;
+    });
+  }
+
 }

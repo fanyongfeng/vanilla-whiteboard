@@ -4,7 +4,6 @@ const fillRule = {
   nonzero: 'nonzero',
   evenodd: 'evenodd'
 }
-
 /**
  * default style settings of path
  */
@@ -30,7 +29,7 @@ const defaultStyles = {
  */
 const fontStyles = {
   // Characters
-  fontSize: 16,
+  fontSize: 26,
   textAlign: 'left',
   justification: 'left'
 };

@@ -10,10 +10,10 @@ export default class Shape extends Path {
 
 
   /**
-   * 用与从JSON构造出Shape实例 
-   * 
+   * 用与从JSON构造出Shape实例
+   *
    * @param {Object} options 配置项
-   * @param {Array} points, startPoint , endPoint 
+   * @param {Array} points, startPoint , endPoint
    */
   static instantiate(options, [sp, ep]) {
 
@@ -65,6 +65,10 @@ export default class Shape extends Path {
     return new Rect(x, y, width, height, this);
   }
 
+  /**
+   * Transform segments and startPoint * endPoint.
+   * @param {Matrix} matrix
+   */
   transformContent(matrix) {
     // also apply to start & end point.
     matrix.applyToPoint(this.startPoint);
