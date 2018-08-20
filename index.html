@@ -204,7 +204,7 @@
         "btnTriangle", "btnMarker", "btnHighlighter",
         "btnSignature", "btnStar", "btnDashed",
         "btnRightTriangle", "btnSelection",
-        "btnChatBox", "btnTextImg"
+        "btnChatBox", "btnTextImg", "btnText"
       ];
 
       btns.forEach(btn => {
@@ -263,9 +263,9 @@
         whiteboard.add(rect1);
       });
 
-      $("#btnText").click(() => {
-        whiteboard.addText(text_cn);
-      });
+      // $("#btnText").click(() => {
+      //   whiteboard.addText(text_cn);
+      // });
 
       function toRGB(num) {
         const red = num >> 16;
