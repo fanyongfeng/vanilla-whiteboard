@@ -29,7 +29,7 @@ export default class Selection extends Tool {
     this.selectionRect.style.dashArray = [5, 2];
   }
 
-  get items(){
+  get items() {
     return items;
   }
 
@@ -130,9 +130,9 @@ export default class Selection extends Tool {
 
   pointOnElement(point) {
     let item;
-    for(let len =this.items.length, i = len; i > 0; i--) { // find from right
+    for (let len = this.items.length, i = len; i > 0; i--) { // find from right
       item = this.items[i - 1];
-      if(item.containsPoint(point)) {
+      if (item.containsPoint(point)) {
         this.setCursor('pointer');
         this.mode = 'move';
         this.target = item;
@@ -147,7 +147,7 @@ export default class Selection extends Tool {
     for (let i = 0; i < this.items.length; i++) {
       let segments = this.items.get(i).segments;
 
-      if(!segments) continue;
+      if (!segments) continue;
 
       for (let j = 0; j < segments.length; j++) {
         seg = segments[j];

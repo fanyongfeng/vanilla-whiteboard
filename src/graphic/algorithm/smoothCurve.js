@@ -1,13 +1,18 @@
+
+import { BezierSegment } from '../types/Segment';
+import Point from '../types/Point';
+
 /**
  * Adapt from https://github.com/paperjs/paper.js
  *
- * @param {*} segments
+ * @param {Array} points
  * @param {Boolean} closed
  */
-export default function smooth(segments, closed) {
+export default function smooth(points, closed) {
   let opts = options || {},
     asymmetric = opts.asymmetric, // asymmetric or continuous;
-    length = segments.length;
+    length = points.length,
+    segments = [];
 
   // Helper method to pick the right from / to indices.
   // Supports numbers and segment objects.
@@ -131,13 +136,15 @@ export default function smooth(segments, closed) {
   // Now update the segments
   for (let i = paddingLeft, max = n - paddingRight, j = from;
     i <= max; i++ , j++) {
-    let segment = segments[j < 0 ? j + length : j],
-      pt = segment._point,
+    let segment = new BezierSegment(),
+      point = point[j < 0 ? j + length : j],
       hx = px[i] - pt._x,
       hy = py[i] - pt._y;
+
+    segment.point = point;
     if (loop || i < max)
-      segment.setHandleOut(hx, hy);
+      segment.control2 = new Point(hx, hy);
     if (loop || i > paddingLeft)
-      segment.setHandleIn(-hx, -hy);
+      segment.control1 = new Point(-hx, -hy);
   }
 }

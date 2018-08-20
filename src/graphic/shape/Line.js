@@ -11,7 +11,7 @@ export default class Line extends Shape {
     this.moveTo(this.startPoint.clone())
       .lineTo(this.endPoint.clone());
 
-    //NOTE: DO NOT 'closePath' on dashline
+    //NOTE: DO NOT 'closePath' on dash-line
     //  this.closePath()
   }
 }

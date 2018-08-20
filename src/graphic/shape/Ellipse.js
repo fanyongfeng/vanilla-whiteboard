@@ -21,7 +21,5 @@ export default class Ellipse extends Shape {
       .bezierCurveTo(new Point(x + a, y + oy), new Point(x + ox, y + b), new Point(x, y + b))
       .bezierCurveTo(new Point(x - ox, y + b), new Point(x - a, y + oy), new Point(x - a, y))
       .closePath();
-
-    return this;
   }
 }

@@ -28,6 +28,10 @@ export class Segment {
     return new Rect(this.point.x, this.point.y, 0, 0);
   }
 
+  get length() {
+    return 0;
+  }
+
   transformCoordinates(matrix) {
 
     let point = this.point,
@@ -156,8 +160,7 @@ export class LineSegment extends Segment {
   }
 
   get length() {
-    let sub = this.contextPoint.subtract(this.point);
-    return Math.sqrt(sub.x * sub.x + sub.y * sub.y);
+    return this.contextPoint.subtract(this.point).length;
   }
 
   get points() {
@@ -206,6 +209,51 @@ export class BezierSegment extends Segment {
   get points() {
     return [this.contextPoint, this.control1, this.control2, this.point];
   }
+
+
+  _calcPoint(t, start, c1, c2, end) {
+    return (start * (1.0 - t) * (1.0 - t) * (1.0 - t))
+      + (3.0 * c1 * (1.0 - t) * (1.0 - t) * t)
+      + (3.0 * c2 * (1.0 - t) * t * t)
+      + (end * t * t * t);
+  }
+
+  /**
+   * 算出近似值
+   */
+  get length() {
+    const steps = 10;
+    let length = 0;
+    let px;
+    let py;
+
+    for (let i = 0; i <= steps; i += 1) {
+      const t = i / steps;
+      const cx = this._calcPoint(
+        t,
+        this.contextPoint.x,
+        this.control1.x,
+        this.control2.x,
+        this.point.x,
+      );
+      const cy = this._calcPoint(
+        t,
+        this.contextPoint.y,
+        this.control1.y,
+        this.control2.y,
+        this.point.y,
+      );
+      if (i > 0) {
+        const xdiff = cx - px;
+        const ydiff = cy - py;
+        length += Math.sqrt((xdiff * xdiff) + (ydiff * ydiff));
+      }
+      px = cx;
+      py = cy;
+    }
+
+    return length;
+  }
 }
 
 /**
@@ -222,6 +270,11 @@ export class QuadraticSegment extends Segment {
   get bounds() {
     //转成三阶算
     return calcBoundsOfBezier(this.fullArgs);
+  }
+
+  get length() {
+    //转成三阶算
+    return this.contextPoint.subtract(this.point).length;
   }
 
   get points() {
@@ -251,5 +304,9 @@ export class ArcSegment extends Segment {
 
   get points() {
     return [this.contextPoint, this.control1, this.point];
+  }
+
+  get length() {
+    return 0;
   }
 }

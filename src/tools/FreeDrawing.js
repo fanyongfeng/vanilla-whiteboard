@@ -1,4 +1,5 @@
 import Tool from './Tool';
+import Image from '../graphic/shape/Image';
 import { createItem } from '../graphic/ItemFactory';
 
 const markerCursor = 'https://www-stage.tutormeetplus.com/v2/static/media/pen.3ec0e0e7.png';
@@ -7,11 +8,12 @@ const highlighterCursor = 'https://www-stage.tutormeetplus.com/v2/static/media/m
 // values: Marker & Highlighter
 export default class FreeDrawing extends Tool {
   _style = {};
-  brush = markerCursor;
 
   constructor(type) {
     super();
     this.type = type;
+    this.cursor = new Image();
+    this.cursor.loadImage(type === 'highlighter' ? highlighterCursor: markerCursor);
   }
 
   lastPoint = null;

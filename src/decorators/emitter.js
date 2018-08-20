@@ -6,7 +6,7 @@
  * Code example:
  *
  * declare:
- * @emitter()
+ * @emittable()
  * Class DecoratedClass { change(){ this.emit('changed') } }
  *
  * use:
@@ -14,7 +14,7 @@
  * ins.on('changed', (event)=>{ //dosomething });
  *
  */
-export default function emitter() {
+export default function emittable() {
   return function (target) {
 
     target.prototype.__callbacks = {};
@@ -98,7 +98,7 @@ export default function emitter() {
   }
 }
 
-@emitter()
+@emittable()
 class Emitter {}
 
 export { Emitter }

@@ -169,6 +169,14 @@ class Path extends Item {
     return this.bounds.expand(this.style.lineWidth / 2);
   }
 
+  /**
+   * get length of path
+   */
+  @memoized()
+  get length(){
+    return this.segments.reduce((arr, item) => arr += item.length, 0);
+  }
+
   simplify() {
     //不优化小于3个点的曲线
     if (this.segments.length < 3) return this;
@@ -180,8 +188,8 @@ class Path extends Item {
   }
 
   smooth() {
-    let segment = smoothCurve(this.segments, this.isClose);
-    this[_segments] = segment;
+    let segments = smoothCurve(this.segments, this.isClose);
+    this[_segments] = segments;
     return this;
   }
 

@@ -18,6 +18,10 @@ export default class Pointer extends Tool {
     this.selectionRect.style.dashArray = [5, 2];
   }
 
+  onMouseEnter(){
+    this.layer.setCursor(this.cursor);
+  }
+
   onMouseDown({ point }){
     this.selectionRect.startPoint = point;
     items.add(this.selectionRect);

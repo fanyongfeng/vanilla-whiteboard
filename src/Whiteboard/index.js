@@ -1,7 +1,7 @@
 /**
  * Entry of whiteboard.
  */
-import emitter from '../decorators/emitter';
+import emittable from '../decorators/emitter';
 import Layer from './Layer';
 import OperateLayer from './OperateLayer';
 import { setStyle } from '../util/dom';
@@ -35,10 +35,10 @@ const defaultOptions = {
  *  - loop / notify
  *  - readonly
  *  - command-mode: verbose // 当绘制时发送更多的指令
- * 
+ *
  *  - precision (精度)
  */
-@emitter()
+@emittable()
 export default class Whiteboard {
   static instances = [];
 

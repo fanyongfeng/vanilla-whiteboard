@@ -42,6 +42,9 @@ let handlers = {
     addListener(canvas, 'mousedown', this.onMouseDown);
     addListener(canvas, 'mousemove', this.onMouseMove);
 
+    addListener(canvas, 'mouseenter', this.onMouseEnter);
+    addListener(canvas, 'mouseleave', this.onMouseLeave);
+
     addListener(canvas, 'keydown', this.onKeyDown);
     addListener(canvas, 'keypress', this.onKeyPress);
     addListener(canvas, 'keyup', this.onKeyUp);
@@ -84,14 +87,14 @@ let handlers = {
     }
   },
 
-  onKeyPress(event) { 
+  onKeyPress(event) {
 
   },
 
   onKeyUp(event) {
-    if ((event.keyCode === keyCode.DELETE || event.keyCode === keyCode.BACKSPACE) && 
+    if ((event.keyCode === keyCode.DELETE || event.keyCode === keyCode.BACKSPACE) &&
       tools.currentTool.type === toolTypes.SELECTOR) {
-      
+
       if (!toolAvailable) return false;
       commands.delete();
     }
@@ -147,6 +150,14 @@ let handlers = {
     }
 
     lastPoint = point;
+  },
+
+  onMouseEnter(){
+
+  },
+
+  onMouseLeave(){
+
   },
 
   _handleMouseEnter(){

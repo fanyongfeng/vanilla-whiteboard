@@ -2,7 +2,7 @@
  * Base class of tools
  */
 export default class Tool {
-  cursor = null;
+  cursor = "pointer";
   _layer = null;
 
   constructor(){
