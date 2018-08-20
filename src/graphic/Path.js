@@ -20,7 +20,7 @@ class Path extends Item {
   startPoint = null;
   contextPoint = null;
   isClose = false;
-  showAuxiliary = true;
+  showAuxiliary = false;
 
   get segments() {
     return this[_segments];
