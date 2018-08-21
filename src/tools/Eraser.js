@@ -36,6 +36,7 @@ export default class Eraser extends Tool {
   }
 
   onMouseUp(){
+    this.items.deleteSelected();
     this.selectionRect.remove();
   }
 }

@@ -4,6 +4,7 @@ import Point from '../graphic/types/Point';
 import { boundsPoi, antiDir } from '../graphic/algorithm/corner';
 import Tool from './Tool';
 import Group from '../graphic/Group';
+import ControlRect from '../graphic/component/ControlRect'
 
 const cursorMap = {
   'topLeft': 'nw-resize',
@@ -30,13 +31,17 @@ export default class Selection extends Tool {
     this.selectionRect.style.dashArray = [5, 2];
 
     this.selectionGroup = new Group();
+    this.selectionGroupControl = new ControlRect(this.selectionGroup);
   }
 
   onMouseDown(event) {
     let point = event.point;
 
     if (this.pointOnElement(point)) {
-      return this.target.selected = true;
+      this.target.selected = true;
+      this.selectionGroup.append(this.target);
+      this.layer.append(this.selectionGroupControl);
+      return;
     }
 
     if (!(this.pointOnPoint(point) || this.pointOnResize(point))) {
@@ -45,35 +50,8 @@ export default class Selection extends Tool {
     }
   }
 
-  drawControlRect(ctx, bounds) {
-    const POINT_WIDTH = 4;
-    const OFFSET = POINT_WIDTH / 2;
-
-    ctx.fillStyle = "#009dec";
-    ctx.lineWidth = 1;
-    ctx.strokeStyle = '#96cef6';
-    ctx.beginPath();
-    // 设置上一个点为最后一个点
-    let lastPoint = bounds[boundsPoi[boundsPoi.length - 1]], point;
-    ctx.moveTo(lastPoint.x, lastPoint.y);
-    boundsPoi.forEach(key => {
-      point = bounds[key];
-      ctx.lineTo(point.x, point.y);
-      ctx.fillRect(point.x - OFFSET, point.y - OFFSET, POINT_WIDTH, POINT_WIDTH);
-      lastPoint = point;
-    })
-    let tc = bounds['topCenter'];
-    ctx.moveTo(tc.x, tc.y);
-    point = tc.add(new Point(0, -50));
-    ctx.lineTo(point.x, point.y);
-    ctx.fillRect(point.x - OFFSET, point.y - OFFSET, POINT_WIDTH, POINT_WIDTH);
-
-    ctx.stroke();
-  }
-
   onMouseUp(event) {
-    // this.layer.clear();
-    // this.items.deleteSelected();
+    this.selectionRect.remove();
     this.mode = 'move';
   }
 
@@ -92,9 +70,6 @@ export default class Selection extends Tool {
 
       if (selected.diff(lastSelected)) {
         this.selectionGroup.children = selected;
-        this.selectedBounds = this.selectionGroup.bounds;
-        window.selectionGroup = this.selectionGroup;
-        window.selectedBounds = this.selectedBounds;
         lastSelected = selected;
       }
 
@@ -161,10 +136,14 @@ export default class Selection extends Tool {
 
   pointOnResize(point) {
     let corner, bounds;
-    for (let i = 0; i < this.items.length; i++) {
-      bounds = this.items.get(i).bounds;
-      if (corner = boundsPoi.find(key => point.nearby(bounds[key]))) break;
-    }
+    // for (let i = 0; i < this.items.length; i++) {
+    //   bounds = this.items.get(i).bounds;
+    //   if (corner = boundsPoi.find(key => point.nearby(bounds[key]))) break;
+    // }
+
+    bounds = this.selectionGroup.bounds;
+    corner = boundsPoi.find(key => point.nearby(bounds[key]))
+
     if (!corner) {
       this.layer.setCursor('default');
       return false;
@@ -192,10 +171,6 @@ export default class Selection extends Tool {
     this.selectionRect.endPoint = point;
     this.selectionRect.draw(ctx);
 
-    this.selectedBounds && this.drawControlRect(ctx, this.selectedBounds);
-  }
-
-  _multiSelecting(event) {
-
+    //this.drawControlRect();
   }
 }

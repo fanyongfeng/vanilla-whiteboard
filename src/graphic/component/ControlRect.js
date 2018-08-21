@@ -1,5 +1,6 @@
 
 import { boundsPoi } from '../algorithm/corner';
+import Point from '../types/Point';
 
 const POINT_WIDTH = 4;
 const OFFSET = POINT_WIDTH / 2;

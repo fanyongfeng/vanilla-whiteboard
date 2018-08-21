@@ -46,8 +46,8 @@ class ItemCollection {
    * @param {Layer} layer
    */
   constructor(items = null, layer) {
-    if (items) items.forEach(item => this.add(item));
     this.layer = layer;
+    if (items) items.forEach(item => this.add(item));
   }
 
   /**
@@ -67,10 +67,18 @@ class ItemCollection {
   }
 
   /**
+   * If contains item.
+   * @param {Item} item
+   */
+  contains(item1) {
+    return !!this.find(item => item === item1);
+  }
+
+  /**
    * return filtered ItemCollection
    */
   filter() {
-    return new ItemCollection(arr.filter.apply(this, arguments));
+    return new ItemCollection(arr.filter.apply(this, arguments), this.layer);
   }
 
   /**

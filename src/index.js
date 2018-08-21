@@ -45,8 +45,8 @@ export { Whiteboard, Point, Rect, Style, Path }
 
 //tmp for debug
 let wb = playground.init();
-wb.drawGrid();
-wb.drawAxes();
+// wb.drawGrid();
+// wb.drawAxes();
 window.nebula = nebula;
 
 
