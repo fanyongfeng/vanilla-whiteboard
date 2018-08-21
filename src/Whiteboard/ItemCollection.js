@@ -3,7 +3,7 @@ import Item from '../graphic/Item';
 
 const arrMethods = {};
 const arr = Array.prototype;
-['splice', 'push', 'sort', 'map', 'forEach', 'find', 'reduce', 'reduceRight']
+['splice', 'push', 'unshift', 'sort', 'map', 'forEach', 'find', 'reduce', 'reduceRight']
   .forEach(method => arrMethods[method] = arr[method]);
 
 /**
@@ -33,7 +33,7 @@ class ItemCollection {
 
   /**
    *
-   * @param {ItemCollection} collection
+   * @param {ItemCollection } collection
    * @param {Item} item
    */
   static includes(ids, id) {
@@ -87,7 +87,7 @@ class ItemCollection {
    * @param {ItemCollection} other
    */
   diff(other) {
-    ItemCollection.diff(this, other);
+    return ItemCollection.diff(this, other);
   }
 
   /**
@@ -110,6 +110,16 @@ class ItemCollection {
     this.push(item);
     this.changed();
     return this;
+  }
+
+  addAtTop(item) {
+    if(!this.length) return this.add(item);
+    else {
+      this.splice(0, 1);
+      item.layer = this.layer;
+      this.unshift(item);
+      this.changed();
+    }
   }
 
   /**

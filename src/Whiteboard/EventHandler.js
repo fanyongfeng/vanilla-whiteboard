@@ -150,8 +150,7 @@ export default class EventHandler {
     if (this.isMouseDown) {
       this.isDragging = true;
       this.invokeToolSlotHandler('onMouseDrag', ev);
-    }
-
+    } else
     this.invokeToolSlotHandler('onMouseMove', ev);
     this.lastPoint = point;
   }

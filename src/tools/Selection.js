@@ -53,8 +53,8 @@ export default class Selection extends Tool {
     ctx.lineWidth = 1;
     ctx.strokeStyle = '#96cef6';
     ctx.beginPath();
-
-    let lastPoint = bounds[boundsPoi[boundsPoi.length - 2]], point;
+    // 设置上一个点为最后一个点
+    let lastPoint = bounds[boundsPoi[boundsPoi.length - 1]], point;
     ctx.moveTo(lastPoint.x, lastPoint.y);
     boundsPoi.forEach(key => {
       point = bounds[key];
@@ -72,7 +72,7 @@ export default class Selection extends Tool {
   }
 
   onMouseUp(event) {
-    this.layer.clear();
+    // this.layer.clear();
     // this.items.deleteSelected();
     this.mode = 'move';
   }
@@ -88,20 +88,14 @@ export default class Selection extends Tool {
         item => item.selected = this.selectionRect.bounds.containsRectangle(item.bounds)
       );
 
-      this.selectionGroup.append(selected);
-
       if (!selected.length) return;
 
       if (selected.diff(lastSelected)) {
-
+        this.selectionGroup.children = selected;
+        this.selectedBounds = this.selectionGroup.bounds;
+        window.selectionGroup = this.selectionGroup;
+        window.selectedBounds = this.selectedBounds;
         lastSelected = selected;
-        selected.forEach(item => {
-          if (this.selectedBounds) {
-            this.selectedBounds = this.selectedBounds.unite(item.bounds);
-          } else {
-            this.selectedBounds = item.bounds;
-          }
-        });
       }
 
     } else if (this.mode === 'resize') {
@@ -197,7 +191,6 @@ export default class Selection extends Tool {
 
     this.selectionRect.endPoint = point;
     this.selectionRect.draw(ctx);
-
 
     this.selectedBounds && this.drawControlRect(ctx, this.selectedBounds);
   }

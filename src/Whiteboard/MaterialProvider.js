@@ -7,7 +7,7 @@ export default class MaterialProvider {
   createMaterial(url){
     let cached = this.cached;
     if(cached[url]) return cached[url];
-    let material = new Image(url);
+    let material = new Image({},url);
     return cached[url] = material;;
   }
 }

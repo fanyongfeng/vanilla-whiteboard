@@ -18,7 +18,7 @@ export default class Group extends Item {
   }
 
   prepend(item) {
-    this._children.shift(item);
+    this._children.unshift(item);
   }
 
   /**
@@ -28,11 +28,14 @@ export default class Group extends Item {
     return this._children;
   }
 
+  set children(value){
+    this._children = value;
+  }
+
   /**
    * get bounds of path. It's a memoized getter for performance.
    * unite all children bounds.
    */
-  @memoized()
   get bounds() {
     let x1 = Infinity,
       x2 = -x1,
