@@ -7,9 +7,9 @@
 import Point from '../types/Point';
 
 // x方向，对应坐标 -1, 0, 1
-const horizontal = ['right', 'centerX', 'left']; //index order sensitive
+const horizontal = ['right', 'centerX', 'left']; // order sensitive
 // y方向，对应坐标 -1, 0, 1
-const vertical = ['bottom', 'centerY', 'top']; //index order sensitive
+const vertical = ['bottom', 'centerY', 'top']; // order sensitive
 
 /**
  * 首字幕大写

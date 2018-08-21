@@ -31,7 +31,7 @@ export default class Pointer extends Tool {
     this.layer.setCursor(this.cursor);
     if(this.cursor.loaded) {
       this.cursor.position = point;
-      //this.emit('move', [this.cursor.toJSON()])
+      //this.emit('pointer', [point.x, point.y])
     }
   }
 

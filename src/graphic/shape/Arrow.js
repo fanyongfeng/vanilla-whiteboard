@@ -4,17 +4,16 @@
 import Shape from "../Shape"
 import Point from "../types/Point";
 
-function calcArrow(sp, ep) {
-  let points = [];
-  let l = Math.sqrt(Math.pow((ep.x - sp.x), 2) + Math.pow((ep.y - sp.y), 2)),
-    e0 = (ep.x - ((ep.x - sp.x) * Math.cos(0.5) - (ep.y - sp.y) * Math.sin(0.5)) * 10 / l),
-    e1 = (ep.y - ((ep.y - sp.y) * Math.cos(0.5) + (ep.x - sp.x) * Math.sin(0.5)) * 10 / l),
-    e2 = (ep.x - ((ep.x - sp.x) * Math.cos(0.5) + (ep.y - sp.y) * Math.sin(0.5)) * 10 / l),
-    e3 = (ep.y - ((ep.y - sp.y) * Math.cos(0.5) - (ep.x - sp.x) * Math.sin(0.5)) * 10 / l);
+function calcArrow(sx, sy, ex, ey) {
+  let l = Math.sqrt(Math.pow((ex - sx), 2) + Math.pow((ey - sy), 2)),
+    e0 = (ex - ((ex - sx) * Math.cos(0.5) - (ey - sy) * Math.sin(0.5)) * 10 / l),
+    e1 = (ey - ((ey - sy) * Math.cos(0.5) + (ex - sx) * Math.sin(0.5)) * 10 / l),
+    e2 = (ex - ((ex - sx) * Math.cos(0.5) + (ey - sy) * Math.sin(0.5)) * 10 / l),
+    e3 = (ey - ((ey - sy) * Math.cos(0.5) - (ex - sx) * Math.sin(0.5)) * 10 / l);
 
   return [
     new Point(e0, e1),
-    new Point(ep.x, ep.y),
+    new Point(ex, ey),
     new Point(e2, e3)
   ];
 }
@@ -22,10 +21,13 @@ export default class Arrow extends Shape {
 
   _buildPath() {
 
-    let points = calcArrow(this.startPoint, this.endPoint);
+    let { x: sx, y: sy } = this.startPoint;
+    let { x: ex, y: ey } = this.endPoint;
 
-    this.moveTo(this.startPoint.clone())
-      .lineTo(this.endPoint.clone())
+    let points = calcArrow(sx, sy, ex, ey);
+
+    this.moveTo(sx, sy)
+      .lineTo(ex, ey)
       .moveTo(points[0])
       .lineTo(points[1])
       .lineTo(points[2])

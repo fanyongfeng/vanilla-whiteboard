@@ -37,8 +37,8 @@ export default class Image extends Item {
 
   get bounds() {
     let bound = this._initBounds.clone();
-    bound.owner = this;
     this.matrix.applyToRect(bound);
+    bound.owner = this;
     return bound;
   }
 

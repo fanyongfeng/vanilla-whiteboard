@@ -18,6 +18,7 @@ const shapeDrawingTools = ["rectangle", "triangle", "rightTriangle", "ellipse", 
 function create() {
   freeDrawingTools.forEach(toolName => registerTool(toolName, FreeDrawing));
   shapeDrawingTools.forEach(toolName => registerTool(toolName, ShapeDrawing));
+  registerTool('arc', ArcDrawing);
   registerTool('selection', Selection);
   registerTool('pointer', Pointer);
   registerTool('text', TextInput);

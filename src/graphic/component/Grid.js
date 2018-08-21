@@ -19,7 +19,7 @@ export default class Grid {
     ctx.font = "9px serif";
 
     //draw vertical lines
-    if (this.minor) this.drawManorGrid(ctx, width, height);
+    if (this.minor) this.drawMinorGrid(ctx, width, height);
     this.drawMajorGrid(ctx, width, height);
     ctx.restore();
   }
@@ -41,7 +41,7 @@ export default class Grid {
     }
   }
 
-  drawManorGrid(ctx, width, height) {
+  drawMinorGrid(ctx, width, height) {
     ctx.strokeStyle = "#f0f0f0";
     let x = 0;
     while (x < width) {
@@ -61,7 +61,6 @@ export default class Grid {
     ctx.beginPath();
     ctx.moveTo(x1, y1);
     ctx.lineTo(x2, y2);
-    ctx.closePath();
     ctx.stroke();
   }
 

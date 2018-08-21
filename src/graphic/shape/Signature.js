@@ -14,4 +14,8 @@ export default class Signature extends Path {
     ctx.closePath();
     ctx.fill();
   };
+
+  _draw(ctx) {
+    //TODO: calc width of Dot.
+  }
 }

@@ -180,16 +180,16 @@ export default class Point {
   }
 
   /**
- * Rotates the point by the given angle around an optional center point.
- * The object itself is not modified.
- *
- * Read more about angle units and orientation in the description of the
- * {@link #angle} property.
- *
- * @param {Number} angle the rotation angle
- * @param {Point} center the center point of the rotation
- * @return {Point} the rotated point
- */
+   * Rotates the point by the given angle around an optional center point.
+   * The object itself is not modified.
+   *
+   * Read more about angle units and orientation in the description of the
+   * {@link #angle} property.
+   *
+   * @param {Number} angle the rotation angle
+   * @param {Point} center the center point of the rotation
+   * @return {Point} the rotated point
+   */
   rotate(angle, center) {
     if (angle === 0)
       return this.clone();

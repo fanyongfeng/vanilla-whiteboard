@@ -30,6 +30,20 @@ export function mixin(...srcs) {
 }
 
 /**
+ * 组合两个function
+ * @param {*} target
+ * @param {*} name
+ * @param {*} fn
+ */
+const combineFunc = function combineFunc(target, name ,fn){
+  if(!target[name]) return target[name] = fn;
+  return target[name] = function(){
+    target[name].apply(this, arguments);
+    fn.apply(this, arguments);
+  }
+}
+
+/**
  * Deep mixins an object into the classes prototype.
  * @param  {...any} srcs
  */

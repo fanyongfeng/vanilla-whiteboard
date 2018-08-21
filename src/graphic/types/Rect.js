@@ -211,8 +211,9 @@ class Rect {
   }
 
   /**
- * transform point
- */
+   * transform by matrix
+   * @param {Matrix} matrix
+   */
   transform(matrix) {
     matrix.applyToRect(this);
   }

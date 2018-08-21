@@ -1,10 +1,3 @@
-const combineFunc = function combineFunc(target, name ,fn){
-  if(!target[name]) return target[name] = fn;
-  return target[name] = function(){
-    target[name].apply(this, arguments);
-    fn.apply(this, arguments);
-  }
-}
 /**
  * 行为装饰器，使工具具有item选择的能力
  */

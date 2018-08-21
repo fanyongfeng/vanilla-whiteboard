@@ -1,5 +1,6 @@
-
+import { memoized } from '../decorators/memoized'
 import Item from './Item';
+import Rect from './types/Rect';
 /**
  * 图形成组，包括Path, Image, Text, CompoundPath
  * 用于成组的transform, delete
@@ -12,8 +13,12 @@ export default class Group extends Item {
     this._children = items;
   }
 
-  add(path) {
-    this._children.push(path);
+  append(item) {
+    this._children.push(item);
+  }
+
+  prepend(item) {
+    this._children.shift(item);
   }
 
   /**
@@ -25,6 +30,7 @@ export default class Group extends Item {
 
   /**
    * get bounds of path. It's a memoized getter for performance.
+   * unite all children bounds.
    */
   @memoized()
   get bounds() {
@@ -51,9 +57,12 @@ export default class Group extends Item {
   }
 
   _draw(ctx) {
-    this._children.forEach(path => path.draw(ctx));
+    this._children.forEach(item => item.draw(ctx));
   }
 
+  /**
+   * Data for serialization.
+   */
   _toJSON() {
     return this._children.map(item => item.toJSON());
   }

@@ -33,8 +33,8 @@ class ItemCollection {
 
   /**
    *
-   * @param {*} collection
-   * @param {*} item
+   * @param {ItemCollection} collection
+   * @param {Item} item
    */
   static includes(ids, id) {
     return !!ids.find(i => i === id);

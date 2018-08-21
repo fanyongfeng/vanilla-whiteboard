@@ -15,6 +15,21 @@ class Item {
   [_selected] = false;
   layer = null;  //inject when it is added on layer.
 
+  /**
+   * Composite rule used for canvas globalCompositeOperation
+   * possible value:
+   * [ 'source-over','source-in','source-out','source-atop',
+   *   'destination-over','destination-in','destination-out','destination-atop',
+   *   'lighter', 'copy','xor', 'multiply', 'screen', 'overlay', 'darken',
+   *   'lighten', 'color-dodge', 'color-burn', 'hard-light', 'soft-light',
+   *   'difference', 'exclusion', 'hue', 'saturation', 'color', 'luminosity'
+   * ]
+   *
+   * @type String
+   * @default
+   */
+  globalCompositeOperation = 'source-over';
+
   constructor(options) {
     if(options) {
       this.type = options.type;
@@ -163,6 +178,8 @@ class Item {
   draw(ctx) {
     ctx.save();
     this.style.apply(ctx);
+    ctx.globalCompositeOperation = this.globalCompositeOperation;
+    // ctx.globalCompositeOperation = 'xor';
     this.matrix.applyToContext(ctx);
     this._draw(ctx);
     ctx.restore();

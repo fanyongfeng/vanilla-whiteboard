@@ -109,7 +109,7 @@ export default class EventHandler {
     event.preventDefault();
     this.isMouseDown = true;
 
-    this.callToolSlotHandler('onMouseDown', new MouseEvent(event));
+    this.invokeToolSlotHandler('onMouseDown', new MouseEvent(event));
 
     addListener(document, 'mouseup', this.onMouseUp);
     addListener(document, 'mousemove', this.onMouseMove);
@@ -122,7 +122,7 @@ export default class EventHandler {
     this.isMouseDown = false;
     this.isDragging = false;
 
-    this.callToolSlotHandler('onMouseUp', new MouseEvent(event));
+    this.invokeToolSlotHandler('onMouseUp', new MouseEvent(event));
 
     removeListener(document, 'mouseup', this.onMouseUp);
     removeListener(document, 'mousemove', this.onMouseMove);
@@ -149,19 +149,19 @@ export default class EventHandler {
 
     if (this.isMouseDown) {
       this.isDragging = true;
-      this.callToolSlotHandler('onMouseDrag', ev);
+      this.invokeToolSlotHandler('onMouseDrag', ev);
     }
 
-    this.callToolSlotHandler('onMouseMove', ev);
+    this.invokeToolSlotHandler('onMouseMove', ev);
     this.lastPoint = point;
   }
 
   onMouseEnter(event) {
-    this.callToolSlotHandler('onMouseEnter', event);
+    this.invokeToolSlotHandler('onMouseEnter', event);
   }
 
   onMouseLeave(event) {
-    this.callToolSlotHandler('onMouseLeave', event);
+    this.invokeToolSlotHandler('onMouseLeave', event);
   }
 
   /**
@@ -169,7 +169,7 @@ export default class EventHandler {
    * @param {String} name Name of handler
    * @param  {...any} args arguments
    */
-  callToolSlotHandler(name, event) {
+  invokeToolSlotHandler(name, event) {
     return this.tool &&
       typeof this.tool[name] === 'function' &&
       this.tool[name](event);

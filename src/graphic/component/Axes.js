@@ -6,7 +6,7 @@ const defaultOptions = {
   position: "center",
 }
 
-const gap = 50;
+const gap = 50; //in pixels
 
 /**
  * 简单坐标轴

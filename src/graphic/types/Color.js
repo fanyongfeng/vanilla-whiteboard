@@ -15,12 +15,20 @@ class Color {
 
   /**
    *
-   * @param {String?} colorStr . CSS color
-   *  e.g. #fff, #ac78bf, rgb(30, 30, 30), rgba(30, 30, 30, 0.5)
+   * @param {String | Array ?} colorStr . CSS color
+   *  e.g.
+   *  String: '#fff','#ac78bf', 'rgb(30, 30, 30)', 'rgba(30, 30, 30, 0.5)'
+   *  Array: [128, 128, 128, 0.5],  [250, 250, 250]
    */
   constructor(colorStr) {
-    if (typeof colorStr !== 'string') return;
-    this.normalizeColor(colorStr);
+    if (typeof colorStr === 'string')
+      this.normalizeColor(colorStr);
+    else if(Array.isArray(colorStr)) {
+      this.red = colorStr[0];
+      this.green = colorStr[1];
+      this.blue = colorStr[2];
+      this.alpha = colorStr[3] || 1;
+    }
   }
 
   /**
@@ -45,12 +53,13 @@ class Color {
     this.red = color[0];
     this.green = color[1];
     this.blue = color[2];
+
     if(typeof color[3] !== "undefined") this.alpha = color[3];
   }
 
   /**
-   * If equals other style.
-   * @param {Style} other
+   * If equals other color.
+   * @param {Color} other
    */
   equals(other) {
     return this === other || (

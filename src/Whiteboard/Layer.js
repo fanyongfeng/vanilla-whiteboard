@@ -35,7 +35,7 @@ export default class Layer {
   }
 
   /**
-   * Layer.
+   * Create whiteboard layer with specified width & height.
    *
    * @param {Number} width
    * @param {Number} height
@@ -68,14 +68,13 @@ export default class Layer {
     this[_items].forEach(item => item.draw(this.ctx));
   }
 
+  /**
+   * refresh current layer.
+   */
   refresh(){
     this.clear();
-    this.whiteboardCtx.emit('layer:refresh', {
-      layer: this,
-    });
-
+    this.whiteboardCtx.emit('layer:refresh', { layer: this, });
     this._draw();
-
     this._isDirty = false;
   }
 
@@ -127,6 +126,9 @@ export default class Layer {
     this.ctx.setTransform(this.deviceRatio, 0, 0, this.deviceRatio, 0, 0);
   }
 
+  /**
+   * clear current layer.
+   */
   clear() {
     this.ctx.clearRect(0, 0, this.width, this.height);
   }

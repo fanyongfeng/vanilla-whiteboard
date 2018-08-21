@@ -17,6 +17,7 @@ import Rect from "./Rect";
  * 变换矩阵，用于transform
  */
 class Matrix {
+
   /**
    * Build Matrix via matrix array.
    * @param {Array} m matrix array, default value: [1, 0, 0, 1, 0, 0].
@@ -166,7 +167,7 @@ class Matrix {
   /**
    *
    *  语法糖倾斜，
-   *  可以根据基准点倾斜，默认是 基于0，0
+   *  可以根据基准点倾斜，默认是 基于 [0，0]
    *  (1, tx, 0)
    *  (ty, 1, 0)
    */
@@ -187,7 +188,7 @@ class Matrix {
 
   /**
    * 缩放
-   * 可以根据基准点缩放，默认是 基于0，0
+   * 可以根据基准点缩放，默认是 基于 [0，0]
    * (sx, 0, 0)
    * (0, sy, 0)
    */
@@ -199,9 +200,9 @@ class Matrix {
   }
 
   /**
-   * transform Coordinate
-   * @param {*} x
-   * @param {*} y
+   * transform Coordinate.
+   * @param {Number} x
+   * @param {Number} y
    */
   transformCoordinate(x, y) {
     return [
@@ -231,7 +232,6 @@ class Matrix {
 
     //FIXME: 优化算法
     return this;
-
   }
 
   /**
@@ -275,16 +275,15 @@ class Matrix {
    * Convert to JSON
    */
   toJSON() {
-    let m = this.m;
-    return [m[0], m[1], m[2], m[3], m[4], m[5]];
+    return [...this.m];
   }
 
   /**
    * Convert to CSS style string.
+   * e.g 'matrix(1,0,0,1,0,0)'
    */
   toString() {
-    let m = this.m;
-    return `matrix(${m[0]}, ${m[1]}, ${m[2]}, ${m[3]}, ${m[4]}, ${m[5]});`;
+    return `matrix(${this.toJSON.join(',')});`;
   }
 }
 
