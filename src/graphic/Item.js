@@ -2,18 +2,18 @@ import { tsid } from '../util/id';
 import Style from './types/Style';
 import Point from './types/Point';
 import Matrix from './types/Matrix';
-import { memoizable, changed } from '../decorators/memoized';
+import { memoizable, changed, observeProps } from '../decorators/memoized';
 
-const _selected = Symbol('_selected');
-const _style = Symbol('_style');
 
 // 白板所有元素的父类
 @memoizable()
+@observeProps(
+  {
+    selected: { type: Boolean, default: false },
+    style: { type: Style, default: null }
+  }
+)
 class Item {
-
-  selectable = true;
-  [_selected] = false;
-  layer = null;  //inject when it is added on layer.
 
   /**
    * Composite rule used for canvas globalCompositeOperation
@@ -29,24 +29,27 @@ class Item {
    * @default
    */
   globalCompositeOperation = 'source-over';
+  selectable = true;
+  layer = null;  //inject when it is added on layer.
+
 
   constructor(options) {
-    if(options) {
+    if (options) {
       this.type = options.type;
       this.typeId = options.typeId;
       this.id = options.id || tsid();
       this.handlePreset(options.preset);
-      this[_style] = new Style(options.style);
+      this.style = new Style(options.style);
     } else {
-      this[_style] = new Style();
+      this.style = new Style();
     }
 
     this.matrix = new Matrix();
   }
 
-  handlePreset(preset){
+  handlePreset(preset) {
     //FIXME: 优化机制
-    if(!preset) return;
+    if (!preset) return;
 
     Object.keys(preset).forEach(key => {
       let item = preset[key];
@@ -54,28 +57,8 @@ class Item {
     });
   }
 
-  get selected() {
-    return this[_selected];
-  }
-
-  @changed()
-  set selected(val) {
-    this[_selected] = val;
-  }
-  /**
- * style of current path
- */
-  get style() {
-    return this[_style];
-  }
-
-  @changed()
-  set style(value) {
-    this[_style] = value;
-    //mark-as-dirty
-  }
-
   get bounds() {
+    throw new Error("getter bounds must be overwrite!");
     return null;
   }
 
@@ -111,11 +94,11 @@ class Item {
    * @param {Point} point Base point.
    */
   scale(sx, sy, point = null) {
-    if(typeof sx !== 'number')
+    if (typeof sx !== 'number')
       throw new TypeError("param 'sx' of scale must be number!");
 
     let mx = new Matrix();
-    if(typeof sy === 'undefined') sy = sx;
+    if (typeof sy === 'undefined') sy = sx;
     point = point || this.bounds.center;
     return this.transform(mx.scale(sx, sy, point));
   }
@@ -126,7 +109,7 @@ class Item {
    * @param {Point} point, Base point.
    */
   rotate(deg, point = null) {
-    if(typeof deg !== 'number')
+    if (typeof deg !== 'number')
       throw new TypeError("param 'deg' of rotate must be number!");
 
     let mx = new Matrix();
@@ -192,7 +175,7 @@ class Item {
    *  Get JSON format data, in [typeId, id, JSONData, style]
    *  e.g. [6, 9909959950, [[345, 234], [603, 436]], {"c":"#da64e2","w":5,"f":20}];
    */
-  toJSON(){
+  toJSON() {
     return [
       this.typeId,
       this.id,

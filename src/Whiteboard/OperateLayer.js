@@ -18,7 +18,7 @@ export default class OperatorLayer extends Layer {
     } else {
       this._cursorImage = value;
     }
-    this.markAsDirty();
+    // this.markAsDirty();
     // if(!value instanceof Item) throw new TypeError("Must be item");
   }
 

@@ -82,3 +82,77 @@ export function memoizable() {
     return target;
   }
 }
+
+const noop = function () { }
+
+const validateFunc = function validateFunc(type, key) {
+  if (type === Boolean) {
+    return function (val) {
+      if (typeof val !== 'boolean') throw new TypeError(`setter '${key}' accept boolean value!`);
+    }
+  } else if (type === String) {
+    return function (val) {
+      if (typeof val !== 'string') throw new TypeError(`setter '${key}' accept string value!`);
+    }
+  } else if (type === Number) {
+    return function (val) {
+      if (typeof val !== 'number') throw new TypeError(`setter '${key}' accept number value!`);
+    }
+  } else {
+    return function (val) {
+      if (!val instanceof type) throw new TypeError(`setter '${key}' accept ${type.name} value!`);
+    }
+  }
+
+  //return noop;
+}
+
+/**
+ * Inject observe props for class.
+ *
+ * @param {Object} desc
+ *
+ * {
+ *  selected: {
+ *    type: Boolean,
+ *    default: true,
+ *    fn:
+ *  }
+ * }
+ */
+export function observeProps(desc) {
+  if (!Object.keys(desc).length)
+    throw new Error('must pass props!');
+
+  return function (target) {
+    for (let key in desc) {
+      if (typeof target.prototype[key] !== 'undefined')
+        throw new Error(`Prop ${key} already exist!`);
+
+      let propDesc = desc[key];
+      let privateKey = Symbol(`_${key}`);
+
+      target.prototype[privateKey] = propDesc.default;
+
+      let checkParam = validateFunc(propDesc.type, key);
+
+      Object.defineProperty(target.prototype, key, {
+        get() {
+          return this[privateKey];
+        },
+        set(val) {
+          //TODO: check params.
+          checkParam(val);
+          if (val === this[privateKey]) return;
+
+          this[privateKey] = val;
+          if (this.layer) {
+            this.layer.markAsDirty();
+          }
+        },
+        enumerable: true,
+        configurable: true,
+      });
+    }
+  }
+}

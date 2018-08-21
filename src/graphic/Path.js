@@ -4,7 +4,7 @@ import Point from './types/Point';
 import Rect from './types/Rect';
 import fitCurve from './algorithm/fitCurve';
 import smoothCurve from './algorithm/smoothCurve';
-import { memoized, changed } from '../decorators/memoized'
+import { memoized, changed, observeProps } from '../decorators/memoized'
 import Item from './Item';
 
 const _segments = Symbol('_segments');
@@ -13,6 +13,12 @@ const _segments = Symbol('_segments');
  * A full path and base class of all single path shapes.
  * 所有矢量图形的父类
  */
+@observeProps(
+  {
+    fill: { type: Boolean, default: false },
+    stroke: { type: Boolean, default: true },
+  }
+)
 class Path extends Item {
 
   //props
@@ -23,33 +29,6 @@ class Path extends Item {
 
   get segments() {
     return this[_segments];
-  }
-
-  _fill = false;
-  get fill(){
-    return this._fill;
-  }
-
-  @changed()
-  set fill(val){
-    if(typeof val!== 'boolean') throw new TypeError("setter 'fill' accept boolean value!");
-
-    this._fill = val;
-    return this;
-  }
-
-
-  _stroke = true; // default is true
-  get stroke(){
-    return this._stroke;
-  }
-
-  @changed()
-  set stroke(val){
-    if(typeof val!== 'boolean') throw new TypeError("setter 'stroke' accept boolean value!");
-
-    this._stroke = val;
-    return this;
   }
 
   add(segment) {
@@ -208,6 +187,7 @@ class Path extends Item {
   smooth() {
     let segments = smoothCurve(this.segments, this.isClose);
     this[_segments] = segments;
+    this.markAsDirty();
     return this;
   }
 

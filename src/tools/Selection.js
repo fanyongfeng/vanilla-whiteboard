@@ -26,7 +26,7 @@ export default class Selection extends Tool {
   constructor() {
     super();
     this.selectionRect = new Rectangle();
-    this.selectionRect.style.strokeStyle = '#ccc';
+    this.selectionRect.style.strokeStyle = '#aaa';
     this.selectionRect.style.lineWidth = 1;
     this.selectionRect.style.dashArray = [5, 2];
 
@@ -37,9 +37,11 @@ export default class Selection extends Tool {
   onMouseDown(event) {
     let point = event.point;
 
+    this.items.unselect();
+
     if (this.pointOnElement(point)) {
       this.target.selected = true;
-      this.selectionGroup.append(this.target);
+      this.selectionGroup.children = [this.target];
       this.layer.append(this.selectionGroupControl);
       return;
     }
@@ -47,6 +49,8 @@ export default class Selection extends Tool {
     if (!(this.pointOnPoint(point) || this.pointOnResize(point))) {
       this.mode = 'select';
       this.selectionRect.startPoint = point;
+      this.selectionRect.endPoint =  point;
+      this.layer.items.add(this.selectionRect);
     }
   }
 
@@ -60,7 +64,8 @@ export default class Selection extends Tool {
     if (this.mode === 'mutate') {
       this.targetPoint.assign(point);
     } if (this.mode === 'select') {
-      this._drawSelectArea(this.layer.ctx, point);
+
+      this.selectionRect.endPoint = point;
 
       let selected = this.items.filter(
         item => item.selected = this.selectionRect.bounds.containsRectangle(item.bounds)
@@ -101,6 +106,7 @@ export default class Selection extends Tool {
       if (item.containsPoint(point)) {
         this.layer.setCursor('pointer');
         this.mode = 'move';
+
         this.target = item;
         return true;
       }
@@ -165,12 +171,4 @@ export default class Selection extends Tool {
     }
   }
 
-  _drawSelectArea(ctx, point) {
-    this.layer.clear();
-
-    this.selectionRect.endPoint = point;
-    this.selectionRect.draw(ctx);
-
-    //this.drawControlRect();
-  }
 }

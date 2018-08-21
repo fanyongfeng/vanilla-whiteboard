@@ -62,7 +62,7 @@ export default class Image extends Item {
     img.src = url;
 
     img.onload = () => {
-      console.log('load');
+      // console.log('load');
 
       this.loaded = img && img.src && img.complete;
       this.naturalWidth = img ? img.naturalWidth || img.width : 0;
