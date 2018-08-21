@@ -136,6 +136,8 @@
         <button id="btnRedo" class="btn btn-default">Redo</button>
         <button id="btnUndo" class="btn btn-default">Undo</button>
         <button id="btnDelete" class="btn btn-default">Delete</button>
+        <button id="btnMaterialPrev" class="btn btn-default">教材上</button>
+        <button id="btnMaterialNext" class="btn btn-default">教材下</button>
         <button id="btnScale+" class="btn btn-default">缩放+</button>
         <button id="btnScale-" class="btn btn-default">缩放+</button>
       </div>
@@ -247,9 +249,9 @@
       });
 
       $("#btnImage").click(() => {
-        whiteboard.addImage(images[parseInt(Math.random() * images.length)]);
+        let img = images[parseInt(Math.random() * images.length)];
+        whiteboard.add([9,,img]);
       });
-
 
       $("#btnClear").click(() => {
         whiteboard.clear();
@@ -261,6 +263,25 @@
 
       $("#btnRect").click(() => {
         whiteboard.add(rect1);
+      });
+
+      let midx = 0;
+      $("#btnMaterialPrev").click(() => {
+        if(--midx < 0) return;
+        whiteboard.drawMaterial(materials[midx]);
+      });
+
+      $("#btnMaterialNext").click(() => {
+        if(++midx >= materials.length - 1) return;
+        whiteboard.drawMaterial(materials[midx]);
+      });
+
+      $('#btnScale+').click(() => {
+        whiteboard.zoom(1.25);
+      });
+
+      $('#btnScale-').click(() => {
+        whiteboard.zoom(0.8);
       });
 
       // $("#btnText").click(() => {
@@ -354,7 +375,6 @@
           element.simplify();
         });
       });
-
 
       function drawFlag() {
         let compoundPath = whiteboard.createItem('compoundPath');

@@ -40,22 +40,8 @@ export default {
     });
 
     this.whiteboard.watch();
+    return whiteboard;
   },
-
-  drawGrid(){
-    let grid = new Grid(true);
-    grid.draw(this.whiteboard.backgroundLayer.ctx, this.whiteboard.width, this.whiteboard.height);
-  },
-
-  drawAxes(){
-    let grid = new Axes();
-    grid.draw(this.whiteboard.backgroundLayer.ctx, this.whiteboard.width, this.whiteboard.height);
-  },
-
-  drawMultiRect(){
-
-  },
-
 
   drawPolyline(type) {
     type = type || 'linear';

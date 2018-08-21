@@ -12,6 +12,9 @@ import Image from '../graphic/shape/Image';
 import Rect from '../graphic/types/Rect';
 import { getTool } from '../tools';
 import { createItemViaJSON, createItem } from '../graphic/ItemFactory';
+import Grid from '../graphic/component/Grid';
+import Axes from '../graphic/component/Axes';
+import MaterialProvider from './MaterialProvider';
 
 const _createContext = Symbol('_createContext');
 const defaultOptions = {
@@ -46,6 +49,7 @@ export default class Whiteboard {
   backgroundLayer = null;
   activeLayer = null;
   operateLayer = null;
+  material = new MaterialProvider;
 
   constructor(options = {}) {
     this.options = Object.assign({}, defaultOptions, options);
@@ -124,6 +128,7 @@ export default class Whiteboard {
     const drawDirtyLayer = () => {
       if (this.activeLayer.isDirty) this.activeLayer.refresh();
       if (this.operateLayer.isDirty) this.operateLayer.refresh();
+      if (this.backgroundLayer.isDirty) this.backgroundLayer.refresh();
       requestAnimationFrame(drawDirtyLayer);
     }
 
@@ -155,7 +160,9 @@ export default class Whiteboard {
     return this.items.toJSON();
   }
 
-  zoom() { }
+  zoom(radio) {
+    this.activeLayer.ctx.scale(radio, radio);
+  }
 
   createItem(type, style) {
     return createItem(type, style);
@@ -173,16 +180,6 @@ export default class Whiteboard {
 
   addText(text) {
     this.items.add(new Text(text));
-  }
-
-  // addRect(x1, y1, x2, y2) {
-  //   let instance = new Rect(new Point(x1, y1), new Point(x2, y2));
-  //   instance.buildPath();
-  //   this.items.add(instance);
-  // }
-
-  addImage(src) {
-    this.items.add(new Image(src));
   }
 
   /**
@@ -214,6 +211,21 @@ export default class Whiteboard {
 
   command(){
 
+  }
+
+  drawMaterial(url){
+    let material = this.material.createMaterial(url)
+    this.backgroundLayer.append(material);
+  }
+
+  drawGrid(){
+    let grid = new Grid(true);
+    this.backgroundLayer.append(grid);
+  }
+
+  drawAxes(){
+    let axes = new Axes();
+    this.backgroundLayer.append(axes);
   }
 
   saveImage() {

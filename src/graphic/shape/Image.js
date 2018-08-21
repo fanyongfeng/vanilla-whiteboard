@@ -12,17 +12,23 @@ const viewHeight = 800;
  */
 export default class Image extends Item {
 
+  static instantiate(options, url){
+    return new this(options, url);
+  }
+  /**
+   * align of image in whiteboard
+   * possible values:
+   *  1)center
+   *  2)start
+   */
+  //align = 'start'; // start.
   _src = null;
   loaded = false;
   strokeDashArray = [0, 1];
-  x = 100;
-  y = 100;
   _bounds = null;
-  align = 'center'; // start.
-  matrix = new Matrix;
 
-  constructor(src) {
-    super();
+  constructor(options, src) {
+    super(options);
     this._src = src;
   }
 

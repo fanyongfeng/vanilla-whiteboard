@@ -88,7 +88,7 @@ export default class Selection extends Tool {
         item => item.selected = this.selectionRect.bounds.containsRectangle(item.bounds)
       );
 
-      this.selectionGroup.add(selected);
+      this.selectionGroup.append(selected);
 
       if (!selected.length) return;
 

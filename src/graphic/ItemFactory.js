@@ -7,6 +7,7 @@ import Star from './shape/Star';
 import Writing from './shape/Writing';
 import Text from './shape/Text';
 import ChatBox from './shape/ChatBox';
+import Image from './shape/Image';
 import Color from './types/Color';
 import CompoundPath from './CompoundPath';
 
@@ -40,7 +41,7 @@ export const shapeTypes = {
   arrow: { id: 7, ctor: Arrow },
   text: { id: 8, ctor: Text },
   textImg: { id: 8, ctor: Text },
-  image: { id: 9, ctor: Image },
+  image: { id: 9, ctor: Image, preset: { align: 'center' }  },
   selector: { id: 10, ctor: Image },
   eraser: { id: 11, ctor: Image },
   dashed: {
@@ -49,8 +50,9 @@ export const shapeTypes = {
   rightTriangle: { id: 13, ctor: Triangle, preset: { right: true } },
   circle: { id: 14 },
   star: { id: 15, ctor: Star },
-  chatBox: {id:16, ctor: ChatBox},
-  compoundPath: { id: 100, ctor: CompoundPath }
+  chatBox: { id: 16, ctor: ChatBox },
+  compoundPath: { id: 100, ctor: CompoundPath },
+  material: { id: 9.1, ctor: Image },
 };
 
 const idMap = {};
@@ -116,7 +118,7 @@ export function createItemViaJSON(json) {
 /**
  *
  * @param {String} type
- * @param {Object} style Style of item.
+ * @param {Object} style, Style of item.
  */
 export function createItem(type, style = {}) { // attach to nebula!
   let shape = shapeTypes[type],

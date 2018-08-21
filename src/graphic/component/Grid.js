@@ -11,7 +11,8 @@ export default class Grid {
     this.minor = minor;
   }
 
-  draw(ctx, width, height) {
+  draw(ctx) {
+    let {width, height} = this.layer;
     ctx.save();
     //preset context2d styles
     ctx.lineWidth = 1;

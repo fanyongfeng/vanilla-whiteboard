@@ -67,7 +67,8 @@ export default class Axes {
     ctx.lineTo(x2, y2);
   }
 
-  draw(ctx, width, height) {
+  draw(ctx) {
+    let {width, height} = this.layer;
     ctx.lineWidth = 1;
     ctx.fontSize = 10;
     ctx.font = "9px serif";
