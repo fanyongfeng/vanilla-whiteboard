@@ -4,7 +4,7 @@ import Point from './types/Point';
 import Rect from './types/Rect';
 import fitCurve from './algorithm/fitCurve';
 import smoothCurve from './algorithm/smoothCurve';
-import { memoized, changed, observeProps } from '../decorators/memoized'
+import { memoized, observeProps } from '../decorators/memoized';
 import Item from './Item';
 
 const _segments = Symbol('_segments');

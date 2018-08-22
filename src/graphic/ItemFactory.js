@@ -40,8 +40,7 @@ export const shapeTypes = {
   rectangle: { id: 6, ctor: Rectangle },
   arrow: { id: 7, ctor: Arrow },
   text: { id: 8, ctor: Text },
-  textImg: { id: 8, ctor: Text },
-  image: { id: 9, ctor: Image, preset: { align: 'center' }  },
+  image: { id: 9, ctor: Image },
   selector: { id: 10, ctor: Image },
   eraser: { id: 11, ctor: Image },
   dashed: {

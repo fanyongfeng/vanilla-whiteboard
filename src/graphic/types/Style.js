@@ -29,7 +29,8 @@ const defaultStyles = {
  */
 const fontStyles = {
   // Characters
-  fontSize: 26,
+  strokeColor: 'rgba(232, 20, 20, 1)',
+  fontSize: 36,
   textAlign: 'left',
   justification: 'left'
 };

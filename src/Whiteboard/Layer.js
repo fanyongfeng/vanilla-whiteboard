@@ -66,7 +66,7 @@ export default class Layer {
   }
 
   _draw(){
-    this[_items].forEach(item => item && item.draw(this.ctx));
+    this[_items].filter(item => !item.input).forEach(item => item && item.draw(this.ctx));
   }
 
   /**
