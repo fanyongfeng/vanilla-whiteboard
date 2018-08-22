@@ -1,6 +1,6 @@
 
 import { setStyle } from '../util/dom';
-import ItemCollection from './ItemArray';
+import ItemCollection from './ItemCollection';
 import Matrix from '../graphic/types/Matrix';
 import Item from '../graphic/Item';
 
@@ -66,7 +66,7 @@ export default class Layer {
   }
 
   _draw(){
-    this[_items].forEach(item => item.draw(this.ctx));
+    this[_items].forEach(item => item && item.draw(this.ctx));
   }
 
   /**

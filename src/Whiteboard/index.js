@@ -215,17 +215,17 @@ export default class Whiteboard {
 
   drawMaterial(url){
     let material = this.material.createMaterial(url)
-    this.backgroundLayer.append(material);
+    this.backgroundLayer.items.set(material, 0);
   }
 
-  drawGrid(){
-    let grid = new Grid(true);
-    this.backgroundLayer.append(grid);
+  drawGrid(minor = false){
+    let grid = new Grid({ minor });
+    this.backgroundLayer.items.set(grid, 1);
   }
 
   drawAxes(){
     let axes = new Axes();
-    this.backgroundLayer.append(axes);
+    this.backgroundLayer.items.set(axes, 2);
   }
 
   saveImage() {

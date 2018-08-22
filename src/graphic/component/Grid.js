@@ -1,18 +1,17 @@
 
+import Item from '../Item';
 
 /**
  * 简单网格
  * Component Grid.
+ * options: {
+ *  minor: false, // If minor grid is shown
+ * }
  */
-export default class Grid {
-  minor = false;
-
-  constructor(minor) {
-    this.minor = minor;
-  }
+export default class Grid extends Item {
 
   draw(ctx) {
-    let {width, height} = this.layer;
+    let { width, height } = this.layer;
     ctx.save();
     //preset context2d styles
     ctx.lineWidth = 1;
@@ -56,7 +55,6 @@ export default class Grid {
       this.drawLine(ctx, 0, y, width, y);
     }
   }
-
 
   drawLine(ctx, x1, y1, x2, y2) {
     ctx.beginPath();

@@ -12,8 +12,8 @@ const radio = 0.382;
 export default class Star extends Shape {
 
   // star default fill-mode
-  _fill = true;
-  _stroke = false;
+  __fill = true;
+  __stroke = false;
 
   _buildPath() {
 

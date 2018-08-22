@@ -1,3 +1,4 @@
+import Item from '../Item';
 
 const defaultOptions = {
   showX: true,
@@ -12,9 +13,10 @@ const gap = 50; //in pixels
  * 简单坐标轴
  * simple axes
  */
-export default class Axes {
+export default class Axes extends Item {
 
   constructor(options = {}) {
+    super(options);
     this.options = Object.assign({}, defaultOptions, options);
   }
 

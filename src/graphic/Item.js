@@ -35,11 +35,14 @@ class Item {
 
   constructor(options) {
     if (options) {
-      this.type = options.type;
-      this.typeId = options.typeId;
-      this.id = options.id || tsid();
-      this.handlePreset(options.preset);
-      this.style = new Style(options.style);
+      let {type, typeId, id, style, ...rest} = options;
+
+      this.type = type || this.constructor.name;
+      this.typeId = typeId || -Infinity;
+      this.id = id || tsid();
+      this.style = new Style(style);
+
+      this.handleRest(rest);
     } else {
       this.style = new Style();
     }
@@ -47,7 +50,7 @@ class Item {
     this.matrix = new Matrix();
   }
 
-  handlePreset(preset) {
+  handleRest(preset) {
     //FIXME: 优化机制
     if (!preset) return;
 
@@ -126,7 +129,6 @@ class Item {
     }
 
     this.transformContent(matrix);
-
     this.markAsDirty();
     return this;
   }

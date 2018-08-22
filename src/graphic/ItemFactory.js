@@ -94,7 +94,7 @@ export function createItemViaJSON(json) {
   let [typeId, id, data, style] = json,
     type = idMap[typeId],
     shape = shapeTypes[type],
-    preset = shape.preset,
+    preset = shape.preset || {},
     ctor;
 
   if (!shape || !(ctor = shape.ctor)) throw new TypeError(`Invalid json!`);
@@ -102,7 +102,7 @@ export function createItemViaJSON(json) {
   style = normalizeStyle(style);
 
   let options = {
-    typeId, type, id, style, preset,
+    typeId, type, id, style, ...preset,
   };
 
   let ins = ctor.instantiate(options, data);
@@ -124,13 +124,13 @@ export function createItem(type, style = {}) { // attach to nebula!
   let shape = shapeTypes[type],
     ctor = shape.ctor,
     typeId = shape.id,
-    preset = shape.preset;
+    preset = shape.preset || {};
 
   if (!ctor) throw new Error(`Can't find specified graphic '${type}'!`);
 
   style = normalizeStyle(style);
   let options = {
-    typeId, type, style, preset
+    typeId, type, style, ...preset
   };
 
   return new ctor(options);

@@ -1,6 +1,7 @@
 
 import { boundsPoi } from '../algorithm/corner';
 import Point from '../types/Point';
+import Item from '../Item';
 
 const POINT_WIDTH = 4;
 const OFFSET = POINT_WIDTH / 2;
@@ -10,13 +11,9 @@ const strokeStyle = '#96cef6';
  * 拖动缩放的辅助框
  * simple axes
  */
-export default class ControlRect {
-  constructor(item){
-    this.linked = item;
-  }
+export default class ControlRect extends Item {
 
-  draw(ctx){
-    let bounds = this.linked.bounds;
+  draw(ctx, bounds){
     ctx.fillStyle = fillStyle;
     ctx.lineWidth = 1;
     ctx.strokeStyle = strokeStyle;
@@ -31,11 +28,15 @@ export default class ControlRect {
       ctx.fillRect(point.x - OFFSET, point.y - OFFSET, POINT_WIDTH, POINT_WIDTH);
       lastPoint = point;
     })
-    let tc = bounds['topCenter'];
-    ctx.moveTo(tc.x, tc.y);
-    point = tc.add(new Point(0, -50));
-    ctx.lineTo(point.x, point.y);
-    ctx.fillRect(point.x - OFFSET, point.y - OFFSET, POINT_WIDTH, POINT_WIDTH);
+
+    if(this.showRotate) {
+      let tc = bounds['topCenter'];
+      ctx.moveTo(tc.x, tc.y);
+      point = tc.add(new Point(0, -50));
+      ctx.lineTo(point.x, point.y);
+      ctx.fillRect(point.x - OFFSET, point.y - OFFSET, POINT_WIDTH, POINT_WIDTH);
+    }
+
     ctx.stroke();
   }
 }

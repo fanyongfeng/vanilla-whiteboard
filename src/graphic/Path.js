@@ -11,7 +11,7 @@ const _segments = Symbol('_segments');
 
 /**
  * A full path and base class of all single path shapes.
- * 所有矢量图形的父类
+ * 所有绘制图形的父类
  */
 @observeProps(
   {

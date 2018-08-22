@@ -1,6 +1,8 @@
 import { memoized } from '../decorators/memoized'
 import Item from './Item';
 import Rect from './types/Rect';
+import ControlRect from './component/ControlRect';
+import { changed } from '../decorators/memoized';
 /**
  * 图形成组，包括Path, Image, Text, CompoundPath
  * 用于成组的transform, delete
@@ -11,6 +13,7 @@ export default class Group extends Item {
   constructor(options, items = []) {
     super(options);
     this._children = items;
+    this.control = new ControlRect({ linked : this});
   }
 
   append(item) {
@@ -28,6 +31,7 @@ export default class Group extends Item {
     return this._children;
   }
 
+  @changed()
   set children(value){
     this._children = value;
   }
@@ -60,7 +64,7 @@ export default class Group extends Item {
   }
 
   _draw(ctx) {
-    this._children.forEach(item => item.draw(ctx));
+    this.control.draw(ctx, this.bounds);
   }
 
   /**

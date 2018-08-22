@@ -4,7 +4,8 @@ import Point from '../graphic/types/Point';
 import { boundsPoi, antiDir, cursorMap } from '../graphic/algorithm/corner';
 import Tool from './Tool';
 import Group from '../graphic/Group';
-import ControlRect from '../graphic/component/ControlRect'
+import ControlRect from '../graphic/component/ControlRect';
+import ItemCollection  from '../Whiteboard/ItemCollection';
 
 let realTimeSize, lastSelected = [];
 
@@ -20,26 +21,28 @@ export default class Selection extends Tool {
     this.selectAreaRect.style.dashArray = [5, 2];
 
     this.transformGroup = new Group();
-    this.transformGroupControl = new ControlRect(this.transformGroup);
   }
 
   onMouseDown(event) {
     let point = event.point;
 
-    this.items.unselect();
+    this.layer.items.set(this.transformGroup);
 
     if (this.pointOnElement(point)) {
+      if(this.target.selected) return;
+      this.items.unselect();
       this.target.selected = true;
       this.transformGroup.children = [this.target];
-      this.layer.append(this.transformGroupControl);
       return;
     }
 
     if (!(this.pointOnPoint(point) || this.pointOnResize(point))) {
       this.mode = 'select';
+      this.items.unselect();
+      this.transformGroup.children = [];
       this.selectAreaRect.startPoint = point;
       this.selectAreaRect.endPoint = point;
-      this.layer.items.add(this.selectAreaRect);
+      this.layer.items.set(this.selectAreaRect);
     }
   }
 
@@ -62,7 +65,7 @@ export default class Selection extends Tool {
 
       if (!selected.length) return;
 
-      if (selected.diff(lastSelected)) {
+      if (ItemCollection.diff(selected, lastSelected)) {
         this.transformGroup.children = selected;
         lastSelected = selected;
       }
@@ -84,7 +87,7 @@ export default class Selection extends Tool {
       realTimeSize = size;
 
     } else if (this.mode === 'move') {
-      this.target.translate(event.delta);
+      this.transformGroup.translate(event.delta);
     }
   }
 
@@ -95,7 +98,6 @@ export default class Selection extends Tool {
       if (item.containsPoint(point)) {
         this.layer.setCursor('pointer');
         this.mode = 'move';
-
         this.target = item;
         return true;
       }
@@ -159,5 +161,4 @@ export default class Selection extends Tool {
       this.mode = 'select';
     }
   }
-
 }

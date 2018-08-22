@@ -24,6 +24,12 @@ class ItemCollection {
 
   [_items] = [];
 
+  /**
+   * Compare 2 ItemCollection by id
+   *
+   * @param {ItemCollection} left
+   * @param {ItemCollection} right
+   */
   static diff(left, right) {
     if (left.length !== right.length) return true;
 
@@ -33,13 +39,28 @@ class ItemCollection {
     return false;
   }
 
-  static includes() {
+  get all(){
+    return this[_items];
+  }
+
+  /**
+   *
+   * @param {ItemCollection } collection
+   * @param {Item} item
+   */
+  static includes(ids, id) {
     return !!ids.find(i => i === id);
   }
 
-
+  /**
+   *
+   * @param {Array} items
+   * @param {Layer} layer
+   */
   constructor(items = null, layer) {
     if (items) this[_items] = items;
+
+    this.layer = layer;
 
     ['forEach', 'find', 'reduce', 'map']
       .forEach(method =>
@@ -57,9 +78,16 @@ class ItemCollection {
     this.layer && this.layer.refresh();
   }
 
+  /**
+   * return filtered ItemCollection
+   */
+
   filter() {
-    return new ItemCollection(arr[method].apply(this[_items], arguments), this.layer);
+    return arr.filter.apply(this[_items], arguments);
   }
+  // filter() {
+  //   return new ItemCollection(arr.filter.apply(this[_items], arguments), this.layer);
+  // }
 
   *[Symbol.iterator]() {
     for (let i = 0, len = this[_items].length; i < len; i++) {
@@ -81,7 +109,7 @@ class ItemCollection {
    * @param {ItemCollection} other
    */
   diff(other) {
-    ItemCollection.diff(this, other);
+    return ItemCollection.diff(this, other);
   }
 
   /**
@@ -90,6 +118,30 @@ class ItemCollection {
    */
   get(index) {
     return this[_items][index];
+  }
+
+  /**
+   * Set item at specified position,
+   * @param {Number} index, specified position
+   * @param {Item} item whiteboard item to be add.
+   */
+  set(item, index) {
+    if(this[_items][index] === item) return false;
+
+    if(typeof index === 'undefined') {
+      if(this.contains(item)) return false;
+      return this.add(item);
+    }
+
+    item.layer = this.layer;
+    this[_items][index] = item;
+
+    if(process.env.NODE_ENV === "development") {
+      this[index] = item;
+    }
+
+    this.changed();
+    return true;
   }
 
   /**
@@ -102,8 +154,11 @@ class ItemCollection {
 
     item.layer = this.layer;
     this[_items].push(item);
-    // let index = this[_items].length - 1;
-    // this[index] = item;
+
+    if(process.env.NODE_ENV === "development") {
+      let index = this[_items].length - 1;
+      this[index] = item;
+    }
 
     this.changed();
     return this;
@@ -140,6 +195,14 @@ class ItemCollection {
   }
 
   /**
+   * Remove specified item from list.
+   * @param {Item} item1
+   */
+  remove(item1) {
+    return this.delete(item2 => item2 === item1);
+  }
+
+  /**
    * Delete items of current collection.
    * It will trigger layer-refresh;
    * @param {Function} fn, filter determine which item should be removed.
@@ -148,8 +211,8 @@ class ItemCollection {
     let deleted = new ItemCollection;
 
     this[_items] = this[_items].filter(item => {
-      if (fn(item)) return true;
-      deleted.add(item.hash);
+      if (!fn(item)) return true;
+      deleted.add(item);
       return false;
     });
 

@@ -130,7 +130,8 @@ export function observeProps(desc) {
         throw new Error(`Prop ${key} already exist!`);
 
       let propDesc = desc[key];
-      let privateKey = Symbol(`_${key}`);
+      //let privateKey = Symbol(`_${key}`);
+      let privateKey = `__${key}`;
 
       target.prototype[privateKey] = propDesc.default;
 
