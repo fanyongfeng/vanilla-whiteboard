@@ -1,3 +1,6 @@
+/**
+ * ItemCollection Array-like 版本
+ */
 import { mixin } from '../decorators/mixin';
 import Item from '../graphic/Item';
 

@@ -1,21 +1,10 @@
 
 import Rectangle from '../graphic/shape/Rectangle';
 import Point from '../graphic/types/Point';
-import { boundsPoi, antiDir } from '../graphic/algorithm/corner';
+import { boundsPoi, antiDir, cursorMap } from '../graphic/algorithm/corner';
 import Tool from './Tool';
 import Group from '../graphic/Group';
 import ControlRect from '../graphic/component/ControlRect'
-
-const cursorMap = {
-  'topLeft': 'nw-resize',
-  'topCenter': 'n-resize',
-  'topRight': 'ne-resize',
-  'rightCenter': 'e-resize',
-  'bottomRight': 'se-resize',
-  'bottomCenter': 's-resize',
-  'bottomLeft': 'sw-resize',
-  'leftCenter': 'w-resize',
-};
 
 let realTimeSize, lastSelected = [];
 
@@ -49,7 +38,7 @@ export default class Selection extends Tool {
     if (!(this.pointOnPoint(point) || this.pointOnResize(point))) {
       this.mode = 'select';
       this.selectAreaRect.startPoint = point;
-      this.selectAreaRect.endPoint =  point;
+      this.selectAreaRect.endPoint = point;
       this.layer.items.add(this.selectAreaRect);
     }
   }
@@ -102,7 +91,7 @@ export default class Selection extends Tool {
   pointOnElement(point) {
     let item;
     for (let len = this.items.length, i = len; i > 0; i--) { // find from right
-      item = this.items[i - 1];
+      item = this.items.get(i - 1);
       if (item.containsPoint(point)) {
         this.layer.setCursor('pointer');
         this.mode = 'move';
@@ -115,9 +104,9 @@ export default class Selection extends Tool {
   }
 
   pointOnPoint(point) {
-    let nearbyPoint, seg;
-    for (let i = 0; i < this.items.length; i++) {
-      let segments = this.items.get(i).segments;
+    let nearbyPoint, seg, segments;
+    for (let item of this.items) {
+      segments = item.segments;
 
       if (!segments) continue;
 

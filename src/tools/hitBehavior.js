@@ -11,7 +11,7 @@ export default function hitBehavior() {
     target.prototype.pointOnElement = function (point) {
       let item;
       for (let len = this.items.length, i = len; i > 0; i--) { // find from right
-        item = this.items[i - 1];
+        item = this.items.get(i - 1);
         if (item.containsPoint(point)) {
           this.setCursor('pointer');
           this.mode = 'move';

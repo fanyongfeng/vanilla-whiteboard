@@ -100,9 +100,13 @@ class ItemCollection {
     if (!item instanceof Item)
       throw new Error('Only Item can add to Collection!');
 
+    item.layer = this.layer;
     this[_items].push(item);
     // let index = this[_items].length - 1;
     // this[index] = item;
+
+    this.changed();
+    return this;
   }
 
   /**

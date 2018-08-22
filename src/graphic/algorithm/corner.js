@@ -90,8 +90,21 @@ const props = {}; //set to rect prototype
 
 })();
 
+
+const cursorMap = {
+  'topLeft': 'nw-resize',
+  'topCenter': 'n-resize',
+  'topRight': 'ne-resize',
+  'rightCenter': 'e-resize',
+  'bottomRight': 'se-resize',
+  'bottomCenter': 's-resize',
+  'bottomLeft': 'sw-resize',
+  'leftCenter': 'w-resize',
+};
+
 export {
   boundsPoi,
   antiDir,
-  props
+  props,
+  cursorMap,
 }

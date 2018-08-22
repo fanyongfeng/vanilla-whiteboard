@@ -1,6 +1,6 @@
 
 import { setStyle } from '../util/dom';
-import ItemCollection from './ItemCollection';
+import ItemCollection from './ItemArray';
 import Matrix from '../graphic/types/Matrix';
 import Item from '../graphic/Item';
 
