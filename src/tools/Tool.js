@@ -6,9 +6,7 @@
  * 4) manage items of operateLayer.
  */
 export default class Tool {
-  cursor = "pointer";
   _layer = null;
-
   constructor(){
 
   }

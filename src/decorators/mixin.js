@@ -31,17 +31,22 @@ export function mixin(...srcs) {
 
 /**
  * 组合两个function
- * @param {*} target
- * @param {*} name
- * @param {*} fn
+ * @param {Object} proto, prototype of class.
+ * @param {*} name 名字
+ * @param {*} fn 带绑定的function
  */
-const combineFunc = function combineFunc(target, name ,fn){
-  if(!target[name]) return target[name] = fn;
-  return target[name] = function(){
-    target[name].apply(this, arguments);
+const combineToProto = function combineFunc(proto, name, fn) {
+  let origin = proto[name];
+  if (typeof origin === 'undefined') return proto[name] = fn;
+  if (typeof origin !== 'function') throw new TypeError(`${name} already exist!`);
+
+  return proto[name] = function () {
+    //call origin function first,
+    origin.apply(this, arguments);
     fn.apply(this, arguments);
   }
 }
+
 
 /**
  * Deep mixins an object into the classes prototype.
@@ -49,12 +54,19 @@ const combineFunc = function combineFunc(target, name ,fn){
  */
 export function deepMixin(srcs) {
   return ((target) => {
-    for(let key in srcs) {
-      let member = srcs[key];
-      if(typeof member === "function") {
-        combineFunc(target.prototype, key, member);
+    for (let key in srcs) {
+      let descriptor = Object.getOwnPropertyDescriptor(srcs, key)
+      if (typeof descriptor.value === "function") {
+        // if is function, combine with old function.
+        combineToProto(target.prototype, key, descriptor.value);
+      } else if(typeof descriptor.get === "function" ||
+        typeof descriptor.set === "function") {
+
+        // if is getter & setter, set descriptor to prototype.
+        Object.defineProperty(target.prototype, key, descriptor);
       } else {
-        target.prototype[key] = member;
+        // if is other types, just overwrite
+        target.prototype[key] = descriptor.value;
       }
     }
     return target;
@@ -68,7 +80,7 @@ export function deepMixin(srcs) {
  */
 export function mixinProps(props) { //Object.defineProperty
   return ((target) => {
-    for(let key in props) {
+    for (let key in props) {
       Object.defineProperty(target.prototype, key, props[key]);
     }
     return target;

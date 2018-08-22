@@ -29,7 +29,9 @@ export default class Image extends Item {
 
   constructor(options, src) {
     super(options);
-    this._src = src;
+    if(src) {
+      this.loadImage(src);
+    }
   }
 
   set src(src) {
