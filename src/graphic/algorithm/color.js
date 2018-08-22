@@ -1,7 +1,10 @@
+/**
+ * Color helper.
+ */
 import { max, min } from './math';
 
 // CSS named colors.
-const namedColor = {
+const NamedColor = {
   'transparent': [0, 0, 0, 0], 'aliceblue': [240, 248, 255, 1],
   'antiquewhite': [250, 235, 215, 1], 'aqua': [0, 255, 255, 1],
   'aquamarine': [127, 255, 212, 1], 'azure': [240, 255, 255, 1],
@@ -85,7 +88,7 @@ const namedColor = {
 * @param {Number} b Blue color value
 * @return {Array} hsl color
 */
-function rgb2hsl(r, g, b) {
+function RGB2HSL(r, g, b) {
   let maxc = max(r, g, b),
     minc = min(r, g, b),
     delta = maxc - minc,
@@ -109,7 +112,7 @@ function rgb2hsl(r, g, b) {
  * @param {Number} s saturation
  * @param {Number} l lightness
  */
-function hsl2rgb(h, s, l) {
+function HSL2RGB(h, s, l) {
   // Scale h to 0..1 with modulo for negative values too
   h = (((h / 360) % 1) + 1) % 1;
   if (s === 0)
@@ -142,7 +145,7 @@ function hsl2rgb(h, s, l) {
   * @param {Number} g Green color value
   * @param {Number} b Blue color value
   * */
-function rgb2gray(r, g, b) {
+function RGB2Gray(r, g, b) {
   return [r * 0.2989 + g * 0.587 + b * 0.114];
 }
 
@@ -153,7 +156,7 @@ function rgb2gray(r, g, b) {
  * @param {Number} g Green color value
  * @param {Number} b Blue color value
  */
-function rgb2hex(r, g, b) {
+function RGB2HEX(r, g, b) {
   var s = (65536 * Math.round(255 * r) + 256 * Math.round(255 * g) + Math.round(255 * b)).toString(16);
   return "#" + "00000".substr(0, 6 - s.length) + s
 }
@@ -162,7 +165,7 @@ function rgb2hex(r, g, b) {
  * Convert hex color string to rgb.
  * @param {String} hex e.g. #ffffff, #c19
  */
-function hex2rgb(hex) {
+function HEX2RGB(hex) {
   //TODO: check format.
   if (hex.length === 4) { //#fff
     hex = `${hex[1]}${hex[1]}${hex[2]}${hex[2]}${hex[2]}${hex[2]}`;
@@ -184,7 +187,7 @@ function hex2rgb(hex) {
  * Convert gray color to rgb.
  * @param {Number} g gray
  */
-function gray2rgb(g) {
+function Gray2RGB(g) {
   return [g, g, g];
 }
 
@@ -192,11 +195,11 @@ function gray2rgb(g) {
  * Convert gray color to HSB.
  * @param {Number} g gray
  */
-function gray2hsb(g) {
+function Gray2HSB(g) {
   return [0, 0, g];
 }
 
 /**
  *Color convert helpers.
  */
-export { namedColor, rgb2hsl, hsl2rgb, rgb2gray, gray2rgb, gray2hsb, rgb2hex, hex2rgb }
+export { NamedColor, RGB2HSL, HSL2RGB, RGB2Gray, Gray2RGB, Gray2HSB, RGB2HEX, HEX2RGB }

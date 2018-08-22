@@ -1,4 +1,4 @@
-import { rgb2hsl, hex2rgb } from '../algorithm/color'
+import { RGB2HSL, HEX2RGB } from '../algorithm/color'
 
 const hexRE = /^#(?:[0-9a-f]{3}|[0-9a-f]{6})$/i;
 const rgbaRE = /^rgba?\((.*)\)$/i;
@@ -43,7 +43,7 @@ class Color {
     let color;
 
     if (hexRE.test(colorStr)) {
-      color = hex2rgb(colorStr);
+      color = HEX2RGB(colorStr);
     } else {
       let match = colorStr.match(rgbaRE),
         parts = match[1].split(',');
@@ -83,7 +83,7 @@ class Color {
    * Convert to HSL format.
    */
   toHSL() {
-    return rgb2hsl(this.red, this.green, this.blue);
+    return RGB2HSL(this.red, this.green, this.blue);
   }
 
   /**

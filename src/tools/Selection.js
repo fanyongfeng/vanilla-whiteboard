@@ -25,13 +25,13 @@ export default class Selection extends Tool {
 
   constructor() {
     super();
-    this.selectionRect = new Rectangle();
-    this.selectionRect.style.strokeStyle = '#aaa';
-    this.selectionRect.style.lineWidth = 1;
-    this.selectionRect.style.dashArray = [5, 2];
+    this.selectAreaRect = new Rectangle();
+    this.selectAreaRect.style.strokeStyle = '#aaa';
+    this.selectAreaRect.style.lineWidth = 1;
+    this.selectAreaRect.style.dashArray = [5, 2];
 
-    this.selectionGroup = new Group();
-    this.selectionGroupControl = new ControlRect(this.selectionGroup);
+    this.transformGroup = new Group();
+    this.transformGroupControl = new ControlRect(this.transformGroup);
   }
 
   onMouseDown(event) {
@@ -41,21 +41,21 @@ export default class Selection extends Tool {
 
     if (this.pointOnElement(point)) {
       this.target.selected = true;
-      this.selectionGroup.children = [this.target];
-      this.layer.append(this.selectionGroupControl);
+      this.transformGroup.children = [this.target];
+      this.layer.append(this.transformGroupControl);
       return;
     }
 
     if (!(this.pointOnPoint(point) || this.pointOnResize(point))) {
       this.mode = 'select';
-      this.selectionRect.startPoint = point;
-      this.selectionRect.endPoint =  point;
-      this.layer.items.add(this.selectionRect);
+      this.selectAreaRect.startPoint = point;
+      this.selectAreaRect.endPoint =  point;
+      this.layer.items.add(this.selectAreaRect);
     }
   }
 
   onMouseUp(event) {
-    this.selectionRect.remove();
+    this.selectAreaRect.remove();
     this.mode = 'move';
   }
 
@@ -65,16 +65,16 @@ export default class Selection extends Tool {
       this.targetPoint.assign(point);
     } if (this.mode === 'select') {
 
-      this.selectionRect.endPoint = point;
+      this.selectAreaRect.endPoint = point;
 
       let selected = this.items.filter(
-        item => item.selected = this.selectionRect.bounds.containsRectangle(item.bounds)
+        item => item.selected = this.selectAreaRect.bounds.containsRectangle(item.bounds)
       );
 
       if (!selected.length) return;
 
       if (selected.diff(lastSelected)) {
-        this.selectionGroup.children = selected;
+        this.transformGroup.children = selected;
         lastSelected = selected;
       }
 
@@ -147,7 +147,7 @@ export default class Selection extends Tool {
     //   if (corner = boundsPoi.find(key => point.nearby(bounds[key]))) break;
     // }
 
-    bounds = this.selectionGroup.bounds;
+    bounds = this.transformGroup.bounds;
     corner = boundsPoi.find(key => point.nearby(bounds[key]))
 
     if (!corner) {

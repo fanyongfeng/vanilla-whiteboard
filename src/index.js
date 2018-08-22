@@ -8,7 +8,7 @@ import Whiteboard from './Whiteboard';
 import playground from './playground'; // for debug,
 // import keyCode from '';
 
-import { rgb2hsl, hsl2rgb, rgb2gray, gray2rgb, gray2hsb } from './graphic/algorithm/color';
+import { RGB2HSL, HSL2RGB, RGB2Gray, Gray2RGB, Gray2HSB } from './graphic/algorithm/color';
 
 
 //top-level APIs
@@ -32,7 +32,7 @@ import { rgb2hsl, hsl2rgb, rgb2gray, gray2rgb, gray2hsb } from './graphic/algori
 let nebula = typeof nebula !== 'undefined' ? nebula : { Point, Rect, Style, Path, Color, Matrix };
 
 //mount util on namespace.
-nebula.util = { rgb2hsl, hsl2rgb, rgb2gray, gray2rgb, gray2hsb };
+nebula.util = { RGB2HSL, HSL2RGB, RGB2Gray, Gray2RGB, Gray2HSB };
 
 //mount Whiteboard constructor on namespace.
 nebula.Whiteboard = Whiteboard;

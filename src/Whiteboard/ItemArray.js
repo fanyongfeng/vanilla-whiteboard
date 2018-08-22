@@ -1,29 +1,27 @@
-/**
- * ItemCollection Embedded-Array 版本
- */
-
 import { mixin } from '../decorators/mixin';
 import Item from '../graphic/Item';
 
-
-const _items = Symbol('_items');
 const arrMethods = {};
 const arr = Array.prototype;
-
 ['splice', 'push', 'unshift', 'sort', 'map', 'forEach', 'find', 'reduce', 'reduceRight']
-  .forEach(method => arrMethods[method] = function () {
-    return arr[method].apply(this[_items], arguments);
-  });
+  .forEach(method => arrMethods[method] = arr[method]);
 
 /**
  * path collection of canvas.
  * Behavior like an array.
+ *
  */
 @mixin(arrMethods)
 class ItemCollection {
 
-  [_items] = [];
+  length = 0;
 
+  /**
+   * Compare 2 ItemCollection by id
+   *
+   * @param {ItemCollection} left
+   * @param {ItemCollection} right
+   */
   static diff(left, right) {
     if (left.length !== right.length) return true;
 
@@ -33,38 +31,39 @@ class ItemCollection {
     return false;
   }
 
-  static includes() {
+  /**
+   *
+   * @param {ItemCollection } collection
+   * @param {Item} item
+   */
+  static includes(ids, id) {
     return !!ids.find(i => i === id);
   }
 
-
+  /**
+   *
+   * @param {Array} items
+   * @param {Layer} layer
+   */
   constructor(items = null, layer) {
-    if (items) this[_items] = items;
-
-    ['forEach', 'find', 'reduce', 'map']
-      .forEach(method =>
-        this[method] = function () {
-          return arr[method].apply(this[_items], arguments);
-        });
+    this.layer = layer;
+    if (items) items.forEach(item => this.add(item));
   }
-
-  get length() { return this[_items].length; }
 
   /**
    * All items-collection change ,will trigger whiteboard re-draw.
    */
   changed() {
-    this.layer && this.layer.refresh();
+    this.layer && this.layer.markAsDirty();
   }
 
-  filter() {
-    return new ItemCollection(arr[method].apply(this[_items], arguments), this.layer);
-  }
-
-  *[Symbol.iterator]() {
-    for (let i = 0, len = this[_items].length; i < len; i++) {
-      yield this[_items][i];
-    }
+  /**
+   * Append Items to a canvas layer.
+   * @param {Layer} layer
+   */
+  appendTo(layer) {
+    this.layer = layer;
+    this.forEach(item => layer.items.add(item));
   }
 
   /**
@@ -72,16 +71,31 @@ class ItemCollection {
    * @param {Item} item
    */
   contains(item1) {
-    return !!this[_items].find(item => item === item1);
+    return !!this.find(item => item === item1);
   }
 
+  /**
+   * return filtered ItemCollection
+   */
+  filter() {
+    return new ItemCollection(arr.filter.apply(this, arguments), this.layer);
+  }
+
+  /**
+   * support iterator
+   */
+  *[Symbol.iterator]() {
+    for (let i = 0, len = this.length; i < len; i++) {
+      yield this[i];
+    }
+  }
 
   /**
    * Compare with other ItemCollection.
    * @param {ItemCollection} other
    */
   diff(other) {
-    ItemCollection.diff(this, other);
+    return ItemCollection.diff(this, other);
   }
 
   /**
@@ -89,27 +103,38 @@ class ItemCollection {
    * @param {Number} index
    */
   get(index) {
-    return this[_items][index];
+    return this[index];
   }
 
   /**
    * Add whiteboard item.
-   * @param {Item} item
+   * @param {*} item
    */
   add(item) {
     if (!item instanceof Item)
       throw new Error('Only Item can add to Collection!');
 
-    this[_items].push(item);
-    // let index = this[_items].length - 1;
-    // this[index] = item;
+    item.layer = this.layer;
+    this.push(item);
+    this.changed();
+    return this;
+  }
+
+  addAtTop(item) {
+    if(!this.length) return this.add(item);
+    else {
+      this.splice(0, 1);
+      item.layer = this.layer;
+      this.unshift(item);
+      this.changed();
+    }
   }
 
   /**
-   * Clear items.
+   * Clear whiteboard item.
    */
   clear() {
-    this[_items] = [];
+    this.splice(0, this.length);
     this.changed();
     return this;
   }
@@ -119,6 +144,8 @@ class ItemCollection {
    */
   selectAll() {
     this.forEach(item => item.selected = true);
+    this.changed();
+    return this;
   }
 
   /**
@@ -126,6 +153,8 @@ class ItemCollection {
    */
   antiSelect() {
     this.forEach(item => item.selected = !item.selected);
+    this.changed();
+    return this;
   }
 
   /**
@@ -133,6 +162,16 @@ class ItemCollection {
    */
   unselect() {
     this.forEach(item => item.selected = false);
+    this.changed();
+    return this;
+  }
+
+  /**
+   * Remove specified item from list.
+   * @param {Item} item1
+   */
+  remove(item1) {
+    this.delete(item2 => item2 === item1);
   }
 
   /**
@@ -143,11 +182,14 @@ class ItemCollection {
   delete(fn) {
     let deleted = new ItemCollection;
 
-    this[_items] = this[_items].filter(item => {
-      if (fn(item)) return true;
-      deleted.add(item.hash);
-      return false;
-    });
+    for (let i = 0, len = this.length; i < len; i++) {
+      let item = this.get(i);
+      if (fn(item)) {
+        this.splice(i--, 1); // delete one item and re-assign current index
+        len--; //re-assign collection length
+        deleted.push(item);
+      }
+    }
 
     this.changed();
     return deleted;
@@ -178,5 +220,3 @@ class ItemCollection {
 }
 
 export default ItemCollection;
-
-

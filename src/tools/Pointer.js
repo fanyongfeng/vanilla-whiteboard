@@ -12,10 +12,10 @@ export default class Pointer extends Tool {
     this.cursor = new Image();
     this.cursor.loadImage("https://www-stage.tutormeetplus.com/v2/static/media/mouse_pointer.64a36561.png");
 
-    this.selectionRect = new Rectangle();
-    this.selectionRect.style.strokeStyle = '#ccc';
-    this.selectionRect.style.lineWidth = 1;
-    this.selectionRect.style.dashArray = [5, 2];
+    this.selectAreaRect = new Rectangle();
+    this.selectAreaRect.style.strokeStyle = '#ccc';
+    this.selectAreaRect.style.lineWidth = 1;
+    this.selectAreaRect.style.dashArray = [5, 2];
   }
 
   onMouseEnter(){
@@ -23,8 +23,8 @@ export default class Pointer extends Tool {
   }
 
   onMouseDown({ point }){
-    this.selectionRect.startPoint = point;
-    this.layer.items.add(this.selectionRect);
+    this.selectAreaRect.startPoint = point;
+    this.layer.items.add(this.selectAreaRect);
   }
 
   onMouseMove({ point, delta }) {
@@ -36,7 +36,7 @@ export default class Pointer extends Tool {
   }
 
   onMouseDrag({ point }) {
-    this.selectionRect.endPoint = point;
+    this.selectAreaRect.endPoint = point;
   }
 
   onMouseUp(){

@@ -47,9 +47,16 @@ const combineFunc = function combineFunc(target, name ,fn){
  * Deep mixins an object into the classes prototype.
  * @param  {...any} srcs
  */
-export function deepMixin(...srcs) {
+export function deepMixin(srcs) {
   return ((target) => {
-    assign(target.prototype, ...srcs);
+    for(let key in srcs) {
+      let member = srcs[key];
+      if(typeof member === "function") {
+        combineFunc(target.prototype, key, member);
+      } else {
+        target.prototype[key] = member;
+      }
+    }
     return target;
   });
 }

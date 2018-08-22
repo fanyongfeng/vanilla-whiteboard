@@ -1,6 +1,8 @@
 /**
  * Helpers & alias of Math.
  */
+
+ /** Represents an arbitrary very small number. epsilon2, epsilon3*/
 export const epsilon = 1e-6;
 export const epsilon2 = 1e-12;
 export const epsilon3 = Number.EPSILON; //2.2204460492503130808472633361816E-16

@@ -78,7 +78,7 @@ class Matrix {
   /**
    * 一个矩阵作用于该矩阵，支持链式书写
    * 等价于： `(specified matrix) * (this matrix)`.
-   * @param {Matrix} m
+   * @param {Matrix} m specified matrix
    */
   prepend(m) {
     const m1 = this.m;
@@ -283,7 +283,7 @@ class Matrix {
    * e.g 'matrix(1,0,0,1,0,0)'
    */
   toString() {
-    return `matrix(${this.toJSON.join(',')});`;
+    return `matrix(${this.toJSON().join(',')});`;
   }
 }
 

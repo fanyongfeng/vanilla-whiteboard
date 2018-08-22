@@ -14,6 +14,7 @@ export default class Layer {
   wrapper = null;
   _isDirty = true;
   matrix = new Matrix;
+  offscreen = false;
 
   /**
    * Move items from one to other
@@ -135,6 +136,8 @@ export default class Layer {
 
   appendTo(whiteboard) {
     //appendTo wrapper.
+    if(this.offscreen) return;
+
     this.wrapper = whiteboard.wrapper;
     this.wrapper.appendChild(this.el);
 
