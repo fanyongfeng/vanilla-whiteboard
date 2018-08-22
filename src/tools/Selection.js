@@ -9,17 +9,19 @@ import ItemCollection  from '../Whiteboard/ItemCollection';
 
 let realTimeSize, lastSelected = [];
 
+const style = {
+  strokeStyle: '#aaa',
+  lineWidth: 1,
+  dashArray: [5, 2] ,
+}
+
 export default class Selection extends Tool {
 
   mode = 'move'; //resize, rotate, mutate, select
 
   constructor() {
     super();
-    this.selectAreaRect = new Rectangle();
-    this.selectAreaRect.style.strokeStyle = '#aaa';
-    this.selectAreaRect.style.lineWidth = 1;
-    this.selectAreaRect.style.dashArray = [5, 2];
-
+    this.selectAreaRect = new Rectangle({ style });
     this.transformGroup = new Group();
   }
 

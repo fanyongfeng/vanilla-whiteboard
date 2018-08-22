@@ -1,6 +1,7 @@
 import Image from '../graphic/shape/Image';
 import Rectangle from '../graphic/shape/Rectangle';
 import Tool from './Tool';
+import dragBounds from './mixins/dragBounds';
 
 export default class Pointer extends Tool {
   //光标

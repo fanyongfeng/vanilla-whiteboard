@@ -1,27 +1,24 @@
 import Image from '../graphic/shape/Image';
 import Rectangle from '../graphic/shape/Rectangle';
 import Tool from './Tool';
-
+import dragBounds from './mixins/dragBounds';
+import cursor from './mixins/cursor';
+@dragBounds()
+@cursor() // 作用与class，decorator越近越早生效
 export default class Eraser extends Tool {
   //
   constructor() {
     super();
     this.cursor = new Image();
     this.cursor.loadImage("https://www-stage.tutormeetplus.com/v2/static/media/eraser.352bd893.png");
-
-    this.selectAreaRect = new Rectangle();
-    this.selectAreaRect.style.strokeStyle = '#aaa';
-    this.selectAreaRect.style.lineWidth = 1;
-    this.selectAreaRect.style.dashArray = [5, 2];
   }
 
   onMouseEnter(){
     this.layer.setCursor(this.cursor);
   }
 
-  onMouseDown({ point }){
-    this.selectAreaRect.startPoint = point;
-    this.layer.items.add(this.selectAreaRect);
+  onMouseDown(){
+    console.log('--Eraser--');
   }
 
   onMouseMove({ point, delta }) {
@@ -31,12 +28,7 @@ export default class Eraser extends Tool {
     }
   }
 
-  onMouseDrag({ point }) {
-    this.selectAreaRect.endPoint = point;
-  }
-
   onMouseUp(){
     this.items.deleteSelected();
-    this.selectAreaRect.remove();
   }
 }
