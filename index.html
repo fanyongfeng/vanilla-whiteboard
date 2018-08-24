@@ -66,6 +66,11 @@
     #btnColor5 span {
       background: rgb(0, 184, 252);
     }
+
+    #draw-panel2 {
+      border: 1px dashed #aaa;
+      margin-top: 20px;
+    }
   </style>
 
   <link rel=stylesheet href="//lib.baomitu.com/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
@@ -170,8 +175,17 @@
         <button id="btnSimp" class="btn btn-default">简化</button>
       </div>
     </div>
+    <div id="draw-panel2">
+    </div>
+    <div class="btns-group">
+      <div class="btn-group">
+        <button id="btnGrid2" class="btn btn-default">绘制网格</button>
+        <button id="btnAxes2" class="btn btn-default">绘制坐标系</button>
+      </div>
 
+    </div>
   </div>
+
   <script>
     var stats = new Stats();
     stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
@@ -365,6 +379,13 @@
       });
       $("#btnAxes").click(() => {
         whiteboard.drawAxes();
+      });
+
+      $("#btnGrid2").click(() => {
+        whiteboard2.drawGrid(true);
+      });
+      $("#btnAxes2").click(() => {
+        whiteboard2.drawAxes();
       });
       //btnSaveImg
 

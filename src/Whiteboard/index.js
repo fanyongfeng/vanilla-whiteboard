@@ -228,7 +228,7 @@ export default class Whiteboard {
   }
 
   drawMaterial(url) {
-    let material = this.material.createMaterial(url)
+    let material = this.material.get(url);
     this.backgroundLayer.items.set(material, 0);
   }
 

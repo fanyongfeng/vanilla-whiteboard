@@ -9,7 +9,7 @@
  *  record: record action in history stack.
  *  clear: clear current history stack.
  */
-
+//TODO: 返回undo stack 和 redo stack 为空的callback，方便UI展示按钮的disable状态
 const noop = () => { };
 const defaultOptions = {
   maxStack: 100,
@@ -27,10 +27,7 @@ export default class History {
    * Clear Current Stack
    */
   clear() {
-    this.stack = {
-      undo: [],
-      redo: [],
-    };
+    this.stack = { undo: [], redo: [], };
   }
 
   /**

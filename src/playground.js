@@ -24,8 +24,16 @@ export default {
   init(){
     window.whiteboard = this.whiteboard = new Whiteboard({
       container:document.getElementById('draw-panel'),
-      width: 1000,
-      height: 800,
+      width: 500,
+      height: 400,
+      zoom: 1,
+      selectionMode: 'contains', // cross
+    });
+
+    window.whiteboard2 = this.whiteboard2 = new Whiteboard({
+      container:document.getElementById('draw-panel2'),
+      width: 500,
+      height: 400,
       zoom: 1,
       selectionMode: 'contains', // cross
     });
@@ -40,6 +48,7 @@ export default {
     });
 
     this.whiteboard.watch();
+    this.whiteboard2.watch();
     return whiteboard;
   },
 
