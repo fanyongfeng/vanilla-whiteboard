@@ -7,26 +7,31 @@ import OperateLayer from './OperateLayer';
 import { setStyle } from '../util/dom';
 import EventHandler from './EventHandler';
 import Text from '../graphic/shape/Text';
-import saveImage from '../util/saveImage';
-import Image from '../graphic/shape/Image';
 import Rect from '../graphic/types/Rect';
 import { getTool } from '../tools';
 import { createItemViaJSON, createItem } from '../graphic/ItemFactory';
 import Grid from '../graphic/component/Grid';
 import Axes from '../graphic/component/Axes';
 import MaterialProvider from './MaterialProvider';
+import History from '../commands/History';
 
 const _createContext = Symbol('_createContext');
 const defaultOptions = {
   selectionMode: "bounds",
-  alignToGrid: false,
   refreshMode: 'loop',
   readonly: false,
   width: 1000,
   height: 800,
   showGrid: false,
   showAxes: false,
+  alignToGrid: false,
+  throttle: 0,
+  minDistance: 0,
+  dragThreshold: 2,
 };
+
+
+const _history = Symbol('_history');
 
 /**
  * 白板的初始化选项。
@@ -209,6 +214,15 @@ export default class Whiteboard {
     ];
   }
 
+  [_history] = new History;
+
+  redo() {
+    this[_history].redo();
+  }
+  undo() {
+    this[_history].undo();
+  }
+
   command() {
 
   }
@@ -228,8 +242,23 @@ export default class Whiteboard {
     this.backgroundLayer.items.set(axes, 2);
   }
 
-  saveImage() {
-    return saveImage(this.layers.map(i => i.el), this.width, this.height);
+  saveImage(filename='material', type = 'png') {
+    if (!/^jpeg|jpg|png$/.test(type)) throw new Error(`Can't support type ${type}`);
+
+    //创建离屏canvas，绘制layers；
+    let offscreenCanvas = new Layer(this.width, this.height);
+    let ctx = offscreenCanvas.ctx;
+
+    this.layers.forEach(layer => ctx.drawImage(layer.el, 0, 0, this.width, this.height));
+
+    let $link = document.createElement('a');
+    function downloadCanvas() {
+      $link.href = offscreenCanvas.el.toDataURL(`image/${type}`);
+      $link.download = filename;
+      $link.click();
+    }
+
+    downloadCanvas(`${filename}.${type}`);
   }
 
   dispose() {

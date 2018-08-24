@@ -2,6 +2,12 @@
 /**
  * options.maxStack : max length limit in history stack
  * options.change : callback on redo/undo action
+ *
+ * methods:
+ *  redo: replay last action.
+ *  undo: cancel last action.
+ *  record: record action in history stack.
+ *  clear: clear current history stack.
  */
 
 const noop = () => { };
@@ -9,6 +15,7 @@ const defaultOptions = {
   maxStack: 100,
   change: noop
 };
+
 export default class History {
   constructor(options) {
     this.clear();
