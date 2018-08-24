@@ -23,7 +23,7 @@ export default {
       this.selectAreaRect.endPoint = point;
 
       let selected = this.items.filter(
-        item => item.selected = this.selectAreaRect.bounds.containsRectangle(item.bounds)
+        item => item.selected = this.selectAreaRect.bounds.containsRect(item.bounds)
       );
 
       if (!selected.length) return;

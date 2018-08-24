@@ -46,8 +46,8 @@ export default class EventHandler {
     this.onMouseMove = throttle(this.onMouseMove, 0).bind(this); //
     this.onMouseUp = this.onMouseUp.bind(this);
 
-    addListener(canvas, 'mousedown', this.onMouseDown.bind(this));
-    addListener(canvas, 'mousemove', this.onMouseMove);
+    addListener(canvas, mousedown, this.onMouseDown.bind(this));
+    addListener(canvas, mousemove, this.onMouseMove);
     addListener(canvas, 'mouseenter', this.onMouseEnter.bind(this));
     addListener(canvas, 'mouseleave', this.onMouseLeave.bind(this));
     addListener(canvas, 'keydown', this.onKeyDown.bind(this));
@@ -111,7 +111,7 @@ export default class EventHandler {
 
     this.invokeToolSlotHandler('onMouseDown', new MouseEvent(event));
 
-    addListener(document, 'mouseup', this.onMouseUp);
+    addListener(document, mouseup, this.onMouseUp);
     addListener(document, 'mousemove', this.onMouseMove);
     removeListener(this.canvas, 'mousemove', this.onMouseMove);
   }
@@ -124,7 +124,7 @@ export default class EventHandler {
 
     this.invokeToolSlotHandler('onMouseUp', new MouseEvent(event));
 
-    removeListener(document, 'mouseup', this.onMouseUp);
+    removeListener(document, mouseup, this.onMouseUp);
     removeListener(document, 'mousemove', this.onMouseMove);
     addListener(this.canvas, 'mousemove', this.onMouseMove);
   }

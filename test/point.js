@@ -3,8 +3,7 @@
  */
 import test from 'ava';
 
-import Point from '../src/types/Point'
-import Rect from '../src/types/Rect'
+import Point from '../src/graphic/types/Point'
 
 test('Point getDistance', t => {
   var p1 = new Point(10, 10);
@@ -14,7 +13,7 @@ test('Point getDistance', t => {
 });
 
 test('Point add, multiply, divide, ', t => {
-  var p1 = new Point(10, 10);subtract
+  var p1 = new Point(10, 10);
   var p2 = new Point(30.5, 100);
 
   p1.add(p2);

@@ -209,32 +209,27 @@ export default class Whiteboard {
     ];
   }
 
-  command(){
+  command() {
 
   }
 
-  drawMaterial(url){
+  drawMaterial(url) {
     let material = this.material.createMaterial(url)
     this.backgroundLayer.items.set(material, 0);
   }
 
-  drawGrid(minor = false){
+  drawGrid(minor = false) {
     let grid = new Grid({ minor });
     this.backgroundLayer.items.set(grid, 1);
   }
 
-  drawAxes(){
+  drawAxes() {
     let axes = new Axes();
     this.backgroundLayer.items.set(axes, 2);
   }
 
   saveImage() {
-    //创建离屏canvas，绘制三个layer；
-    let offscreenCanvas = new Layer(this.width, this.height);
-    let ctx = offscreenCanvas.ctx;
-
-    this.layers.forEach(layer => ctx.drawImage(layer.el, 0, 0, this.width, this.height));
-    return saveImage(offscreenCanvas.el);
+    return saveImage(this.layers.map(i => i.el), this.width, this.height);
   }
 
   dispose() {

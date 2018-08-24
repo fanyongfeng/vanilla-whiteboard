@@ -11,7 +11,6 @@ import TextInput from './TextInput';
 
 //tools map.
 const tools = {};
-window.tools = tools;
 const freeDrawingTools = ["marker", "highlighter", "signature"];
 const shapeDrawingTools = ["rectangle", "triangle", "rightTriangle", "ellipse", "arrow", "line", "dashed", "star", "chatBox"];
 

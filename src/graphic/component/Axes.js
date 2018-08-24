@@ -20,7 +20,7 @@ export default class Axes extends Item {
     this.options = Object.assign({}, defaultOptions, options);
   }
 
-  renderXAxis(ctx, width, height) {
+  drawXAxis(ctx, width, height) {
 
     this.drawLine(ctx, 0, height/2, width, height/2);
     //TODO:render arrow;
@@ -37,7 +37,7 @@ export default class Axes extends Item {
     ctx.stroke();
   }
 
-  renderYAxis(ctx, width, height) {
+  drawYAxis(ctx, width, height) {
     this.drawLine(ctx,  width /2 , height, width /2 , 0);
     let mark = this.minY;
     let y = height;
@@ -80,11 +80,11 @@ export default class Axes extends Item {
     this.minY = -parseInt(height / gap / 2);
 
     if (this.options.showX) {
-      this.renderXAxis(ctx, width, height);
+      this.drawXAxis(ctx, width, height);
     }
 
     if (this.options.showY) {
-      this.renderYAxis(ctx, width, height);
+      this.drawYAxis(ctx, width, height);
     }
   }
 }

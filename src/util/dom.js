@@ -13,7 +13,6 @@ export function setStyle(element, styles){
   }
 
   for (let property in styles) {
-
     let normalizedProperty = (property === 'float' || property === 'cssFloat')
       ? (typeof elementStyle.styleFloat === 'undefined' ? 'cssFloat' : 'styleFloat')
       : property;

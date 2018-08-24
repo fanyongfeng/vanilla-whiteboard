@@ -3,7 +3,10 @@ import Image from '../graphic/shape/Image';
 
 export default class MaterialProvider {
   cached = {};
-  constructor(options){}
+  preload = 5;
+  constructor(options){
+
+  }
   createMaterial(url){
     let cached = this.cached;
     if(cached[url]) return cached[url];

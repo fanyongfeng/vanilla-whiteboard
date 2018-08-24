@@ -112,6 +112,9 @@ export default class Layer {
     this._isDirty = true;
   }
 
+  /**
+   * Apply deviceRatio to Canvas, for retina.
+   */
   applyRatio() {
     this.el.width = this.width * this.deviceRatio;
     this.el.height = this.height * this.deviceRatio;

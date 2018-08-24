@@ -168,7 +168,7 @@ export default class Style {
   }
 
   /**
-   * to JSON format. used for websocket message.
+   * Convert to Shortly JSON format. used for MilkyWay concerns.
    */
   toShortJSON() {
     return {
@@ -177,6 +177,13 @@ export default class Style {
       "w": this.lineWidth,
       "f": this.fontSize
     }
+  }
+
+  /**
+   * Convert to JSON format.
+   */
+  toJSON(){
+    return {...this};
   }
 
   /**

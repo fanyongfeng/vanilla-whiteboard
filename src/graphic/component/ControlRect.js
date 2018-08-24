@@ -14,6 +14,7 @@ const strokeStyle = '#96cef6';
 export default class ControlRect extends Item {
 
   draw(ctx, bounds){
+    ctx.save();
     ctx.fillStyle = fillStyle;
     ctx.lineWidth = 1;
     ctx.strokeStyle = strokeStyle;
@@ -38,5 +39,6 @@ export default class ControlRect extends Item {
     }
 
     ctx.stroke();
+    ctx.restore();
   }
 }

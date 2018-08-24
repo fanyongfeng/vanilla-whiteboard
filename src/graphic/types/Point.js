@@ -110,7 +110,7 @@ export default class Point {
    * If the point coord is equal to the other point.
    * @param {Point} other
    */
-  eq(other) {
+  equals(other) {
     return this === other || (this.x === other.x && this.y === other.y);
   }
 

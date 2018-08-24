@@ -174,6 +174,9 @@ class Path extends Item {
     return this.segments.reduce((arr, item) => arr += item.length, 0);
   }
 
+  /**
+   * Simplify current path, and rebuild segments
+   */
   simplify() {
     //不优化小于3个点的曲线
     if (this.segments.length < 3) return this;
@@ -184,6 +187,9 @@ class Path extends Item {
     return this;
   }
 
+  /**
+   * Smooth current path, and rebuild segments
+   */
   smooth() {
     let segments = smoothCurve(this.segments, this.isClose);
     this[_segments] = segments;

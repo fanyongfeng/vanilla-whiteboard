@@ -17,17 +17,17 @@ export default function dragBounds(style) {
       return this._dragRect;
     },
 
-    onMouseDown: function ({ point }) {
+    onMouseDown({ point }) {
       this.dragRect.startPoint = this.dragRect.endPoint = point;
       this.layer.items.add(this.dragRect);
       console.log('--dragbound');
     },
 
-    onMouseDrag: function ({ point }) {
+    onMouseDrag({ point }) {
       this.dragRect.endPoint = point;
     },
 
-    onMouseUp: function () {
+    onMouseUp() {
       this.dragRect.remove();
     }
   }

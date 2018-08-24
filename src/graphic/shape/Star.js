@@ -14,6 +14,7 @@ export default class Star extends Shape {
   // star default fill-mode
   __fill = true;
   __stroke = false;
+  scaleMode = "proportion";
 
   _buildPath() {
 

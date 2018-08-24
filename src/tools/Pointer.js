@@ -2,16 +2,15 @@ import Image from '../graphic/shape/Image';
 import Rectangle from '../graphic/shape/Rectangle';
 import Tool from './Tool';
 import dragBounds from './mixins/dragBounds';
+import cursor from './mixins/cursor';
+import { deepMixin } from '../decorators/mixin'
 
+
+@deepMixin(cursor("https://www-stage.tutormeetplus.com/v2/static/media/mouse_pointer.64a36561.png"))
 export default class Pointer extends Tool {
-  //光标
-  cursor = null;
 
   constructor() {
     super();
-
-    this.cursor = new Image();
-    this.cursor.loadImage("https://www-stage.tutormeetplus.com/v2/static/media/mouse_pointer.64a36561.png");
 
     this.selectAreaRect = new Rectangle();
     this.selectAreaRect.style.strokeStyle = '#ccc';

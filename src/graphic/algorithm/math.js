@@ -2,7 +2,7 @@
  * Helpers & alias of Math.
  */
 
- /** Represents an arbitrary very small number. epsilon2, epsilon3*/
+/** Represents an arbitrary very small number. epsilon2, epsilon3*/
 export const epsilon = 1e-6;
 export const epsilon2 = 1e-12;
 export const epsilon3 = Number.EPSILON; //2.2204460492503130808472633361816E-16
@@ -24,7 +24,7 @@ export const floor = Math.floor;
 export const log = Math.log;
 export const pow = Math.pow;
 export const sin = Math.sin;
-export const sign = Math.sign || function(x) { return x > 0 ? 1 : x < 0 ? -1 : 0; };
+export const sign = Math.sign || function (x) { return x > 0 ? 1 : x < 0 ? -1 : 0; };
 export const sqrt = Math.sqrt;
 export const tan = Math.tan;
 export const max = Math.max;
@@ -42,6 +42,34 @@ export function haversin(x) {
   return (x = sin(x / 2)) * x;
 }
 
-export function isZero(val){
+export function isZero(val) {
   return val >= -epsilon2 && val <= epsilon2;
 }
+
+export function random(min, max) {
+  if (typeof min === 'undefined') {
+    max = 1;
+    min = 0;
+  } else if (typeof max === 'undefined') {
+    max = min;
+    min = 0;
+  }
+  return min === max ? min : Math.random() * (max - min) + min;
+};
+
+export function sum(array) {
+  let result;
+
+  for (const value of array) {
+    if (value !== undefined) {
+      result = result === undefined ? value : (result + value);
+    }
+  }
+  return result;
+}
+
+export function mean(array) {
+  let len = array.length;
+  return sum(array) / len;
+}
+
