@@ -1,19 +1,21 @@
 import Tool from './Tool';
 import Image from '../graphic/shape/Image';
 import { createItem } from '../graphic/ItemFactory';
+import cursor from './mixins/cursor';
+import { deepMixin } from '../decorators/mixin';
 
 const markerCursor = 'https://www-stage.tutormeetplus.com/v2/static/media/pen.3ec0e0e7.png';
 const highlighterCursor = 'https://www-stage.tutormeetplus.com/v2/static/media/mouse_pointer.64a36561.png';
 
 // values: Marker & Highlighter
+
+@deepMixin(cursor(markerCursor))
 export default class FreeDrawing extends Tool {
   _style = {};
 
   constructor(type) {
     super();
     this.type = type;
-    this.cursor = new Image();
-    this.cursor.loadImage(type === 'highlighter' ? highlighterCursor: markerCursor);
   }
 
   lastPoint = null;
@@ -25,7 +27,6 @@ export default class FreeDrawing extends Tool {
     this.currentShape = createItem(this.type, this.style);
     // this.currentShape.style = this.style.clone();
     this.items.add(this.currentShape);
-
     this.currentShape.moveTo(event.point);
     this.lastPoint = event.point;
   }
@@ -47,10 +48,6 @@ export default class FreeDrawing extends Tool {
   onMouseUp(event) {
     this.currentShape.simplify();
     this.currentShape = null;
-  }
-
-  onMouseMove(event) {
-
   }
 
   set style(value) {

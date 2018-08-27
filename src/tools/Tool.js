@@ -19,7 +19,7 @@ export default class Tool {
   }
 
   /**
-   * Get layer of
+   * Get layer of tool
    */
   set layer(value){
     this._layer = value;

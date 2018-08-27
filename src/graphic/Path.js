@@ -1,5 +1,6 @@
 
 import { LineSegment, BezierSegment, MoveSegment, QuadraticSegment, ArcSegment } from './types/Segment';
+import SegmentPoint from './types/SegmentPoint';
 import Point from './types/Point';
 import Rect from './types/Rect';
 import fitCurve from './algorithm/fitCurve';
@@ -8,7 +9,7 @@ import { memoized, changed, observeProps } from '../decorators/memoized'
 import Item from './Item';
 
 const _segments = Symbol('_segments');
-
+const _points =  Symbol('_segments');
 /**
  * A full path and base class of all single path shapes.
  * 所有绘制图形的父类
@@ -23,12 +24,17 @@ class Path extends Item {
 
   //props
   [_segments] = [];
+  [_points] = [];
   contextPoint = null;
   isClose = false;
   showAuxiliary = false;
 
   get segments() {
     return this[_segments];
+  }
+
+  get points() {
+    return this[_points];
   }
 
   add(segment) {
@@ -191,6 +197,7 @@ class Path extends Item {
    * Smooth current path, and rebuild segments
    */
   smooth() {
+
     let segments = smoothCurve(this.segments, this.isClose);
     this[_segments] = segments;
     this.markAsDirty();

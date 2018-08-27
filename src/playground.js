@@ -9,16 +9,10 @@ import {
 
 import Path from "./graphic/Path";
 import Point from "./graphic/types/Point";
-
-import Grid from './graphic/component/Grid';
-import Axes from './graphic/component/Axes';
-
 import animate from './animate/animate';
 import easing from './animate/easing';
 import animateColor from './animate/animateColor';
 
-
-window.animation = animate;
 export default {
 
   init(){
@@ -39,17 +33,46 @@ export default {
     });
 
     window.items = window.whiteboard.items;
-
-
     this.whiteboard.on('item:add', (arg)=>{
-       // console.log(arg);
+      // console.log(arg);
     }).on('layer:refresh', (arg)=>{
-       // console.log(`${arg.layer.role}, refreshed!`);
+      // console.log(`${arg.layer.role}, refreshed!`);
+    }).on('item:add', (arg)=>{
+
     });
 
     this.whiteboard.watch();
     this.whiteboard2.watch();
     return whiteboard;
+  },
+
+  simulateComm(){
+    function addItem(hash){
+      this.whiteboard2.add(hash);
+    }
+
+    function removeItem(){
+      this.whiteboard2.remove(hash);
+    }
+
+    function transformItem(){
+      this.whiteboard2.remove(hash);
+    }
+
+    function typingText(){
+      this.whiteboard2.remove(hash);
+    }
+
+    this.whiteboard.on('item:add', (arg)=>{
+      addItem(args);
+    }).on('item:remove', (arg)=>{
+      let ids = arg;
+      removeItem(ids)
+    }).on('item:transform', (arg)=>{
+      transformItem();
+    }).on('item:typing', (arg)=>{
+      typingText();
+    });
   },
 
   drawPolyline(type) {

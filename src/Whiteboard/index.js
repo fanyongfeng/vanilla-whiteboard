@@ -183,6 +183,10 @@ export default class Whiteboard {
     this.emit('item:add', { instance });
   }
 
+  remove(json) {
+    this.items.delete(json);
+  }
+
   addText(text) {
     this.items.add(new Text(text));
   }

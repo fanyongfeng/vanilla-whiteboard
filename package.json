@@ -70,8 +70,7 @@
   "ava": {
     "require": [
       "babel-register"
-    ],
-    "babel": "inherit"
+    ]
   },
   "engines": {
     "node": ">= 4.0.0",
