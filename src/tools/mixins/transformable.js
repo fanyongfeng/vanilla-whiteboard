@@ -1,5 +1,9 @@
+
+import Group from '../../graphic/Group';
+import { boundsPoi, antiDir, cursorMap } from '../../graphic/algorithm/corner';
 /**
  * enable tool has transform behavior.
+ * 依赖于selectable, 必须选中才可以tranform
  * 使工具可以变形（移动、旋转、缩放）白板Item
  */
 
@@ -13,7 +17,9 @@ export default function transformable(enableRotate = false) {
     onMouseDown(event) {
       this._downPoint = event.point;
 
-      if (this._pointOnResize(this._downPoint)) {
+      this.transformGroup.children = this._selected;
+
+      if (!this._pointOnResize(this._downPoint)) {
         this.items.unselect();
         this.transformGroup.children = [];
         return true;
@@ -41,6 +47,8 @@ export default function transformable(enableRotate = false) {
 
       } else if (this.mode === 'move') {
         this.transformGroup.translate(delta);
+      } else {
+        this.transformGroup.children = this._selected;
       }
     },
 

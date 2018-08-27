@@ -17,6 +17,7 @@ export default function selectable(){
         if(this.target.selected) return;
         this.items.unselect();
         this.target.selected = true;
+        this._selected = [this.target];
         return false;
       }
       this.mode = 'select';

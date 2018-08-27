@@ -5,9 +5,6 @@ export default function mutable(){
   return {
     onMouseDown(event) {
       let point = event.point;
-
-      this.layer.items.set(this.transformGroup);
-
       if (this._pointOnPoint(point)) {
         return;
       }
@@ -18,6 +15,11 @@ export default function mutable(){
       if (this.mode === 'mutate') {
         this.targetPoint.assign(point);
       }
+    },
+
+
+    onMouseMove({ point }) {
+      this._pointOnPoint(point);
     },
 
     _pointOnPoint(point) {
@@ -45,7 +47,6 @@ export default function mutable(){
       }
       return false;
     }
-
   }
 }
 

@@ -42,8 +42,11 @@ const combineToProto = function combineFunc(proto, name, fn) {
 
   return proto[name] = function () {
     //call origin function first,
-    origin.apply(this, arguments);
-    fn.apply(this, arguments);
+    if(origin.apply(this, arguments) !== false) {
+      // cancel second fn call, if origin function return 'false'.
+      return fn.apply(this, arguments);
+    }
+    return false;
   }
 }
 
