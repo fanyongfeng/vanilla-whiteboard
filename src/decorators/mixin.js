@@ -61,10 +61,16 @@ export function deepMixin(srcs) {
         combineToProto(target.prototype, key, descriptor.value);
       } else if(typeof descriptor.get === "function" ||
         typeof descriptor.set === "function") {
-
+          if(process.env.NODE_ENV === "development") {
+            target.prototype[key] && console.warn(`${target.name}.${key} already exist!`);
+          }
         // if is getter & setter, set descriptor to prototype.
         Object.defineProperty(target.prototype, key, descriptor);
       } else {
+
+        if(process.env.NODE_ENV === "development") {
+          target.prototype[key] && console.warn(`${target.name}.${key} already exist!`);
+        }
         // if is other types, just overwrite
         target.prototype[key] = descriptor.value;
       }

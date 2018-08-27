@@ -56,7 +56,7 @@ export default class Image extends Item {
    * @param {Function} fn callback
    */
   loadImage(url, fn) {
-    if (!url) return;
+    if (!url && this._image && this.loaded) return;
 
     // let img = new window.Image;
     let img = document.createElement('img');

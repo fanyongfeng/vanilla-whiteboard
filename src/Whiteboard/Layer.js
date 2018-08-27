@@ -74,7 +74,7 @@ export default class Layer {
    */
   refresh(){
     this.clear();
-    this.whiteboardCtx.emit('layer:refresh', { layer: this, });
+    this.globalCtx.emit('layer:refresh', { layer: this, });
     this._draw();
     this._isDirty = false;
   }
@@ -145,7 +145,7 @@ export default class Layer {
     this.wrapper.appendChild(this.el);
 
     //ref whiteboard context.
-    this.whiteboardCtx = whiteboard.context;
+    this.globalCtx = whiteboard.context;
   }
 
   dispose(){

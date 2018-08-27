@@ -11,8 +11,7 @@ export default class Text extends Tool {
   _texts = [];
 
   constructor(type) {
-    super();
-    this.type = type;
+    super(type);
     window._texts = this._texts;
     window.drawText = this.drawText.bind(this);
   }

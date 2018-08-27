@@ -1,6 +1,10 @@
 import Rectangle from '../../graphic/shape/Rectangle';
-import { createItem } from '../graphic/ItemFactory';
+import { createItem } from '../../graphic/ItemFactory';
 
+/**
+ * Enable tool add item on mouse event triggered!
+ * @param {*} style
+ */
 export default function itemCreator(style) {
 
   return {
@@ -13,16 +17,9 @@ export default function itemCreator(style) {
       return this._style;
     },
 
-    onMouseDown(event) {
+    onBeforeMouseDown(event) {
       this.currentShape = createItem(this.type, this.style);
-    },
-
-    onMouseDrag({ point }) {
-      this.dragRect.endPoint = point;
-    },
-
-    onMouseUp() {
-      this.dragRect.remove();
+      this.items.add(this.currentShape);
     }
   }
 }

@@ -4,13 +4,22 @@ import Image from '../../graphic/shape/Image';
 
 export default function cursor(url) {
   return {
-    cursor:  new Image({}, url),
+    _init(){
+      if(typeof url === "function") {
+        url = url(this.type);
+      }
+      this._cursor = new Image({}, url);
+    },
+
+    get cursor() {
+      return this._cursor;
+    },
+
     onMouseEnter({ point }){
       this.layer.setCursor(this.cursor);
     },
 
     onMouseMove({ point }) {
-      this.layer.setCursor(this.cursor);
       if(this.cursor.loaded) {
         this.cursor.position = point;
       }

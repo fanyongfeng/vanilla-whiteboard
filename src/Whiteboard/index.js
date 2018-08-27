@@ -105,22 +105,23 @@ export default class Whiteboard {
       activeLayer = new Layer(this.width, this.height, 'active'),
       operateLayer = new OperateLayer(this.width, this.height, 'operate');
 
-    let whiteboardCtx = {
+    let proto = {
       whiteboard: this,
       backgroundLayer,
       activeLayer,
       operateLayer,
       currentMode: null,
-      settings: this.options,
+      settings: Object.freeze(this.options),
       bounds: new Rect(0, 0, this.width, this.height),
       emit: this.emit.bind(this)
     }
 
     // 将context 属性赋值白板实例
-    Object.keys(whiteboardCtx).forEach(key => this[key] = whiteboardCtx[key]);
+    if(process.env.NODE_ENV === 'development')
+      Object.keys(proto).forEach(key => this[key] = proto[key]);
 
     //return context;
-    return whiteboardCtx;
+    return Object.create(proto);
   }
 
   /**
@@ -165,7 +166,11 @@ export default class Whiteboard {
     return this.items.toJSON();
   }
 
-  zoom(radio) {
+  get zoom(){
+
+  }
+
+  set zoom(radio) {
     this.activeLayer.ctx.scale(radio, radio);
   }
 

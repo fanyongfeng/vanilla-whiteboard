@@ -18,8 +18,8 @@ export default {
   init(){
     window.whiteboard = this.whiteboard = new Whiteboard({
       container:document.getElementById('draw-panel'),
-      width: 500,
-      height: 400,
+      width: 1000,
+      height: 800,
       zoom: 1,
       selectionMode: 'contains', // cross
     });

@@ -6,8 +6,11 @@ const defaultStyle = {
   lineWidth: 1,
   dashArray: [5, 2],
 }
-
-export default function dragBounds(style) {
+/**
+ * enable tool has drag behavior.
+ * 使工具在拖拽时，生成一个虚线辅助框, 该辅助框在开始拖拽时生成，
+ */
+export default function dragBounds(style, removeOnNextDrag = false) {
   style = Object.assign({}, defaultStyle, style);
 
   return {
@@ -18,9 +21,10 @@ export default function dragBounds(style) {
     },
 
     onMouseDown({ point }) {
+      if(removeOnNextDrag)
+        this.dragRect.remove();
       this.dragRect.startPoint = this.dragRect.endPoint = point;
       this.layer.items.add(this.dragRect);
-      console.log('--dragbound');
     },
 
     onMouseDrag({ point }) {
@@ -28,7 +32,8 @@ export default function dragBounds(style) {
     },
 
     onMouseUp() {
-      this.dragRect.remove();
+      if(!removeOnNextDrag)
+        this.dragRect.remove();
     }
   }
 }

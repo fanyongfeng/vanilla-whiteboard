@@ -1,3 +1,8 @@
+/**
+ * enable tool has transform behavior.
+ * 使工具可以变形（移动、旋转、缩放）白板Item
+ */
+
 export default function transformable() {
   return {
     onMouseDrag(event) {

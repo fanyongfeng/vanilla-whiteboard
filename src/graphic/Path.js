@@ -37,6 +37,10 @@ class Path extends Item {
     return this[_points];
   }
 
+  /**
+   * Add Segement in path.
+   * @param {Segment} segment
+   */
   add(segment) {
     segment.owner = this;
     segment.contextPoint = this.contextPoint;
@@ -45,6 +49,10 @@ class Path extends Item {
     this.markAsDirty();
   }
 
+
+  /*
+  * Implements iterator.
+  **/
   *[Symbol.iterator]() {
     for (let i = 0, len = this.segments.length; i < len; i++) {
       yield this.segments[i];

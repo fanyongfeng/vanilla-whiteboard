@@ -107,13 +107,21 @@ export default class EventHandler {
 
   onMouseDown(event) {
     event.preventDefault();
-    this.isMouseDown = true;
 
-    this.invokeToolSlotHandler('onMouseDown', new MouseEvent(event));
+    let _event = new MouseEvent(event);
+
+    if(this.invokeToolSlotHandler('onBeforeMouseDown', _event) === false) {
+      return;
+    }
+
+    this.isMouseDown = true;
+    this.draggingTriggered = 0;
+
+    this.invokeToolSlotHandler('onMouseDown', _event);
 
     addListener(document, mouseup, this.onMouseUp);
-    addListener(document, 'mousemove', this.onMouseMove);
-    removeListener(this.canvas, 'mousemove', this.onMouseMove);
+    addListener(document, mousemove, this.onMouseMove);
+    removeListener(this.canvas, mousemove, this.onMouseMove);
   }
 
   onMouseUp(event) {
@@ -125,18 +133,18 @@ export default class EventHandler {
     this.invokeToolSlotHandler('onMouseUp', new MouseEvent(event));
 
     removeListener(document, mouseup, this.onMouseUp);
-    removeListener(document, 'mousemove', this.onMouseMove);
-    addListener(this.canvas, 'mousemove', this.onMouseMove);
+    removeListener(document, mousemove, this.onMouseMove);
+    addListener(this.canvas, mousemove, this.onMouseMove);
   }
 
   onMouseMove(event) {
     event.preventDefault();
 
-    let ev = new MouseEvent(event),
-      point = ev.point;
+    let _event = new MouseEvent(event),
+      point = _event.point;
 
     // if(!throttleDistance(point, 10)) return;
-    if (ev.target !== this.canvas) return;
+    if (_event.target !== this.canvas) return;
 
     let contain = this.context.bounds.containsPoint(point);
     if (!contain) return;
@@ -149,9 +157,16 @@ export default class EventHandler {
 
     if (this.isMouseDown) {
       this.isDragging = true;
-      this.invokeToolSlotHandler('onMouseDrag', ev);
-    } else
-    this.invokeToolSlotHandler('onMouseMove', ev);
+      if(this.draggingTriggered === 0 &&
+        this.invokeToolSlotHandler('onBeforeMouseDrag', _event) === false) {
+        console.log('--dragging canceled!--')
+        return;
+      }
+      this.draggingTriggered++;
+      this.invokeToolSlotHandler('onMouseDrag', _event);
+    } else {
+      this.invokeToolSlotHandler('onMouseMove', _event);
+    }
     this.lastPoint = point;
   }
 
@@ -169,9 +184,11 @@ export default class EventHandler {
    * @param  {...any} args arguments
    */
   invokeToolSlotHandler(name, event) {
-    return this.tool &&
-      typeof this.tool[name] === 'function' &&
-      this.tool[name](event);
+    if(!this.tool ||
+      typeof this.tool[name] !== 'function') return; //ensure return undefined when handler is null.
+    if(process.env.NODE_ENV === 'development')
+      console.log(this.tool.type, name, 'triggered!');
+    return this.tool[name](event);
   }
 }
 

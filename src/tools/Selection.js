@@ -4,24 +4,20 @@ import Point from '../graphic/types/Point';
 import { boundsPoi, antiDir, cursorMap } from '../graphic/algorithm/corner';
 import Tool from './Tool';
 import Group from '../graphic/Group';
-import ControlRect from '../graphic/component/ControlRect';
 import ItemCollection  from '../Whiteboard/ItemCollection';
+import dragBounds from './mixins/dragBounds';
+import selectable from './mixins/selectable';
+import { deepMixin } from '../decorators/mixin';
 
 let realTimeSize, lastSelected = [];
 
-const style = {
-  strokeStyle: '#aaa',
-  lineWidth: 1,
-  dashArray: [5, 2] ,
-}
-
+@deepMixin(dragBounds())
 export default class Selection extends Tool {
 
   mode = 'move'; //resize, rotate, mutate, select
 
-  constructor() {
-    super();
-    this.selectAreaRect = new Rectangle({ style });
+  constructor(type) {
+    super(type);
     this.transformGroup = new Group();
   }
 
@@ -42,14 +38,10 @@ export default class Selection extends Tool {
       this.mode = 'select';
       this.items.unselect();
       this.transformGroup.children = [];
-      this.selectAreaRect.startPoint = point;
-      this.selectAreaRect.endPoint = point;
-      this.layer.items.set(this.selectAreaRect);
     }
   }
 
   onMouseUp(event) {
-    this.selectAreaRect.remove();
     this.mode = 'move';
   }
 
@@ -59,10 +51,8 @@ export default class Selection extends Tool {
       this.targetPoint.assign(point);
     } if (this.mode === 'select') {
 
-      this.selectAreaRect.endPoint = point;
-
       let selected = this.items.filter(
-        item => item.selected = this.selectAreaRect.bounds.containsRect(item.bounds)
+        item => item.selected = this.dragRect.bounds.containsRect(item.bounds)
       );
 
       if (!selected.length) return;

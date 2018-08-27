@@ -80,10 +80,9 @@ class ItemCollection {
     this[_items] = Array.from(new Set(this[_items]));
   }
 
-  // filter() {
-  //   return new ItemCollection(arr.filter.apply(this[_items], arguments), this.layer);
-  // }
-
+  /*
+  * Implements iterator.
+  **/
   *[Symbol.iterator]() {
     for (let i = 0, len = this[_items].length; i < len; i++) {
       yield this[_items][i];
@@ -115,6 +114,7 @@ class ItemCollection {
     if(this[_items][index] === item) return false;
 
     if(typeof index === 'undefined') {
+      //add same item only once.
       if(this.includes(item)) return false;
       return this.add(item);
     }

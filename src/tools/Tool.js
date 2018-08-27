@@ -6,9 +6,11 @@
  * 4) manage items of operateLayer.
  */
 export default class Tool {
+  ctx = null; //白板上下文，在实例化后注入；
   _layer = null;
-  constructor(){
-
+  constructor(type){
+    this.type = type;
+    this._init && this._init();
   }
 
   /**
