@@ -13,7 +13,9 @@ import { deepMixin } from '../decorators/mixin'
   strokeStyle: '#aaa',
   lineWidth: 2,
 }, true))
-@deepMixin(cursor("https://www-stage.tutormeetplus.com/v2/static/media/mouse_pointer.64a36561.png"))
+@deepMixin(cursor("https://www-stage.tutormeetplus.com/v2/static/media/mouse_pointer.64a36561.png", {
+  x : 11, y : -12
+}))
 export default class Pointer extends Tool {
 
   onMouseEnter(){

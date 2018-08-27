@@ -5,9 +5,19 @@
  * 3) emit event for websocket.
  * 4) manage items of operateLayer.
  */
+
+const toolStatus = {
+  "move":"move",
+  "select":"select",
+  "drawing":"drawing",
+  "scale":"scale",
+  "translate":"translate",
+}
 export default class Tool {
   ctx = null; //白板上下文，在实例化后注入；
   _layer = null;
+  mode = '';
+
   constructor(type){
     this.type = type;
     this._init && this._init();

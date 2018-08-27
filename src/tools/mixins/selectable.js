@@ -1,50 +1,50 @@
+
+import ItemCollection  from '../../Whiteboard/ItemCollection';
+
 /**
  * enable tool has select behavior.
  */
 export default function selectable(){
   return {
+    _downPoint: null,
+    _lastSelected: [],
+    _selected: [],
+
     onMouseDown(event) {
-      let point = event.point;
-  
-      this.layer.items.set(this.transformGroup);
-  
-      if (this.pointOnElement(point)) {
+      this._downPoint = event.point;
+
+      if (this._pointOnElement(this._downPoint)) {
         if(this.target.selected) return;
         this.items.unselect();
         this.target.selected = true;
-        this.transformGroup.children = [this.target];
-        return;
+        return false;
       }
+      this.mode = 'select';
     },
-  
+
     onMouseDrag(event) {
+      if (this.mode !== 'select')  return;
+
       let point = event.point;
-      if (this.mode === 'select') {
-  
-        this.selectAreaRect.endPoint = point;
-  
-        let selected = this.items.filter(
-          item => item.selected = this.selectAreaRect.bounds.containsRect(item.bounds)
-        );
-  
-        if (!selected.length) return;
-  
-        if (ItemCollection.diff(selected, lastSelected)) {
-          this.transformGroup.children = selected;
-          lastSelected = selected;
-        }
-  
-      }
+      this.dragRect.endPoint = point;
+      this._selected = this.items.filter(
+        item => item.selected = this.dragRect.bounds.containsRect(item.bounds)
+      );
     },
-  
-    pointOnElement(point) {
-      let item;
-      for (let len = this.items.length, i = len; i > 0; i--) { // find from right
+
+    onMouseMove({ point }) {
+      this._pointOnElement(point);
+    },
+
+    _pointOnElement(point) {
+      for (let len = this.items.length, i = len, item; i > 0; i--) { // find from right
         item = this.items.get(i - 1);
         if (item.containsPoint(point)) {
-          this.setCursor('pointer');
           this.mode = 'move';
           this.target = item;
+          if(!(this.cursor && typeof this.cursor !== 'string')) {
+            this.layer.setCursor('pointer');
+          }
           return true;
         }
       }

@@ -3,13 +3,29 @@
  * 使工具可以变形（移动、旋转、缩放）白板Item
  */
 
-export default function transformable() {
+export default function transformable(enableRotate = false) {
   return {
+
+    _init() {
+      this.transformGroup = new Group();
+    },
+
+    onMouseDown(event) {
+      this._downPoint = event.point;
+
+      if (this._pointOnResize(this._downPoint)) {
+        this.items.unselect();
+        this.transformGroup.children = [];
+        return true;
+      }
+      this.mode = 'select';
+    },
+
     onMouseDrag(event) {
-      let point = event.point;
+      let { point, delta }  = event;
 
       if (this.mode === 'resize') {
-        this.corner = this.corner.add(event.delta);
+        this.corner = this.corner.add(delta);
         let size = this.corner.subtract(this.basePoint);
 
         let sx = 1.0,
@@ -24,11 +40,15 @@ export default function transformable() {
         realTimeSize = size;
 
       } else if (this.mode === 'move') {
-        this.transformGroup.translate(event.delta);
+        this.transformGroup.translate(delta);
       }
     },
 
-    pointOnResize(point) {
+    onMouseMove({ point }) {
+      this._pointOnResize(point);
+    },
+
+    _pointOnResize(point) {
       let corner, bounds;
 
       bounds = this.transformGroup.bounds;

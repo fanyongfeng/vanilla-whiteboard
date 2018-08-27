@@ -11,7 +11,9 @@ const highlighterCursor = 'https://www-stage.tutormeetplus.com/v2/static/media/m
 // values: Marker & Highlighter
 
 @deepMixin(itemCreator())
-@deepMixin(cursor(highlighterCursor))
+@deepMixin(cursor(markerCursor, {
+  x : 13, y : -15
+}))
 export default class FreeDrawing extends Tool {
   _style = {};
 

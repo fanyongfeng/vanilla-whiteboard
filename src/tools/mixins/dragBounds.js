@@ -20,6 +20,10 @@ export default function dragBounds(style, removeOnNextDrag = false) {
       return this._dragRect;
     },
 
+    /**
+     * Add drag rectangle when mousemove.
+     * @param {*} param0
+     */
     onMouseDown({ point }) {
       if(removeOnNextDrag)
         this.dragRect.remove();
@@ -27,10 +31,18 @@ export default function dragBounds(style, removeOnNextDrag = false) {
       this.layer.items.add(this.dragRect);
     },
 
+    /**
+     * Set size of drag rectangle.
+     * @param {*} param0
+     */
     onMouseDrag({ point }) {
       this.dragRect.endPoint = point;
     },
 
+    /**
+     * Remove drag rect when mouse-up.
+     * @param {*} param0
+     */
     onMouseUp() {
       if(!removeOnNextDrag)
         this.dragRect.remove();

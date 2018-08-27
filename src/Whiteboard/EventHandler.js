@@ -33,7 +33,10 @@ export default class EventHandler {
 
   set tool(tool) {
     this._currentTool = tool;
-    if (tool) this._currentTool.layer = this.layer;
+    if (tool) {
+      this._currentTool.layer = this.layer;
+      this.layer.clear();
+    }
   }
 
   get tool() {

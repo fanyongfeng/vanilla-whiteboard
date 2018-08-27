@@ -8,7 +8,7 @@ export default function mutable(){
 
       this.layer.items.set(this.transformGroup);
 
-      if (this.pointOnPoint(point)) {
+      if (this._pointOnPoint(point)) {
         return;
       }
     },
@@ -20,7 +20,7 @@ export default function mutable(){
       }
     },
 
-    pointOnPoint(point) {
+    _pointOnPoint(point) {
       let nearbyPoint, seg, segments;
       for (let item of this.items) {
         segments = item.segments;
