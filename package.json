@@ -68,9 +68,12 @@
     "webpack-merge": "^4.1.0"
   },
   "ava": {
+    "babel": "inherit",
     "require": [
       "babel-register"
-    ]
+    ],
+    "serial": true,
+    "verbose": true
   },
   "engines": {
     "node": ">= 4.0.0",

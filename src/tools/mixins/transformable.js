@@ -9,6 +9,7 @@ import { boundsPoi, antiDir, cursorMap } from '../../graphic/algorithm/corner';
 
 export default function transformable(enableRotate = false) {
   return {
+    realTimeSize : null,
 
     _init() {
       this.transformGroup = new Group();
@@ -17,6 +18,7 @@ export default function transformable(enableRotate = false) {
     onMouseDown(event) {
       this._downPoint = event.point;
 
+      this.layer.items.set(this.transformGroup);
       this.transformGroup.children = this._selected;
 
       if (!this._pointOnResize(this._downPoint)) {
@@ -37,13 +39,13 @@ export default function transformable(enableRotate = false) {
         let sx = 1.0,
           sy = 1.0;
 
-        if (Math.abs(realTimeSize.x) > 0.0000001 && this.resizeDir !== 'topCenter' && this.resizeDir !== 'bottomCenter')
-          sx = size.x / realTimeSize.x;
-        if (Math.abs(realTimeSize.y) > 0.0000001 && this.resizeDir !== 'leftCenter' && this.resizeDir !== 'rightCenter')
-          sy = size.y / realTimeSize.y;
+        if (Math.abs(this.realTimeSize.x) > 0.0000001 && this.resizeDir !== 'topCenter' && this.resizeDir !== 'bottomCenter')
+          sx = size.x / this.realTimeSize.x;
+        if (Math.abs(this.realTimeSize.y) > 0.0000001 && this.resizeDir !== 'leftCenter' && this.resizeDir !== 'rightCenter')
+          sy = size.y / this.realTimeSize.y;
 
         this.target.scale(sx, sy, this.basePoint);
-        realTimeSize = size;
+        this.realTimeSize = size;
 
       } else if (this.mode === 'move') {
         this.transformGroup.translate(delta);
@@ -54,6 +56,10 @@ export default function transformable(enableRotate = false) {
 
     onMouseMove({ point }) {
       this._pointOnResize(point);
+    },
+
+    onMouseUp(event) {
+      this.mode = 'move';
     },
 
     _pointOnResize(point) {
@@ -73,7 +79,7 @@ export default function transformable(enableRotate = false) {
       this.target = bounds.owner;
       this.corner = bounds[corner];
       this.resizeDir = corner;
-      realTimeSize = this.corner.subtract(this.basePoint);
+      this.realTimeSize = this.corner.subtract(this.basePoint);
       return true;
     }
   }

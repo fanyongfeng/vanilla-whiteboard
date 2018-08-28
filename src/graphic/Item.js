@@ -3,9 +3,11 @@ import Style from './types/Style';
 import Point from './types/Point';
 import Matrix from './types/Matrix';
 import { memoizable, changed, observeProps } from '../decorators/memoized';
+import emittable from '../decorators/emitter';
 
 
 // 白板所有元素的父类
+@emittable()
 @memoizable()
 @observeProps(
   {

@@ -1,5 +1,4 @@
 import { MouseEvent, KeyEvent, keyCode } from './EventType';
-import tools from '../tools';
 import throttle from '../util/throttle';
 import { addListener, removeListener } from '../util/dom';
 
@@ -100,7 +99,7 @@ export default class EventHandler {
 
   onKeyUp(event) {
     if ((event.keyCode === keyCode.DELETE || event.keyCode === keyCode.BACKSPACE) &&
-      tools._currentTool.type === toolTypes.SELECTOR) {
+      this._currentTool.type === toolTypes.SELECTOR) {
 
       if (!toolAvailable) return false;
       commands.delete();

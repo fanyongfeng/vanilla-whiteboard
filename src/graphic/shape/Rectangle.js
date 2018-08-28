@@ -8,6 +8,8 @@ export default class Rectangle extends Shape {
 
   radius = 0;
 
+  _stroke = false;
+
   _buildPath() {
 
     let { x: sx, y: sy } = this.startPoint;

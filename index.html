@@ -67,7 +67,8 @@
       background: rgb(0, 184, 252);
     }
 
-    #draw-panel,#draw-panel2 {
+    #draw-panel,
+    #draw-panel2 {
       border: 1px dashed #aaa;
       margin-top: 20px;
     }
@@ -156,6 +157,7 @@
         <button id="btnRects" class="btn btn-default">绘制多个矩形</button>
         <button id="btnRectss" class="btn btn-default">绘制海量矩形</button>
         <button id="btnCompoundPath" class="btn btn-default">绘制复合图形</button>
+        <button id="btnHitMap" class="btn btn-default">绘制热力图</button>
         <button id="btnText" class="btn btn-default">绘制文字</button>
         <button id="btnGrid" class="btn btn-default">绘制网格</button>
         <button id="btnAxes" class="btn btn-default">绘制坐标系</button>
@@ -205,10 +207,10 @@
     const WAN = 100000;
     $(() => {
 
-    /**
-     * 首字幕小写
-     * @param { } str
-     */
+      /**
+       * 首字幕小写
+       * @param { } str
+       */
       const camelize = (str) => {
         return str.replace(/\b[A-Z]/g, function (match) {
           return match.toLowerCase();
@@ -267,7 +269,7 @@
 
       $("#btnImage").click(() => {
         let img = images[parseInt(Math.random() * images.length)];
-        whiteboard.add([9,,img]);
+        whiteboard.add([9, , img]);
       });
 
       $("#btnClear").click(() => {
@@ -282,14 +284,33 @@
         whiteboard.add(rect1);
       });
 
+      const colors = ["#c6e48b","#c6e48b","#196127","#7bc96f","#7bc96f","#c6e48b","#ebedf0"];
+      $('#btnHitMap').click(() => {
+
+        let startX = 100, startY = 100;
+
+        for (let w = 0; w < 50; w++) {
+
+          for (let h = 0; h < 7; h++) {
+            let sx = w * 12 + startX;
+            let sy = h * 12 + startY;
+            let ex = sx + 8;
+            let ey = sy + 8;
+            let hex = parseInt(h * 16777215 / 100);
+
+            whiteboard.add([6, , [[sx, sy], [ex, ey]], { c: colors[parseInt(Math.random() * 7) ]}]);
+          }
+        }
+      });
+
       let midx = 0;
       $("#btnMaterialPrev").click(() => {
-        if(--midx < 0) return;
+        if (--midx < 0) return;
         whiteboard.drawMaterial(materials[midx]);
       });
 
       $("#btnMaterialNext").click(() => {
-        if(++midx >= materials.length - 1) return;
+        if (++midx >= materials.length - 1) return;
         whiteboard.drawMaterial(materials[midx]);
       });
 
@@ -328,7 +349,7 @@
       });
 
       $("#btnRectss").click(() => {
-        for (let i = 0; i < 10000; i++) {
+        for (let i = 0; i < 2000; i++) {
           let xi = i % 100, yi = parseInt(i / 100),
             sx = xi * 8 + 30,
             sy = yi * 8 + 30,
