@@ -9,7 +9,7 @@ import { boundsPoi, antiDir, cursorMap } from '../../graphic/algorithm/corner';
 
 export default function transformable(enableRotate = false) {
   return {
-    realTimeSize : null,
+    realTimeSize: null,
 
     _init() {
       this.transformGroup = new Group();
@@ -21,27 +21,36 @@ export default function transformable(enableRotate = false) {
       this.layer.items.set(this.transformGroup);
       this.transformGroup.children = this._selected;
 
-      if (!this._pointOnResize(this._downPoint)) {
+      let isPointOnResize = this._pointOnResize(this._downPoint);
+
+      if (isPointOnResize) {
+        this.mode = 'resize';
+      } else if(this.mode === 'select'){
         this.items.unselect();
         this.transformGroup.children = [];
         return true;
       }
-      this.mode = 'select';
+      return false;
     },
 
-    onMouseDrag(event) {
-      let { point, delta }  = event;
+    onMouseDrag({ delta }) {
 
-      if (this.mode === 'resize') {
+      if (this.mode === 'select')  {
+        this.transformGroup.children = this._selected;
+      } else if (this.mode === 'resize') {
         this.corner = this.corner.add(delta);
         let size = this.corner.subtract(this.basePoint);
 
         let sx = 1.0,
           sy = 1.0;
 
-        if (Math.abs(this.realTimeSize.x) > 0.0000001 && this.resizeDir !== 'topCenter' && this.resizeDir !== 'bottomCenter')
+        if (Math.abs(this.realTimeSize.x) > 0.0000001 &&
+          this.resizeDir !== 'topCenter' &&
+          this.resizeDir !== 'bottomCenter')
           sx = size.x / this.realTimeSize.x;
-        if (Math.abs(this.realTimeSize.y) > 0.0000001 && this.resizeDir !== 'leftCenter' && this.resizeDir !== 'rightCenter')
+        if (Math.abs(this.realTimeSize.y) > 0.0000001 &&
+          this.resizeDir !== 'leftCenter' &&
+          this.resizeDir !== 'rightCenter')
           sy = size.y / this.realTimeSize.y;
 
         this.target.scale(sx, sy, this.basePoint);
@@ -49,17 +58,11 @@ export default function transformable(enableRotate = false) {
 
       } else if (this.mode === 'move') {
         this.transformGroup.translate(delta);
-      } else {
-        this.transformGroup.children = this._selected;
       }
     },
 
     onMouseMove({ point }) {
-      this._pointOnResize(point);
-    },
-
-    onMouseUp(event) {
-      this.mode = 'move';
+      return !this._pointOnResize(point);
     },
 
     _pointOnResize(point) {
@@ -69,12 +72,10 @@ export default function transformable(enableRotate = false) {
       corner = boundsPoi.find(key => point.nearby(bounds[key]))
 
       if (!corner) {
-        this.layer.setCursor('default');
+        this.setLayerCursor('default');
         return false;
       }
-      this.mode = 'resize';
-      this.layer.setCursor(cursorMap[corner]);
-
+      this.setLayerCursor(cursorMap[corner]);
       this.basePoint = bounds[antiDir[corner]];
       this.target = bounds.owner;
       this.corner = bounds[corner];

@@ -70,7 +70,7 @@ class ItemCollection {
    * All items-collection change ,will trigger whiteboard re-draw.
    */
   changed() {
-    this.layer && this.layer.refresh();
+    this.layer && this.layer.markAsDirty();
   }
 
   /**

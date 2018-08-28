@@ -10,20 +10,17 @@ import { deepMixin } from '../decorators/mixin'
  * 3）需要能够在接收端看到“拖拽框”
  */
 @deepMixin(dragBounds({
-  strokeStyle: '#aaa',
+  strokeStyle: '#f00',
   lineWidth: 2,
 }, true))
 @deepMixin(cursor("https://www-stage.tutormeetplus.com/v2/static/media/mouse_pointer.64a36561.png", {
   x : 11, y : -12
 }))
 export default class Pointer extends Tool {
-
-  onMouseEnter(){
-    this.layer.setCursor(this.cursor);
+  onMouseMove({point}){
+    this.globalCtx.emit('pointer:move', [point.x, point.y]);
   }
-
-  onMouseDown({ point }){
-    this.selectAreaRect.startPoint = point;
-    this.layer.items.add(this.selectAreaRect);
+  onMouseUp() {
+    this.globalCtx.emit('pointer:draw', this.dragRect.toJSON());
   }
 }

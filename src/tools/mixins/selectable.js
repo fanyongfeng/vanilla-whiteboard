@@ -4,7 +4,7 @@ import ItemCollection  from '../../Whiteboard/ItemCollection';
 /**
  * enable tool has select behavior.
  */
-export default function selectable(){
+export default function selectable(multiSelect = true){
   return {
     _downPoint: null,
     _lastSelected: [],
@@ -14,13 +14,15 @@ export default function selectable(){
       this._downPoint = event.point;
 
       if (this._pointOnElement(this._downPoint)) {
-        if(this.target.selected) return;
+        this.mode = 'move';
+        if(this.target.selected) return false;
         this.items.unselect();
         this.target.selected = true;
         this._selected = [this.target];
-        return false;
+        return true;
       }
       this.mode = 'select';
+      return true;
     },
 
     onMouseDrag(event) {
@@ -34,18 +36,15 @@ export default function selectable(){
     },
 
     onMouseMove({ point }) {
-      this._pointOnElement(point);
+      return !this._pointOnElement(point);
     },
 
     _pointOnElement(point) {
       for (let len = this.items.length, i = len, item; i > 0; i--) { // find from right
         item = this.items.get(i - 1);
         if (item.containsPoint(point)) {
-          this.mode = 'move';
           this.target = item;
-          if(!(this.cursor && typeof this.cursor !== 'string')) {
-            this.layer.setCursor('pointer');
-          }
+          this.setLayerCursor('pointer');
           return true;
         }
       }

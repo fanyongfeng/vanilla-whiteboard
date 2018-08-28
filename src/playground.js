@@ -24,13 +24,13 @@ export default {
       selectionMode: 'contains', // cross
     });
 
-    window.whiteboard2 = this.whiteboard2 = new Whiteboard({
-      container:document.getElementById('draw-panel2'),
-      width: 500,
-      height: 400,
-      zoom: 1,
-      selectionMode: 'contains', // cross
-    });
+    // window.whiteboard2 = this.whiteboard2 = new Whiteboard({
+    //   container:document.getElementById('draw-panel2'),
+    //   width: 500,
+    //   height: 400,
+    //   zoom: 1,
+    //   selectionMode: 'contains', // cross
+    // });
 
     window.items = window.whiteboard.items;
     this.whiteboard.on('item:add', (arg)=>{
@@ -38,11 +38,15 @@ export default {
     }).on('layer:refresh', (arg)=>{
       // console.log(`${arg.layer.role}, refreshed!`);
     }).on('item:add', (arg)=>{
-
-    });
+      console.log('item:add', arg);
+    }).on('pointer:move', (arg)=>{
+      console.log('pointer:move', arg);
+    }).on('pointer:draw', (arg)=>{
+      console.log('pointer:draw', arg);
+    });;
 
     this.whiteboard.watch();
-    this.whiteboard2.watch();
+    // this.whiteboard2.watch();
     return whiteboard;
   },
 

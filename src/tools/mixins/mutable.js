@@ -14,12 +14,12 @@ export default function mutable(){
       let point = event.point;
       if (this.mode === 'mutate') {
         this.targetPoint.assign(point);
+        this.target.markAsDirty();
       }
     },
 
-
     onMouseMove({ point }) {
-      this._pointOnPoint(point);
+      return !this._pointOnPoint(point);
     },
 
     _pointOnPoint(point) {
@@ -37,14 +37,15 @@ export default function mutable(){
         }
         if (nearbyPoint) break;
       }
-
       if (nearbyPoint) {
         this.mode = 'mutate';
-        this.layer.setCursor('pointer');
+        this.setLayerCursor('pointer');
         this.target = seg.owner;
         this.targetPoint = nearbyPoint;
-        return true
+        return true;
       }
+
+      this.setLayerCursor('default');
       return false;
     }
   }

@@ -73,7 +73,7 @@ export default class Layer {
    * refresh current layer.
    */
   refresh(){
-    this.clear();
+    this._clearCanvas();
     this.globalCtx.emit('layer:refresh', { layer: this, });
     this._draw();
     this._isDirty = false;
@@ -130,11 +130,15 @@ export default class Layer {
     this.ctx.setTransform(this.deviceRatio, 0, 0, this.deviceRatio, 0, 0);
   }
 
+  _clearCanvas(){
+    this.ctx.clearRect(0, 0, this.width, this.height);
+  }
+
   /**
    * clear current layer.
    */
   clear() {
-    this.ctx.clearRect(0, 0, this.width, this.height);
+    this.items.clear();
   }
 
   appendTo(whiteboard) {

@@ -34,6 +34,7 @@ export default class EventHandler {
     this._currentTool = tool;
     if (tool) {
       this._currentTool.layer = this.layer;
+      this._currentTool.globalCtx = this.context;
       this.layer.clear();
     }
   }
@@ -188,8 +189,8 @@ export default class EventHandler {
   invokeToolSlotHandler(name, event) {
     if(!this.tool ||
       typeof this.tool[name] !== 'function') return; //ensure return undefined when handler is null.
-    if(process.env.NODE_ENV === 'development')
-      console.log(this.tool.type, name, 'triggered!');
+    // if(process.env.NODE_ENV === 'development')
+    //   console.log(this.tool.type, name, 'triggered!');
     return this.tool[name](event);
   }
 }

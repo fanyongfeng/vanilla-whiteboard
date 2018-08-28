@@ -1,8 +1,11 @@
 import Tool from './Tool';
-import {createItem}  from '../graphic/ItemFactory';
+import dragBounds from './mixins/dragBounds';
 import { deepMixin } from '../decorators/mixin';
 import itemCreator from './mixins/itemCreator';
-
+@deepMixin(dragBounds({
+  strokeStyle: 'rgb(255,163,0)',
+  lineWidth: 1,
+}))
 @deepMixin(itemCreator())
 export default class ShapeDrawing extends Tool{
 
@@ -15,7 +18,7 @@ export default class ShapeDrawing extends Tool{
   }
 
   onMouseUp(event) {
-    //this.emit('add', [this.currentShape.toJSON()])
+    this.globalCtx.emit('item:add', this.currentShape.toJSON());
     this.currentShape = null;
   }
 }

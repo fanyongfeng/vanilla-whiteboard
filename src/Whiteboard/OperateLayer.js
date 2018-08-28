@@ -23,6 +23,14 @@ export default class OperatorLayer extends Layer {
     // if(!value instanceof Item) throw new TypeError("Must be item");
   }
 
+  /**
+   * clear current layer.
+   */
+  clear() {
+    super.clear();
+    this.setCursor('default');
+  }
+
   _draw() {
     // draw cursor first!
     if (this._cursorImage) this._cursorImage.draw(this.ctx);

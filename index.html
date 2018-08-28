@@ -89,7 +89,7 @@
         <button id="btnSelection" class="btn btn-default">选择</button>
         <button id="btnPointer" class="btn btn-default">鼠标手</button>
         <button id="btnEraser" class="btn btn-default">橡皮</button>
-
+        <button id="btnPathMutator" class="btn btn-default">Path变形</button>
 
         <button id="btnArrow" class="btn btn-default">箭头</button>
         <button id="btnLine" class="btn btn-default">直线</button>
@@ -225,7 +225,7 @@
         "btnTriangle", "btnMarker", "btnHighlighter",
         "btnSignature", "btnStar", "btnDashed",
         "btnRightTriangle", "btnSelection",
-        "btnChatBox", "btnTextImg", "btnText"
+        "btnChatBox", "btnTextImg", "btnText", "btnPathMutator"
       ];
 
       btns.forEach(btn => {
@@ -278,6 +278,7 @@
 
       $("#btnCurve").click(() => {
         whiteboard.add(curve1);
+        whiteboard.items.get(0).showAuxiliary = true;
       });
 
       $("#btnRect").click(() => {
@@ -344,12 +345,13 @@
 
           let hex = parseInt(i * 16777215 / 100);
 
-          whiteboard.add([6, , [[sx, sy], [ex, ey]], { c: 'rgb(' + toRGB(hex) + ')' }]);
+          //whiteboard.add([6, , [[sx, sy], [ex, ey]], { c: 'rgb(' + toRGB(hex) + ')' }]);
+          whiteboard.add([6, , [[sx, sy], [ex, ey]], { c: '#ddd' }]);
         }
       });
 
       $("#btnRectss").click(() => {
-        for (let i = 0; i < 2000; i++) {
+        for (let i = 0; i < 10000; i++) {
           let xi = i % 100, yi = parseInt(i / 100),
             sx = xi * 8 + 30,
             sy = yi * 8 + 30,
@@ -422,11 +424,7 @@
         });
       });
 
-      $("#btnSimp").click(() => {
-        items.forEach(element => {
-          element.simplify();
-        });
-      });
+      $("#btnSimp").click(() => items.forEach(element => element.simplify()));
 
       function drawFlag() {
         let compoundPath = whiteboard.createItem('compoundPath');

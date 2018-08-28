@@ -111,6 +111,7 @@ export default class Whiteboard {
       activeLayer,
       operateLayer,
       currentMode: null,
+      refreshCount: 0, //刷新计数，白板所有layers刷新总次数
       settings: Object.freeze(this.options),
       bounds: new Rect(0, 0, this.width, this.height),
       emit: this.emit.bind(this)

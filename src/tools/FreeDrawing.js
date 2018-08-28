@@ -1,20 +1,14 @@
 import Tool from './Tool';
-import Image from '../graphic/shape/Image';
-import { createItem } from '../graphic/ItemFactory';
 import cursor from './mixins/cursor';
 import { deepMixin } from '../decorators/mixin';
 import itemCreator from './mixins/itemCreator';
 
 const markerCursor = 'https://www-stage.tutormeetplus.com/v2/static/media/pen.3ec0e0e7.png';
-const highlighterCursor = 'https://www-stage.tutormeetplus.com/v2/static/media/mouse_pointer.64a36561.png';
+const highlighterCursor = 'https://www-stage.tutormeetplus.com/v2/static/media/mark_pen.901db183.png';
 
 // values: Marker & Highlighter
 
-@deepMixin(itemCreator())
-@deepMixin(cursor(markerCursor, {
-  x : 13, y : -15
-}))
-export default class FreeDrawing extends Tool {
+class FreeDrawing extends Tool {
   _style = {};
 
   lastPoint = null;
@@ -43,6 +37,15 @@ export default class FreeDrawing extends Tool {
    */
   onMouseUp(event) {
     this.currentShape.simplify();
+    this.globalCtx.emit('item:add', this.currentShape.toJSON());
     this.currentShape = null;
   }
 }
+
+@deepMixin(itemCreator())
+@deepMixin(cursor(markerCursor, { x : 13, y : -15 }))
+export class Marker extends FreeDrawing {}
+
+@deepMixin(itemCreator())
+@deepMixin(cursor(highlighterCursor, { x : 12, y : -12 }))
+export class Highlighter extends FreeDrawing {}

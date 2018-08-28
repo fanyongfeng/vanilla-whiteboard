@@ -6,9 +6,14 @@ const defaultStyle = {
   lineWidth: 1,
   dashArray: [5, 2],
 }
+
 /**
+ *
  * enable tool has drag behavior.
  * 使工具在拖拽时，生成一个虚线辅助框, 该辅助框在开始拖拽时生成，
+ *
+ * @param {Object} style
+ * @param {Boolean} removeOnNextDrag, If true drag-rect will be removed on next mouse-down, else on mouse-up
  */
 export default function dragBounds(style, removeOnNextDrag = false) {
   style = Object.assign({}, defaultStyle, style);
@@ -25,6 +30,8 @@ export default function dragBounds(style, removeOnNextDrag = false) {
      * @param {*} param0
      */
     onMouseDown({ point }) {
+      if(this.mode !== 'select') return;
+
       if(removeOnNextDrag)
         this.dragRect.remove();
       this.dragRect.startPoint = this.dragRect.endPoint = point;
@@ -36,6 +43,7 @@ export default function dragBounds(style, removeOnNextDrag = false) {
      * @param {*} param0
      */
     onMouseDrag({ point }) {
+      if(this.mode !== 'select') return;
       this.dragRect.endPoint = point;
     },
 
@@ -44,6 +52,8 @@ export default function dragBounds(style, removeOnNextDrag = false) {
      * @param {*} param0
      */
     onMouseUp() {
+      //reset mode to 'select' on mouse up.
+      this.mode = 'select';
       if(!removeOnNextDrag)
         this.dragRect.remove();
     }

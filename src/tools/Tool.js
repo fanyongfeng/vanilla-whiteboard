@@ -14,13 +14,18 @@ const toolStatus = {
   "translate":"translate",
 }
 export default class Tool {
-  ctx = null; //白板上下文，在实例化后注入；
+  globalCtx = null; //白板上下文，在实例化后注入；
   _layer = null;
-  mode = '';
+  mode = 'select';
 
   constructor(type){
     this.type = type;
     this._init && this._init();
+  }
+
+  setLayerCursor(cursor){
+    if(!this._cursor)
+      this.layer.setCursor(cursor);
   }
 
   /**
