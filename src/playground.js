@@ -24,13 +24,13 @@ export default {
       selectionMode: 'contains', // cross
     });
 
-    // window.whiteboard2 = this.whiteboard2 = new Whiteboard({
-    //   container:document.getElementById('draw-panel2'),
-    //   width: 500,
-    //   height: 400,
-    //   zoom: 1,
-    //   selectionMode: 'contains', // cross
-    // });
+    window.whiteboard2 = this.whiteboard2 = new Whiteboard({
+      container:document.getElementById('draw-panel2'),
+      width: 500,
+      height: 400,
+      zoom: 1,
+      selectionMode: 'contains', // cross
+    });
 
     window.items = window.whiteboard.items;
     this.whiteboard.on('item:add', (arg)=>{
@@ -39,43 +39,53 @@ export default {
       // console.log(`${arg.layer.role}, refreshed!`);
     }).on('item:add', (arg)=>{
       console.log('item:add', arg);
-    }).on('pointer:move', (arg)=>{
-      console.log('pointer:move', arg);
-    }).on('pointer:draw', (arg)=>{
-      console.log('pointer:draw', arg);
-    });;
+    });
 
     this.whiteboard.watch();
-    // this.whiteboard2.watch();
+    this.whiteboard2.watch();
+    this.simulateComm();
     return whiteboard;
   },
 
   simulateComm(){
+    let wb2 = this.whiteboard2;
     function addItem(hash){
-      this.whiteboard2.add(hash);
+      wb2.add(hash);
     }
 
-    function removeItem(){
-      this.whiteboard2.remove(hash);
+    function removeItem(hash){
+      wb2.remove(hash);
     }
 
-    function transformItem(){
-      this.whiteboard2.remove(hash);
+    function transformItem(hash){
+      wb2.remove(hash);
     }
 
-    function typingText(){
-      this.whiteboard2.remove(hash);
+    function typingText(hash){
+      wb2.remove(hash);
+    }
+
+    function pointerMove(hash){
+      wb2.remove(hash);
+    }
+
+    function pointerDraw(hash){
+      wb2.remove(hash);
     }
 
     this.whiteboard.on('item:add', (arg)=>{
-      addItem(args);
+      addItem(arg);
     }).on('item:remove', (arg)=>{
       let ids = arg;
       removeItem(ids)
     }).on('item:transform', (arg)=>{
-      transformItem();
+      transformItem(arg);
     }).on('item:typing', (arg)=>{
-      typingText();
+      typingText(arg);
+    }).on('pointer:move', (arg)=>{
+      pointerMove();
+    }).on('pointer:draw', (arg)=>{
+      pointerDraw();
     });
   },
 

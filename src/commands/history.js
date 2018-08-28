@@ -1,7 +1,9 @@
+import Action from './Action';
+import emittable from '../decorators/emitter';
 // History Stack for undo/redo
 /**
  * options.maxStack : max length limit in history stack
- * options.change : callback on redo/undo action
+ * options.enableKeyboard : If enable keyboard to redo-undo actions. (e.g. ctrl + z)
  *
  * methods:
  *  redo: replay last action.
@@ -10,17 +12,19 @@
  *  clear: clear current history stack.
  */
 //TODO: 返回undo stack 和 redo stack 为空的callback，方便UI展示按钮的disable状态
-const noop = () => { };
+
+
 const defaultOptions = {
-  maxStack: 100,
-  change: noop
+  maxStack: 300,
+  enableKeyboard: true
 };
 
+@emittable()
 export default class History {
+
   constructor(options) {
     this.clear();
     this.options = Object.assign({}, defaultOptions, options);
-    this.lastRecord = +new Date;
   }
 
   /**
@@ -28,102 +32,62 @@ export default class History {
    */
   clear() {
     this.stack = { undo: [], redo: [], };
+    this.emit('change', { stackLength: [0, 0] });
   }
 
   /**
-   * Get anti-action for current action
-   * @param {*} delta
-   * @param {*} oldDelta used fro anti-action
+   * Record changed and store to stack
+   * @param {Object} delta
+   * @param {Object} oldDelta
    */
-  getUndoAction(delta, oldDelta) {
-    if (delta.action === 'ADD') {
-      return Object.assign({}, delta, {
-        action: 'DELETE',
-      });
-    } else if (delta.action === 'DELETE') {
-      return Object.assign({}, delta, {
-        action: 'ADD',
-      });
-    } else if (delta.action === 'MOVE') {
-      let antiOffset = {
-        x: -delta.data.offset.x,
-        y: -delta.data.offset.y,
-      };
-
-      return {
-        action: 'MOVE',
-        data: {
-          ids: delta.data.ids,
-          offset: antiOffset,
-        },
-      };
-    } else if (delta.action === 'SCALE') {
-      let antiScale = {
-        sx: 1 / delta.data.scale.sx,
-        sy: 1 / delta.data.scale.sy,
-        basePoint: delta.data.scale.basePoint,
-      };
-      return {
-        action: 'SCALE',
-        data: {
-          ids: delta.data.ids,
-          scale: antiScale,
-        },
-      };
-    } else if (delta.action === 'TYPING') {
-      return {
-        action: 'TYPING',
-        data: {
-          id: delta.data.id,
-          value: delta.data.lastTypedText,
-        },
-      };
-    }
-  }
-
-  //modify history item in undo stack
-  transform(delta) {
-    this.stack.undo.push(delta);
-  }
-
-  //record user action
   record(delta, oldDelta) {
-    this.stack.redo = []; // clear redo list on an new record point.
+    if (!delta) throw TypeError('Invalid record point.');
+    // clear redo list on an new record point.
+    this.stack.redo = [];
 
-    let undoDelta = this.getUndoAction(delta, oldDelta);
-
-    this.stack.undo.push({
-      redo: delta,
-      undo: undoDelta,
-    });
+    let action = new Action(delta, oldDelta);
+    this.stack.undo.push(action);
 
     if (this.stack.undo.length > this.options.maxStack) {
       this.stack.undo.shift();
     }
-    this.lastRecord = +new Date();
   }
 
-  //handle undo/redo actions
+  /**
+   * handle undo/redo actions
+   * @param {string} source, "undo" or "redo"
+   * @param {string} dest, "redo" or "undo"
+   */
   change(source, dest) {
+    if (!this.options.enableKeyboard) return;
     if (this.stack[source].length === 0) return;
 
     let delta = this.stack[source].pop();
     if (!delta[source]) return;
-    this.options.change.call(this, {
+
+    this.emit('change', {
       action: source.toUpperCase(),
       delta: delta[source],
+      stackLength: [
+        this.stack.redo.length,
+        this.stack.undo.length
+      ],
     });
 
     this.lastRecorded = 0;
     this.stack[dest].push(delta);
   }
 
-  //redo action
+  /**
+   * Redo last undo action.
+   */
   redo() {
     this.change('redo', 'undo');
   }
 
-  //undo action
+  /**
+   * undo last record action.
+   */
   undo() {
     this.change('undo', 'redo');
   }

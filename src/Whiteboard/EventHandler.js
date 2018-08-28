@@ -3,9 +3,14 @@ import throttle from '../util/throttle';
 import { addListener, removeListener } from '../util/dom';
 
 // bind both mouse & touch event.
-const mousedown = 'mousedown touchstart';
-const mousemove = 'mousemove touchmove';
-const mouseup = 'mouseup touchend';
+// const mousedown = 'mousedown touchstart';
+// const mousemove = 'mousemove touchmove';
+// const mouseup = 'mouseup touchend';
+
+const mousedown = 'mousedown';
+const mousemove = 'mousemove';
+const mouseup = 'mouseup';
+
 
 /**
  *

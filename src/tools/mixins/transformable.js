@@ -25,7 +25,7 @@ export default function transformable(enableRotate = false) {
 
       if (isPointOnResize) {
         this.mode = 'resize';
-      } else if(this.mode === 'select'){
+      } else if (this.mode === 'select') {
         this.items.unselect();
         this.transformGroup.children = [];
         return true;
@@ -35,7 +35,7 @@ export default function transformable(enableRotate = false) {
 
     onMouseDrag({ delta }) {
 
-      if (this.mode === 'select')  {
+      if (this.mode === 'select') {
         this.transformGroup.children = this._selected;
       } else if (this.mode === 'resize') {
         this.corner = this.corner.add(delta);
@@ -58,6 +58,14 @@ export default function transformable(enableRotate = false) {
 
       } else if (this.mode === 'move') {
         this.transformGroup.translate(delta);
+      }
+    },
+
+    onMouseUp() {
+      if (this.mode === 'move') {
+        this.globalCtx.emit('items:move', []);
+      } else if (this.mode === 'resize') {
+        this.globalCtx.emit('items:resize', []);
       }
     },
 

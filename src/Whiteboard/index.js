@@ -186,7 +186,6 @@ export default class Whiteboard {
   add(json) {
     let instance = createItemViaJSON(json);
     this.items.add(instance);
-    this.emit('item:add', { instance });
   }
 
   remove(json) {
