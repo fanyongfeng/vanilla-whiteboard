@@ -14,6 +14,7 @@ import Grid from '../graphic/component/Grid';
 import Axes from '../graphic/component/Axes';
 import MaterialProvider from './MaterialProvider';
 import History from '../commands/History';
+import Item from '../graphic/Item';
 
 const _createContext = Symbol('_createContext');
 const defaultOptions = {
@@ -27,6 +28,7 @@ const defaultOptions = {
   alignToGrid: false,
   throttle: 0,
   minDistance: 0,
+  zoom: 1,
   dragThreshold: 2,
 };
 
@@ -90,6 +92,11 @@ export default class Whiteboard {
     handler.bind(this.operateLayer);
 
     this.tool = 'selection';
+
+    if(this.options.zoom !== 1) {
+      this.zoom = this.options.zoom;
+    }
+
     Whiteboard.instances.push(this)
   }
 
@@ -118,7 +125,7 @@ export default class Whiteboard {
     }
 
     // 将context 属性赋值白板实例
-    if(process.env.NODE_ENV === 'development')
+    if (process.env.NODE_ENV === 'development')
       Object.keys(proto).forEach(key => this[key] = proto[key]);
 
     //return context;
@@ -167,24 +174,42 @@ export default class Whiteboard {
     return this.items.toJSON();
   }
 
-  get zoom(){
+  _zoom = 1;
 
+  /**
+   * Get zoom of current whiteboard.
+   */
+  get zoom() {
+    return this._zoom;
   }
 
+  /**
+   * Set zoom of current whiteboard.
+   */
   set zoom(radio) {
-    this.activeLayer.ctx.scale(radio, radio);
-  }
+    this._zoom = radio;
+    this.layers.forEach(layer => layer.zoom(radio));
 
-  createItem(type, style) {
-    return createItem(type, style);
+    setStyle(this.wrapper, {
+      width: `${this.width * radio}px`,
+      height: `${this.height * radio}px`,
+      position: 'relative'
+    });
   }
 
   addItem(item) {
     this.items.add(item);
   }
 
+  createItem(type, style) {
+    if (!type) throw new TypeError("Argument illegal!");
+    if (typeof type === 'string') return createItem(type, style);
+    if (type instanceof Item) return type;
+    return createItemViaJSON(type);
+  }
+
   add(json) {
-    let instance = createItemViaJSON(json);
+    let instance = this.createItem(json);
     this.items.add(instance);
   }
 
@@ -251,7 +276,7 @@ export default class Whiteboard {
     this.backgroundLayer.items.set(axes, 2);
   }
 
-  saveImage(filename='material', type = 'png') {
+  saveImage(filename = 'material', type = 'png') {
     if (!/^jpeg|jpg|png$/.test(type)) throw new Error(`Can't support type ${type}`);
 
     //创建离屏canvas，绘制layers；

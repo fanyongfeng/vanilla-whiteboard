@@ -277,8 +277,9 @@
       });
 
       $("#btnCurve").click(() => {
-        whiteboard.add(curve1);
-        whiteboard.items.get(0).showAuxiliary = true;
+        let item = whiteboard.createItem(curve1);
+        item.showAuxiliary = true;
+        whiteboard.add(item);
       });
 
       $("#btnRect").click(() => {
@@ -299,7 +300,12 @@
             let ey = sy + 8;
             let hex = parseInt(h * 16777215 / 100);
 
-            whiteboard.add([6, , [[sx, sy], [ex, ey]], { c: colors[parseInt(Math.random() * 7) ]}]);
+            let item =whiteboard.createItem([6, , [[sx, sy], [ex, ey]], { c: colors[parseInt(Math.random() * 7) ]}]);
+            item.on('hover', function({ target }){
+              //console.log(...arguments);
+              target.selected = true;
+            });
+            whiteboard.add(item);
           }
         }
       });

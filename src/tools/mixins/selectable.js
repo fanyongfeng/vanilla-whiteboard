@@ -36,7 +36,12 @@ export default function selectable(multiSelect = true){
     },
 
     onMouseMove({ point }) {
-      return !this._pointOnElement(point);
+      let isPointOnElement = this._pointOnElement(point);
+      if(isPointOnElement) {
+        let {target} = this;
+        target.emit('hover', { target });
+      }
+      return !isPointOnElement;
     },
 
     _pointOnElement(point) {

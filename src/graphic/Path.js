@@ -17,6 +17,7 @@ const _points =  Symbol('_segments');
 @observeProps(
   {
     fill: { type: Boolean, default: false },
+    showAuxiliary: { type: Boolean, default: false },
     stroke: { type: Boolean, default: true },
   }
 )
@@ -27,7 +28,6 @@ class Path extends Item {
   [_points] = [];
   contextPoint = null;
   isClose = false;
-  showAuxiliary = false;
 
   get segments() {
     return this[_segments];

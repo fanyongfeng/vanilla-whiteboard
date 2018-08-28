@@ -26,9 +26,9 @@ export default {
 
     window.whiteboard2 = this.whiteboard2 = new Whiteboard({
       container:document.getElementById('draw-panel2'),
-      width: 500,
-      height: 400,
-      zoom: 1,
+      width: 1000,
+      height: 800,
+      zoom: .5,
       selectionMode: 'contains', // cross
     });
 

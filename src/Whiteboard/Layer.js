@@ -101,6 +101,7 @@ export default class Layer {
     return this.deviceRatio;
   }
 
+
   /**
    * prop 'isDirty' is readonly
    */
@@ -139,6 +140,17 @@ export default class Layer {
    */
   clear() {
     this.items.clear();
+  }
+
+  zoom(radio){
+    this.ctx.scale(radio, radio);
+    setStyle(this.el, {
+      width: `${this.width * radio}px`,
+      height: `${this.height * radio}px`,
+    });
+
+    this.el.width = this.el.width * radio;
+    this.el.height = this.el.height * radio;
   }
 
   appendTo(whiteboard) {
