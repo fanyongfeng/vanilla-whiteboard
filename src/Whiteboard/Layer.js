@@ -101,7 +101,6 @@ export default class Layer {
     return this.deviceRatio;
   }
 
-
   /**
    * prop 'isDirty' is readonly
    */
@@ -119,9 +118,10 @@ export default class Layer {
   applyRatio() {
     this.el.width = this.width * this.deviceRatio;
     this.el.height = this.height * this.deviceRatio;
-    this.matrix
-      .scale(this.deviceRatio, this.deviceRatio)
-      .applyToContext(this.ctx);
+    this.ctx.scale(this.deviceRatio, this.deviceRatio);
+    // this.matrix
+    //   .scale(this.deviceRatio, this.deviceRatio)
+    //   .applyToContext(this.ctx);
   }
 
   /**
@@ -142,8 +142,13 @@ export default class Layer {
     this.items.clear();
   }
 
+  /**
+   * 等比缩放画布
+   * @param {Number} radio
+   */
   zoom(radio){
-    this.ctx.scale(radio, radio);
+    // /this.ctx.scale(radio, radio);
+    this.matrix.scale(radio, radio);
     setStyle(this.el, {
       width: `${this.width * radio}px`,
       height: `${this.height * radio}px`,
@@ -151,6 +156,7 @@ export default class Layer {
 
     this.el.width = this.el.width * radio;
     this.el.height = this.el.height * radio;
+    this.markAsDirty();
   }
 
   appendTo(whiteboard) {
@@ -164,6 +170,9 @@ export default class Layer {
     this.globalCtx = whiteboard.context;
   }
 
+  /**
+   * 释放该Layer
+   */
   dispose(){
     this.wrapper && this.wrapper.removeChild(this.el);
   }

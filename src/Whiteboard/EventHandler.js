@@ -48,6 +48,10 @@ export default class EventHandler {
     return this._currentTool;
   }
 
+  get inverseMatrix(){
+    return this.layer.matrix.inverse();
+  }
+
   bind(layer) {
     this.layer = layer;
     let canvas = this.canvas = layer.el;
@@ -113,10 +117,17 @@ export default class EventHandler {
     keyModifiers[event.key] = false;
   }
 
+  _getMouseEvent(event){
+    let _event = new MouseEvent(event);
+    let point = _event.point;
+    this.inverseMatrix.applyToPoint(point);
+    return _event;
+  }
+
   onMouseDown(event) {
     event.preventDefault();
 
-    let _event = new MouseEvent(event);
+    let _event = this._getMouseEvent(event);
 
     if(this.invokeToolSlotHandler('onBeforeMouseDown', _event) === false) {
       return;
@@ -138,7 +149,7 @@ export default class EventHandler {
     this.isMouseDown = false;
     this.isDragging = false;
 
-    this.invokeToolSlotHandler('onMouseUp', new MouseEvent(event));
+    this.invokeToolSlotHandler('onMouseUp', this._getMouseEvent(event));
 
     removeListener(document, mouseup, this.onMouseUp);
     removeListener(document, mousemove, this.onMouseMove);
@@ -148,7 +159,7 @@ export default class EventHandler {
   onMouseMove(event) {
     event.preventDefault();
 
-    let _event = new MouseEvent(event),
+    let _event = this._getMouseEvent(event),
       point = _event.point;
 
     // if(!throttleDistance(point, 10)) return;
@@ -166,10 +177,8 @@ export default class EventHandler {
     if (this.isMouseDown) {
       this.isDragging = true;
       if(this.draggingTriggered === 0 &&
-        this.invokeToolSlotHandler('onBeforeMouseDrag', _event) === false) {
-        console.log('--dragging canceled!--')
-        return;
-      }
+        this.invokeToolSlotHandler('onBeforeMouseDrag', _event) === false)  return;
+
       this.draggingTriggered++;
       this.invokeToolSlotHandler('onMouseDrag', _event);
     } else {

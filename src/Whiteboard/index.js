@@ -214,7 +214,7 @@ export default class Whiteboard {
   }
 
   remove(json) {
-    this.items.delete(json);
+    this.items.deleteById(json);
   }
 
   addText(text) {
