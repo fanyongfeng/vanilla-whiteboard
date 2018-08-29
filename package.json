@@ -60,6 +60,9 @@
     "webpack-merge": "^4.1.0"
   },
   "ava": {
+    "files": [
+      "test/point.js"
+    ],
     "babel": "inherit",
     "require": [
       "babel-register"

@@ -4,36 +4,25 @@
 import test from 'ava';
 import Color from '../src/graphic/types/Color';
 
-test('Set named color', function() {
-  var path = new Path();
-  path.fillColor = 'red';
-  equals(path.fillColor, new Color(1, 0, 0));
-  equals(path.fillColor.toCSS(), 'rgb(255,0,0)');
-});
+test('Set color to hex', t => {
+  var color = new Color('#ff0000');
+  t.deepEqual(color, new Color(1, 0, 0));
+  t.deepEqual(color.toString(), 'rgba(255,0,0,1)');
 
-test('Set color to hex', function() {
-  var path = new Path();
-  path.fillColor = '#ff0000';
-  equals(path.fillColor, new Color(1, 0, 0));
-  equals(path.fillColor.toCSS(), 'rgb(255,0,0)');
-
-  var path = new Path();
-  path.fillColor = '#f00';
-  equals(path.fillColor, new Color(1, 0, 0));
-  equals(path.fillColor.toCSS(), 'rgb(255,0,0)');
+  var color = new Color('#f00');
+  t.deepEqual(color, new Color(1, 0, 0));
+  t.deepEqual(color.toString(), 'rgba(255,0,0,1)');
 });
 
 
-test('Set color to array', function() {
-  var path = new Path();
-  path.fillColor = [1, 0, 0];
-  equals(path.fillColor, new Color(1, 0, 0));
-  equals(path.fillColor.toCSS(), 'rgb(255,0,0)');
+test('Set color to array', t => {
+  var color = new Color(255, 0, 0);
+  t.deepEqual(color, new Color(1, 0, 0));
+  t.deepEqual(color.toString(), 'rgba(255,0,0,1)');
 });
 
-test('Converter:', function() {
-  var path = new Path();
-  path.fillColor = [1, 0, 0];
-  equals(path.fillColor, new Color(1, 0, 0));
-  equals(path.fillColor.toCSS(), 'rgb(255,0,0)');
+test('Converter:', t => {
+  var color = new Color(255, 0, 0);
+  t.deepEqual(color, new Color(1, 0, 0));
+  t.deepEqual(color.toString(), 'rgba(255,0,0,1)');
 })

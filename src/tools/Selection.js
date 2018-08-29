@@ -11,4 +11,6 @@ import { deepMixin } from '../decorators/mixin';
 @deepMixin(transformable())
 @deepMixin(selectable())
 @deepMixin(dragBounds())
-export default class Selection extends Tool { }
+export default class Selection extends Tool {
+
+}

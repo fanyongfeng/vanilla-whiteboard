@@ -70,7 +70,7 @@ export default class Point {
    * The object itself is not modified!
    */
   divide(x, y) {
-    let point = Point.instance(x, y);
+    let point = Point.instantiate(x, y);
     return new Point(this.x / point.x, this.y / point.y);
   }
 
@@ -246,8 +246,8 @@ export default class Point {
   /**
    * return point data as JSON-format: [x, y]
    */
-  toJSON(precision = 5) {
-    if(precision === 0) return [this.x, this.y];
+  toJSON(precision = -1) {
+    if(precision === -1) return [this.x, this.y];
 
     let multiplier = Math.pow(10, precision);
     return [
