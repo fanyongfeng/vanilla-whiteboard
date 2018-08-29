@@ -28,7 +28,7 @@ function fitCurve(points, maxError) {
 
   for (let i = 0, prev, l = points.length; i < l; i++) {
     let point = points[i];
-    if (!prev || !prev.eq(point)) {
+    if (!prev || !prev.equals(point)) {
       _points.push(prev = point.clone());
     }
   }

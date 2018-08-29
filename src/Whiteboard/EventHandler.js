@@ -1,12 +1,16 @@
 import { MouseEvent, KeyEvent, keyCode } from './EventType';
-import tools from '../tools';
 import throttle from '../util/throttle';
 import { addListener, removeListener } from '../util/dom';
 
 // bind both mouse & touch event.
-const mousedown = 'mousedown touchstart';
-const mousemove = 'mousemove touchmove';
-const mouseup = 'mouseup touchend';
+// const mousedown = 'mousedown touchstart';
+// const mousemove = 'mousemove touchmove';
+// const mouseup = 'mouseup touchend';
+
+const mousedown = 'mousedown';
+const mousemove = 'mousemove';
+const mouseup = 'mouseup';
+
 
 /**
  *
@@ -33,11 +37,19 @@ export default class EventHandler {
 
   set tool(tool) {
     this._currentTool = tool;
-    if (tool) this._currentTool.layer = this.layer;
+    if (tool) {
+      this._currentTool.layer = this.layer;
+      this._currentTool.globalCtx = this.context;
+      this.layer.clear();
+    }
   }
 
   get tool() {
     return this._currentTool;
+  }
+
+  get inverseMatrix(){
+    return this.layer.matrix.inverse();
   }
 
   bind(layer) {
@@ -46,8 +58,8 @@ export default class EventHandler {
     this.onMouseMove = throttle(this.onMouseMove, 0).bind(this); //
     this.onMouseUp = this.onMouseUp.bind(this);
 
-    addListener(canvas, 'mousedown', this.onMouseDown.bind(this));
-    addListener(canvas, 'mousemove', this.onMouseMove);
+    addListener(canvas, mousedown, this.onMouseDown.bind(this));
+    addListener(canvas, mousemove, this.onMouseMove);
     addListener(canvas, 'mouseenter', this.onMouseEnter.bind(this));
     addListener(canvas, 'mouseleave', this.onMouseLeave.bind(this));
     addListener(canvas, 'keydown', this.onKeyDown.bind(this));
@@ -97,7 +109,7 @@ export default class EventHandler {
 
   onKeyUp(event) {
     if ((event.keyCode === keyCode.DELETE || event.keyCode === keyCode.BACKSPACE) &&
-      tools._currentTool.type === toolTypes.SELECTOR) {
+      this._currentTool.type === toolTypes.SELECTOR) {
 
       if (!toolAvailable) return false;
       commands.delete();
@@ -105,15 +117,30 @@ export default class EventHandler {
     keyModifiers[event.key] = false;
   }
 
+  _getMouseEvent(event){
+    let _event = new MouseEvent(event);
+    let point = _event.point;
+    this.inverseMatrix.applyToPoint(point);
+    return _event;
+  }
+
   onMouseDown(event) {
     event.preventDefault();
+
+    let _event = this._getMouseEvent(event);
+
+    if(this.invokeToolSlotHandler('onBeforeMouseDown', _event) === false) {
+      return;
+    }
+
     this.isMouseDown = true;
+    this.draggingTriggered = 0;
 
-    this.invokeToolSlotHandler('onMouseDown', new MouseEvent(event));
+    this.invokeToolSlotHandler('onMouseDown', _event);
 
-    addListener(document, 'mouseup', this.onMouseUp);
-    addListener(document, 'mousemove', this.onMouseMove);
-    removeListener(this.canvas, 'mousemove', this.onMouseMove);
+    addListener(document, mouseup, this.onMouseUp);
+    addListener(document, mousemove, this.onMouseMove);
+    removeListener(this.canvas, mousemove, this.onMouseMove);
   }
 
   onMouseUp(event) {
@@ -122,21 +149,21 @@ export default class EventHandler {
     this.isMouseDown = false;
     this.isDragging = false;
 
-    this.invokeToolSlotHandler('onMouseUp', new MouseEvent(event));
+    this.invokeToolSlotHandler('onMouseUp', this._getMouseEvent(event));
 
-    removeListener(document, 'mouseup', this.onMouseUp);
-    removeListener(document, 'mousemove', this.onMouseMove);
-    addListener(this.canvas, 'mousemove', this.onMouseMove);
+    removeListener(document, mouseup, this.onMouseUp);
+    removeListener(document, mousemove, this.onMouseMove);
+    addListener(this.canvas, mousemove, this.onMouseMove);
   }
 
   onMouseMove(event) {
     event.preventDefault();
 
-    let ev = new MouseEvent(event),
-      point = ev.point;
+    let _event = this._getMouseEvent(event),
+      point = _event.point;
 
     // if(!throttleDistance(point, 10)) return;
-    if (ev.target !== this.canvas) return;
+    if (_event.target !== this.canvas) return;
 
     let contain = this.context.bounds.containsPoint(point);
     if (!contain) return;
@@ -149,9 +176,14 @@ export default class EventHandler {
 
     if (this.isMouseDown) {
       this.isDragging = true;
-      this.invokeToolSlotHandler('onMouseDrag', ev);
-    } else
-    this.invokeToolSlotHandler('onMouseMove', ev);
+      if(this.draggingTriggered === 0 &&
+        this.invokeToolSlotHandler('onBeforeMouseDrag', _event) === false)  return;
+
+      this.draggingTriggered++;
+      this.invokeToolSlotHandler('onMouseDrag', _event);
+    } else {
+      this.invokeToolSlotHandler('onMouseMove', _event);
+    }
     this.lastPoint = point;
   }
 
@@ -169,9 +201,11 @@ export default class EventHandler {
    * @param  {...any} args arguments
    */
   invokeToolSlotHandler(name, event) {
-    return this.tool &&
-      typeof this.tool[name] === 'function' &&
-      this.tool[name](event);
+    if(!this.tool ||
+      typeof this.tool[name] !== 'function') return; //ensure return undefined when handler is null.
+    // if(process.env.NODE_ENV === 'development')
+    //   console.log(this.tool.type, name, 'triggered!');
+    return this.tool[name](event);
   }
 }
 

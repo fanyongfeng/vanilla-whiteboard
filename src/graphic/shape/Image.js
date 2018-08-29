@@ -1,7 +1,5 @@
 import Item from "../Item"
 import Rect from '../types/Rect';
-import Point from '../types/Point';
-import Matrix from '../types/Matrix';
 
 
 const viewWidth = 1000;
@@ -56,7 +54,7 @@ export default class Image extends Item {
    * @param {Function} fn callback
    */
   loadImage(url, fn) {
-    if (!url) return;
+    if (!url && this._image && this.loaded) return;
 
     // let img = new window.Image;
     let img = document.createElement('img');
@@ -78,7 +76,7 @@ export default class Image extends Item {
     };
 
     img.onerror = function () {
-      console.warn(`can't load image${img.src}`);
+      console.warn(`can't load image '${url}'`);
       //TODO:Emit error event
       img = img.onload = img.onerror = null;
     };

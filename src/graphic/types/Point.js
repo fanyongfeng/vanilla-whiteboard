@@ -39,9 +39,39 @@ export default class Point {
   * the point as a new point.
   * The object itself is not modified!
   */
-  add(point) {
-    point = Point.instantiate(point);
+  add(x, y) {
+    let point = Point.instantiate(x, y);
     return new Point(this.x + point.x, this.y + point.y);
+  }
+
+  /**
+   * Returns the multiplication of the supplied point to the point as a new
+   * point.
+   * The object itself is not modified!
+   */
+  multiply(x, y) {
+    let point = Point.instantiate(x, y);
+    return new Point(this.x * point.x, this.y * point.y);
+  }
+
+  /**
+    * Returns the subtraction of the supplied value to both coordinates of
+    * the point as a new point.
+    * The object itself is not modified!
+    */
+  subtract(x, y) {
+    let point = Point.instantiate(x, y);
+    return new Point(this.x - point.x, this.y - point.y);
+  }
+
+  /**
+   * Returns the division of the supplied value to both coordinates of
+   * the point as a new point.
+   * The object itself is not modified!
+   */
+  divide(x, y) {
+    let point = Point.instantiate(x, y);
+    return new Point(this.x / point.x, this.y / point.y);
   }
 
   /**
@@ -54,36 +84,6 @@ export default class Point {
   transform(matrix) {
     matrix.applyToPoint(this);
     return this;
-  }
-
-  /**
-   * Returns the multiplication of the supplied point to the point as a new
-   * point.
-   * The object itself is not modified!
-   */
-  multiply(point) {
-    point = Point.instantiate(point);
-    return new Point(this.x * point.x, this.y * point.y);
-  }
-
-  /**
-    * Returns the subtraction of the supplied value to both coordinates of
-    * the point as a new point.
-    * The object itself is not modified!
-    */
-  subtract(point) {
-    point = Point.instantiate(point);
-    return new Point(this.x - point.x, this.y - point.y);
-  }
-
-  /**
-   * Returns the division of the supplied value to both coordinates of
-   * the point as a new point.
-   * The object itself is not modified!
-   */
-  divide(point) {
-    point = Point.instance(point);
-    return new Point(this.x / point.x, this.y / point.y);
   }
 
   /**
@@ -110,22 +110,20 @@ export default class Point {
    * If the point coord is equal to the other point.
    * @param {Point} other
    */
-  eq(other) {
+  equals(other) {
     return this === other || (this.x === other.x && this.y === other.y);
   }
 
   /**
    * Returns new point which is the result of linear interpolation with this one and another one
    * @param {Point} other
-   * @param {Number} t , position of interpolation, between 0 and 1 default 0.5
+   * @param {Number} time , position of interpolation, between 0 and 1 default 0.5
    * @return {Point}
    */
-  lerp(other, t) {
-    if (typeof t === 'undefined') {
-      t = 0.5;
-    }
-    t = Math.max(Math.min(1, t), 0);
-    return new Point(this.x + (other.x - this.x) * t, this.y + (other.y - this.y) * t);
+  lerp(other, time = 0.5) {
+    if(time > 1 || time < 0) throw new TypeError(`Param 'Time' must between 0 and 1;`);
+    time = Math.max(Math.min(1, time), 0);
+    return new Point(this.x + (other.x - this.x) * time, this.y + (other.y - this.y) * time);
   }
 
   /**
@@ -248,8 +246,8 @@ export default class Point {
   /**
    * return point data as JSON-format: [x, y]
    */
-  toJSON(precision = 5) {
-    if(precision === 0) return [this.x, this.y];
+  toJSON(precision = -1) {
+    if(precision === -1) return [this.x, this.y];
 
     let multiplier = Math.pow(10, precision);
     return [

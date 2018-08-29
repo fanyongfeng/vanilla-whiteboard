@@ -1,52 +1,57 @@
 /**
  * enable tool has select behavior.
  */
-export default {
-  onMouseDown(event) {
-    let point = event.point;
+export default function selectable(multiSelect = true){
+  return {
+    _downPoint: null,
+    _lastSelected: [],
+    _selected: [],
 
-    this.layer.items.set(this.transformGroup);
+    onMouseDown(event) {
+      this._downPoint = event.point;
 
-    if (this.pointOnElement(point)) {
-      if(this.target.selected) return;
-      this.items.unselect();
-      this.target.selected = true;
-      this.transformGroup.children = [this.target];
-      return;
-    }
-  },
-
-  onMouseDrag(event) {
-    let point = event.point;
-    if (this.mode === 'select') {
-
-      this.selectAreaRect.endPoint = point;
-
-      let selected = this.items.filter(
-        item => item.selected = this.selectAreaRect.bounds.containsRectangle(item.bounds)
-      );
-
-      if (!selected.length) return;
-
-      if (ItemCollection.diff(selected, lastSelected)) {
-        this.transformGroup.children = selected;
-        lastSelected = selected;
-      }
-
-    }
-  },
-
-  pointOnElement = function (point) {
-    let item;
-    for (let len = this.items.length, i = len; i > 0; i--) { // find from right
-      item = this.items.get(i - 1);
-      if (item.containsPoint(point)) {
-        this.setCursor('pointer');
+      if (this._pointOnElement(this._downPoint)) {
         this.mode = 'move';
-        this.target = item;
+        if(this.target.selected) return false;
+        this.items.unselect();
+        this.target.selected = true;
+        this._selected = [this.target];
         return true;
       }
+      this.mode = 'select';
+      return true;
+    },
+
+    onMouseDrag(event) {
+      if (this.mode !== 'select')  return;
+
+      let point = event.point;
+      this.dragRect.endPoint = point;
+      this._selected = this.items.filter(
+        item => item.selected = this.dragRect.bounds.containsRect(item.bounds)
+      );
+    },
+
+    onMouseMove({ point }) {
+      let isPointOnElement = this._pointOnElement(point);
+      if(isPointOnElement) {
+        let {target} = this;
+        target.emit('hover', { target });
+      }
+      return !isPointOnElement;
+    },
+
+    _pointOnElement(point) {
+      for (let len = this.items.length, i = len, item; i > 0; i--) { // find from right
+        item = this.items.get(i - 1);
+        if (item.containsPoint(point)) {
+          this.target = item;
+          this.setLayerCursor('pointer');
+          return true;
+        }
+      }
+      return false;
     }
-    return false;
   }
 }
+

@@ -17,9 +17,17 @@ export default class OperatorLayer extends Layer {
       this._cursorImage = null;
     } else {
       this._cursorImage = value;
+      this._cursorImage.layer = this;
     }
     this.markAsDirty();
-    // if(!value instanceof Item) throw new TypeError("Must be item");
+  }
+
+  /**
+   * clear current layer.
+   */
+  clear() {
+    super.clear();
+    this.setCursor('default');
   }
 
   _draw() {

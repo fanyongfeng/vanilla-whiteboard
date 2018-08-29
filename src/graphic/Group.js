@@ -1,14 +1,16 @@
-import { memoized } from '../decorators/memoized'
 import Item from './Item';
 import Rect from './types/Rect';
 import ControlRect from './component/ControlRect';
-import { changed } from '../decorators/memoized';
+import { observeProps } from '../decorators/memoized';
 /**
  * 图形成组，包括Path, Image, Text, CompoundPath
  * 用于成组的transform, delete
  */
+
+@observeProps({
+  children: { type: Array, default: [] }
+})
 export default class Group extends Item {
-  _children = [];
 
   constructor(options, items = []) {
     super(options);
@@ -22,18 +24,6 @@ export default class Group extends Item {
 
   prepend(item) {
     this._children.unshift(item);
-  }
-
-  /**
-   * Get children.
-   */
-  get children() {
-    return this._children;
-  }
-
-  @changed()
-  set children(value){
-    this._children = value;
   }
 
   /**

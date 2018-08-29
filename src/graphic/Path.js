@@ -1,5 +1,6 @@
 
 import { LineSegment, BezierSegment, MoveSegment, QuadraticSegment, ArcSegment } from './types/Segment';
+import SegmentPoint from './types/SegmentPoint';
 import Point from './types/Point';
 import Rect from './types/Rect';
 import fitCurve from './algorithm/fitCurve';
@@ -8,7 +9,7 @@ import { memoized, observeProps } from '../decorators/memoized';
 import Item from './Item';
 
 const _segments = Symbol('_segments');
-
+const _points =  Symbol('_points');
 /**
  * A full path and base class of all single path shapes.
  * 所有绘制图形的父类
@@ -16,6 +17,7 @@ const _segments = Symbol('_segments');
 @observeProps(
   {
     fill: { type: Boolean, default: false },
+    showAuxiliary: { type: Boolean, default: false },
     stroke: { type: Boolean, default: true },
   }
 )
@@ -23,22 +25,34 @@ class Path extends Item {
 
   //props
   [_segments] = [];
+  [_points] = [];
   contextPoint = null;
   isClose = false;
-  showAuxiliary = false;
 
   get segments() {
     return this[_segments];
   }
 
+  get points() {
+    return this[_points];
+  }
+
+  /**
+   * Add Segement in path.
+   * @param {Segment} segment
+   */
   add(segment) {
     segment.owner = this;
     segment.contextPoint = this.contextPoint;
     this.segments.push(segment);
     this.contextPoint = segment.point;
-    this.markAsDirty();
+    this.changed();
   }
 
+
+  /*
+  * Implements iterator.
+  **/
   *[Symbol.iterator]() {
     for (let i = 0, len = this.segments.length; i < len; i++) {
       yield this.segments[i];
@@ -174,20 +188,27 @@ class Path extends Item {
     return this.segments.reduce((arr, item) => arr += item.length, 0);
   }
 
+  /**
+   * Simplify current path, and rebuild segments
+   */
   simplify() {
     //不优化小于3个点的曲线
     if (this.segments.length < 3) return this;
 
     let segments = fitCurve(this.segments.map(item => item.point), 1);
     this[_segments] = ([this[_segments][0]]).concat(segments);
-    this.markAsDirty();
+    this.changed();
     return this;
   }
 
+  /**
+   * Smooth current path, and rebuild segments
+   */
   smooth() {
+
     let segments = smoothCurve(this.segments, this.isClose);
     this[_segments] = segments;
-    this.markAsDirty();
+    this.changed();
     return this;
   }
 

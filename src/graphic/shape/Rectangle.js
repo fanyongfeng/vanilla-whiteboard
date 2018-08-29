@@ -3,10 +3,15 @@
  */
 import Shape from "../Shape"
 import Point from "../types/Point";
+import { observeProps } from '../../decorators/memoized';
 
+@observeProps({
+  /**
+   * 是否有圆角
+   */
+  radius: { type: Number, default: 0 },
+})
 export default class Rectangle extends Shape {
-
-  radius = 0;
 
   _buildPath() {
 

@@ -2,10 +2,12 @@ import { tsid } from '../util/id';
 import Style from './types/Style';
 import Point from './types/Point';
 import Matrix from './types/Matrix';
-import { memoizable, changed, observeProps } from '../decorators/memoized';
+import { memoizable, observeProps } from '../decorators/memoized';
+import emittable from '../decorators/emitter';
 
 
 // 白板所有元素的父类
+@emittable()
 @memoizable()
 @observeProps(
   {
@@ -30,12 +32,13 @@ class Item {
    */
   globalCompositeOperation = 'source-over';
   selectable = true;
+  scaleMode = "free"; //no-scale, free, proportion
   layer = null;  //inject when it is added on layer.
 
 
   constructor(options) {
     if (options) {
-      let {type, typeId, id, style, ...rest} = options;
+      let { type, typeId, id, style, ...rest } = options;
 
       this.type = type || this.constructor.name;
       this.typeId = typeId || -Infinity;
@@ -60,19 +63,31 @@ class Item {
     });
   }
 
+  /**
+   * Get bounds of current item.
+   */
   get bounds() {
     throw new Error("getter bounds must be overwrite!");
     return null;
   }
 
+  /**
+   * Get bounds with stroke of current item.
+   */
   get strokeBounds() {
     return this.bounds;
   }
 
+  /**
+   * Get position based-on center point of current item.
+   */
   get position() {
     return this.bounds.center;
   }
 
+  /**
+   * Set position of current item.
+   */
   set position(value) {
     this.setPosition(value.x, value.y);
   }
@@ -99,6 +114,11 @@ class Item {
   scale(sx, sy, point = null) {
     if (typeof sx !== 'number')
       throw new TypeError("param 'sx' of scale must be number!");
+
+    if (this.scaleMode === 'proportion') {
+      let scaleRadio = Math.min(sx, sy);
+      sx = sy = scaleRadio;
+    }
 
     let mx = new Matrix();
     if (typeof sy === 'undefined') sy = sx;
@@ -129,7 +149,7 @@ class Item {
     }
 
     this.transformContent(matrix);
-    this.markAsDirty();
+    this.changed();
     return this;
   }
 

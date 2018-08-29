@@ -1,0 +1,62 @@
+{
+  "folders": [
+    {
+      "path": "/Users/daniel_jhe/work/github-project/graphic/fabric.js"
+    },
+    {
+      "path": "/Users/daniel_jhe/work/github-project/graphic/antv"
+    },
+    {
+      "path": "/Users/daniel_jhe/work/github-project/graphic/echarts"
+    },
+    {
+      "path": "/Users/daniel_jhe/work/github-project/graphic/literallycanvas"
+    },
+    {
+      "path": "/Users/daniel_jhe/work/github-project/graphic/paper.js"
+    },
+    {
+      "path": "/Users/daniel_jhe/work/github-project/graphic/zrender"
+    },
+    {
+      "path": "/Users/daniel_jhe/work/github-project/graphic/spritejs"
+    },
+    {
+      "path": "/Users/daniel_jhe/work/github-project/game/pixi.js"
+    },
+    {
+      "path": "/Users/daniel_jhe/work/github-project/graphic/signature_pad"
+    },
+    {
+      "path": "/Users/daniel_jhe/work/github-project/game/p5.js"
+    },
+    {
+      "path": "/Users/daniel_jhe/work/github-project/webGL-AR-VR/three.js.with-comments"
+    },
+    {
+      "path": "/Users/daniel_jhe/work/github-project/graphic/pts"
+    },
+    {
+      "path": "/Users/daniel_jhe/work/github-project/graphic/pt"
+    },
+    {
+      "path": "/Users/daniel_jhe/work/github-project/graphic/react-canvas"
+    },
+    {
+      "path": "/Users/daniel_jhe/work/github-project/react/redux-undo"
+    },
+    {
+      "path": "/Users/daniel_jhe/work/github-project/react/react"
+    },
+    {
+      "path": "/Users/daniel_jhe/work/github-project/vue/vue"
+    },
+    {
+      "path": "/Users/daniel_jhe/work/github-project/vue/vuex"
+    },
+    {
+      "path": "/Users/daniel_jhe/work/github-project/frameworks/libs/lodash"
+    }
+  ],
+  "settings": {}
+}

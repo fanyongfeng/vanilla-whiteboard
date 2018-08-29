@@ -9,16 +9,10 @@ import {
 
 import Path from "./graphic/Path";
 import Point from "./graphic/types/Point";
-
-import Grid from './graphic/component/Grid';
-import Axes from './graphic/component/Axes';
-
 import animate from './animate/animate';
 import easing from './animate/easing';
 import animateColor from './animate/animateColor';
 
-
-window.animation = animate;
 export default {
 
   init(){
@@ -30,17 +24,69 @@ export default {
       selectionMode: 'contains', // cross
     });
 
+    window.whiteboard2 = this.whiteboard2 = new Whiteboard({
+      container:document.getElementById('draw-panel2'),
+      width: 1000,
+      height: 800,
+      zoom: .5,
+      selectionMode: 'contains', // cross
+    });
+
     window.items = window.whiteboard.items;
-
-
     this.whiteboard.on('item:add', (arg)=>{
-       // console.log(arg);
+      // console.log(arg);
     }).on('layer:refresh', (arg)=>{
-       // console.log(`${arg.layer.role}, refreshed!`);
+      // console.log(`${arg.layer.role}, refreshed!`);
+    }).on('item:add', (arg)=>{
+      console.log('item:add', arg);
     });
 
     this.whiteboard.watch();
+    this.whiteboard2.watch();
+    this.simulateComm();
     return whiteboard;
+  },
+
+  simulateComm(){
+    let wb2 = this.whiteboard2;
+    function addItem(hash){
+      wb2.add(hash);
+    }
+
+    function removeItem(hash){
+      wb2.remove(hash);
+    }
+
+    function transformItem(hash){
+      wb2.remove(hash);
+    }
+
+    function typingText(hash){
+      wb2.remove(hash);
+    }
+
+    function pointerMove(hash){
+      wb2.remove(hash);
+    }
+
+    function pointerDraw(hash){
+      wb2.remove(hash);
+    }
+
+    this.whiteboard.on('item:add', (arg)=>{
+      addItem(arg);
+    }).on('item:remove', (arg)=>{
+      let ids = arg;
+      removeItem(ids)
+    }).on('item:transform', (arg)=>{
+      transformItem(arg);
+    }).on('item:typing', (arg)=>{
+      typingText(arg);
+    }).on('pointer:move', (arg)=>{
+      pointerMove();
+    }).on('pointer:draw', (arg)=>{
+      pointerDraw();
+    });
   },
 
   drawPolyline(type) {

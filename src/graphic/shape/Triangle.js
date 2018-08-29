@@ -1,14 +1,21 @@
 
 import Shape from "../Shape";
-import Point from "../types/Point";
+import { observeProps } from '../../decorators/memoized';
 
 /**
  * 支持等腰，直角三角形
  */
+@observeProps({
+  /**
+   * 当直角三角形时，确定直角的方向
+   */
+  anti: { type: Boolean, default: true },
+  /**
+   * 是否是直角三角形
+   */
+  right: { type: Boolean, default: false },
+})
 export default class Triangle extends Shape {
-
-  // anti = true;
-  // right = false;
 
   _buildPath() {
     let t1x, t1y, t2x, t2y;

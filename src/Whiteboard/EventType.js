@@ -15,7 +15,14 @@ export class MouseEvent {
     this.target = originEvent.target;
     this.offsetX = originEvent.offsetX;
     this.offsetY = originEvent.offsetY;
-    this.point = new Point(originEvent.offsetX, originEvent.offsetY);
+  }
+
+  _point = null;
+  get point() {
+    if (!this._point) {
+      this._point = new Point(this.offsetX, this.offsetY);
+    }
+    return this._point;
   }
 
   get delta() {
@@ -42,6 +49,8 @@ export class KeyEvent {
     this.originEvent = originEvent;
     this.type = originEvent.type;
     this.target = originEvent.target;
+    this.key = originEvent.key;
+    this.keyCode = originEvent.keyCode;
   }
 
   toString() {

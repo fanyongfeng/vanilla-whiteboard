@@ -1,6 +1,0 @@
-
-export default { 
-  exec(name){
-
-  }
-}

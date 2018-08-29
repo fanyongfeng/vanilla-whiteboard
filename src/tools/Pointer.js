@@ -1,46 +1,26 @@
-import Image from '../graphic/shape/Image';
-import Rectangle from '../graphic/shape/Rectangle';
 import Tool from './Tool';
 import dragBounds from './mixins/dragBounds';
+import cursor from './mixins/cursor';
+import { deepMixin } from '../decorators/mixin'
 
+/**
+ * 指挥棒工具，有如下feature:
+ * 1) 当拖拽时生成“拖拽框”，默认时红色
+ * 2) 在鼠标移动时生成一个“指挥棒”，并实时发送“指挥棒”位置数据
+ * 3）需要能够在接收端看到“拖拽框”
+ */
+@deepMixin(dragBounds({
+  strokeStyle: '#f00',
+  lineWidth: 2,
+}, true))
+@deepMixin(cursor("https://www-stage.tutormeetplus.com/v2/static/media/mouse_pointer.64a36561.png", {
+  x : 11, y : -12
+}))
 export default class Pointer extends Tool {
-  //光标
-  cursor = null;
-
-  constructor() {
-    super();
-
-    this.cursor = new Image();
-    this.cursor.loadImage("https://www-stage.tutormeetplus.com/v2/static/media/mouse_pointer.64a36561.png");
-
-    this.selectAreaRect = new Rectangle();
-    this.selectAreaRect.style.strokeStyle = '#ccc';
-    this.selectAreaRect.style.lineWidth = 1;
-    this.selectAreaRect.style.dashArray = [5, 2];
+  onMouseMove({point}){
+    this.globalCtx.emit('pointer:move', [point.x, point.y]);
   }
-
-  onMouseEnter(){
-    this.layer.setCursor(this.cursor);
-  }
-
-  onMouseDown({ point }){
-    this.selectAreaRect.startPoint = point;
-    this.layer.items.add(this.selectAreaRect);
-  }
-
-  onMouseMove({ point, delta }) {
-    this.layer.setCursor(this.cursor);
-    if(this.cursor.loaded) {
-      this.cursor.position = point;
-      //this.emit('pointer', [point.x, point.y])
-    }
-  }
-
-  onMouseDrag({ point }) {
-    this.selectAreaRect.endPoint = point;
-  }
-
-  onMouseUp(){
-
+  onMouseUp() {
+    this.globalCtx.emit('pointer:draw', this.dragRect.toJSON());
   }
 }

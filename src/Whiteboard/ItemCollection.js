@@ -5,15 +5,13 @@
 import { mixin } from '../decorators/mixin';
 import Item from '../graphic/Item';
 
-
 const _items = Symbol('_items');
 const arrMethods = {};
 const arr = Array.prototype;
 
-['splice', 'push', 'unshift', 'sort', 'map', 'forEach', 'find', 'reduce', 'reduceRight']
-  .forEach(method => arrMethods[method] = function () {
-    return arr[method].apply(this[_items], arguments);
-  });
+//Inject Array methods into ItemCollection.
+['splice', 'push', 'unshift', 'sort', 'map', 'forEach', 'find', 'reduce', 'reduceRight', 'filter', 'includes']
+  .forEach(method => arrMethods[method] = function() { return arr[method].apply(this[_items], arguments) });
 
 /**
  * path collection of canvas.
@@ -39,19 +37,6 @@ class ItemCollection {
     return false;
   }
 
-  get all(){
-    return this[_items];
-  }
-
-  /**
-   *
-   * @param {ItemCollection } collection
-   * @param {Item} item
-   */
-  static includes(ids, id) {
-    return !!ids.find(i => i === id);
-  }
-
   /**
    *
    * @param {Array} items
@@ -61,48 +46,42 @@ class ItemCollection {
     if (items) this[_items] = items;
 
     this.layer = layer;
-
-    ['forEach', 'find', 'reduce', 'map']
-      .forEach(method =>
-        this[method] = function () {
-          return arr[method].apply(this[_items], arguments);
-        });
   }
 
+  /**
+   * Get length of items.
+   */
   get length() { return this[_items].length; }
+
+  /**
+   * Internal getter, visit item-array directly
+   */
+  get array(){
+    return this[_items];
+  }
 
   /**
    * All items-collection change ,will trigger whiteboard re-draw.
    */
   changed() {
-    this.layer && this.layer.refresh();
+    this.layer && this.layer.markAsDirty();
   }
 
   /**
-   * return filtered ItemCollection
+   * filter duplicated items
    */
-
-  filter() {
-    return arr.filter.apply(this[_items], arguments);
+  distinct(){
+    this[_items] = Array.from(new Set(this[_items]));
   }
-  // filter() {
-  //   return new ItemCollection(arr.filter.apply(this[_items], arguments), this.layer);
-  // }
 
+  /*
+  * Implements iterator.
+  **/
   *[Symbol.iterator]() {
     for (let i = 0, len = this[_items].length; i < len; i++) {
       yield this[_items][i];
     }
   }
-
-  /**
-   * If contains item.
-   * @param {Item} item
-   */
-  contains(item1) {
-    return !!this[_items].find(item => item === item1);
-  }
-
 
   /**
    * Compare with other ItemCollection.
@@ -123,13 +102,14 @@ class ItemCollection {
   /**
    * Set item at specified position,
    * @param {Number} index, specified position
-   * @param {Item} item whiteboard item to be add.
+   * @param {Item} item, whiteboard item to be add.
    */
   set(item, index) {
     if(this[_items][index] === item) return false;
 
     if(typeof index === 'undefined') {
-      if(this.contains(item)) return false;
+      //add same item only once.
+      if(this.includes(item)) return false;
       return this.add(item);
     }
 
@@ -150,7 +130,7 @@ class ItemCollection {
    */
   add(item) {
     if (!item instanceof Item)
-      throw new Error('Only Item can add to Collection!');
+      throw new TypeError('Only Item can add to Collection!');
 
     item.layer = this.layer;
     this[_items].push(item);
@@ -232,8 +212,8 @@ class ItemCollection {
    * Delete items by ids.
    * @param {Array} ids
    */
-  deleteById(ids) {
-    return this.delete((item) => ItemCollection.includes(ids, item.id));
+  deleteById(ids = []) {
+    return this.delete((item) => ids.includes(item.id));
   }
 
   /**

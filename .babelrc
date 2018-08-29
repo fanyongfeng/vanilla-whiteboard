@@ -1,15 +1,23 @@
 {
   "presets": [
-    ["env", {
-      "modules": false
-    }],
-    "@ava/stage-4",
+    [
+      "env",
+      {
+        "modules": false
+      }
+    ],
     "stage-2"
   ],
-  "plugins": ["transform-runtime", "transform-decorators-legacy"],
+  "plugins": [
+    "transform-decorators-legacy",
+    "transform-runtime"
+  ],
   "env": {
     "test": {
-      "presets": ["env", "stage-2"]
+      "presets": [
+        "env",
+        "stage-2"
+      ]
     }
   }
 }

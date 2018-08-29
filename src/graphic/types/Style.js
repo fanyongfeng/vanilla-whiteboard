@@ -31,6 +31,7 @@ const fontStyles = {
   // Characters
   strokeColor: 'rgba(232, 20, 20, 1)',
   fontSize: 36,
+  fontFamily: 'sans-serif',
   textAlign: 'left',
   justification: 'left'
 };
@@ -129,8 +130,11 @@ export default class Style {
     return other === this || compare(this, other) || false;
   }
 
+  /**
+   * Read-only prop
+   */
   get font() {
-    return `${this.fontSize}px sans-serif`;
+    return `${this.fontSize}px ${this.fontFamily}`;
   }
 
   /**
@@ -169,7 +173,7 @@ export default class Style {
   }
 
   /**
-   * to JSON format. used for websocket message.
+   * Convert to Shortly JSON format. used for MilkyWay concerns.
    */
   toShortJSON() {
     return {
@@ -178,6 +182,13 @@ export default class Style {
       "w": this.lineWidth,
       "f": this.fontSize
     }
+  }
+
+  /**
+   * Convert to JSON format.
+   */
+  toJSON(){
+    return {...this};
   }
 
   /**

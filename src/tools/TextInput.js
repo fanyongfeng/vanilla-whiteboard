@@ -1,17 +1,16 @@
 
 import Tool from './Tool';
 import { drawTextImg } from '../graphic/shape/Text';
-import {createItem}  from '../graphic/ItemFactory';
+import { createItem }  from '../graphic/ItemFactory';
 
 /**
  * Tool to input text on whiteboard
  */
+
 export default class Text extends Tool {
 
   constructor(type) {
-    super();
-    this.type = type;
-    window._texts = this._texts;
+    super(type);
     window.drawText = this.drawText.bind(this);
   }
 

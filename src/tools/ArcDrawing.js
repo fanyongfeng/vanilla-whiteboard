@@ -2,8 +2,8 @@
 import Tool from './Tool';
 
 export default class ArcDrawing extends Tool {
-  constructor(name) {
-    super();
+  constructor(type) {
+    super(type);
     this.center = null;
   }
 

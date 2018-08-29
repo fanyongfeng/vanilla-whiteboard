@@ -294,6 +294,18 @@ export class ArcSegment extends Segment {
     this.radius = radius;
   }
 
+  containsPoint(point, lineWidth) {
+    //TODO:
+    let ret = containStrokeArc(
+      this.contextPoint.x, this.contextPoint.y,
+      this.control1.x, this.control1.y,
+      this.control2.x, this.control2.y,
+      this.point.x, this.point.y,
+      lineWidth, point.x, point.y
+    )
+    return ret;
+  }
+
   get args() {
     return [
       this.control1.x, this.control1.y,

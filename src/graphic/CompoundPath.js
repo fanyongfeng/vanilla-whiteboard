@@ -85,4 +85,4 @@ class CompoundPath extends Item {
   }
 }
 
-export default CompoundPath
+export default CompoundPath;

@@ -4,8 +4,6 @@ import Shape from "../Shape";
 
 export default class ChatBox extends Shape {
 
-  fill = false;
-
   _buildPath() {
 
     let { x: sx, y: sy } = this.startPoint;

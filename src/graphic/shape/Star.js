@@ -11,9 +11,10 @@ import Point from "../types/Point";
 const radio = 0.382;
 export default class Star extends Shape {
 
-  // star default fill-mode
+  // Set fill-mode as default.
   __fill = true;
   __stroke = false;
+  scaleMode = "proportion";
 
   _buildPath() {
 

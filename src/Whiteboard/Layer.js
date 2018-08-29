@@ -6,7 +6,7 @@ import Item from '../graphic/Item';
 
 const _items = Symbol('_items');
 /**
- * Create canvas layer, and Manage all canvas of whiteboard.
+ * Create canvas layer, and Manage all canvases in whiteboard.
  */
 export default class Layer {
 
@@ -73,8 +73,8 @@ export default class Layer {
    * refresh current layer.
    */
   refresh(){
-    this.clear();
-    this.whiteboardCtx.emit('layer:refresh', { layer: this, });
+    this._clearCanvas();
+    this.globalCtx.emit('layer:refresh', { layer: this, });
     this._draw();
     this._isDirty = false;
   }
@@ -108,16 +108,23 @@ export default class Layer {
     return this._isDirty;
   }
 
+  /**
+   * Mark layer as 'dirty', it will be refreshed on next tick.
+   */
   markAsDirty(){
     this._isDirty = true;
   }
 
+  /**
+   * Apply deviceRatio to Canvas, for retina.
+   */
   applyRatio() {
     this.el.width = this.width * this.deviceRatio;
     this.el.height = this.height * this.deviceRatio;
-    this.matrix
-      .scale(this.deviceRatio, this.deviceRatio)
-      .applyToContext(this.ctx);
+    this.ctx.scale(this.deviceRatio, this.deviceRatio);
+    // this.matrix
+    //   .scale(this.deviceRatio, this.deviceRatio)
+    //   .applyToContext(this.ctx);
   }
 
   /**
@@ -127,11 +134,32 @@ export default class Layer {
     this.ctx.setTransform(this.deviceRatio, 0, 0, this.deviceRatio, 0, 0);
   }
 
+  _clearCanvas(){
+    this.ctx.clearRect(0, 0, this.width, this.height);
+  }
+
   /**
    * clear current layer.
    */
   clear() {
-    this.ctx.clearRect(0, 0, this.width, this.height);
+    this.items.clear();
+  }
+
+  /**
+   * 等比缩放画布
+   * @param {Number} radio
+   */
+  zoom(radio){
+    // /this.ctx.scale(radio, radio);
+    this.matrix.scale(radio, radio);
+    setStyle(this.el, {
+      width: `${this.width * radio}px`,
+      height: `${this.height * radio}px`,
+    });
+
+    this.el.width = this.el.width * radio;
+    this.el.height = this.el.height * radio;
+    this.markAsDirty();
   }
 
   appendTo(whiteboard) {
@@ -142,9 +170,12 @@ export default class Layer {
     this.wrapper.appendChild(this.el);
 
     //ref whiteboard context.
-    this.whiteboardCtx = whiteboard.context;
+    this.globalCtx = whiteboard.context;
   }
 
+  /**
+   * 释放该Layer
+   */
   dispose(){
     this.wrapper && this.wrapper.removeChild(this.el);
   }

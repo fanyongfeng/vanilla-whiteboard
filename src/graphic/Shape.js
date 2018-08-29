@@ -1,11 +1,16 @@
 import Path from './Path';
 import Point from './types/Point';
 import Rect from './types/Rect';
+import {observeProps } from '../decorators/memoized'
 
 /**
  * The base class of 'two points shapes' that build with start-point & end-point.
  * 通常情况下，图形都是由拖动行为绘制的
  */
+@observeProps({
+  startPoint: { type: Point, default: new Point },
+  endPoint: { type: Point, default: new Point },
+})
 export default class Shape extends Path {
 
 
@@ -16,7 +21,6 @@ export default class Shape extends Path {
    * @param {Array} points, startPoint , endPoint
    */
   static instantiate(options, [sp, ep]) {
-
     let startPoint = new Point(sp[0], sp[1]);
     let endPoint = new Point(ep[0], ep[1]);
 
@@ -26,37 +30,22 @@ export default class Shape extends Path {
   constructor(options, sp = null, ep = null) {
     super(options);
 
-    this._startPoint = sp || new Point;
-    this._endPoint = ep || new Point;
-    this.buildPath();
+    sp && (this.startPoint = sp);
+    ep && (this.endPoint = ep);
   }
 
-  set startPoint(point){
-    this._startPoint = point;
-    this.buildPath();
-  }
-
-  get startPoint(){
-    return this._startPoint;
-  }
-
-  set endPoint(point){
-    this._endPoint = point;
-    this.buildPath();
-  }
-
-  get endPoint(){
-    return this._endPoint;
-  }
-
-  _buildPath(){
+  _buildPath() {
     throw new Error('must overwrite!');
   }
 
-  buildPath(){
+  buildPath() {
     this.clear();
     this._buildPath();
-    this.markAsDirty();
+  }
+
+  _draw(ctx){
+    this.buildPath();
+    super._draw(ctx);
   }
 
   // override bounds for dragging-shapes

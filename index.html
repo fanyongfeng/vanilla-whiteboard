@@ -66,6 +66,12 @@
     #btnColor5 span {
       background: rgb(0, 184, 252);
     }
+
+    #draw-panel,
+    #draw-panel2 {
+      border: 1px dashed #aaa;
+      margin-top: 20px;
+    }
   </style>
 
   <link rel=stylesheet href="//lib.baomitu.com/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
@@ -83,7 +89,7 @@
         <button id="btnSelection" class="btn btn-default">选择</button>
         <button id="btnPointer" class="btn btn-default">鼠标手</button>
         <button id="btnEraser" class="btn btn-default">橡皮</button>
-
+        <button id="btnPathMutator" class="btn btn-default">Path变形</button>
 
         <button id="btnArrow" class="btn btn-default">箭头</button>
         <button id="btnLine" class="btn btn-default">直线</button>
@@ -139,17 +145,19 @@
         <button id="btnMaterialPrev" class="btn btn-default">教材上</button>
         <button id="btnMaterialNext" class="btn btn-default">教材下</button>
         <button id="btnScale+" class="btn btn-default">缩放+</button>
-        <button id="btnScale-" class="btn btn-default">缩放+</button>
+        <button id="btnScale-" class="btn btn-default">缩放-</button>
       </div>
     </div>
 
     <div class="btns-group">
       <div class="btn-group">
         <button id="btnCurve" class="btn btn-default">绘制曲线</button>
+        <button id="btnPolyline" class="btn btn-default">绘制折线</button>
         <button id="btnRect" class="btn btn-default">绘制一个矩形</button>
         <button id="btnRects" class="btn btn-default">绘制多个矩形</button>
         <button id="btnRectss" class="btn btn-default">绘制海量矩形</button>
         <button id="btnCompoundPath" class="btn btn-default">绘制复合图形</button>
+        <button id="btnHitMap" class="btn btn-default">绘制热力图</button>
         <button id="btnText" class="btn btn-default">绘制文字</button>
         <button id="btnGrid" class="btn btn-default">绘制网格</button>
         <button id="btnAxes" class="btn btn-default">绘制坐标系</button>
@@ -170,8 +178,17 @@
         <button id="btnSimp" class="btn btn-default">简化</button>
       </div>
     </div>
+    <div id="draw-panel2">
+    </div>
+    <div class="btns-group">
+      <div class="btn-group">
+        <button id="btnGrid2" class="btn btn-default">绘制网格</button>
+        <button id="btnAxes2" class="btn btn-default">绘制坐标系</button>
+      </div>
 
+    </div>
   </div>
+
   <script>
     var stats = new Stats();
     stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
@@ -190,10 +207,10 @@
     const WAN = 100000;
     $(() => {
 
-    /**
-     * 首字幕小写
-     * @param { } str
-     */
+      /**
+       * 首字幕小写
+       * @param { } str
+       */
       const camelize = (str) => {
         return str.replace(/\b[A-Z]/g, function (match) {
           return match.toLowerCase();
@@ -208,7 +225,7 @@
         "btnTriangle", "btnMarker", "btnHighlighter",
         "btnSignature", "btnStar", "btnDashed",
         "btnRightTriangle", "btnSelection",
-        "btnChatBox", "btnTextImg", "btnText"
+        "btnChatBox", "btnTextImg", "btnText", "btnPathMutator"
       ];
 
       btns.forEach(btn => {
@@ -252,7 +269,7 @@
 
       $("#btnImage").click(() => {
         let img = images[parseInt(Math.random() * images.length)];
-        whiteboard.add([9,,img]);
+        whiteboard.add([9, , img]);
       });
 
       $("#btnClear").click(() => {
@@ -260,30 +277,56 @@
       });
 
       $("#btnCurve").click(() => {
-        whiteboard.add(curve1);
+        let item = whiteboard.createItem(curve1);
+        item.showAuxiliary = true;
+        whiteboard.add(item);
       });
 
       $("#btnRect").click(() => {
         whiteboard.add(rect1);
       });
 
+      const colors = ["#c6e48b","#c6e48b","#196127","#7bc96f","#7bc96f","#c6e48b","#ebedf0"];
+      $('#btnHitMap').click(() => {
+
+        let startX = 100, startY = 100;
+
+        for (let w = 0; w < 50; w++) {
+
+          for (let h = 0; h < 7; h++) {
+            let sx = w * 12 + startX;
+            let sy = h * 12 + startY;
+            let ex = sx + 8;
+            let ey = sy + 8;
+            let hex = parseInt(h * 16777215 / 100);
+
+            let item =whiteboard.createItem([6, , [[sx, sy], [ex, ey]], { c: colors[parseInt(Math.random() * 7) ]}]);
+            item.on('hover', function({ target }){
+              //console.log(...arguments);
+              target.selected = true;
+            });
+            whiteboard.add(item);
+          }
+        }
+      });
+
       let midx = 0;
       $("#btnMaterialPrev").click(() => {
-        if(--midx < 0) return;
+        if (--midx < 0) return;
         whiteboard.drawMaterial(materials[midx]);
       });
 
       $("#btnMaterialNext").click(() => {
-        if(++midx >= materials.length - 1) return;
+        if (++midx >= materials.length - 1) return;
         whiteboard.drawMaterial(materials[midx]);
       });
 
       $('#btnScale+').click(() => {
-        whiteboard.zoom(1.25);
+        whiteboard.zoom = 1.25;
       });
 
       $('#btnScale-').click(() => {
-        whiteboard.zoom(0.8);
+        whiteboard.zoom = 0.8;
       });
 
       // $("#btnText").click(() => {
@@ -308,7 +351,8 @@
 
           let hex = parseInt(i * 16777215 / 100);
 
-          whiteboard.add([6, , [[sx, sy], [ex, ey]], { c: 'rgb(' + toRGB(hex) + ')' }]);
+          //whiteboard.add([6, , [[sx, sy], [ex, ey]], { c: 'rgb(' + toRGB(hex) + ')' }]);
+          whiteboard.add([6, , [[sx, sy], [ex, ey]], { c: '#ddd' }]);
         }
       });
 
@@ -366,6 +410,13 @@
       $("#btnAxes").click(() => {
         whiteboard.drawAxes();
       });
+
+      $("#btnGrid2").click(() => {
+        whiteboard2.drawGrid(true);
+      });
+      $("#btnAxes2").click(() => {
+        whiteboard2.drawAxes();
+      });
       //btnSaveImg
 
       $("#btnSave").click(() => {
@@ -379,11 +430,7 @@
         });
       });
 
-      $("#btnSimp").click(() => {
-        items.forEach(element => {
-          element.simplify();
-        });
-      });
+      $("#btnSimp").click(() => items.forEach(element => element.simplify()));
 
       function drawFlag() {
         let compoundPath = whiteboard.createItem('compoundPath');

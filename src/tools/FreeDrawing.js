@@ -1,20 +1,17 @@
 import Tool from './Tool';
-import Image from '../graphic/shape/Image';
-import { createItem } from '../graphic/ItemFactory';
+import cursor from './mixins/cursor';
+import { deepMixin } from '../decorators/mixin';
+import itemCreator from './mixins/itemCreator';
 
 const markerCursor = 'https://www-stage.tutormeetplus.com/v2/static/media/pen.3ec0e0e7.png';
-const highlighterCursor = 'https://www-stage.tutormeetplus.com/v2/static/media/mouse_pointer.64a36561.png';
+const highlighterCursor = 'https://www-stage.tutormeetplus.com/v2/static/media/mark_pen.901db183.png';
 
-// values: Marker & Highlighter
-export default class FreeDrawing extends Tool {
+
+/**
+ * Base class og marker tool & highlighter tool.
+ */
+class FreeDrawing extends Tool {
   _style = {};
-
-  constructor(type) {
-    super();
-    this.type = type;
-    this.cursor = new Image();
-    this.cursor.loadImage(type === 'highlighter' ? highlighterCursor: markerCursor);
-  }
 
   lastPoint = null;
   /**
@@ -22,10 +19,6 @@ export default class FreeDrawing extends Tool {
     * @param {Object} pointer
     */
   onMouseDown(event) {
-    this.currentShape = createItem(this.type, this.style);
-    // this.currentShape.style = this.style.clone();
-    this.items.add(this.currentShape);
-
     this.currentShape.moveTo(event.point);
     this.lastPoint = event.point;
   }
@@ -46,18 +39,21 @@ export default class FreeDrawing extends Tool {
    */
   onMouseUp(event) {
     this.currentShape.simplify();
+    this.globalCtx.emit('item:add', this.currentShape.toJSON());
     this.currentShape = null;
   }
-
-  onMouseMove(event) {
-
-  }
-
-  set style(value) {
-    this._style = value;
-  }
-
-  get style() {
-    return this._style;
-  }
 }
+
+/**
+ * 白板笔工具
+ */
+@deepMixin(itemCreator())
+@deepMixin(cursor(markerCursor, { x : 13, y : -15 }))
+export class Marker extends FreeDrawing {}
+
+/**
+ * 荧光笔工具
+ */
+@deepMixin(itemCreator())
+@deepMixin(cursor(highlighterCursor, { x : 12, y : -12 }))
+export class Highlighter extends FreeDrawing {}

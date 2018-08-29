@@ -5,10 +5,27 @@
  * 3) emit event for websocket.
  * 4) manage items of operateLayer.
  */
-export default class Tool {
-  _layer = null;
-  constructor(){
 
+const toolStatus = {
+  "move":"move",
+  "select":"select",
+  "drawing":"drawing",
+  "scale":"scale",
+  "translate":"translate",
+}
+export default class Tool {
+  globalCtx = null; //白板上下文，在实例化后注入；
+  _layer = null;
+  mode = 'select';
+
+  constructor(type){
+    this.type = type;
+    this._init && this._init();
+  }
+
+  setLayerCursor(cursor){
+    if(!this._cursor)
+      this.layer.setCursor(cursor);
   }
 
   /**
@@ -19,7 +36,7 @@ export default class Tool {
   }
 
   /**
-   * Get layer of
+   * Get layer of tool
    */
   set layer(value){
     this._layer = value;
