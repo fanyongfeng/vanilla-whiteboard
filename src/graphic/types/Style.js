@@ -29,6 +29,7 @@ const defaultStyles = {
  */
 const fontStyles = {
   // Characters
+  fontFamily: 'sans-serif',
   fontSize: 26,
   textAlign: 'left',
   justification: 'left'
@@ -128,8 +129,11 @@ export default class Style {
     return other === this || compare(this, other) || false;
   }
 
+  /**
+   * Read-only prop
+   */
   get font() {
-    return `${this.fontSize}px sans-serif`;
+    return `${this.fontSize}px ${this.fontFamily}`;
   }
 
   /**

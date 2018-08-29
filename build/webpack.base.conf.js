@@ -2,7 +2,6 @@
 const path = require('path')
 const utils = require('./utils')
 const config = require('../config')
-const vueLoaderConfig = require('./vue-loader.conf')
 
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
@@ -21,16 +20,12 @@ module.exports = {
       : config.dev.assetsPublicPath
   },
   resolve: {
-    extensions: ['.js', '.vue', '.json'],
-    alias: {
-      'vue$': 'vue/dist/vue.esm.js',
-      '@': resolve('src'),
-    }
+    extensions: ['.js', '.json'],
   },
   module: {
     rules: [
       ...(config.dev.useEslint? [{
-        test: /\.(js|vue)$/,
+        test: /\.(js)$/,
         loader: 'eslint-loader',
         enforce: 'pre',
         include: [resolve('src'), resolve('test')],
@@ -39,11 +34,6 @@ module.exports = {
           emitWarning: !config.dev.showEslintErrorsInOverlay
         }
       }] : []),
-      {
-        test: /\.vue$/,
-        loader: 'vue-loader',
-        options: vueLoaderConfig
-      },
       {
         test: /\.js$/,
         loader: 'babel-loader',

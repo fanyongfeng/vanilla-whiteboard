@@ -171,10 +171,10 @@ class ItemCollection {
 
   /**
    * Remove specified item from list.
-   * @param {Item} item1
+   * @param {Item} item
    */
-  remove(item1) {
-    this.delete(item2 => item2 === item1);
+  remove(item) {
+    this.delete(i => i === item);
   }
 
   /**
@@ -211,6 +211,7 @@ class ItemCollection {
    * @param {Array} ids
    */
   deleteById(ids) {
+    if(!Array.isArray(ids)) ids = [ids];
     return this.delete((item) => ItemCollection.includes(ids, item.id));
   }
 

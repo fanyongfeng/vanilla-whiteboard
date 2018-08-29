@@ -49,6 +49,8 @@ export class KeyEvent {
     this.originEvent = originEvent;
     this.type = originEvent.type;
     this.target = originEvent.target;
+    this.key = originEvent.key;
+    this.keyCode = originEvent.keyCode;
   }
 
   toString() {

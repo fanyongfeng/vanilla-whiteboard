@@ -6,7 +6,7 @@ import Item from '../graphic/Item';
 
 const _items = Symbol('_items');
 /**
- * Create canvas layer, and Manage all canvas of whiteboard.
+ * Create canvas layer, and Manage all canvases in whiteboard.
  */
 export default class Layer {
 
@@ -108,6 +108,9 @@ export default class Layer {
     return this._isDirty;
   }
 
+  /**
+   * Mark layer as 'dirty', it will be refreshed on next tick.
+   */
   markAsDirty(){
     this._isDirty = true;
   }

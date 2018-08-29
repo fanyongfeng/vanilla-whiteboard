@@ -28,6 +28,8 @@ const defaultOptions = {
   alignToGrid: false,
   throttle: 0,
   minDistance: 0,
+  verbose:false,
+  precision: 1,
   zoom: 1,
   dragThreshold: 2,
 };
@@ -45,7 +47,6 @@ const _history = Symbol('_history');
  *  - loop / notify
  *  - readonly
  *  - command-mode: verbose // 当绘制时发送更多的指令
- *
  *  - precision (精度)
  */
 @emittable()
@@ -302,9 +303,11 @@ export default class Whiteboard {
     wrapper.removeChild(this.activeLayer);
   }
 
+  /**
+   * Clear layers of whiteboard.
+   */
   clear() {
-    this.items.clear();
-    this.activeLayer.clear();
+    this.layers.forEach(layer => layer.clear());
     return this;
   }
 }

@@ -9,7 +9,7 @@ const _items = Symbol('_items');
 const arrMethods = {};
 const arr = Array.prototype;
 
-//Inject Array methods in Item collection.
+//Inject Array methods into ItemCollection.
 ['splice', 'push', 'unshift', 'sort', 'map', 'forEach', 'find', 'reduce', 'reduceRight', 'filter', 'includes']
   .forEach(method => arrMethods[method] = function() { return arr[method].apply(this[_items], arguments) });
 
@@ -46,12 +46,6 @@ class ItemCollection {
     if (items) this[_items] = items;
 
     this.layer = layer;
-
-    ['forEach', 'find', 'reduce', 'map']
-      .forEach(method =>
-        this[method] = function () {
-          return arr[method].apply(this[_items], arguments);
-        });
   }
 
   /**
@@ -108,7 +102,7 @@ class ItemCollection {
   /**
    * Set item at specified position,
    * @param {Number} index, specified position
-   * @param {Item} item whiteboard item to be add.
+   * @param {Item} item, whiteboard item to be add.
    */
   set(item, index) {
     if(this[_items][index] === item) return false;

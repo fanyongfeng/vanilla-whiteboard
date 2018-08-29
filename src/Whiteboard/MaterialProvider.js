@@ -24,7 +24,7 @@ export default class MaterialProvider {
   }
 
   /**
-   * get material image.
+   * Get material image by url.
    * @param {String} url
    */
   get(url){
@@ -36,7 +36,7 @@ export default class MaterialProvider {
   }
 
   /**
-   * remove material image.
+   * Remove material image by url.
    * @param {String} url
    */
   remove(url) {
