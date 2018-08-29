@@ -76,7 +76,7 @@ export default class Image extends Item {
     };
 
     img.onerror = function () {
-      console.warn(`can't load image${img.src}`);
+      console.warn(`can't load image '${url}'`);
       //TODO:Emit error event
       img = img.onload = img.onerror = null;
     };
