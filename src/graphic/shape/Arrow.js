@@ -30,7 +30,6 @@ export default class Arrow extends Shape {
       .lineTo(ex, ey)
       .moveTo(points[0])
       .lineTo(points[1])
-      .lineTo(points[2])
-      .closePath();
+      .lineTo(points[2]);
   }
 }

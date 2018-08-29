@@ -21,7 +21,7 @@ export default function dragBounds(style, removeOnNextDrag = false) {
   return {
     _dragRect: new Rectangle({ style }),
 
-    get dragRect(){
+    get dragRect() {
       return this._dragRect;
     },
 
@@ -30,9 +30,9 @@ export default function dragBounds(style, removeOnNextDrag = false) {
      * @param {*} param0
      */
     onMouseDown({ point }) {
-      if(this.mode !== 'select') return;
+      if (this.mode !== 'select') return;
 
-      if(removeOnNextDrag)
+      if (removeOnNextDrag)
         this.dragRect.remove();
       this.dragRect.startPoint = this.dragRect.endPoint = point;
       this.layer.items.add(this.dragRect);
@@ -43,7 +43,7 @@ export default function dragBounds(style, removeOnNextDrag = false) {
      * @param {*} param0
      */
     onMouseDrag({ point }) {
-      if(this.mode !== 'select') return;
+      if (this.mode !== 'select') return;
       this.dragRect.endPoint = point;
     },
 
@@ -54,7 +54,7 @@ export default function dragBounds(style, removeOnNextDrag = false) {
     onMouseUp() {
       //reset mode to 'select' on mouse up.
       this.mode = 'select';
-      if(!removeOnNextDrag)
+      if (!removeOnNextDrag)
         this.dragRect.remove();
     }
   }

@@ -1,12 +1,12 @@
 
 import Group from '../../graphic/Group';
 import { boundsPoi, antiDir, cursorMap } from '../../graphic/algorithm/corner';
+
 /**
  * enable tool has transform behavior.
  * 依赖于selectable, 必须选中才可以tranform
  * 使工具可以变形（移动、旋转、缩放）白板Item
  */
-
 export default function transformable(enableRotate = false) {
   return {
     realTimeSize: null,

@@ -1,7 +1,5 @@
 import Item from "../Item"
 import Rect from '../types/Rect';
-import Point from '../types/Point';
-import Matrix from '../types/Matrix';
 
 
 const viewWidth = 1000;

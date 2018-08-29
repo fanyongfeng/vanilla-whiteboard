@@ -3,8 +3,8 @@ import Point from "../types/Point"
 
 export default class Signature extends Path {
 
-  _drawDot (point) {
-    let {x, y} = point;
+  _drawDot(point) {
+    let { x, y } = point;
     const ctx = this._ctx;
     const size = this.dotSize;
 

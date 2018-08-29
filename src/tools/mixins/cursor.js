@@ -25,7 +25,7 @@ export default function cursor(url, offset = null) {
     },
 
     /**
-     * Gte cursor image of tool.
+     * Get cursor image of tool, readonly.
      */
     get cursor() {
       return this._cursor;

@@ -1,6 +1,3 @@
-
-import ItemCollection  from '../../Whiteboard/ItemCollection';
-
 /**
  * enable tool has select behavior.
  */

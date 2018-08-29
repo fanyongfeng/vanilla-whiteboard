@@ -1,4 +1,3 @@
-import Rectangle from '../../graphic/shape/Rectangle';
 import { createItem } from '../../graphic/ItemFactory';
 
 /**
@@ -17,6 +16,9 @@ export default function itemCreator(style) {
       this._style = value;
     },
 
+    /**
+     * Set style of tool
+     */
     get style() {
       return this._style;
     },
