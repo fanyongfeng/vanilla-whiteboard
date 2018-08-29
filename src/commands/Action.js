@@ -79,5 +79,4 @@ export default class Action {
   get data() {
 
   }
-
 }

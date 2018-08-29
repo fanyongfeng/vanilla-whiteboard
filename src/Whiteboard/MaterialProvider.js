@@ -1,6 +1,9 @@
 
 import Image from '../graphic/shape/Image';
 
+/**
+ * Manage & cache materials of whiteboard.
+ */
 export default class MaterialProvider {
   cached = {};
   preload = 1;
@@ -11,12 +14,12 @@ export default class MaterialProvider {
    * @param {Array} images
    * @param {Object} options
    */
-  constructor(images, options = {}){
-    if(!images) return;
+  constructor(images, options = {}) {
+    if (!images) return;
 
-    for(let url of images) {
-      let material = new Image({},url);
-      if(this._length < this.preload)
+    for (let url of images) {
+      let material = new Image({}, url);
+      if (this._length < this.preload)
         material.loadImage();
       this._length++;
       this.cached[url] = material;;
@@ -27,10 +30,10 @@ export default class MaterialProvider {
    * Get material image by url.
    * @param {String} url
    */
-  get(url){
+  get(url) {
     let cached = this.cached;
-    if(cached[url]) return cached[url];
-    let material = new Image({},url);
+    if (cached[url]) return cached[url];
+    let material = new Image({}, url);
     this._length++;
     return cached[url] = material;;
   }
