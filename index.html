@@ -145,7 +145,7 @@
         <button id="btnMaterialPrev" class="btn btn-default">教材上</button>
         <button id="btnMaterialNext" class="btn btn-default">教材下</button>
         <button id="btnScale+" class="btn btn-default">缩放+</button>
-        <button id="btnScale-" class="btn btn-default">缩放+</button>
+        <button id="btnScale-" class="btn btn-default">缩放-</button>
       </div>
     </div>
 
@@ -322,11 +322,11 @@
       });
 
       $('#btnScale+').click(() => {
-        whiteboard.zoom(1.25);
+        whiteboard.zoom = 1.25;
       });
 
       $('#btnScale-').click(() => {
-        whiteboard.zoom(0.8);
+        whiteboard.zoom = 0.8;
       });
 
       // $("#btnText").click(() => {

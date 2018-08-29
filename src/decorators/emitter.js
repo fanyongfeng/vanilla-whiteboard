@@ -98,6 +98,9 @@ export default function emittable() {
   }
 }
 
+/**
+ * Use Event Emitter as instance.
+ */
 @emittable()
 class Emitter {}
 

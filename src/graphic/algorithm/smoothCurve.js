@@ -5,6 +5,9 @@ import Point from '../types/Point';
 /**
  * Adapt from https://github.com/paperjs/paper.js
  *
+ * 输入: 多个点的数组
+ * 输出: 曲线列表
+ *
  * @param {Array} points
  * @param {Boolean} closed
  */

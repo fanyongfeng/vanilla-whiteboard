@@ -3,12 +3,12 @@
  */
 import Shape from "../Shape"
 import Point from "../types/Point";
+import { observeProps } from '../../decorators/memoized';
 
+@observeProps({
+  radius: { type: Number, default: 0 },
+})
 export default class Rectangle extends Shape {
-
-  radius = 0;
-
-  _stroke = false;
 
   _buildPath() {
 

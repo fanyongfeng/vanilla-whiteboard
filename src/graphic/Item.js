@@ -2,7 +2,7 @@ import { tsid } from '../util/id';
 import Style from './types/Style';
 import Point from './types/Point';
 import Matrix from './types/Matrix';
-import { memoizable, changed, observeProps } from '../decorators/memoized';
+import { memoizable, observeProps } from '../decorators/memoized';
 import emittable from '../decorators/emitter';
 
 
@@ -38,7 +38,7 @@ class Item {
 
   constructor(options) {
     if (options) {
-      let {type, typeId, id, style, ...rest} = options;
+      let { type, typeId, id, style, ...rest } = options;
 
       this.type = type || this.constructor.name;
       this.typeId = typeId || -Infinity;
@@ -115,7 +115,7 @@ class Item {
     if (typeof sx !== 'number')
       throw new TypeError("param 'sx' of scale must be number!");
 
-    if(this.scaleMode === 'proportion') {
+    if (this.scaleMode === 'proportion') {
       let scaleRadio = Math.min(sx, sy);
       sx = sy = scaleRadio;
     }

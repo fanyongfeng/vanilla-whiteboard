@@ -9,7 +9,7 @@ import { memoized, changed, observeProps } from '../decorators/memoized'
 import Item from './Item';
 
 const _segments = Symbol('_segments');
-const _points =  Symbol('_segments');
+const _points =  Symbol('_points');
 /**
  * A full path and base class of all single path shapes.
  * 所有绘制图形的父类

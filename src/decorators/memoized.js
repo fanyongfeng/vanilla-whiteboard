@@ -1,5 +1,4 @@
 const dirtyCheckKey = '__is_dirty';
-const privateKey = Symbol(dirtyCheckKey);
 
 /**
  * mark getter as memoized prop, the value is cached till the instance mark as dirty,
@@ -55,27 +54,18 @@ export function memoizable() {
     if (typeof target.prototype.markAsDirty === 'function')
       throw new Error(`can't decorate memoizable twice!`);
 
-    target.prototype.__cachedProps = [];
-
-    Object.defineProperty(target.prototype, dirtyCheckKey, {
-      get() {
-        return this[privateKey];
-      },
-      set(val) {
-        if (this.layer) {
-          this.layer.markAsDirty();
-        }
-        this[privateKey] = val;
-        return this;
-      },
-      enumerable: true,
-      configurable: true,
-    });
+    // _cachedProps list.
+    target.prototype.__cachedProps = Object.create(null);
+    // init dirtyKey as true.
+    target.prototype[dirtyCheckKey] = true;
 
     /**
      * mark the item instance as 'dirty', it will trigger canvas refresh and re-calc the memozied props.
      */
     target.prototype.markAsDirty = function () {
+      if (this.layer) {
+        this.layer.markAsDirty();
+      }
       this[dirtyCheckKey] = true;
     }
 
@@ -83,28 +73,28 @@ export function memoizable() {
   }
 }
 
-const noop = function () { }
-
 const validateFunc = function validateFunc(type, key) {
   if (type === Boolean) {
     return function (val) {
-      if (typeof val !== 'boolean') throw new TypeError(`setter '${key}' accept boolean value!`);
+      if (typeof val !== 'boolean')
+        throw new TypeError(`setter '${key}' accept boolean value!`);
     }
   } else if (type === String) {
     return function (val) {
-      if (typeof val !== 'string') throw new TypeError(`setter '${key}' accept string value!`);
+      if (typeof val !== 'string')
+        throw new TypeError(`setter '${key}' accept string value!`);
     }
   } else if (type === Number) {
     return function (val) {
-      if (typeof val !== 'number') throw new TypeError(`setter '${key}' accept number value!`);
+      if (typeof val !== 'number')
+        throw new TypeError(`setter '${key}' accept number value!`);
     }
   } else {
     return function (val) {
-      if (!val instanceof type) throw new TypeError(`setter '${key}' accept ${type.name} value!`);
+      if (!val instanceof type)
+        throw new TypeError(`setter '${key}' accept ${type.name} value!`);
     }
   }
-
-  //return noop;
 }
 
 /**
@@ -112,17 +102,20 @@ const validateFunc = function validateFunc(type, key) {
  *
  * @param {Object} desc
  *
- * {
- *  selected: {
- *    type: Boolean,
- *    default: true,
- *    fn:
+ * Code Example:
+ *  {
+ *    selected: {
+ *      type: Boolean,
+ *      default: true,
+ *      fn: function(newVal) {
+ *        console.log(this)
+ *      }
+ *    }
  *  }
- * }
  */
 export function observeProps(desc) {
   if (!Object.keys(desc).length)
-    throw new Error('must pass props!');
+    throw new TypeError('must pass props!');
 
   return function (target) {
     for (let key in desc) {
@@ -136,20 +129,20 @@ export function observeProps(desc) {
       target.prototype[privateKey] = propDesc.default;
 
       let checkParam = validateFunc(propDesc.type, key);
+      let fn = propDesc.fn;
 
       Object.defineProperty(target.prototype, key, {
         get() {
           return this[privateKey];
         },
         set(val) {
-          //TODO: check params.
           checkParam(val);
+          //if not changed, do nothing.
           if (val === this[privateKey]) return;
 
           this[privateKey] = val;
-          if (this.layer) {
-            this.layer.markAsDirty();
-          }
+          fn && fn.call(this, val);
+          this.markAsDirty();
         },
         enumerable: true,
         configurable: true,
