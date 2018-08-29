@@ -28,10 +28,10 @@ module.exports = {
 
   build: {
     // Template for index.html
-    index: path.resolve(__dirname, '../dist/index.html'),
+    index: path.resolve(__dirname, '../../dist/index.html'),
 
     // Paths
-    assetsRoot: path.resolve(__dirname, '../dist'),
+    assetsRoot: path.resolve(__dirname, '../../dist'),
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
 
@@ -42,8 +42,6 @@ module.exports = {
     productionSourceMap: true,
     // https://webpack.js.org/configuration/devtool/#production
     devtool: '#source-map',
-    productionGzip: false,
-    productionGzipExtensions: ['js', 'css'],
     bundleAnalyzerReport: process.env.npm_config_report
   }
 }
