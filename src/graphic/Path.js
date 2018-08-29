@@ -46,7 +46,7 @@ class Path extends Item {
     segment.contextPoint = this.contextPoint;
     this.segments.push(segment);
     this.contextPoint = segment.point;
-    this.markAsDirty();
+    this.changed();
   }
 
 
@@ -197,7 +197,7 @@ class Path extends Item {
 
     let segments = fitCurve(this.segments.map(item => item.point), 1);
     this[_segments] = ([this[_segments][0]]).concat(segments);
-    this.markAsDirty();
+    this.changed();
     return this;
   }
 
@@ -208,7 +208,7 @@ class Path extends Item {
 
     let segments = smoothCurve(this.segments, this.isClose);
     this[_segments] = segments;
-    this.markAsDirty();
+    this.changed();
     return this;
   }
 

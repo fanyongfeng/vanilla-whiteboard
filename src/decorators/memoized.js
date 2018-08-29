@@ -1,8 +1,8 @@
-const dirtyCheckKey = '__is_dirty';
+const cachedPropsKey = '__cachedProps';
 
 /**
  * mark getter as memoized prop, the value is cached till the instance mark as dirty,
- * @param {String} dirtyCheckKey
+ * @param {String} cacheKey, Specify the cacheKey of prop (default value: PropName)
  */
 export function memoized(cacheKey) {
 
@@ -11,14 +11,14 @@ export function memoized(cacheKey) {
     if (typeof descriptor.get !== 'function')
       throw new Error(`Can't decorate ${name}, Only used for getter~`);
 
-    cacheKey = cacheKey || `__cache__${name}`;
-    target[cacheKey] = null;
+    cacheKey = cacheKey || `${name}`;
     const { get } = descriptor;
 
     descriptor.get = function () {
-      if (this[cacheKey] && !this[dirtyCheckKey]) return this[cacheKey];
-      this[dirtyCheckKey] = false;
-      return this[cacheKey] = get.apply(this);
+      let cacheProps = this[cachedPropsKey];
+      if (typeof cacheProps[cacheKey] !== 'undefined')
+        return cacheProps[cacheKey];
+      return cacheProps[cacheKey] = get.apply(this);
     }
 
     return descriptor;
@@ -35,7 +35,7 @@ export function changed() {
 
     const { set } = descriptor;
     descriptor.set = function () {
-      this.markAsDirty();
+      this.changed();
       return set.apply(this, arguments);
     }
 
@@ -44,29 +44,30 @@ export function changed() {
 }
 
 /**
- * Mark class as memoizable, It will inject prop '__is_dirty' in  prototype,
- * if this.__is_dirty === true, notify the item-collection.
+ * Mark class as memoizable, It will inject prop 'cachedProps' and 'changed' method in  prototype:
+ *
+ * cachedProps: will cache the complex compute prop. And it will be cleared the changed invoked.
+ * changed: Notify the layer to refresh.
+ *
  */
 export function memoizable() {
 
   return function (target) {
 
-    if (typeof target.prototype.markAsDirty === 'function')
+    if (typeof target.prototype.changed === 'function')
       throw new Error(`can't decorate memoizable twice!`);
 
     // _cachedProps list.
-    target.prototype.__cachedProps = Object.create(null);
-    // init dirtyKey as true.
-    target.prototype[dirtyCheckKey] = true;
+    target.prototype[cachedPropsKey] = {};
 
     /**
      * mark the item instance as 'dirty', it will trigger canvas refresh and re-calc the memozied props.
      */
-    target.prototype.markAsDirty = function () {
+    target.prototype.changed = function () {
       if (this.layer) {
         this.layer.markAsDirty();
       }
-      this[dirtyCheckKey] = true;
+      this[cachedPropsKey] = {}; //TODO: 策略清缓存
     }
 
     return target;
@@ -142,7 +143,7 @@ export function observeProps(desc) {
 
           this[privateKey] = val;
           fn && fn.call(this, val);
-          this.markAsDirty();
+          this.changed();
         },
         enumerable: true,
         configurable: true,

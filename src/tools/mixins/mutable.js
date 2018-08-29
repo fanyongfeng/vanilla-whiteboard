@@ -14,7 +14,7 @@ export default function mutable(){
       let point = event.point;
       if (this.mode === 'mutate') {
         this.targetPoint.assign(point);
-        this.target.markAsDirty();
+        this.target.changed();
       }
     },
 

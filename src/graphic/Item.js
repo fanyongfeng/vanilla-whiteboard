@@ -149,7 +149,7 @@ class Item {
     }
 
     this.transformContent(matrix);
-    this.markAsDirty();
+    this.changed();
     return this;
   }
 
