@@ -13,6 +13,8 @@ import animate from './animate/animate';
 import easing from './animate/easing';
 import animateColor from './animate/animateColor';
 
+import EventPlayer from './eventlog-player';
+
 export default {
 
   init(){
@@ -44,6 +46,10 @@ export default {
     this.whiteboard.watch();
     this.whiteboard2.watch();
     this.simulateComm();
+
+
+    window.player = this.player = new EventPlayer(eventlog);
+
     return whiteboard;
   },
 
