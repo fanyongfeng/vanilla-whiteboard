@@ -56,6 +56,21 @@
     },
     {
       "path": "/Users/daniel_jhe/work/github-project/frameworks/libs/lodash"
+    },
+    {
+      "path": "/Users/daniel_jhe/work/github-project/node/express"
+    },
+    {
+      "path": "/Users/daniel_jhe/work/github-project/node/koa"
+    },
+    {
+      "path": "/Users/daniel_jhe/work/github-project/frameworks/editors/quill"
+    },
+    {
+      "path": "/Users/daniel_jhe/work/github-project/graphic/f2"
+    },
+    {
+      "path": "/Users/daniel_jhe/work/github-project/graphic/html2canvas"
     }
   ],
   "settings": {}

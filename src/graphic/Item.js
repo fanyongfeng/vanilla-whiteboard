@@ -30,7 +30,8 @@ class Item {
    * @type String
    * @default
    */
-  globalCompositeOperation = 'source-over';
+  globalCompositeOperation = 'source-over'; //'xor'
+  filter = "blur(5px)"; //experiment feature.
   selectable = true;
   scaleMode = "free"; //no-scale, free, proportion
   layer = null;  //inject when it is added on layer.
@@ -184,7 +185,6 @@ class Item {
     ctx.save();
     this.style.apply(ctx);
     ctx.globalCompositeOperation = this.globalCompositeOperation;
-    // ctx.globalCompositeOperation = 'xor';
     this.matrix.applyToContext(ctx);
     this._draw(ctx);
     ctx.restore();
