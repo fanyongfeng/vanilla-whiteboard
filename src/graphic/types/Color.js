@@ -61,12 +61,12 @@ class Color {
    * If equals other color.
    * @param {Color} other
    */
-  equals(other) {
-    return this === other || (
-      this.red === other.red &&
-      this.green === other.green &&
-      this.blue === other.blue &&
-      this.alpha === other.alpha
+  equals(color) {
+    return this === color || (
+      this.red === color.red &&
+      this.green === color.green &&
+      this.blue === color.blue &&
+      this.alpha === color.alpha
     );
   }
 

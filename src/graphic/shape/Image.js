@@ -1,34 +1,47 @@
 import Item from "../Item"
 import Rect from '../types/Rect';
+import { observeProps } from '../../decorators/memoized';
 
 
 const viewWidth = 1000;
 const viewHeight = 800;
 /**
  * The Raster item represents an image.
- * Image transform 完全靠 transform , 而非指定的初始x, y;
+ * Image transform 靠 matrix , 而非指定的初始x, y;
  */
-export default class Image extends Item {
-
-  static instantiate(options, url){
-    return new this(options, url);
-  }
+@observeProps({
+  /**
+   * Set alpha of image, between 0 and 1.
+   */
+  alpha: { type: Number, default: 1 },
   /**
    * align of image in whiteboard
    * possible values:
    *  1)center
    *  2)start
    */
-  //align = 'start'; // start.
+  align: { type: String, default: "start" },
+  /**
+   * If has box-shadow, like css box-shadow.
+   */
+  shadow: { type: Boolean, default: true },
+})
+export default class Image extends Item {
+
+  static instantiate(options, src) {
+    return new this(options, src);
+  }
+
   _src = null;
+  _bounds = null;
   loaded = false;
   strokeDashArray = [0, 1];
-  _bounds = null;
 
   constructor(options, src) {
     super(options);
-    if(src) {
-      this.loadImage(src);
+    if (src) {
+      this.src = src;
+      this.loadImage();
     }
   }
 
@@ -50,16 +63,15 @@ export default class Image extends Item {
 
   /**
    * Load image & trigger callback;
-   * @param {String} url image url string.
    * @param {Function} fn callback
    */
-  loadImage(url, fn) {
-    if (!url && this._image && this.loaded) return;
+  loadImage(fn) {
+    if (!this.src && this._image && this.loaded) return;
 
     // let img = new window.Image;
     let img = document.createElement('img');
     img.setAttribute('crossOrigin', 'anonymous');
-    img.src = url;
+    img.src = this.src;
 
     img.onload = () => {
       // console.log('load');
@@ -76,7 +88,7 @@ export default class Image extends Item {
     };
 
     img.onerror = function () {
-      console.warn(`can't load image '${url}'`);
+      console.warn(`can't load image '${this.src}'`);
       //TODO:Emit error event
       img = img.onload = img.onerror = null;
     };
@@ -115,20 +127,23 @@ export default class Image extends Item {
     return new Rect(x, y, width, height, this);
   }
 
-  getImageData() {
+  /**
+   * Get Image Data of specified area from canvas.
+   * @return {TypedArray} data
+   */
+  get imageData() {
     let { x, y, width, height } = this.bounds;
     return this._ctx.getImageData(x, y, width, height);
   }
 
-  setImageData(data) {
+  /**
+   * Set TypedArray Data to canvas.
+   * @param {TypedArray} data
+   */
+  set imageData(data) {
     let { x, y } = this.bounds;
     this._ctx.putImageData(data, x, y);
   }
-
-  _toJSON() {
-    return [this.src];
-  }
-
 
   /**
    * 参考
@@ -143,15 +158,15 @@ export default class Image extends Item {
   drawImageAndStroke(ctx) {
     let { x, y, width, height } = this._initBounds;
 
-    // ctx.shadowOffsetX = 5;
-    // ctx.shadowOffsetY = 5;
-    // ctx.shadowBlur = 2;
-    // ctx.shadowColor = "rgba(0, 0, 0, 0.3)";
+    if (this.shadow) {
+      ctx.shadowOffsetX = 8;
+      ctx.shadowOffsetY = 8;
+      ctx.shadowBlur = 10;
+      ctx.shadowColor = "rgba(0, 0, 0, 0.3)";
+    }
 
+    ctx.globalAlpha = this.alpha;
     ctx.drawImage(this._image, x, y, width, height);
-
-    //TODO: transform bounds.
-
   }
 
   _draw(ctx) {
@@ -160,7 +175,11 @@ export default class Image extends Item {
     if (this.loaded) {
       this.drawImageAndStroke(ctx);
     } else {
-      this.loadImage(this._src, ()=> this.drawImageAndStroke(ctx));
+      this.loadImage(() => this.drawImageAndStroke(ctx));
     }
+  }
+
+  _toJSON() {
+    return [this.src];
   }
 }
