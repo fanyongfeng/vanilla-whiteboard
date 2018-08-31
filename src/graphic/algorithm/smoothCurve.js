@@ -1,4 +1,3 @@
-
 import { BezierSegment } from '../types/Segment';
 import Point from '../types/Point';
 
@@ -28,11 +27,9 @@ export default function smooth(points, closed) {
       // Make sure the segment / curve is not from a wrong path.
       let path = value.path;
       if (path && path !== self)
-        throw new Error(value._class + ' ' + index + ' of ' + path
-          + ' is not part of ' + self);
+        throw new Error(value._class + ' ' + index + ' of ' + path + ' is not part of ' + self);
       // Add offset of 1 to curves to reach their end segment.
-      if (_default && value instanceof Segment)
-        index++;
+      if (_default && value instanceof Segment) index++;
     } else {
       index = typeof value === 'number' ? value : _default;
     }
@@ -40,9 +37,7 @@ export default function smooth(points, closed) {
     // Ranges on closed paths are allowed to wrapped around the
     // beginning/end (e.g. start near the end, end near the beginning),
     // while ranges on open paths stay within the path's open range.
-    return Math.min(index < 0 && closed
-      ? index % length
-      : index < 0 ? index + length : index, length - 1);
+    return Math.min(index < 0 && closed ? index % length : index < 0 ? index + length : index, length - 1);
   }
 
   let loop = closed && opts.from === undefined && opts.to === undefined,
@@ -76,9 +71,8 @@ export default function smooth(points, closed) {
   }
   // Set up the knots array now, taking the paddings into account.
   n += paddingLeft + paddingRight;
-  if (n <= 1)
-    return;
-  for (let i = 0, j = from - paddingLeft; i <= n; i++ , j++) {
+  if (n <= 1) return;
+  for (let i = 0, j = from - paddingLeft; i <= n; i++, j++) {
     knots[i] = segments[(j < 0 ? j + length : j) % length]._point;
   }
 
@@ -137,17 +131,14 @@ export default function smooth(points, closed) {
   py[n] = (3 * knots[n]._y - py[n_1]) / 2;
 
   // Now update the segments
-  for (let i = paddingLeft, max = n - paddingRight, j = from;
-    i <= max; i++ , j++) {
+  for (let i = paddingLeft, max = n - paddingRight, j = from; i <= max; i++, j++) {
     let segment = new BezierSegment(),
       point = point[j < 0 ? j + length : j],
       hx = px[i] - pt._x,
       hy = py[i] - pt._y;
 
     segment.point = point;
-    if (loop || i < max)
-      segment.control2 = new Point(hx, hy);
-    if (loop || i > paddingLeft)
-      segment.control1 = new Point(-hx, -hy);
+    if (loop || i < max) segment.control2 = new Point(hx, hy);
+    if (loop || i > paddingLeft) segment.control1 = new Point(-hx, -hy);
   }
 }

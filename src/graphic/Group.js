@@ -8,14 +8,13 @@ import { observeProps } from '../decorators/memoized';
  */
 
 @observeProps({
-  children: { type: Array, default: [] }
+  children: { type: Array, default: [] },
 })
 export default class Group extends Item {
-
   constructor(options, items = []) {
     super(options);
     this._children = items;
-    this.control = new ControlRect({ linked : this});
+    this.control = new ControlRect({ linked: this });
   }
 
   append(item) {

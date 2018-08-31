@@ -1,7 +1,7 @@
-import { memoized } from '../decorators/memoized'
+import { memoized } from '../decorators/memoized';
 import Rect from './types/Rect';
 import Item from './Item';
-import { createItemViaJSON } from './ItemFactory'
+import { createItemViaJSON } from './ItemFactory';
 
 /**
  * @class A compound path is a complex path that is made up of one or more
@@ -18,7 +18,6 @@ class CompoundPath extends Item {
     let instance = new CompoundPath(options);
     paths.forEach(path => instance.add(createItemViaJSON(path)));
     return instance;
-
   }
 
   constructor(options, paths = []) {
@@ -43,11 +42,9 @@ class CompoundPath extends Item {
   get segments() {
     let children = this._children,
       segments = [];
-    for (let i = 0, l = children.length; i < l; i++)
-      segments.push.apply(segments, children[i].segments);
+    for (let i = 0, l = children.length; i < l; i++) segments.push.apply(segments, children[i].segments);
     return segments;
   }
-
 
   /**
    * get bounds of path. It's a memoized getter for performance.

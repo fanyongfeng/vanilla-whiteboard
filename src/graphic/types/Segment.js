@@ -33,7 +33,6 @@ export class Segment {
   }
 
   transformCoordinates(matrix) {
-
     let point = this.point,
       control1 = this.control1 || null,
       control2 = this.control2 || null;
@@ -49,7 +48,9 @@ export class Segment {
     }
   }
 
-  containsPoint() { return false; }
+  containsPoint() {
+    return false;
+  }
 
   drawPoint(ctx, point) {
     if (!point) return;
@@ -60,8 +61,8 @@ export class Segment {
     if (!controlPoint) return;
     ctx.fillRect(controlPoint.x - OFFSET, controlPoint.y - OFFSET, POINT_WIDTH, POINT_WIDTH);
 
-    ctx.moveTo(point.x, point.y)
-    ctx.lineTo(controlPoint.x, controlPoint.y)
+    ctx.moveTo(point.x, point.y);
+    ctx.lineTo(controlPoint.x, controlPoint.y);
   }
 
   /**
@@ -69,15 +70,13 @@ export class Segment {
    * @param {*} ctx
    */
   draw(ctx) {
-
     // ctx.save();
-    ctx.fillStyle = "#4f80ff";
+    ctx.fillStyle = '#4f80ff';
     ctx.lineWidth = 1;
     ctx.strokeStyle = '#5887ff';
     ctx.beginPath();
     this.drawPoint(ctx, this.point);
     this.drawPoint(ctx, this.contextPoint);
-
 
     this.drawControlPoint(ctx, this.point, this.control);
     this.drawControlPoint(ctx, this.contextPoint, this.control1);
@@ -92,7 +91,7 @@ export class Segment {
    */
   get args() {
     return this.points.slice(1).reduce((acc, item) => {
-      [].push.apply(acc, item.toJSON())
+      [].push.apply(acc, item.toJSON());
       return acc;
     }, []);
   }
@@ -118,7 +117,6 @@ export class MoveSegment extends Segment {
     super();
     this.point = point;
   }
-
 }
 
 export class LineSegment extends Segment {
@@ -130,9 +128,13 @@ export class LineSegment extends Segment {
 
   containsPoint(point, lineWidth) {
     return containStrokeLine(
-      this.contextPoint.x, this.contextPoint.y,
-      this.point.x, this.point.y,
-      lineWidth, point.x, point.y
+      this.contextPoint.x,
+      this.contextPoint.y,
+      this.point.x,
+      this.point.y,
+      lineWidth,
+      point.x,
+      point.y
     );
   }
 
@@ -172,7 +174,6 @@ export class LineSegment extends Segment {
  * 3 阶贝塞尔
  */
 export class BezierSegment extends Segment {
-
   command = 'C';
   constructor(cp1, cp2, point) {
     super();
@@ -183,23 +184,32 @@ export class BezierSegment extends Segment {
 
   containsPoint(point, lineWidth) {
     let ret = containStroke(
-      this.contextPoint.x, this.contextPoint.y,
-      this.control1.x, this.control1.y,
-      this.control2.x, this.control2.y,
-      this.point.x, this.point.y,
-      lineWidth, point.x, point.y
-    )
+      this.contextPoint.x,
+      this.contextPoint.y,
+      this.control1.x,
+      this.control1.y,
+      this.control2.x,
+      this.control2.y,
+      this.point.x,
+      this.point.y,
+      lineWidth,
+      point.x,
+      point.y
+    );
     return ret;
   }
 
-
   get fullArgs() {
     return [
-      this.contextPoint.x, this.contextPoint.y,
-      this.control1.x, this.control1.y,
-      this.control2.x, this.control2.y,
-      this.point.x, this.point.y
-    ]
+      this.contextPoint.x,
+      this.contextPoint.y,
+      this.control1.x,
+      this.control1.y,
+      this.control2.x,
+      this.control2.y,
+      this.point.x,
+      this.point.y,
+    ];
   }
 
   get bounds() {
@@ -210,12 +220,13 @@ export class BezierSegment extends Segment {
     return [this.contextPoint, this.control1, this.control2, this.point];
   }
 
-
   _calcPoint(t, start, c1, c2, end) {
-    return (start * (1.0 - t) * (1.0 - t) * (1.0 - t))
-      + (3.0 * c1 * (1.0 - t) * (1.0 - t) * t)
-      + (3.0 * c2 * (1.0 - t) * t * t)
-      + (end * t * t * t);
+    return (
+      start * (1.0 - t) * (1.0 - t) * (1.0 - t) +
+      3.0 * c1 * (1.0 - t) * (1.0 - t) * t +
+      3.0 * c2 * (1.0 - t) * t * t +
+      end * t * t * t
+    );
   }
 
   /**
@@ -229,24 +240,12 @@ export class BezierSegment extends Segment {
 
     for (let i = 0; i <= steps; i += 1) {
       const t = i / steps;
-      const cx = this._calcPoint(
-        t,
-        this.contextPoint.x,
-        this.control1.x,
-        this.control2.x,
-        this.point.x,
-      );
-      const cy = this._calcPoint(
-        t,
-        this.contextPoint.y,
-        this.control1.y,
-        this.control2.y,
-        this.point.y,
-      );
+      const cx = this._calcPoint(t, this.contextPoint.x, this.control1.x, this.control2.x, this.point.x);
+      const cy = this._calcPoint(t, this.contextPoint.y, this.control1.y, this.control2.y, this.point.y);
       if (i > 0) {
         const xdiff = cx - px;
         const ydiff = cy - py;
-        length += Math.sqrt((xdiff * xdiff) + (ydiff * ydiff));
+        length += Math.sqrt(xdiff * xdiff + ydiff * ydiff);
       }
       px = cx;
       py = cy;
@@ -297,21 +296,23 @@ export class ArcSegment extends Segment {
   containsPoint(point, lineWidth) {
     //TODO:
     let ret = containStrokeArc(
-      this.contextPoint.x, this.contextPoint.y,
-      this.control1.x, this.control1.y,
-      this.control2.x, this.control2.y,
-      this.point.x, this.point.y,
-      lineWidth, point.x, point.y
-    )
+      this.contextPoint.x,
+      this.contextPoint.y,
+      this.control1.x,
+      this.control1.y,
+      this.control2.x,
+      this.control2.y,
+      this.point.x,
+      this.point.y,
+      lineWidth,
+      point.x,
+      point.y
+    );
     return ret;
   }
 
   get args() {
-    return [
-      this.control1.x, this.control1.y,
-      this.control2.x, this.control2.y,
-      this.radius
-    ]
+    return [this.control1.x, this.control1.y, this.control2.x, this.control2.y, this.radius];
   }
 
   get points() {

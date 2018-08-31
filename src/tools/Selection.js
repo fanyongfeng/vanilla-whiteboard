@@ -1,4 +1,3 @@
-
 import Tool from './Tool';
 import dragBounds from './mixins/dragBounds';
 import selectable from './mixins/selectable';
@@ -11,4 +10,4 @@ import { deepMixin } from '../decorators/mixin';
 @deepMixin(transformable())
 @deepMixin(selectable())
 @deepMixin(dragBounds())
-export default class Selection extends Tool { }
+export default class Selection extends Tool {}

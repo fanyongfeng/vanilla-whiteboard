@@ -18,7 +18,7 @@ import Item from '../graphic/Item';
 
 const _createContext = Symbol('_createContext');
 const defaultOptions = {
-  selectionMode: "bounds",
+  selectionMode: 'bounds',
   refreshMode: 'loop',
   readonly: false,
   width: 1000,
@@ -28,12 +28,11 @@ const defaultOptions = {
   alignToGrid: false,
   throttle: 0,
   minDistance: 0,
-  verbose:false,
+  verbose: false,
   precision: 1,
   zoom: 1,
   dragThreshold: 2,
 };
-
 
 const _history = Symbol('_history');
 
@@ -58,7 +57,7 @@ export default class Whiteboard {
   backgroundLayer = null;
   activeLayer = null;
   operateLayer = null;
-  material = new MaterialProvider;
+  material = new MaterialProvider();
 
   constructor(options = {}) {
     this.options = Object.assign({}, defaultOptions, options);
@@ -67,14 +66,13 @@ export default class Whiteboard {
 
     /** 一个container不能加载两个白板*/
     Whiteboard.instances.find(instance => {
-      if (instance.wrapper === container)
-        throw new Error("Can't instance at same container twice!");
-    })
+      if (instance.wrapper === container) throw new Error("Can't instance at same container twice!");
+    });
 
     setStyle(container, {
       width: `${width}px`,
       height: `${height}px`,
-      position: 'relative'
+      position: 'relative',
     });
 
     this.wrapper = container;
@@ -82,25 +80,23 @@ export default class Whiteboard {
     this.height = height;
     this.context = this[_createContext]();
     this.operateLayer.el.tabIndex = 1; //make container focusable.
-
     this.backgroundLayer.appendTo(this);
     this.activeLayer.appendTo(this);
     this.operateLayer.appendTo(this);
 
-    let handler = this.handler = new EventHandler();
+    let handler = (this.handler = new EventHandler());
     handler.context = this.context;
 
-    if(!this.options.readonly) {
+    if (!this.options.readonly) {
       handler.bind(this.operateLayer);
       this.tool = 'selection';
     }
 
-
-    if(this.options.zoom !== 1) {
+    if (this.options.zoom !== 1) {
       this.zoom = this.options.zoom;
     }
 
-    Whiteboard.instances.push(this)
+    Whiteboard.instances.push(this);
   }
 
   /**
@@ -111,9 +107,9 @@ export default class Whiteboard {
    */
   [_createContext]() {
     //实例化所有的layer
-    let backgroundLayer = this.backgroundLayer = new Layer(this.width, this.height, 'background'),
-      activeLayer = this.activeLayer = new Layer(this.width, this.height, 'active'),
-      operateLayer = this.operateLayer = new OperateLayer(this.width, this.height, 'operate');
+    let backgroundLayer = (this.backgroundLayer = new Layer(this.width, this.height, 'background')),
+      activeLayer = (this.activeLayer = new Layer(this.width, this.height, 'active')),
+      operateLayer = (this.operateLayer = new OperateLayer(this.width, this.height, 'operate'));
 
     //return context;
     return {
@@ -122,7 +118,7 @@ export default class Whiteboard {
       operateLayer,
       refreshCount: 0, //刷新计数，白板所有layers刷新总次数
       settings: Object.freeze(this.options),
-      emit: this.emit.bind(this)
+      emit: this.emit.bind(this),
     };
   }
 
@@ -137,7 +133,7 @@ export default class Whiteboard {
       if (this.operateLayer.isDirty) this.operateLayer.refresh();
       if (this.backgroundLayer.isDirty) this.backgroundLayer.refresh();
       this._animationFrameId = requestAnimationFrame(drawDirtyLayer);
-    }
+    };
 
     //invoke immediately！
     drawDirtyLayer();
@@ -147,8 +143,8 @@ export default class Whiteboard {
   /**
    * unwatch will stop current loop;
    */
-  unwatch(){
-    this._isLoop =false;
+  unwatch() {
+    this._isLoop = false;
     cancelAnimationFrame(this._animationFrameId);
   }
 
@@ -194,7 +190,7 @@ export default class Whiteboard {
     setStyle(this.wrapper, {
       width: `${this.width * radio}px`,
       height: `${this.height * radio}px`,
-      position: 'relative'
+      position: 'relative',
     });
   }
 
@@ -203,7 +199,7 @@ export default class Whiteboard {
   }
 
   createItem(type, style) {
-    if (!type) throw new TypeError("Argument illegal!");
+    if (!type) throw new TypeError('Argument illegal!');
     if (typeof type === 'string') return createItem(type, style);
     if (type instanceof Item) return type;
     return createItemViaJSON(type);
@@ -231,8 +227,7 @@ export default class Whiteboard {
   }
 
   set tool(val) {
-    if(!this.options.readonly)
-      this.handler.tool = getTool(val);
+    if (!this.options.readonly) this.handler.tool = getTool(val);
   }
 
   get tool() {
@@ -243,14 +238,10 @@ export default class Whiteboard {
    * Get Layers of Whiteboard.
    */
   get layers() {
-    return [
-      this.backgroundLayer,
-      this.activeLayer,
-      this.operateLayer
-    ];
+    return [this.backgroundLayer, this.activeLayer, this.operateLayer];
   }
 
-  [_history] = new History;
+  [_history] = new History();
 
   redo() {
     this[_history].redo();
@@ -259,9 +250,7 @@ export default class Whiteboard {
     this[_history].undo();
   }
 
-  command() {
-
-  }
+  command() {}
 
   drawMaterial(url) {
     let material = this.material.get(url);
@@ -312,4 +301,3 @@ export default class Whiteboard {
     return this;
   }
 }
-

@@ -2,18 +2,17 @@
  * enum of action type
  */
 const ActionType = {
-  "translate": "translate",
-  "add": "add",
-  "remove": "remove",
-  "scale": "scale",
-  "typing": "typing",
-}
+  translate: 'translate',
+  add: 'add',
+  remove: 'remove',
+  scale: 'scale',
+  typing: 'typing',
+};
 
 /**
  * Action of redo-undo history
  */
 export default class Action {
-
   recordTimeStamp = +new Date();
   _redo = null;
   _undo = null;
@@ -21,9 +20,7 @@ export default class Action {
 
   constructor(delta, oldDelta = null) {
     this.type = delta.type;
-    this._redo = {
-
-    }
+    this._redo = {};
   }
 
   /**
@@ -36,11 +33,11 @@ export default class Action {
     switch (delta.action) {
       case 'ADD':
         return Object.assign({}, delta, {
-          action: 'DELETE'
+          action: 'DELETE',
         });
       case 'DELETE':
         return Object.assign({}, delta, {
-          action: 'ADD'
+          action: 'ADD',
         });
       case 'MOVE':
         let { x, y } = hash.offset;
@@ -52,11 +49,7 @@ export default class Action {
           },
         };
       case 'SCALE':
-        let {
-          sx,
-          sy,
-          basePoint
-        } = hash.scale;
+        let { sx, sy, basePoint } = hash.scale;
         return {
           action: 'SCALE',
           data: {
@@ -64,7 +57,7 @@ export default class Action {
             scale: {
               sx: 1 / sx,
               sy: 1 / sy,
-              basePoint
+              basePoint,
             },
           },
         };
@@ -78,7 +71,7 @@ export default class Action {
         };
     }
   }
-  
+
   get redo() {
     return this._redo;
   }

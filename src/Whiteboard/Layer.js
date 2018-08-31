@@ -1,4 +1,3 @@
-
 import { setStyle } from '../util/dom';
 import ItemCollection from './ItemCollection';
 import Matrix from '../graphic/types/Matrix';
@@ -10,18 +9,17 @@ const _items = Symbol('_items');
  * Create canvas layer, and Manage all canvases in whiteboard.
  */
 export default class Layer {
-
   [_items] = new ItemCollection(null, this);
   wrapper = null;
   _isDirty = true;
   _bounds = null;
-  matrix = new Matrix;
+  matrix = new Matrix();
   offscreen = false;
 
   /**
    * Move items from one to other
    */
-  static elevator(source, target, fn){
+  static elevator(source, target, fn) {
     target.forEach(element => {
       top.remove(element);
       bottom.add(element);
@@ -32,7 +30,7 @@ export default class Layer {
   /**
    * Get bounds of layer.
    */
-  get bounds(){
+  get bounds() {
     return this._bounds;
   }
 
@@ -40,7 +38,7 @@ export default class Layer {
    * Alias of items.append .
    * @param {Item} item
    */
-  append(item){
+  append(item) {
     this.items.add(item);
   }
 
@@ -51,7 +49,7 @@ export default class Layer {
    * @param {Number} height
    * @param {String} role
    */
-  constructor(width, height, role){
+  constructor(width, height, role) {
     let el = document.createElement('canvas');
     el.setAttribute('data-role', role);
     this.role = role;
@@ -59,7 +57,7 @@ export default class Layer {
     this.ctx = el.getContext('2d');
     this.width = width;
     this.height = height;
-    this._bounds =  new Rect(0, 0, this.width, this.height);
+    this._bounds = new Rect(0, 0, this.width, this.height);
 
     setStyle(el, {
       position: 'absolute',
@@ -75,22 +73,22 @@ export default class Layer {
     }
   }
 
-  _draw(){
+  _draw() {
     this.globalCtx.refreshCount++;
-    this[_items].forEach(item => item && item.draw(this.ctx));
+    this[_items].filter(item => !item.input).forEach(item => item && item.draw(this.ctx));
   }
 
   /**
    * refresh current layer.
    */
-  refresh(){
+  refresh() {
     this._clearCanvas();
-    this.globalCtx.emit('layer:refresh', { layer: this, });
+    this.globalCtx.emit('layer:refresh', { layer: this });
     this._draw();
     this._isDirty = false;
   }
 
-  get items(){
+  get items() {
     return this[_items];
   }
 
@@ -101,11 +99,13 @@ export default class Layer {
   get pixelRadio() {
     let ctx = this.ctx;
     if (!/^off|false$/.test(canvas.getAttribute('hidpi'))) {
-      let backingStoreRatio = ctx.webkitBackingStorePixelRatio ||
+      let backingStoreRatio =
+        ctx.webkitBackingStorePixelRatio ||
         ctx.mozBackingStorePixelRatio ||
         ctx.msBackingStorePixelRatio ||
         ctx.oBackingStorePixelRatio ||
-        ctx.backingStorePixelRatio || 1;
+        ctx.backingStorePixelRatio ||
+        1;
 
       return this.deviceRatio / backingStoreRatio;
     }
@@ -115,14 +115,14 @@ export default class Layer {
   /**
    * prop 'isDirty' is readonly
    */
-  get isDirty(){
+  get isDirty() {
     return this._isDirty;
   }
 
   /**
    * Mark layer as 'dirty', it will be refreshed on next tick.
    */
-  markAsDirty(){
+  markAsDirty() {
     this._isDirty = true;
   }
 
@@ -145,7 +145,7 @@ export default class Layer {
     this.ctx.setTransform(this.deviceRatio, 0, 0, this.deviceRatio, 0, 0);
   }
 
-  _clearCanvas(){
+  _clearCanvas() {
     this.ctx.clearRect(0, 0, this.width, this.height);
   }
 
@@ -160,7 +160,7 @@ export default class Layer {
    * 等比缩放画布
    * @param {Number} radio
    */
-  zoom(radio){
+  zoom(radio) {
     // /this.ctx.scale(radio, radio);
     this.matrix.scale(radio, radio);
     setStyle(this.el, {
@@ -175,7 +175,7 @@ export default class Layer {
 
   appendTo(whiteboard) {
     //appendTo wrapper.
-    if(this.offscreen) return;
+    if (this.offscreen) return;
 
     this.wrapper = whiteboard.wrapper;
     this.wrapper.appendChild(this.el);
@@ -187,7 +187,7 @@ export default class Layer {
   /**
    * 释放该Layer
    */
-  dispose(){
+  dispose() {
     this.wrapper && this.wrapper.removeChild(this.el);
   }
 }

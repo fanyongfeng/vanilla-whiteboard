@@ -1,17 +1,17 @@
 /**
  * enable tool has mutate behavior.
  */
-export default function mutable(){
+export default function mutable() {
   return {
     onMouseDown(event) {
-      let point = event.point;
+      const point = event.point;
       if (this._pointOnPoint(point)) {
         return;
       }
     },
 
     onMouseDrag(event) {
-      let point = event.point;
+      const point = event.point;
       if (this.mode === 'mutate') {
         this.targetPoint.assign(point);
         this.target.changed();
@@ -47,7 +47,6 @@ export default function mutable(){
 
       this.setLayerCursor('default');
       return false;
-    }
-  }
+    },
+  };
 }
-

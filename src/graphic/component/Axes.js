@@ -3,9 +3,9 @@ import Item from '../Item';
 const defaultOptions = {
   showX: true,
   showY: true,
-  mode: "numeric",
-  position: "center",
-}
+  mode: 'numeric',
+  position: 'center',
+};
 
 const gap = 50; //in pixels
 
@@ -14,15 +14,13 @@ const gap = 50; //in pixels
  * simple axes
  */
 export default class Axes extends Item {
-
   constructor(options = {}) {
     super(options);
     this.options = Object.assign({}, defaultOptions, options);
   }
 
   drawXAxis(ctx, width, height) {
-
-    this.drawLine(ctx, 0, height/2, width, height/2);
+    this.drawLine(ctx, 0, height / 2, width, height / 2);
     //TODO:render arrow;
 
     let mark = this.minX;
@@ -38,26 +36,26 @@ export default class Axes extends Item {
   }
 
   drawYAxis(ctx, width, height) {
-    this.drawLine(ctx,  width /2 , height, width /2 , 0);
+    this.drawLine(ctx, width / 2, height, width / 2, 0);
     let mark = this.minY;
     let y = height;
 
     while (y > 0) {
       y -= gap;
       mark++;
-      this.drawMarkY(ctx, width /2, y, mark);
+      this.drawMarkY(ctx, width / 2, y, mark);
     }
 
     ctx.stroke();
   }
 
-  drawMarkY(ctx, x, y, mark){
+  drawMarkY(ctx, x, y, mark) {
     ctx.moveTo(x, y);
     ctx.lineTo(x - 4, y);
     ctx.fillText(mark.toString(), x - 12, y - 6);
   }
 
-  drawMark(ctx, x, y, mark){
+  drawMark(ctx, x, y, mark) {
     ctx.moveTo(x, y);
     ctx.lineTo(x, y + 4);
     ctx.fillText(mark.toString(), x - 3, y + 15);
@@ -70,11 +68,11 @@ export default class Axes extends Item {
   }
 
   draw(ctx) {
-    let {width, height} = this.layer;
+    let { width, height } = this.layer;
     ctx.lineWidth = 1;
     ctx.fontSize = 10;
-    ctx.font = "9px serif";
-    ctx.strokeStyle = "#000";
+    ctx.font = '9px serif';
+    ctx.strokeStyle = '#000';
 
     this.minX = -parseInt(width / gap / 2);
     this.minY = -parseInt(height / gap / 2);

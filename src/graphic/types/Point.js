@@ -1,16 +1,15 @@
-import { isZero } from '../algorithm/math'
+import { isZero } from '../algorithm/math';
 /**
  * The base type of graphic ,(location & vector)
  */
 export default class Point {
-
   /**
    * static method to create instance from params
    */
   static instantiate(x, y) {
-    if (typeof x === "undefined") throw TypeError("Invalid arguments!");
-    if (typeof x === "number") {
-      return typeof y === "number" ? new Point(x, y) : new Point(x, x);
+    if (typeof x === 'undefined') throw TypeError('Invalid arguments!');
+    if (typeof x === 'number') {
+      return typeof y === 'number' ? new Point(x, y) : new Point(x, x);
     }
     // if x is Point
     return x.clone();
@@ -35,10 +34,10 @@ export default class Point {
   }
 
   /**
-    * Returns the addition of the supplied value to both coordinates of
-  * the point as a new point.
-  * The object itself is not modified!
-  */
+   * Returns the addition of the supplied value to both coordinates of
+   * the point as a new point.
+   * The object itself is not modified!
+   */
   add(x, y) {
     let point = Point.instantiate(x, y);
     return new Point(this.x + point.x, this.y + point.y);
@@ -55,10 +54,10 @@ export default class Point {
   }
 
   /**
-    * Returns the subtraction of the supplied value to both coordinates of
-    * the point as a new point.
-    * The object itself is not modified!
-    */
+   * Returns the subtraction of the supplied value to both coordinates of
+   * the point as a new point.
+   * The object itself is not modified!
+   */
   subtract(x, y) {
     let point = Point.instantiate(x, y);
     return new Point(this.x - point.x, this.y - point.y);
@@ -121,7 +120,7 @@ export default class Point {
    * @return {Point}
    */
   lerp(other, time = 0.5) {
-    if(time > 1 || time < 0) throw new TypeError(`Param 'Time' must between 0 and 1;`);
+    if (time > 1 || time < 0) throw new TypeError(`Param 'Time' must between 0 and 1;`);
     time = Math.max(Math.min(1, time), 0);
     return new Point(this.x + (other.x - this.x) * time, this.y + (other.y - this.y) * time);
   }
@@ -189,18 +188,14 @@ export default class Point {
    * @return {Point} the rotated point
    */
   rotate(angle, center) {
-    if (angle === 0)
-      return this.clone();
-    angle = angle * Math.PI / 180;
+    if (angle === 0) return this.clone();
+    angle = (angle * Math.PI) / 180;
 
     let point = center ? this.subtract(center) : this,
       sin = Math.sin(angle),
       cos = Math.cos(angle);
 
-    point = new Point(
-      point.x * cos - point.y * sin,
-      point.x * sin + point.y * cos
-    );
+    point = new Point(point.x * cos - point.y * sin, point.x * sin + point.y * cos);
 
     return center ? point.add(center) : point;
   }
@@ -247,13 +242,10 @@ export default class Point {
    * return point data as JSON-format: [x, y]
    */
   toJSON(precision = -1) {
-    if(precision === -1) return [this.x, this.y];
+    if (precision === -1) return [this.x, this.y];
 
     let multiplier = Math.pow(10, precision);
-    return [
-      Math.round(this.x * multiplier) / multiplier,
-      Math.round(this.y * multiplier) / multiplier
-    ]
+    return [Math.round(this.x * multiplier) / multiplier, Math.round(this.y * multiplier) / multiplier];
   }
 
   /**

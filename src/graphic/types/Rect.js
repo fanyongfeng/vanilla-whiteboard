@@ -7,13 +7,12 @@ import { mixinProps } from '../../decorators/mixin';
  */
 @mixinProps(props)
 class Rect {
-
   /**
    * static method to create instance from params
    */
   static instantiate(x, y, width, height) {
-    if (typeof x === "undefined") throw TypeError("Invalid arguments!");
-    if (typeof x === "number") return new Rect(x, y, width, height)
+    if (typeof x === 'undefined') throw TypeError('Invalid arguments!');
+    if (typeof x === 'number') return new Rect(x, y, width, height);
     // if x is Rect
     return x.clone();
   }
@@ -46,8 +45,12 @@ class Rect {
    * @type Number
    *
    */
-  get top() { return this.y; }
-  set top(top) { this.y = top; }
+  get top() {
+    return this.y;
+  }
+  set top(top) {
+    this.y = top;
+  }
 
   /**
    * The coordinate of the left.
@@ -55,8 +58,12 @@ class Rect {
    * @type Number
    *
    */
-  get left() { return this.x; }
-  set left(left) { this.x = left; }
+  get left() {
+    return this.x;
+  }
+  set left(left) {
+    this.x = left;
+  }
 
   /**
    * The coordinate of bottom, getter && setter
@@ -64,17 +71,24 @@ class Rect {
    * @type Number
    *
    */
-  get bottom() { return this.y + this.height; }
-  set bottom(bottom) { this.y = bottom - this.height; }
+  get bottom() {
+    return this.y + this.height;
+  }
+  set bottom(bottom) {
+    this.y = bottom - this.height;
+  }
 
   /**
    * The coordinate of right, getter && setter
    *
    * @type Number
    */
-  get right() { return this.x + this.width; }
-  set right(right) { this.x = right - this.width; }
-
+  get right() {
+    return this.x + this.width;
+  }
+  set right(right) {
+    this.x = right - this.width;
+  }
 
   /**
    * The center-x coordinate of the rectangle.
@@ -109,7 +123,6 @@ class Rect {
     return this;
   }
 
-
   /**
    * The area of the rectangle.
    *
@@ -119,7 +132,6 @@ class Rect {
   get area() {
     return this.width * this.height;
   }
-
 
   /**
    * Returns a new rectangle representing the union of this rectangle with the
@@ -139,13 +151,13 @@ class Rect {
   }
 
   /**
-  * Returns a new rectangle representing the intersection of this rectangle with the
-  * specified rectangle.
-  *
-  * @param {Rect} rect the rectangle to be combined with this rectangle
-  * @return {Rect | null} the smallest rectangle containing both the specified, if
-  * rectangle and this rectangle
-  */
+   * Returns a new rectangle representing the intersection of this rectangle with the
+   * specified rectangle.
+   *
+   * @param {Rect} rect the rectangle to be combined with this rectangle
+   * @return {Rect | null} the smallest rectangle containing both the specified, if
+   * rectangle and this rectangle
+   */
   intersect(rect) {
     let x1 = Math.max(this.x, rect.x);
     var width1 = Math.min(this.x + this.width, rect.x + rect.width);
@@ -163,8 +175,7 @@ class Rect {
    * or the passed array:
    */
   contains(arg) {
-    return arg && arg.width !== undefined
-      || (Array.isArray(arg) ? arg : arguments).length === 4
+    return (arg && arg.width !== undefined) || (Array.isArray(arg) ? arg : arguments).length === 4
       ? this.containsRect(Rect.instantiate(...arguments))
       : this.containsPoint(Point.instantiate(...arguments));
   }
@@ -180,9 +191,7 @@ class Rect {
   containsPoint(point) {
     var x = point.x,
       y = point.y;
-    return x >= this.x && y >= this.y
-      && x <= this.x + this.width
-      && y <= this.y + this.height;
+    return x >= this.x && y >= this.y && x <= this.x + this.width && y <= this.y + this.height;
   }
 
   /**
@@ -196,9 +205,9 @@ class Rect {
   containsRect(rect) {
     var x = rect.x,
       y = rect.y;
-    return x >= this.x && y >= this.y
-      && x + rect.width <= this.x + this.width
-      && y + rect.height <= this.y + this.height;
+    return (
+      x >= this.x && y >= this.y && x + rect.width <= this.x + this.width && y + rect.height <= this.y + this.height
+    );
   }
 
   /**
@@ -216,12 +225,10 @@ class Rect {
    * @param {Rect} other
    */
   equals(other) {
-    return this === other ||
-      (this.x === other.x &&
-        this.y === other.y &&
-        this.width === other.width &&
-        this.height === other.height
-      );
+    return (
+      this === other ||
+      (this.x === other.x && this.y === other.y && this.width === other.width && this.height === other.height)
+    );
   }
 
   /**
@@ -232,8 +239,7 @@ class Rect {
   expand(width, height) {
     if (typeof height === 'undefined') height = width;
 
-    return new Rect(this.x - width / 2, this.y - height / 2,
-      this.width + width, this.height + height);
+    return new Rect(this.x - width / 2, this.y - height / 2, this.width + width, this.height + height);
   }
 
   /**
@@ -255,11 +261,7 @@ class Rect {
    * return string format.
    */
   toString() {
-    return '{ x: ' + this.x
-      + ', y: ' + this.y
-      + ', width: ' + this.width
-      + ', height: ' + this.height
-      + ' }';
+    return '{ x: ' + this.x + ', y: ' + this.y + ', width: ' + this.width + ', height: ' + this.height + ' }';
   }
 }
 

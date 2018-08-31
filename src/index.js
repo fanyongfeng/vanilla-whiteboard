@@ -10,7 +10,6 @@ import playground from './playground'; // for debug,
 
 import { RGB2HSL, HSL2RGB, RGB2Gray, Gray2RGB, Gray2HSB } from './graphic/algorithm/color';
 
-
 //top-level APIs
 /**
  * on('type', handler);
@@ -40,14 +39,11 @@ nebula.Whiteboard = Whiteboard;
 //mount enum on namespace.
 // nebula.enum = { keyCode };
 
-export default nebula;
-export { Whiteboard, Point, Rect, Style, Path }
-
 //tmp for debug
 let wb = playground.init();
 // wb.drawGrid();
 // wb.drawAxes();
 window.nebula = nebula;
 
-
-
+export default nebula;
+export { Whiteboard, Point, Rect, Style, Path };

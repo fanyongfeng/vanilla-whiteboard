@@ -1,4 +1,4 @@
-import { RGB2HSL, HEX2RGB } from '../algorithm/color'
+import { RGB2HSL, HEX2RGB } from '../algorithm/color';
 
 const hexRE = /^#(?:[0-9a-f]{3}|[0-9a-f]{6})$/i;
 const rgbaRE = /^rgba?\((.*)\)$/i;
@@ -21,9 +21,8 @@ class Color {
    *  Array: [128, 128, 128, 0.5],  [250, 250, 250]
    */
   constructor(colorStr) {
-    if (typeof colorStr === 'string')
-      this.normalizeColor(colorStr);
-    else if(Array.isArray(colorStr)) {
+    if (typeof colorStr === 'string') this.normalizeColor(colorStr);
+    else if (Array.isArray(colorStr)) {
       this.red = colorStr[0];
       this.green = colorStr[1];
       this.blue = colorStr[2];
@@ -39,7 +38,7 @@ class Color {
    *
    * @param {String} colorStr
    */
-  normalizeColor(colorStr){
+  normalizeColor(colorStr) {
     let color;
 
     if (hexRE.test(colorStr)) {
@@ -54,7 +53,7 @@ class Color {
     this.green = color[1];
     this.blue = color[2];
 
-    if(typeof color[3] !== "undefined") this.alpha = color[3];
+    if (typeof color[3] !== 'undefined') this.alpha = color[3];
   }
 
   /**
@@ -62,19 +61,17 @@ class Color {
    * @param {Color} other
    */
   equals(color) {
-    return this === color || (
-      this.red === color.red &&
-      this.green === color.green &&
-      this.blue === color.blue &&
-      this.alpha === color.alpha
+    return (
+      this === color ||
+      (this.red === color.red && this.green === color.green && this.blue === color.blue && this.alpha === color.alpha)
     );
   }
 
   /**
    * Return a new duplicate of this instance.
    */
-  clone(){
-    let ret = new Color;
+  clone() {
+    let ret = new Color();
     Object.assign(ret, ...this); // ...this, remain red, blue, green, alpha.
     return ret;
   }
@@ -89,7 +86,7 @@ class Color {
   /**
    * Convert to HEX number.
    */
-  toHex(){
+  toHex() {
     return (this.red << 16) + (this.green << 8) + this.blue;
   }
 
@@ -98,7 +95,7 @@ class Color {
    */
   toHexString() {
     let colorStr = this.toHex().toString(16);
-    return '#000000'.substr(0, 7 - colorStr.length) + colorStr;;
+    return '#000000'.substr(0, 7 - colorStr.length) + colorStr;
   }
 
   /**

@@ -5,42 +5,37 @@ const cachedPropsKey = '__cachedProps';
  * @param {String} cacheKey, Specify the cacheKey of prop (default value: PropName)
  */
 export function memoized(cacheKey) {
-
-  return function (target, name, descriptor) {
-
-    if (typeof descriptor.get !== 'function')
-      throw new Error(`Can't decorate ${name}, Only used for getter~`);
+  return function(target, name, descriptor) {
+    if (typeof descriptor.get !== 'function') throw new Error(`Can't decorate ${name}, Only used for getter~`);
 
     cacheKey = cacheKey || `${name}`;
     const { get } = descriptor;
 
-    descriptor.get = function () {
+    descriptor.get = function() {
       let cacheProps = this[cachedPropsKey];
-      if (typeof cacheProps[cacheKey] !== 'undefined')
-        return cacheProps[cacheKey];
-      return cacheProps[cacheKey] = get.apply(this);
-    }
+      if (typeof cacheProps[cacheKey] !== 'undefined') return cacheProps[cacheKey];
+      return (cacheProps[cacheKey] = get.apply(this));
+    };
 
     return descriptor;
-  }
+  };
 }
 
 /**
  * mark setter. if the value changed, it will trigger canvas refresh OR mark layer as dirty.
  */
 export function changed() {
-  return function (target, name, descriptor) {
-    if (typeof descriptor.set !== 'function')
-      throw new Error(`Can't decorate ${name}, Only used for setter~`);
+  return function(target, name, descriptor) {
+    if (typeof descriptor.set !== 'function') throw new Error(`Can't decorate ${name}, Only used for setter~`);
 
     const { set } = descriptor;
-    descriptor.set = function () {
+    descriptor.set = function() {
       this.changed();
       return set.apply(this, arguments);
-    }
+    };
 
     return descriptor;
-  }
+  };
 }
 
 /**
@@ -51,11 +46,8 @@ export function changed() {
  *
  */
 export function memoizable() {
-
-  return function (target) {
-
-    if (typeof target.prototype.changed === 'function')
-      throw new Error(`can't decorate memoizable twice!`);
+  return function(target) {
+    if (typeof target.prototype.changed === 'function') throw new Error(`can't decorate memoizable twice!`);
 
     // _cachedProps list.
     target.prototype[cachedPropsKey] = {};
@@ -63,40 +55,36 @@ export function memoizable() {
     /**
      * mark the item instance as 'dirty', it will trigger canvas refresh and re-calc the memozied props.
      */
-    target.prototype.changed = function () {
+    target.prototype.changed = function() {
       if (this.layer) {
         this.layer.markAsDirty();
       }
       this[cachedPropsKey] = {}; //TODO: 策略清缓存
-    }
+    };
 
     return target;
-  }
+  };
 }
 
 const validateFunc = function validateFunc(type, key) {
   if (type === Boolean) {
-    return function (val) {
-      if (typeof val !== 'boolean')
-        throw new TypeError(`setter '${key}' accept boolean value!`);
-    }
+    return function(val) {
+      if (typeof val !== 'boolean') throw new TypeError(`setter '${key}' accept boolean value!`);
+    };
   } else if (type === String) {
-    return function (val) {
-      if (typeof val !== 'string')
-        throw new TypeError(`setter '${key}' accept string value!`);
-    }
+    return function(val) {
+      if (typeof val !== 'string') throw new TypeError(`setter '${key}' accept string value!`);
+    };
   } else if (type === Number) {
-    return function (val) {
-      if (typeof val !== 'number')
-        throw new TypeError(`setter '${key}' accept number value!`);
-    }
+    return function(val) {
+      if (typeof val !== 'number') throw new TypeError(`setter '${key}' accept number value!`);
+    };
   } else {
-    return function (val) {
-      if (!val instanceof type)
-        throw new TypeError(`setter '${key}' accept ${type.name} value!`);
-    }
+    return function(val) {
+      if (!val instanceof type) throw new TypeError(`setter '${key}' accept ${type.name} value!`);
+    };
   }
-}
+};
 
 /**
  * Inject observe props for class.
@@ -115,13 +103,11 @@ const validateFunc = function validateFunc(type, key) {
  *  }
  */
 export function observeProps(desc) {
-  if (!Object.keys(desc).length)
-    throw new TypeError('must pass props!');
+  if (!Object.keys(desc).length) throw new TypeError('must pass props!');
 
-  return function (target) {
+  return function(target) {
     for (let key in desc) {
-      if (typeof target.prototype[key] !== 'undefined')
-        throw new Error(`Prop ${key} already exist!`);
+      if (typeof target.prototype[key] !== 'undefined') throw new Error(`Prop ${key} already exist!`);
 
       let propDesc = desc[key];
       //let privateKey = Symbol(`_${key}`);
@@ -149,5 +135,5 @@ export function observeProps(desc) {
         configurable: true,
       });
     }
-  }
+  };
 }

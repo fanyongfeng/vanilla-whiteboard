@@ -5,18 +5,14 @@ import Matrix from './types/Matrix';
 import { memoizable, observeProps } from '../decorators/memoized';
 import emittable from '../decorators/emitter';
 
-
 // 白板所有元素的父类
 @emittable()
 @memoizable()
-@observeProps(
-  {
-    selected: { type: Boolean, default: false },
-    style: { type: Style, default: null }
-  }
-)
+@observeProps({
+  selected: { type: Boolean, default: false },
+  style: { type: Style, default: null },
+})
 class Item {
-
   /**
    * Composite rule used for canvas globalCompositeOperation
    * possible value:
@@ -31,11 +27,10 @@ class Item {
    * @default
    */
   globalCompositeOperation = 'source-over'; //'xor'
-  filter = "blur(5px)"; //experiment feature.
+  filter = 'blur(5px)'; //experiment feature.
   selectable = true;
-  scaleMode = "free"; //no-scale, free, proportion
-  layer = null;  //inject when it is added on layer.
-
+  scaleMode = 'free'; //no-scale, free, proportion
+  layer = null; //inject when it is added on layer.
 
   constructor(options) {
     if (options) {
@@ -68,7 +63,7 @@ class Item {
    * Get bounds of current item.
    */
   get bounds() {
-    throw new Error("getter bounds must be overwrite!");
+    throw new Error('getter bounds must be overwrite!');
     return null;
   }
 
@@ -113,8 +108,7 @@ class Item {
    * @param {Point} point Base point.
    */
   scale(sx, sy, point = null) {
-    if (typeof sx !== 'number')
-      throw new TypeError("param 'sx' of scale must be number!");
+    if (typeof sx !== 'number') throw new TypeError("param 'sx' of scale must be number!");
 
     if (this.scaleMode === 'proportion') {
       let scaleRadio = Math.min(sx, sy);
@@ -133,8 +127,7 @@ class Item {
    * @param {Point} point, Base point.
    */
   rotate(deg, point = null) {
-    if (typeof deg !== 'number')
-      throw new TypeError("param 'deg' of rotate must be number!");
+    if (typeof deg !== 'number') throw new TypeError("param 'deg' of rotate must be number!");
 
     let mx = new Matrix();
     point = point || this.bounds.center;
@@ -174,7 +167,7 @@ class Item {
   }
 
   _draw(ctx) {
-    throw new Error("Abstract method must be overwrite!");
+    throw new Error('Abstract method must be overwrite!');
   }
 
   /**
@@ -198,12 +191,7 @@ class Item {
    *  e.g. [6, 9909959950, [[345, 234], [603, 436]], {"c":"#da64e2","w":5,"f":20}];
    */
   toJSON() {
-    return [
-      this.typeId,
-      this.id,
-      this._toJSON(),
-      this.style.toShortJSON()
-    ]
+    return [this.typeId, this.id, this._toJSON(), this.style.toShortJSON()];
   }
 
   /**

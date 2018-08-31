@@ -13,15 +13,13 @@ import emittable from '../decorators/emitter';
  */
 //TODO: 返回undo stack 和 redo stack 为空的callback，方便UI展示按钮的disable状态
 
-
 const defaultOptions = {
   maxStack: 300,
-  enableKeyboard: true
+  enableKeyboard: true,
 };
 
 @emittable()
 export default class History {
-
   constructor(options) {
     this.clear();
     this.options = Object.assign({}, defaultOptions, options);
@@ -31,7 +29,7 @@ export default class History {
    * Clear Current Stack
    */
   clear() {
-    this.stack = { undo: [], redo: [], };
+    this.stack = { undo: [], redo: [] };
     this.emit('change', { stackLength: [0, 0] });
   }
 
@@ -68,10 +66,7 @@ export default class History {
     this.emit('change', {
       action: source.toUpperCase(),
       delta: delta[source],
-      stackLength: [
-        this.stack.redo.length,
-        this.stack.undo.length
-      ],
+      stackLength: [this.stack.redo.length, this.stack.undo.length],
     });
 
     this.lastRecorded = 0;
