@@ -10,8 +10,12 @@ const arrMethods = {};
 const arr = Array.prototype;
 
 //Inject Array methods into ItemCollection.
-['splice', 'push', 'unshift', 'sort', 'map', 'forEach', 'find', 'reduce', 'reduceRight', 'filter', 'includes']
-  .forEach(method => arrMethods[method] = function() { return arr[method].apply(this[_items], arguments) });
+['splice', 'push', 'unshift', 'sort', 'map', 'forEach', 'find', 'reduce', 'reduceRight', 'filter', 'includes'].forEach(
+  method =>
+    (arrMethods[method] = function() {
+      return arr[method].apply(this[_items], arguments);
+    })
+);
 
 /**
  * path collection of canvas.
@@ -19,7 +23,6 @@ const arr = Array.prototype;
  */
 @mixin(arrMethods)
 class ItemCollection {
-
   [_items] = [];
 
   /**
@@ -51,12 +54,14 @@ class ItemCollection {
   /**
    * Get length of items.
    */
-  get length() { return this[_items].length; }
+  get length() {
+    return this[_items].length;
+  }
 
   /**
    * Internal getter, visit item-array directly
    */
-  get array(){
+  get array() {
     return this[_items];
   }
 
@@ -70,7 +75,7 @@ class ItemCollection {
   /**
    * filter duplicated items
    */
-  distinct(){
+  distinct() {
     this[_items] = Array.from(new Set(this[_items]));
   }
 
@@ -105,18 +110,18 @@ class ItemCollection {
    * @param {Item} item, whiteboard item to be add.
    */
   set(item, index) {
-    if(this[_items][index] === item) return false;
+    if (this[_items][index] === item) return false;
 
-    if(typeof index === 'undefined') {
+    if (typeof index === 'undefined') {
       //add same item only once.
-      if(this.includes(item)) return false;
+      if (this.includes(item)) return false;
       return this.add(item);
     }
 
     item.layer = this.layer;
     this[_items][index] = item;
 
-    if(process.env.NODE_ENV === "development") {
+    if (process.env.NODE_ENV === 'development') {
       this[index] = item;
     }
 
@@ -129,13 +134,12 @@ class ItemCollection {
    * @param {Item} item
    */
   add(item) {
-    if (!item instanceof Item)
-      throw new TypeError('Only Item can add to Collection!');
+    if (!item instanceof Item) throw new TypeError('Only Item can add to Collection!');
 
     item.layer = this.layer;
     this[_items].push(item);
 
-    if(process.env.NODE_ENV === "development") {
+    if (process.env.NODE_ENV === 'development') {
       let index = this[_items].length - 1;
       this[index] = item;
     }
@@ -157,21 +161,21 @@ class ItemCollection {
    * Select All items, support keyboard event Ctrl+A.
    */
   selectAll() {
-    this.forEach(item => item.selected = true);
+    this.forEach(item => (item.selected = true));
   }
 
   /**
    * anti-select current collection.
    */
   antiSelect() {
-    this.forEach(item => item.selected = !item.selected);
+    this.forEach(item => (item.selected = !item.selected));
   }
 
   /**
    * unselect all items.
    */
   unselect() {
-    this.forEach(item => item.selected = false);
+    this.forEach(item => (item.selected = false));
   }
 
   /**
@@ -188,7 +192,7 @@ class ItemCollection {
    * @param {Function} fn, filter determine which item should be removed.
    */
   delete(fn) {
-    let deleted = new ItemCollection;
+    let deleted = new ItemCollection();
 
     this[_items] = this[_items].filter(item => {
       if (!fn(item)) return true;
@@ -205,7 +209,7 @@ class ItemCollection {
    * Delete selected items of current collection.
    */
   deleteSelected() {
-    return this.delete((item) => item.selected);
+    return this.delete(item => item.selected);
   }
 
   /**
@@ -213,7 +217,7 @@ class ItemCollection {
    * @param {Array} ids
    */
   deleteById(ids = []) {
-    return this.delete((item) => ids.includes(item.id));
+    return this.delete(item => ids.includes(item.id));
   }
 
   /**
@@ -225,5 +229,3 @@ class ItemCollection {
 }
 
 export default ItemCollection;
-
-

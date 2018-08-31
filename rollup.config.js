@@ -33,6 +33,7 @@ let config = {
     //   include: ['src/**/*.js']
     // }),
     babel({
+      "include": "src/**",
       "exclude": "node_modules/**",
       "runtimeHelpers": true
     })
