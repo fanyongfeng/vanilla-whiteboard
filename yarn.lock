@@ -3267,7 +3267,7 @@ eslint@^5.1.0:
     table "^4.0.3"
     text-table "^0.2.0"
 
-esm@^3.0.80:
+esm@^3.0.80, esm@^3.0.81:
   version "3.0.81"
   resolved "http://registry.npm.taobao.org/esm/download/esm-3.0.81.tgz#3d78df013960b6d30bb5a5adfafe5d9da654b9d2"
 

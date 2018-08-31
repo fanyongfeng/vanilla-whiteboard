@@ -1,8 +1,7 @@
 {
   "presets": [
     ["@babel/preset-env", {
-      "modules": false,
-      "targets": "> 0.25%, not dead"
+      "modules": false
     }]
   ],
   "plugins": [

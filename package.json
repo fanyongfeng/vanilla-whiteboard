@@ -55,6 +55,7 @@
     "eslint-loader": "^1.7.1",
     "eslint-plugin-html": "^3.0.0",
     "eslint-plugin-import": "^2.7.0",
+    "esm": "^3.0.81",
     "eventsource-polyfill": "^0.9.6",
     "file-loader": "^1.1.4",
     "friendly-errors-webpack-plugin": "^1.6.1",
@@ -88,13 +89,9 @@
     "files": [
       "test/point.js"
     ],
-    "babel": {
-      "testOptions": {
-        "babelrc": true
-      }
-    },
     "require": [
-      "@babel/register"
+      "./test/register.js",
+      "esm"
     ],
     "serial": true
   },
