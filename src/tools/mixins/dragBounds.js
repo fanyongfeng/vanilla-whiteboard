@@ -1,11 +1,10 @@
-
 import Rectangle from '../../graphic/shape/Rectangle';
 
 const defaultStyle = {
   strokeStyle: '#aaa',
   lineWidth: 1,
   dashArray: [5, 2],
-}
+};
 
 /**
  *
@@ -32,8 +31,7 @@ export default function dragBounds(style, removeOnNextDrag = false) {
     onMouseDown({ point }) {
       if (this.mode !== 'select') return;
 
-      if (removeOnNextDrag)
-        this.dragRect.remove();
+      if (removeOnNextDrag) this.dragRect.remove();
       this.dragRect.startPoint = this.dragRect.endPoint = point;
       this.layer.items.add(this.dragRect);
     },
@@ -54,8 +52,7 @@ export default function dragBounds(style, removeOnNextDrag = false) {
     onMouseUp() {
       //reset mode to 'select' on mouse up.
       this.mode = 'select';
-      if (!removeOnNextDrag)
-        this.dragRect.remove();
-    }
-  }
+      if (!removeOnNextDrag) this.dragRect.remove();
+    },
+  };
 }

@@ -5,7 +5,7 @@
  * 3) point
  */
 export class SegmentPoint {
-  constructor(){
+  constructor() {
     this.handleIn = null;
     this.handleOut = null;
     this.point = null;
@@ -17,7 +17,7 @@ export class SegmentPoint {
     return [this.point, this.handleIn, this.handleOut];
   }
 
-  toJSON(){
+  toJSON() {
     return this.points.map(point => [point.x, point.y]);
   }
 }

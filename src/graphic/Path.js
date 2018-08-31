@@ -1,28 +1,23 @@
-
 import { LineSegment, BezierSegment, MoveSegment, QuadraticSegment, ArcSegment } from './types/Segment';
-import SegmentPoint from './types/SegmentPoint';
 import Point from './types/Point';
 import Rect from './types/Rect';
 import fitCurve from './algorithm/fitCurve';
 import smoothCurve from './algorithm/smoothCurve';
-import { memoized, changed, observeProps } from '../decorators/memoized'
+import { memoized, observeProps } from '../decorators/memoized';
 import Item from './Item';
 
 const _segments = Symbol('_segments');
-const _points =  Symbol('_points');
+const _points = Symbol('_points');
 /**
  * A full path and base class of all single path shapes.
  * 所有绘制图形的父类
  */
-@observeProps(
-  {
-    fill: { type: Boolean, default: false },
-    showAuxiliary: { type: Boolean, default: false },
-    stroke: { type: Boolean, default: true },
-  }
-)
+@observeProps({
+  fill: { type: Boolean, default: false },
+  showAuxiliary: { type: Boolean, default: false },
+  stroke: { type: Boolean, default: true },
+})
 class Path extends Item {
-
   //props
   [_segments] = [];
   [_points] = [];
@@ -48,7 +43,6 @@ class Path extends Item {
     this.contextPoint = segment.point;
     this.changed();
   }
-
 
   /*
   * Implements iterator.
@@ -121,7 +115,8 @@ class Path extends Item {
    * @param {*} cp
    * @param {*} point
    */
-  quadraticCurveTo(cp, point) { //二阶转三阶
+  quadraticCurveTo(cp, point) {
+    //二阶转三阶
 
     let current = this.contextPoint;
 
@@ -130,11 +125,7 @@ class Path extends Item {
     // and the cubic is A B C D,
     // B = E + 1/3 (A - E)
     // C = E + 1/3 (D - E)
-    this.bezierCurveTo(
-      cp.add(current.subtract(cp).multiply(1 / 3)),
-      cp.add(point.subtract(cp).multiply(1 / 3)),
-      point
-    );
+    this.bezierCurveTo(cp.add(current.subtract(cp).multiply(1 / 3)), cp.add(point.subtract(cp).multiply(1 / 3)), point);
     return this;
   }
 
@@ -173,7 +164,6 @@ class Path extends Item {
     }
 
     return new Rect(x1, y1, x2 - x1, y2 - y1, this);
-
   }
 
   get strokeBounds() {
@@ -184,8 +174,8 @@ class Path extends Item {
    * get length of path
    */
   @memoized()
-  get length(){
-    return this.segments.reduce((arr, item) => arr += item.length, 0);
+  get length() {
+    return this.segments.reduce((arr, item) => (arr += item.length), 0);
   }
 
   /**
@@ -196,7 +186,7 @@ class Path extends Item {
     if (this.segments.length < 3) return this;
 
     let segments = fitCurve(this.segments.map(item => item.point), 1);
-    this[_segments] = ([this[_segments][0]]).concat(segments);
+    this[_segments] = [this[_segments][0]].concat(segments);
     this.changed();
     return this;
   }
@@ -205,7 +195,6 @@ class Path extends Item {
    * Smooth current path, and rebuild segments
    */
   smooth() {
-
     let segments = smoothCurve(this.segments, this.isClose);
     this[_segments] = segments;
     this.changed();
@@ -220,7 +209,7 @@ class Path extends Item {
     // If point not in bounds of path, return false.
     if (!super.containsPoint(point)) return false;
     //TODO: 准确fill状态下判断是否包含指定点，先简化处理
-    if(this.fill) return true;
+    if (this.fill) return true;
 
     let seg = this.segments.find(item => item.containsPoint(point, this.style.lineWidth));
     return !!seg;
@@ -234,14 +223,14 @@ class Path extends Item {
   }
 
   _draw(ctx) {
-
     ctx.beginPath();
 
     for (let i = 0, segment, len = this.segments.length; i < len; ++i) {
-
       segment = this.segments[i];
 
-      switch (segment.command) { // first letter
+      switch (
+        segment.command // first letter
+      ) {
         case 'm':
         case 'M': // moveTo, absolute
           ctx.moveTo(segment.point.x, segment.point.y);
@@ -266,18 +255,18 @@ class Path extends Item {
       }
     }
 
-    if (this.isClose)
-      ctx.closePath();
+    if (this.isClose) ctx.closePath();
 
     //和svg不同，svg 的fillColor 会自动fill, canvas 则通过API控制
-    if (this.fill && this.style.hasFill) // 如果fill 模式为true, 则 执行fill
+    if (this.fill && this.style.hasFill)
+      // 如果fill 模式为true, 则 执行fill
       ctx.fill(this.style.fillRule);
 
-    if (this.stroke && this.style.hasStroke) // 如果stroke 模式为true, 则 执行stroke
+    if (this.stroke && this.style.hasStroke)
+      // 如果stroke 模式为true, 则 执行stroke
       ctx.stroke();
 
-    if (this.showAuxiliary)
-      this.segments.forEach(segment => segment.draw(ctx));
+    if (this.showAuxiliary) this.segments.forEach(segment => segment.draw(ctx));
   }
 
   _toJSON() {

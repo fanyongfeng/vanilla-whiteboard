@@ -1,4 +1,3 @@
-
 import Image from '../../graphic/shape/Image';
 
 /**
@@ -13,12 +12,11 @@ export default function cursor(url, offset = null) {
   let offsetY = offset ? offset.y : 0;
 
   return {
-
     /**
      * All _init method should invoked in constructor of base;
      */
     _init() {
-      if (typeof url === "function") {
+      if (typeof url === 'function') {
         url = url(this.type);
       }
       this._cursor = new Image({}, url);
@@ -42,7 +40,7 @@ export default function cursor(url, offset = null) {
      * Update position of image on mousemove & mouseDrag.
      * @param {Point} point
      */
-    _move(point){
+    _move(point) {
       if (this.cursor.loaded) {
         this.cursor.position = point.add(offsetX, offsetY);
       }
@@ -55,5 +53,5 @@ export default function cursor(url, offset = null) {
     onMouseDrag({ point }) {
       this._move(point);
     },
-  }
+  };
 }

@@ -24,23 +24,29 @@ function fitCurve(points, maxError) {
   if (points.length <= 1) return [];
 
   let _points = [],
-    curves, length;
+    curves,
+    length;
 
   for (let i = 0, prev, l = points.length; i < l; i++) {
     let point = points[i];
     if (!prev || !prev.equals(point)) {
-      _points.push(prev = point.clone());
+      _points.push((prev = point.clone()));
     }
   }
 
   length = _points.length;
 
-  if(length > 1) {
-    curves = fitCubic(_points, maxError, 0, length - 1,
+  if (length > 1) {
+    curves = fitCubic(
+      _points,
+      maxError,
+      0,
+      length - 1,
       // Left Tangent
       points[1].subtract(points[0]),
       // Right Tangent
-      points[length - 2].subtract(points[length - 1]));
+      points[length - 2].subtract(points[length - 1])
+    );
   }
 
   return curves;
@@ -52,12 +58,7 @@ function fitCubic(points, error, first, last, tan1, tan2) {
       pt2 = points[last],
       dist = pt1.getDistance(pt2) / 3;
 
-
-    let seg = new BezierSegment(
-      pt1.add(tan1.normalize(dist)),
-      pt2.add(tan2.normalize(dist)),
-      pt2
-    );
+    let seg = new BezierSegment(pt1.add(tan1.normalize(dist)), pt2.add(tan2.normalize(dist)), pt2);
     seg.contextPoint = pt1;
 
     return [seg];
@@ -80,13 +81,13 @@ function fitCubic(points, error, first, last, tan1, tan2) {
 
     split = max.index;
     // If error not too large, try reparameterization and iteration
-    if (max.error >= maxError)
-      break;
+    if (max.error >= maxError) break;
     parametersInOrder = reparameterize(points, first, last, uPrime, curve);
     maxError = max.error;
   }
 
-  let tanCenter = points[split - 1].subtract(points[split + 1]), curves = [];
+  let tanCenter = points[split - 1].subtract(points[split + 1]),
+    curves = [];
   curves = curves.concat(fitCubic(points, error, first, split, tan1, tanCenter));
   curves = curves.concat(fitCubic(points, error, split, last, tanCenter.negate(), tan2));
 
@@ -95,16 +96,12 @@ function fitCubic(points, error, first, last, tan1, tan2) {
 
 // Use least-squares method to find Bezier control points for region.
 function generateBezier(points, first, last, uPrime, tan1, tan2) {
-
   let epsilon = EPSILON,
     abs = Math.abs,
     pt1 = points[first],
     pt2 = points[last],
     // Create the C and X matrices
-    C = [
-      [0, 0],
-      [0, 0]
-    ],
+    C = [[0, 0], [0, 0]],
     X = [0, 0];
 
   for (let i = 0, l = last - first + 1; i < l; i++) {
@@ -117,9 +114,7 @@ function generateBezier(points, first, last, uPrime, tan1, tan2) {
       b3 = u * u * u,
       a1 = tan1.normalize(b1),
       a2 = tan2.normalize(b2),
-      tmp = points[first + i]
-        .subtract(pt1.multiply(b0 + b1))
-        .subtract(pt2.multiply(b2 + b3));
+      tmp = points[first + i].subtract(pt1.multiply(b0 + b1)).subtract(pt2.multiply(b2 + b3));
     C[0][0] += a1.dot(a1);
     C[0][1] += a1.dot(a2);
     // C[1][0] += a1.dot(a2);
@@ -144,9 +139,7 @@ function generateBezier(points, first, last, uPrime, tan1, tan2) {
     // Matrix is under-determined, try assuming alpha1 == alpha2
     let c0 = C[0][0] + C[0][1],
       c1 = C[1][0] + C[1][1];
-    alpha1 = alpha2 = abs(c0) > epsilon ? X[0] / c0 :
-      abs(c1) > epsilon ? X[1] / c1 :
-        0;
+    alpha1 = alpha2 = abs(c0) > epsilon ? X[0] / c0 : abs(c1) > epsilon ? X[1] / c1 : 0;
   }
 
   // If alpha negative, use the Wu/Barsky heuristic (see text)
@@ -177,10 +170,7 @@ function generateBezier(points, first, last, uPrime, tan1, tan2) {
 
   // First and last control points of the Bezier curve are
   // positioned exactly at the first and last data points
-  return [pt1,
-    pt1.add(handle1 || tan1.normalize(alpha1)),
-    pt2.add(handle2 || tan2.normalize(alpha2)),
-    pt2];
+  return [pt1, pt1.add(handle1 || tan1.normalize(alpha1)), pt2.add(handle2 || tan2.normalize(alpha2)), pt2];
 }
 
 // Given set of points and their parameterization, try to find
@@ -192,8 +182,7 @@ function reparameterize(points, first, last, u, curve) {
   // Detect if the new parameterization has reordered the points.
   // In that case, we would fit the points of the path in the wrong order.
   for (let i = 1, l = u.length; i < l; i++) {
-    if (u[i] <= u[i - 1])
-      return false;
+    if (u[i] <= u[i - 1]) return false;
   }
   return true;
 }
@@ -246,8 +235,7 @@ function evaluate(degree, curve, t) {
 function chordLengthParameterize(points, first, last) {
   let u = [0];
   for (let i = first + 1; i <= last; i++) {
-    u[i - first] = u[i - first - 1] +
-      points[i].getDistance(points[i - 1]);
+    u[i - first] = u[i - first - 1] + points[i].getDistance(points[i - 1]);
   }
   for (let i = 1, m = last - first; i <= m; i++) {
     u[i] /= u[m];
@@ -270,7 +258,7 @@ function findMaxError(points, first, last, curve, u) {
   }
   return {
     error: maxDist,
-    index: index
+    index: index,
   };
 }
 

@@ -6,7 +6,6 @@ import itemCreator from './mixins/itemCreator';
 const markerCursor = 'https://www-stage.tutormeetplus.com/v2/static/media/pen.3ec0e0e7.png';
 const highlighterCursor = 'https://www-stage.tutormeetplus.com/v2/static/media/mark_pen.901db183.png';
 
-
 /**
  * Base class og marker tool & highlighter tool.
  */
@@ -15,9 +14,9 @@ class FreeDrawing extends Tool {
 
   lastPoint = null;
   /**
-    * Invoked on mouse down
-    * @param {Object} pointer
-    */
+   * Invoked on mouse down
+   * @param {Object} pointer
+   */
   onMouseDown(event) {
     this.currentShape.moveTo(event.point);
     this.lastPoint = event.point;
@@ -48,12 +47,12 @@ class FreeDrawing extends Tool {
  * 白板笔工具
  */
 @deepMixin(itemCreator())
-@deepMixin(cursor(markerCursor, { x : 13, y : -15 }))
+@deepMixin(cursor(markerCursor, { x: 13, y: -15 }))
 export class Marker extends FreeDrawing {}
 
 /**
  * 荧光笔工具
  */
 @deepMixin(itemCreator())
-@deepMixin(cursor(highlighterCursor, { x : 12, y : -12 }))
+@deepMixin(cursor(highlighterCursor, { x: 12, y: -12 }))
 export class Highlighter extends FreeDrawing {}

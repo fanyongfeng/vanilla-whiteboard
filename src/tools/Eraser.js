@@ -12,9 +12,12 @@ import { deepMixin } from '../decorators/mixin';
  */
 @deepMixin(selectable()) //decorator 作用与class越近越早生效
 @deepMixin(dragBounds())
-@deepMixin(cursor("https://www-stage.tutormeetplus.com/v2/static/media/eraser.352bd893.png", {
-  x : 8, y : -8 //magic number for appropriate offset of eraser image.
-}))
+@deepMixin(
+  cursor('https://www-stage.tutormeetplus.com/v2/static/media/eraser.352bd893.png', {
+    x: 8,
+    y: -8, //magic number for appropriate offset of eraser image.
+  })
+)
 export default class Eraser extends Tool {
   onMouseUp() {
     this.items.deleteSelected();

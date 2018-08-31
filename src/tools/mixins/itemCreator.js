@@ -5,7 +5,6 @@ import { createItem } from '../../graphic/ItemFactory';
  * @param {*} style
  */
 export default function itemCreator(style) {
-
   return {
     _style: {},
 
@@ -30,6 +29,6 @@ export default function itemCreator(style) {
     onBeforeMouseDown(event) {
       this.currentShape = createItem(this.type, this.style);
       this.items.add(this.currentShape);
-    }
-  }
+    },
+  };
 }

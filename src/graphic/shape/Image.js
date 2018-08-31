@@ -1,7 +1,6 @@
-import Item from "../Item"
+import Item from '../Item';
 import Rect from '../types/Rect';
 import { observeProps } from '../../decorators/memoized';
-
 
 const viewWidth = 1000;
 const viewHeight = 800;
@@ -20,14 +19,13 @@ const viewHeight = 800;
    *  1)center
    *  2)start
    */
-  align: { type: String, default: "start" },
+  align: { type: String, default: 'start' },
   /**
    * If has box-shadow, like css box-shadow.
    */
   shadow: { type: Boolean, default: true },
 })
 export default class Image extends Item {
-
   static instantiate(options, src) {
     return new this(options, src);
   }
@@ -87,7 +85,7 @@ export default class Image extends Item {
       img = img.onload = img.onerror = null;
     };
 
-    img.onerror = function () {
+    img.onerror = function() {
       console.warn(`can't load image '${this.src}'`);
       //TODO:Emit error event
       img = img.onload = img.onerror = null;
@@ -96,12 +94,10 @@ export default class Image extends Item {
     this._image = img;
   }
 
-
   /**
    * 通过图像原始大小，算出宽高及起始位置，并返回bounds.(保持图片原始宽高比)
    */
   calcInitBounds() {
-
     const viewRadio = viewWidth / viewHeight;
     const imgRadio = this.naturalWidth / this.naturalHeight;
 
@@ -115,7 +111,7 @@ export default class Image extends Item {
     } else if (imgRadio > viewRadio) {
       width = viewWidth;
       height = viewWidth / imgRadio;
-      x = 0
+      x = 0;
       y = this.align === 'center' ? (viewHeight - height) / 2 : 0;
     } else {
       height = viewHeight;
@@ -162,7 +158,7 @@ export default class Image extends Item {
       ctx.shadowOffsetX = 8;
       ctx.shadowOffsetY = 8;
       ctx.shadowBlur = 10;
-      ctx.shadowColor = "rgba(0, 0, 0, 0.3)";
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
     }
 
     ctx.globalAlpha = this.alpha;

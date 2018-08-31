@@ -1,5 +1,3 @@
-
-
 import Rect from '../types/Rect';
 
 /**
@@ -9,8 +7,7 @@ import Rect from '../types/Rect';
  * @return {Number}
  */
 function distanceSquare(v1, v2) {
-  return (v1[0] - v2[0]) * (v1[0] - v2[0])
-    + (v1[1] - v2[1]) * (v1[1] - v2[1]);
+  return (v1[0] - v2[0]) * (v1[0] - v2[0]) + (v1[1] - v2[1]) * (v1[1] - v2[1]);
 }
 
 function cubicAt(p0, p1, p2, p3, t) {
@@ -49,10 +46,7 @@ function cubicProjectPoint(x1, y1, x2, y2, x3, y3, x4, y4, x, y, out) {
   const v0 = [x, y];
 
   for (_t = 0; _t < 1; _t += 0.05) {
-    v1 = [
-      cubicAt(x1, x2, x3, x4, _t),
-      cubicAt(y1, y2, y3, y4, _t)
-    ];
+    v1 = [cubicAt(x1, x2, x3, x4, _t), cubicAt(y1, y2, y3, y4, _t)];
 
     d1 = distanceSquare(v0, v1);
     if (d1 < d) {
@@ -70,10 +64,7 @@ function cubicProjectPoint(x1, y1, x2, y2, x3, y3, x4, y4, x, y, out) {
     prev = t - interval;
     next = t + interval;
 
-    v1 = [
-      cubicAt(x1, x2, x3, x4, prev),
-      cubicAt(y1, y2, y3, y4, prev)
-    ];
+    v1 = [cubicAt(x1, x2, x3, x4, prev), cubicAt(y1, y2, y3, y4, prev)];
 
     d1 = distanceSquare(v0, v1);
 
@@ -81,10 +72,7 @@ function cubicProjectPoint(x1, y1, x2, y2, x3, y3, x4, y4, x, y, out) {
       t = prev;
       d = d1;
     } else {
-      v2 = [
-        cubicAt(x1, x2, x3, x4, next),
-        cubicAt(y1, y2, y3, y4, next)
-      ];
+      v2 = [cubicAt(x1, x2, x3, x4, next), cubicAt(y1, y2, y3, y4, next)];
 
       d2 = distanceSquare(v0, v2);
 
@@ -127,20 +115,16 @@ function containStroke(x0, y0, x1, y1, x2, y2, x3, y3, lineWidth, x, y) {
   let _l = lineWidth;
   // Quick reject
   if (
-    (y > y0 + _l && y > y1 + _l && y > y2 + _l && y > y3 + _l)
-    || (y < y0 - _l && y < y1 - _l && y < y2 - _l && y < y3 - _l)
-    || (x > x0 + _l && x > x1 + _l && x > x2 + _l && x > x3 + _l)
-    || (x < x0 - _l && x < x1 - _l && x < x2 - _l && x < x3 - _l)
+    (y > y0 + _l && y > y1 + _l && y > y2 + _l && y > y3 + _l) ||
+    (y < y0 - _l && y < y1 - _l && y < y2 - _l && y < y3 - _l) ||
+    (x > x0 + _l && x > x1 + _l && x > x2 + _l && x > x3 + _l) ||
+    (x < x0 - _l && x < x1 - _l && x < x2 - _l && x < x3 - _l)
   ) {
     return false;
   }
-  let d = cubicProjectPoint(
-    x0, y0, x1, y1, x2, y2, x3, y3,
-    x, y, null
-  );
+  let d = cubicProjectPoint(x0, y0, x1, y1, x2, y2, x3, y3, x, y, null);
   return d <= _l / 2;
 }
-
 
 let PI2 = Math.PI * 2;
 
@@ -165,11 +149,7 @@ function normalizeRadian(angle) {
  * @param  {Number}  y
  * @return {Boolean}
  */
-function containStrokeArc(
-  cx, cy, r, startAngle, endAngle, anticlockwise,
-  lineWidth, x, y
-) {
-
+function containStrokeArc(cx, cy, r, startAngle, endAngle, anticlockwise, lineWidth, x, y) {
   if (lineWidth === 0) return false;
 
   let _l = lineWidth;
@@ -178,7 +158,7 @@ function containStrokeArc(
   y -= cy;
   let d = Math.sqrt(x * x + y * y);
 
-  if ((d - _l > r) || (d + _l < r)) return false;
+  if (d - _l > r || d + _l < r) return false;
 
   if (Math.abs(startAngle - endAngle) % PI2 < 1e-4) {
     // Is a circle
@@ -200,16 +180,15 @@ function containStrokeArc(
   if (angle < 0) {
     angle += PI2;
   }
-  return (angle >= startAngle && angle <= endAngle)
-    || (angle + PI2 >= startAngle && angle + PI2 <= endAngle);
+  return (angle >= startAngle && angle <= endAngle) || (angle + PI2 >= startAngle && angle + PI2 <= endAngle);
 }
-
 
 // Converted from code found here:
 // http://blog.hackers-cafe.net/2009/06/how-to-calculate-bezier-curves-bounding.html
 //
 function calcBoundsOfBezier(x0, y0, x1, y1, x2, y2, x3, y3) {
-  const tvalues = [], bounds = [[], []];
+  const tvalues = [],
+    bounds = [[], []];
   let a, b, c, t;
 
   for (let i = 0; i < 2; ++i) {
@@ -252,8 +231,8 @@ function calcBoundsOfBezier(x0, y0, x1, y1, x2, y2, x3, y3) {
   while (j--) {
     t = tvalues[j];
     mt = 1 - t;
-    bounds[0][j] = (mt * mt * mt * x0) + (3 * mt * mt * t * x1) + (3 * mt * t * t * x2) + (t * t * t * x3);
-    bounds[1][j] = (mt * mt * mt * y0) + (3 * mt * mt * t * y1) + (3 * mt * t * t * y2) + (t * t * t * y3);
+    bounds[0][j] = mt * mt * mt * x0 + 3 * mt * mt * t * x1 + 3 * mt * t * t * x2 + t * t * t * x3;
+    bounds[1][j] = mt * mt * mt * y0 + 3 * mt * mt * t * y1 + 3 * mt * t * t * y2 + t * t * t * y3;
   }
 
   bounds[0][jlen] = x0;
@@ -290,10 +269,10 @@ function containStrokeLine(x0, y0, x1, y1, lineWidth, x, y) {
   let _b = x0;
   // Quick reject
   if (
-    (y > y0 + _l && y > y1 + _l)
-    || (y < y0 - _l && y < y1 - _l)
-    || (x > x0 + _l && x > x1 + _l)
-    || (x < x0 - _l && x < x1 - _l)
+    (y > y0 + _l && y > y1 + _l) ||
+    (y < y0 - _l && y < y1 - _l) ||
+    (x > x0 + _l && x > x1 + _l) ||
+    (x < x0 - _l && x < x1 - _l)
   ) {
     return false;
   }
@@ -301,19 +280,12 @@ function containStrokeLine(x0, y0, x1, y1, lineWidth, x, y) {
   if (x0 !== x1) {
     _a = (y0 - y1) / (x0 - x1);
     _b = (x0 * y1 - x1 * y0) / (x0 - x1);
-  }
-  else {
+  } else {
     return Math.abs(x - x0) <= _l / 2;
   }
   let tmp = _a * x - y + _b;
-  let _s = tmp * tmp / (_a * _a + 1);
-  return _s <= _l / 2 * _l / 2;
+  let _s = (tmp * tmp) / (_a * _a + 1);
+  return _s <= ((_l / 2) * _l) / 2;
 }
 
-export {
-  containStroke,
-  containStrokeArc,
-  containStrokeLine,
-  calcBoundsOfBezier
-};
-
+export { containStroke, containStrokeArc, containStrokeLine, calcBoundsOfBezier };

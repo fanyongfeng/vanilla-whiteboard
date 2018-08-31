@@ -1,7 +1,6 @@
 // https://eslint.org/docs/user-guide/configuring
 
 module.exports = {
-
   root: true,
   parser: 'babel-eslint',
   parserOptions: {
@@ -32,20 +31,17 @@ module.exports = {
       'optionalDependencies': ['test/unit/index.js']
     }],
     // allow debugger during development
-    'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0
+    'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0,
+    "arrow-parens": ["error", "as-needed"],
+    "no-underscore-dangle": ["error", { "allow": ["foo_", "_bar"] }]
   },
   "globals": {
     "window": true,
     "document": true,
     "setTimeout": true,
     "setInterval": true,
-    "GDATA": true,
-    "SENTRY_URL": true,
     "VERSION": true,
-    "ISSTORYBOOK": true,
-    "pdfMake": true,
-    "tmclient": true,
-    "Guacamole": true,
+    "items": true,
     "BlobBuilder":true,
     "WebKitBlobBuilder":true,
     "MozBlobBuilder": true,
