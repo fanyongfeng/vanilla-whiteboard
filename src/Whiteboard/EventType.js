@@ -8,7 +8,6 @@ import Point from '../graphic/types/Point';
  * Mouse Event Class
  */
 export class MouseEvent {
-
   constructor(originEvent) {
     this.originEvent = originEvent;
     this.type = originEvent.type;
@@ -33,11 +32,16 @@ export class MouseEvent {
   }
 
   toString() {
-    return "{ type: '" + this.type
-      + "', point: " + this.point
-      + ', target: ' + this.target
-      + (this.delta ? ', delta: ' + this.delta : '')
-      + ' }';
+    return (
+      "{ type: '" +
+      this.type +
+      "', point: " +
+      this.point +
+      ', target: ' +
+      this.target +
+      (this.delta ? ', delta: ' + this.delta : '') +
+      ' }'
+    );
   }
 }
 
@@ -54,10 +58,7 @@ export class KeyEvent {
   }
 
   toString() {
-    return "{ type: '" + this.type
-      + "', key: " + this.key
-      + ', target: ' + this.target
-      + ' }';
+    return "{ type: '" + this.type + "', key: " + this.key + ', target: ' + this.target + ' }';
   }
 }
 
@@ -82,6 +83,5 @@ export const keyCode = {
   F12: 123,
   NUMPAD_PLUS: 107,
   NUMPAD_MINUS: 109,
-  NUMPAD_DOT: 110
-}
-
+  NUMPAD_DOT: 110,
+};

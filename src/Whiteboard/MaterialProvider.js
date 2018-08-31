@@ -1,4 +1,3 @@
-
 import Image from '../graphic/shape/Image';
 
 /**
@@ -19,10 +18,9 @@ export default class MaterialProvider {
 
     for (let url of images) {
       let material = new Image({}, url);
-      if (this._length < this.preload)
-        material.loadImage();
+      if (this._length < this.preload) material.loadImage();
       this._length++;
-      this.cached[url] = material;;
+      this.cached[url] = material;
     }
   }
 
@@ -35,7 +33,7 @@ export default class MaterialProvider {
     if (cached[url]) return cached[url];
     let material = new Image({}, url);
     this._length++;
-    return cached[url] = material;;
+    return (cached[url] = material);
   }
 
   /**
@@ -49,5 +47,7 @@ export default class MaterialProvider {
     return img;
   }
 
-  get length() { return this._length; }
+  get length() {
+    return this._length;
+  }
 }

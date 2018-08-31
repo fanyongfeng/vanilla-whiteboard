@@ -18,7 +18,7 @@ import Item from '../graphic/Item';
 
 const _createContext = Symbol('_createContext');
 const defaultOptions = {
-  selectionMode: "bounds",
+  selectionMode: 'bounds',
   refreshMode: 'loop',
   readonly: false,
   width: 1000,
@@ -28,12 +28,11 @@ const defaultOptions = {
   alignToGrid: false,
   throttle: 0,
   minDistance: 0,
-  verbose:false,
+  verbose: false,
   precision: 1,
   zoom: 1,
   dragThreshold: 2,
 };
-
 
 const _history = Symbol('_history');
 
@@ -57,7 +56,7 @@ export default class Whiteboard {
   backgroundLayer = null;
   activeLayer = null;
   operateLayer = null;
-  material = new MaterialProvider;
+  material = new MaterialProvider();
 
   constructor(options = {}) {
     this.options = Object.assign({}, defaultOptions, options);
@@ -66,14 +65,13 @@ export default class Whiteboard {
 
     /** 一个container不能加载两个白板*/
     Whiteboard.instances.find(instance => {
-      if (instance.wrapper === container)
-        throw new Error("Can't instance at same container twice!");
-    })
+      if (instance.wrapper === container) throw new Error("Can't instance at same container twice!");
+    });
 
     setStyle(container, {
       width: `${width}px`,
       height: `${height}px`,
-      position: 'relative'
+      position: 'relative',
     });
 
     this.wrapper = container;
@@ -86,18 +84,18 @@ export default class Whiteboard {
     this.activeLayer.appendTo(this);
     this.operateLayer.appendTo(this);
 
-    let handler = this.handler = new EventHandler();
+    let handler = (this.handler = new EventHandler());
 
     handler.context = this.context;
     handler.bind(this.operateLayer);
 
     this.tool = 'selection';
 
-    if(this.options.zoom !== 1) {
+    if (this.options.zoom !== 1) {
       this.zoom = this.options.zoom;
     }
 
-    Whiteboard.instances.push(this)
+    Whiteboard.instances.push(this);
   }
 
   /**
@@ -107,7 +105,6 @@ export default class Whiteboard {
    *
    */
   [_createContext]() {
-
     let backgroundLayer = new Layer(this.width, this.height, 'background'),
       activeLayer = new Layer(this.width, this.height, 'active'),
       operateLayer = new OperateLayer(this.width, this.height, 'operate');
@@ -121,12 +118,11 @@ export default class Whiteboard {
       refreshCount: 0, //刷新计数，白板所有layers刷新总次数
       settings: Object.freeze(this.options),
       bounds: new Rect(0, 0, this.width, this.height),
-      emit: this.emit.bind(this)
-    }
+      emit: this.emit.bind(this),
+    };
 
     // 将context 属性赋值白板实例
-    if (process.env.NODE_ENV === 'development')
-      Object.keys(proto).forEach(key => this[key] = proto[key]);
+    if (process.env.NODE_ENV === 'development') Object.keys(proto).forEach(key => (this[key] = proto[key]));
 
     //return context;
     return Object.create(proto);
@@ -144,7 +140,7 @@ export default class Whiteboard {
       if (this.operateLayer.isDirty) this.operateLayer.refresh();
       if (this.backgroundLayer.isDirty) this.backgroundLayer.refresh();
       requestAnimationFrame(drawDirtyLayer);
-    }
+    };
 
     //invoke immediately！
     drawDirtyLayer();
@@ -193,7 +189,7 @@ export default class Whiteboard {
     setStyle(this.wrapper, {
       width: `${this.width * radio}px`,
       height: `${this.height * radio}px`,
-      position: 'relative'
+      position: 'relative',
     });
   }
 
@@ -202,7 +198,7 @@ export default class Whiteboard {
   }
 
   createItem(type, style) {
-    if (!type) throw new TypeError("Argument illegal!");
+    if (!type) throw new TypeError('Argument illegal!');
     if (typeof type === 'string') return createItem(type, style);
     if (type instanceof Item) return type;
     return createItemViaJSON(type);
@@ -241,14 +237,10 @@ export default class Whiteboard {
    * Get Layers of Whiteboard.
    */
   get layers() {
-    return [
-      this.backgroundLayer,
-      this.activeLayer,
-      this.operateLayer
-    ];
+    return [this.backgroundLayer, this.activeLayer, this.operateLayer];
   }
 
-  [_history] = new History;
+  [_history] = new History();
 
   redo() {
     this[_history].redo();
@@ -257,9 +249,7 @@ export default class Whiteboard {
     this[_history].undo();
   }
 
-  command() {
-
-  }
+  command() {}
 
   drawMaterial(url) {
     let material = this.material.get(url);
@@ -310,4 +300,3 @@ export default class Whiteboard {
     return this;
   }
 }
-

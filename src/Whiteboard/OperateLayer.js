@@ -5,7 +5,6 @@ import Layer from './Layer';
  * 最前面的一层, 相较于其他层有特定的行为。
  */
 export default class OperatorLayer extends Layer {
-
   _cursorImage = null;
   /**
    * set cursor of layer. Use for operateLayer.
