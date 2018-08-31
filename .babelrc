@@ -1,8 +1,7 @@
 {
   "presets": [
     ["@babel/preset-env", {
-      "modules": false,
-      "loose": false
+      "modules": false
     }]
   ],
   "plugins": [
