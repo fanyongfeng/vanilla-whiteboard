@@ -24,6 +24,7 @@
     ]
   },
   "devDependencies": {
+    "@ava/babel-preset-stage-4": "^2.0.0",
     "@babel/core": "^7.0.0",
     "@babel/plugin-proposal-class-properties": "^7.0.0",
     "@babel/plugin-proposal-decorators": "^7.0.0",
@@ -34,7 +35,7 @@
     "@babel/runtime-corejs2": "^7.0.0",
     "@babel/standalone": "^7.0.0",
     "autoprefixer": "^7.1.2",
-    "ava": "^0.25.0",
+    "ava": "next",
     "babel-eslint": "^7.1.1",
     "babel-loader": "^8.0.0",
     "babel-minify": "^0.4.3",
@@ -55,7 +56,7 @@
     "node-notifier": "^5.1.2",
     "ora": "^1.2.0",
     "portfinder": "^1.0.13",
-    "prettier": "^1.14.2",
+    "prettier": "1.14.2",
     "rimraf": "^2.6.0",
     "rollup": "^0.65.0",
     "rollup-plugin-babel": "beta",
@@ -78,9 +79,13 @@
     "files": [
       "test/point.js"
     ],
-    "babel": "inherit",
+    "babel": {
+      "testOptions": {
+        "babelrc": true
+      }
+    },
     "require": [
-      "babel-register"
+      "@babel/register"
     ],
     "serial": true,
     "verbose": true
@@ -93,5 +98,8 @@
     "> 1%",
     "last 2 versions",
     "not ie <= 8"
-  ]
+  ],
+  "dependencies": {
+    "npm": "^6.4.1"
+  }
 }
