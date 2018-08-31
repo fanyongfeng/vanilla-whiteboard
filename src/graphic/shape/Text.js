@@ -69,6 +69,7 @@ export default class Text extends Item {
     });
     document.getElementById('draw-panel').appendChild(input);
     this.bindInputEvent(input);
+    input.focus();
     this.input = input;
   }
 

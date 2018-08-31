@@ -19,10 +19,7 @@ export default class Text extends Tool {
     this.currentShape.editable = true;
     this.currentShape.startPoint = this.currentShape.endPoint = event.point;
     items.add(this.currentShape);
-    setTimeout(() => {
-      // this.currentShape.editable = false;
-      this.currentShape.input.focus();
-    }, 50);
+    // this.currentShape.editable = false;
   }
 
   set style(value) {
