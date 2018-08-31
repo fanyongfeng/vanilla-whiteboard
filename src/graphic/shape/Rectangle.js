@@ -1,8 +1,8 @@
 /**
  * Rectangle support radius.
  */
-import Shape from "../Shape"
-import Point from "../types/Point";
+import Shape from '../Shape';
+import Point from '../types/Point';
 import { observeProps } from '../../decorators/memoized';
 
 @observeProps({
@@ -12,9 +12,7 @@ import { observeProps } from '../../decorators/memoized';
   radius: { type: Number, default: 0 },
 })
 export default class Rectangle extends Shape {
-
   _buildPath() {
-
     let { x: sx, y: sy } = this.startPoint;
     let { x: ex, y: ey } = this.endPoint;
     let width = Math.abs(sx - ex);
@@ -24,8 +22,7 @@ export default class Rectangle extends Shape {
     if (radius > shortLine / 2) radius = shortLine / 2;
     let isRounded = radius !== 0;
 
-    this.moveTo(new Point(sx + radius, sy))
-      .lineTo(new Point(ex - radius, sy));
+    this.moveTo(new Point(sx + radius, sy)).lineTo(new Point(ex - radius, sy));
 
     //isRounded && this.arc(ex - radius, sy + radius, radius, -Math.PI / 2, 0);
     isRounded && this.arcTo(new Point(ex, sy), new Point(ex, sy + radius), radius);

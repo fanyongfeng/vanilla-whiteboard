@@ -1,4 +1,3 @@
-
 import { BezierSegment, MoveSegment } from '../types/Segment';
 import Point from '../types/Point';
 import Path from '../Path';
@@ -7,7 +6,6 @@ import Path from '../Path';
  * Marker & highlighter.
  */
 export default class Writing extends Path {
-
   // set alpha of path style.
   //alpha = 1;
 
@@ -29,12 +27,11 @@ export default class Writing extends Path {
           new Point(seg[3][0], seg[3][1])
         );
       }
-      instance.add(segment)
+      instance.add(segment);
     });
 
     return instance;
   }
-
 
   constructor(options) {
     super(options);

@@ -1,4 +1,3 @@
-
 import Group from '../../graphic/Group';
 import { boundsPoi, antiDir, cursorMap } from '../../graphic/algorithm/corner';
 
@@ -34,7 +33,6 @@ export default function transformable(enableRotate = false) {
     },
 
     onMouseDrag({ delta }) {
-
       if (this.mode === 'select') {
         this.transformGroup.children = this._selected;
       } else if (this.mode === 'resize') {
@@ -44,18 +42,21 @@ export default function transformable(enableRotate = false) {
         let sx = 1.0,
           sy = 1.0;
 
-        if (Math.abs(this.realTimeSize.x) > 0.0000001 &&
+        if (
+          Math.abs(this.realTimeSize.x) > 0.0000001 &&
           this.resizeDir !== 'topCenter' &&
-          this.resizeDir !== 'bottomCenter')
+          this.resizeDir !== 'bottomCenter'
+        )
           sx = size.x / this.realTimeSize.x;
-        if (Math.abs(this.realTimeSize.y) > 0.0000001 &&
+        if (
+          Math.abs(this.realTimeSize.y) > 0.0000001 &&
           this.resizeDir !== 'leftCenter' &&
-          this.resizeDir !== 'rightCenter')
+          this.resizeDir !== 'rightCenter'
+        )
           sy = size.y / this.realTimeSize.y;
 
         this.target.scale(sx, sy, this.basePoint);
         this.realTimeSize = size;
-
       } else if (this.mode === 'move') {
         this.transformGroup.translate(delta);
       }
@@ -77,7 +78,7 @@ export default function transformable(enableRotate = false) {
       let corner, bounds;
 
       bounds = this.transformGroup.bounds;
-      corner = boundsPoi.find(key => point.nearby(bounds[key]))
+      corner = boundsPoi.find(key => point.nearby(bounds[key]));
 
       if (!corner) {
         this.setLayerCursor('default');
@@ -90,6 +91,6 @@ export default function transformable(enableRotate = false) {
       this.resizeDir = corner;
       this.realTimeSize = this.corner.subtract(this.basePoint);
       return true;
-    }
-  }
+    },
+  };
 }

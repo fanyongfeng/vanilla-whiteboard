@@ -1,4 +1,3 @@
-
 /**
  *
  * Make Class support event-emitter:  'on', 'off', 'once' ,'emit'.
@@ -15,8 +14,7 @@
  *
  */
 export default function emittable() {
-  return function (target) {
-
+  return function(target) {
     target.prototype.__callbacks = {};
 
     /**
@@ -25,11 +23,10 @@ export default function emittable() {
      * @param {String} name Name of Event.
      * @param {Function} fn Handler of Event.
      */
-    target.prototype.on = function (name, fn) {
-      if (typeof name !== 'string' || typeof fn !== 'function')
-        throw new Error('Arguments illegal!');
+    target.prototype.on = function(name, fn) {
+      if (typeof name !== 'string' || typeof fn !== 'function') throw new Error('Arguments illegal!');
 
-      let handlers = this.__callbacks[name] = this.__callbacks[name] || [];
+      let handlers = (this.__callbacks[name] = this.__callbacks[name] || []);
 
       if (handlers.indexOf(fn) === -1) {
         this.__callbacks[name].push(fn);
@@ -44,13 +41,12 @@ export default function emittable() {
      * @param {String} name Name of Event.
      * @param {Function} fn Handler of Event.
      */
-    target.prototype.off = function (name, fn) {
+    target.prototype.off = function(name, fn) {
       if (!this.__callbacks[name]) return this;
       if (typeof fn === 'undefined') {
         delete this.__callbacks[name];
       }
-      if (typeof fn !== 'function')
-        throw new Error('second param must be function!');
+      if (typeof fn !== 'function') throw new Error('second param must be function!');
 
       let handlers = this.__callbacks[name];
       let index = handlers.indexOf(fn);
@@ -60,7 +56,7 @@ export default function emittable() {
       }
 
       return this;
-    }
+    };
 
     /**
      * Trigger handler once.
@@ -68,19 +64,19 @@ export default function emittable() {
      * @param {String} name Name of Event.
      * @param {Function} fn Handler of Event.
      */
-    target.prototype.once = function (name, fn) {
-      return this.on(name, function () {
+    target.prototype.once = function(name, fn) {
+      return this.on(name, function() {
         fn.apply(this, arguments);
         this.off(name, fn);
       });
-    }
+    };
 
     /**
      * Trigger handlers of specified event.
      *
      * @param {String} name Name of Event.
      */
-    target.prototype.emit = function (name, ...args) {
+    target.prototype.emit = function(name, ...args) {
       let handlers = this.__callbacks[name];
       if (!handlers) return;
 
@@ -95,7 +91,7 @@ export default function emittable() {
     };
 
     return target;
-  }
+  };
 }
 
 /**
@@ -104,5 +100,4 @@ export default function emittable() {
 @emittable()
 class Emitter {}
 
-export { Emitter }
-
+export { Emitter };

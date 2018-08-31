@@ -2,8 +2,8 @@ import Color from './Color';
 
 const fillRule = {
   nonzero: 'nonzero',
-  evenodd: 'evenodd'
-}
+  evenodd: 'evenodd',
+};
 /**
  * default style settings of path
  */
@@ -33,11 +33,10 @@ const fontStyles = {
   fontSize: 36,
   fontFamily: 'sans-serif',
   textAlign: 'left',
-  justification: 'left'
+  justification: 'left',
 };
 
 export default class Style {
-
   constructor(options = {}) {
     /** new copy of color instance! */
     this._strokeStyle = new Color('#c69');
@@ -168,8 +167,9 @@ export default class Style {
     let color = this.shadowColor;
     // In order to draw a shadow, we need either a shadow blur or an
     // offset, or both.
-    return !!color && color.alpha > 0 && (this.shadowBlur > 0
-      || !(this.shadowOffsetX === 0 && this.shadowOffsetY === 0));
+    return (
+      !!color && color.alpha > 0 && (this.shadowBlur > 0 || !(this.shadowOffsetX === 0 && this.shadowOffsetY === 0))
+    );
   }
 
   /**
@@ -177,18 +177,18 @@ export default class Style {
    */
   toShortJSON() {
     return {
-      "sc": this.strokeStyle.toHexString(),
-      "fc": this.fillStyle.toHexString(),
-      "w": this.lineWidth,
-      "f": this.fontSize
-    }
+      sc: this.strokeStyle.toHexString(),
+      fc: this.fillStyle.toHexString(),
+      w: this.lineWidth,
+      f: this.fontSize,
+    };
   }
 
   /**
    * Convert to JSON format.
    */
-  toJSON(){
-    return {...this};
+  toJSON() {
+    return { ...this };
   }
 
   /**

@@ -1,5 +1,5 @@
-import Point from "./Point";
-import Rect from "./Rect";
+import Point from './Point';
+import Rect from './Rect';
 
 //https://github.com/chrisaljoudi/transformatrix.js
 
@@ -17,7 +17,6 @@ import Rect from "./Rect";
  * 变换矩阵，用于transform
  */
 class Matrix {
-
   /**
    * Build Matrix via matrix array.
    * @param {Array} m matrix array, default value: [1, 0, 0, 1, 0, 0].
@@ -138,7 +137,7 @@ class Matrix {
     (0, 1, sy)
    * */
   translate(point) {
-    return this.append([1, 0, 0, 1, point.x, point.y])
+    return this.append([1, 0, 0, 1, point.x, point.y]);
   }
 
   /**
@@ -148,11 +147,13 @@ class Matrix {
       (sin, cos, 0)
    */
   rotate(deg, point = null) {
-
-    let rad = deg * Math.PI / 180,
+    let rad = (deg * Math.PI) / 180,
       c = Math.cos(rad),
       s = Math.sin(rad),
-      x = 0, y = 0, tx = 0, ty = 0;
+      x = 0,
+      y = 0,
+      tx = 0,
+      ty = 0;
 
     if (point) {
       x = point.x;
@@ -172,15 +173,14 @@ class Matrix {
    *  (ty, 1, 0)
    */
   skew(degX, degY, point = null) {
-
     if (point) this.translate(point);
-    degY |= 0
-    const radX = degX * Math.PI / 180,
-      radY = degY * Math.PI / 180
+    degY |= 0;
+    const radX = (degX * Math.PI) / 180,
+      radY = (degY * Math.PI) / 180;
     const tx = Math.tan(radX),
-      ty = Math.tan(radY)
+      ty = Math.tan(radY);
 
-    this.append([1, ty, tx, 1, 0, 0])
+    this.append([1, ty, tx, 1, 0, 0]);
     if (point) this.translate(point.negate());
 
     return this;
@@ -194,7 +194,7 @@ class Matrix {
    */
   scale(sx, sy, point = null) {
     if (point) this.translate(point);
-    this.append([sx, 0, 0, sy, 0, 0])
+    this.append([sx, 0, 0, sy, 0, 0]);
     if (point) this.translate(point.negate());
     return this;
   }
@@ -205,10 +205,7 @@ class Matrix {
    * @param {Number} y
    */
   transformCoordinate(x, y) {
-    return [
-      x * this.m[0] + y * this.m[2] + this.m[4],
-      x * this.m[1] + y * this.m[3] + this.m[5]
-    ];
+    return [x * this.m[0] + y * this.m[2] + this.m[4], x * this.m[1] + y * this.m[3] + this.m[5]];
   }
 
   /**
@@ -216,7 +213,6 @@ class Matrix {
    * @param {*} bounds
    */
   applyToRect(bounds) {
-
     let { x, y, width, height } = bounds;
     let pointTL = new Point(x, y);
     let pointTR = new Point(x, y + height);

@@ -1,18 +1,16 @@
-import Path from "../Path"
+import Path from '../Path';
 
 export default class Arc extends Path {
-
   shape = {
-      cx: 100,
-      cy: 100,
-      r: 30,
-      startAngle: 0,
-      endAngle: Math.PI * 2,
-      clockwise: true
-  }
+    cx: 100,
+    cy: 100,
+    r: 30,
+    startAngle: 0,
+    endAngle: Math.PI * 2,
+    clockwise: true,
+  };
 
   _buildPath(ctx, shape) {
-
     let x = shape.cx;
     let y = shape.cy;
     let r = Math.max(shape.r, 0);

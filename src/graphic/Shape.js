@@ -1,19 +1,17 @@
 import Path from './Path';
 import Point from './types/Point';
 import Rect from './types/Rect';
-import {observeProps } from '../decorators/memoized'
+import { observeProps } from '../decorators/memoized';
 
 /**
  * The base class of 'two points shapes' that build with start-point & end-point.
  * 通常情况下，图形都是由拖动行为绘制的
  */
 @observeProps({
-  startPoint: { type: Point, default: new Point },
-  endPoint: { type: Point, default: new Point },
+  startPoint: { type: Point, default: new Point() },
+  endPoint: { type: Point, default: new Point() },
 })
 export default class Shape extends Path {
-
-
   /**
    * 用与从JSON构造出Shape实例
    *
@@ -43,7 +41,7 @@ export default class Shape extends Path {
     this._buildPath();
   }
 
-  _draw(ctx){
+  _draw(ctx) {
     this.buildPath();
     super._draw(ctx);
   }
@@ -84,9 +82,6 @@ export default class Shape extends Path {
   }
 
   _toJSON() {
-    return [
-      [this.startPoint.x, this.startPoint.y],
-      [this.endPoint.x, this.endPoint.y],
-    ];
+    return [[this.startPoint.x, this.startPoint.y], [this.endPoint.x, this.endPoint.y]];
   }
 }

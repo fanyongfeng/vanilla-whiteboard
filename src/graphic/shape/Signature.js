@@ -1,8 +1,7 @@
-import Path from "../Path"
-import Point from "../types/Point"
+import Path from '../Path';
+import Point from '../types/Point';
 
 export default class Signature extends Path {
-
   _drawDot(point) {
     let { x, y } = point;
     const ctx = this._ctx;
@@ -13,7 +12,7 @@ export default class Signature extends Path {
     ctx.arc(x, y, size, 0, 2 * Math.PI, false);
     ctx.closePath();
     ctx.fill();
-  };
+  }
 
   _draw(ctx) {
     //TODO: calc width of Dot.

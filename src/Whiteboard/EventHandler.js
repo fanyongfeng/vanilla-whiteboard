@@ -11,7 +11,6 @@ const mousedown = 'mousedown';
 const mousemove = 'mousemove';
 const mouseup = 'mouseup';
 
-
 /**
  *
  * @param {Point} prev
@@ -24,16 +23,13 @@ function throttleDistance(prev, next, distance = 10) {
 }
 
 export default class EventHandler {
-
   isDragging = false;
   isMouseDown = false;
-  keyModifiers = {}
+  keyModifiers = {};
   lastPoint = null; //绑定流程和一般拖拽类似
   _currentTool = null;
 
-  constructor() {
-
-  }
+  constructor() {}
 
   set tool(tool) {
     this._currentTool = tool;
@@ -48,13 +44,13 @@ export default class EventHandler {
     return this._currentTool;
   }
 
-  get inverseMatrix(){
+  get inverseMatrix() {
     return this.layer.matrix.inverse();
   }
 
   bind(layer) {
     this.layer = layer;
-    let canvas = this.canvas = layer.el;
+    let canvas = (this.canvas = layer.el);
     this.onMouseMove = throttle(this.onMouseMove, 0).bind(this); //
     this.onMouseUp = this.onMouseUp.bind(this);
 
@@ -103,21 +99,20 @@ export default class EventHandler {
     }
   }
 
-  onKeyPress(event) {
-
-  }
+  onKeyPress(event) {}
 
   onKeyUp(event) {
-    if ((event.keyCode === keyCode.DELETE || event.keyCode === keyCode.BACKSPACE) &&
-      this._currentTool.type === toolTypes.SELECTOR) {
-
+    if (
+      (event.keyCode === keyCode.DELETE || event.keyCode === keyCode.BACKSPACE) &&
+      this._currentTool.type === toolTypes.SELECTOR
+    ) {
       if (!toolAvailable) return false;
       commands.delete();
     }
     keyModifiers[event.key] = false;
   }
 
-  _getMouseEvent(event){
+  _getMouseEvent(event) {
     let _event = new MouseEvent(event);
     let point = _event.point;
     this.inverseMatrix.applyToPoint(point);
@@ -129,7 +124,7 @@ export default class EventHandler {
 
     let _event = this._getMouseEvent(event);
 
-    if(this.invokeToolSlotHandler('onBeforeMouseDown', _event) === false) {
+    if (this.invokeToolSlotHandler('onBeforeMouseDown', _event) === false) {
       return;
     }
 
@@ -176,8 +171,7 @@ export default class EventHandler {
 
     if (this.isMouseDown) {
       this.isDragging = true;
-      if(this.draggingTriggered === 0 &&
-        this.invokeToolSlotHandler('onBeforeMouseDrag', _event) === false)  return;
+      if (this.draggingTriggered === 0 && this.invokeToolSlotHandler('onBeforeMouseDrag', _event) === false) return;
 
       this.draggingTriggered++;
       this.invokeToolSlotHandler('onMouseDrag', _event);
@@ -201,11 +195,9 @@ export default class EventHandler {
    * @param  {...any} args arguments
    */
   invokeToolSlotHandler(name, event) {
-    if(!this.tool ||
-      typeof this.tool[name] !== 'function') return; //ensure return undefined when handler is null.
+    if (!this.tool || typeof this.tool[name] !== 'function') return; //ensure return undefined when handler is null.
     // if(process.env.NODE_ENV === 'development')
     //   console.log(this.tool.type, name, 'triggered!');
     return this.tool[name](event);
   }
 }
-

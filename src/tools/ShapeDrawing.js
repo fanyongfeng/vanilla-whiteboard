@@ -6,13 +6,14 @@ import itemCreator from './mixins/itemCreator';
 /**
  * 绘制两点图形工具
  */
-@deepMixin(dragBounds({
-  strokeStyle: 'rgb(255,163,0)',
-  lineWidth: 1,
-}))
+@deepMixin(
+  dragBounds({
+    strokeStyle: 'rgb(255,163,0)',
+    lineWidth: 1,
+  })
+)
 @deepMixin(itemCreator())
-export default class ShapeDrawing extends Tool{
-
+export default class ShapeDrawing extends Tool {
   onMouseDown(event) {
     this.currentShape.startPoint = this.currentShape.endPoint = event.point;
   }

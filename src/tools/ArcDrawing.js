@@ -1,4 +1,3 @@
-
 import Tool from './Tool';
 
 export default class ArcDrawing extends Tool {
@@ -8,23 +7,14 @@ export default class ArcDrawing extends Tool {
   }
 
   onMouseDown(event) {
-
     if (this.center) {
       this.radius = event.point.subtract(this.center).length;
-    } else
-      this.center = event.point;
-
+    } else this.center = event.point;
   }
 
-  onMouseMove(event) {
+  onMouseMove(event) {}
 
-  }
+  onMouseDrag(event) {}
 
-  onMouseDrag(event) {
-
-  }
-
-  onMouseUp(event) {
-
-  }
+  onMouseUp(event) {}
 }

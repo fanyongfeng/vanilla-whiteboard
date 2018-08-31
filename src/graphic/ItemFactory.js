@@ -44,7 +44,9 @@ export const shapeTypes = {
   selector: { id: 10, ctor: Image },
   eraser: { id: 11, ctor: Image },
   dashed: {
-    id: 12, ctor: Line, preset: { dash: [10, 12] }
+    id: 12,
+    ctor: Line,
+    preset: { dash: [10, 12] },
   },
   rightTriangle: { id: 13, ctor: Triangle, preset: { right: true } },
   circle: { id: 14 },
@@ -55,7 +57,9 @@ export const shapeTypes = {
 };
 
 const idMap = {};
-for (let key in shapeTypes) { idMap[shapeTypes[key].id] = key; }
+for (let key in shapeTypes) {
+  idMap[shapeTypes[key].id] = key;
+}
 
 function normalizeStyle(style) {
   let ret = {};
@@ -101,7 +105,11 @@ export function createItemViaJSON(json) {
   style = normalizeStyle(style);
 
   let options = {
-    typeId, type, id, style, ...preset,
+    typeId,
+    type,
+    id,
+    style,
+    ...preset,
   };
 
   let ins = ctor.instantiate(options, data);
@@ -119,7 +127,8 @@ export function createItemViaJSON(json) {
  * @param {String} type
  * @param {Object} style, Style of item.
  */
-export function createItem(type, style = {}) { // attach to nebula!
+export function createItem(type, style = {}) {
+  // attach to nebula!
   let shape = shapeTypes[type],
     ctor = shape.ctor,
     typeId = shape.id,
@@ -129,12 +138,14 @@ export function createItem(type, style = {}) { // attach to nebula!
 
   style = normalizeStyle(style);
   let options = {
-    typeId, type, style, ...preset
+    typeId,
+    type,
+    style,
+    ...preset,
   };
 
   return new ctor(options);
 }
-
 
 /**
  * registry shapes
@@ -143,10 +154,7 @@ export function createItem(type, style = {}) { // attach to nebula!
  * @param {*} id
  */
 export function registerShape(type, ctor, id) {
-  if (shapeTypes[type])
-    throw new Error(`Shape '${type}' already exist!`);
+  if (shapeTypes[type]) throw new Error(`Shape '${type}' already exist!`);
 
   shapeTypes[type] = { ctor, id };
 }
-
-

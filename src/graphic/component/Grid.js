@@ -1,4 +1,3 @@
-
 import Item from '../Item';
 
 /**
@@ -9,14 +8,13 @@ import Item from '../Item';
  * }
  */
 export default class Grid extends Item {
-
   draw(ctx) {
     let { width, height } = this.layer;
     ctx.save();
     //preset context2d styles
     ctx.lineWidth = 1;
     ctx.fontSize = 10;
-    ctx.font = "9px serif";
+    ctx.font = '9px serif';
 
     //draw vertical lines
     if (this.minor) this.drawMinorGrid(ctx, width, height);
@@ -25,7 +23,7 @@ export default class Grid extends Item {
   }
 
   drawMajorGrid(ctx, width, height) {
-    ctx.strokeStyle = "#c0c0c0";
+    ctx.strokeStyle = '#c0c0c0';
     let x = 0;
     while (x < width) {
       x += 50;
@@ -42,7 +40,7 @@ export default class Grid extends Item {
   }
 
   drawMinorGrid(ctx, width, height) {
-    ctx.strokeStyle = "#f0f0f0";
+    ctx.strokeStyle = '#f0f0f0';
     let x = 0;
     while (x < width) {
       x += 10;

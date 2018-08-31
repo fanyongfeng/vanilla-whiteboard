@@ -5,7 +5,7 @@ const replaceAll = (target, search, replacement) => target.replace(new RegExp(se
 const getStylePropertyValue = (target, property) => {
   const style = window.getComputedStyle(target, null);
   return parseInt(style.getPropertyValue(property), 10);
-}
+};
 
 export const drawTextImg = (element, ctx) => {
   const width = getStylePropertyValue(element, 'width');
@@ -23,7 +23,7 @@ export const drawTextImg = (element, ctx) => {
   const svg = new Blob([data], { type: 'image/svg+xml;charset=utf-8' });
   const url = DOM_URL.createObjectURL(svg);
 
-  img.onload = (data) => {
+  img.onload = data => {
     element.cxtWidth = data.target.width;
     element.cxtHeight = data.target.height;
     ctx.drawImage(img, left, top);
@@ -31,13 +31,12 @@ export const drawTextImg = (element, ctx) => {
   };
   // document.body.appendChild(img);
   img.src = url;
-}
+};
 
 /**
  * Text Item;
  */
 export default class Text extends Item {
-
   _mode = 'textarea'; // textarea
   _autoBreak = true; // if _autoBreak is true, Text line will break if out of canvas bounds.
   _editable = false;
@@ -65,7 +64,7 @@ export default class Text extends Item {
       'font-size': `${this.style.fontSize}px`,
       position: 'absolute',
       left: `${x}px`,
-      top: `${y - 10}px`
+      top: `${y - 10}px`,
     });
     document.getElementById('draw-panel').appendChild(input);
     this.bindInputEvent(input);
@@ -90,16 +89,15 @@ export default class Text extends Item {
   /**
    * @param offset object {x, y}
    */
-  updatePosition({x= 0, y= 0}) {
+  updatePosition({ x = 0, y = 0 }) {
     const { left, top } = input.style;
     Object.assign(input.style, {
-      'left': `${left - x }px`,
-      'top': `${top - y}px`
-    })
+      left: `${left - x}px`,
+      top: `${top - y}px`,
+    });
   }
 
   _drawTextImg() {
     drawTextImg(this.input, this.cxt);
   }
-
 }

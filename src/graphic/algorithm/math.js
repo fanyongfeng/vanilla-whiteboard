@@ -24,7 +24,11 @@ export const floor = Math.floor;
 export const log = Math.log;
 export const pow = Math.pow;
 export const sin = Math.sin;
-export const sign = Math.sign || function (x) { return x > 0 ? 1 : x < 0 ? -1 : 0; };
+export const sign =
+  Math.sign ||
+  function(x) {
+    return x > 0 ? 1 : x < 0 ? -1 : 0;
+  };
 export const sqrt = Math.sqrt;
 export const tan = Math.tan;
 export const max = Math.max;
@@ -55,14 +59,14 @@ export function random(min, max) {
     min = 0;
   }
   return min === max ? min : Math.random() * (max - min) + min;
-};
+}
 
 export function sum(array) {
   let result;
 
   for (const value of array) {
     if (value !== undefined) {
-      result = result === undefined ? value : (result + value);
+      result = result === undefined ? value : result + value;
     }
   }
   return result;
@@ -72,4 +76,3 @@ export function mean(array) {
   let len = array.length;
   return sum(array) / len;
 }
-
