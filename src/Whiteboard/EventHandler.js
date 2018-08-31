@@ -165,7 +165,7 @@ export default class EventHandler {
     // if(!throttleDistance(point, 10)) return;
     if (_event.target !== this.canvas) return;
 
-    let contain = this.context.bounds.containsPoint(point);
+    let contain = this.layer.bounds.containsPoint(point);
     if (!contain) return;
 
     if (typeof event.touches !== 'undefined' && event.touches.length > 1) {

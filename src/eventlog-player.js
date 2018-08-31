@@ -13,6 +13,9 @@ class Pointer {
   next() {
 
   }
+  goto(){
+
+  }
 }
 
 class Snapshot {

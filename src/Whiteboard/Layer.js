@@ -3,6 +3,7 @@ import { setStyle } from '../util/dom';
 import ItemCollection from './ItemCollection';
 import Matrix from '../graphic/types/Matrix';
 import Item from '../graphic/Item';
+import Rect from '../graphic/types/Rect';
 
 const _items = Symbol('_items');
 /**
@@ -13,6 +14,7 @@ export default class Layer {
   [_items] = new ItemCollection(null, this);
   wrapper = null;
   _isDirty = true;
+  _bounds = null;
   matrix = new Matrix;
   offscreen = false;
 
@@ -25,6 +27,13 @@ export default class Layer {
       bottom.add(element);
     });
     refreshAll();
+  }
+
+  /**
+   * Get bounds of layer.
+   */
+  get bounds(){
+    return this._bounds;
   }
 
   /**
@@ -50,6 +59,7 @@ export default class Layer {
     this.ctx = el.getContext('2d');
     this.width = width;
     this.height = height;
+    this._bounds =  new Rect(0, 0, this.width, this.height);
 
     setStyle(el, {
       position: 'absolute',
@@ -66,6 +76,7 @@ export default class Layer {
   }
 
   _draw(){
+    this.globalCtx.refreshCount++;
     this[_items].forEach(item => item && item.draw(this.ctx));
   }
 

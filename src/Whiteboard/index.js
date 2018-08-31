@@ -54,6 +54,7 @@ export default class Whiteboard {
   static instances = [];
 
   _currentTool = null;
+  _animationFrameId = -Infinity;
   backgroundLayer = null;
   activeLayer = null;
   operateLayer = null;
@@ -80,7 +81,6 @@ export default class Whiteboard {
     this.width = width;
     this.height = height;
     this.context = this[_createContext]();
-
     this.operateLayer.el.tabIndex = 1; //make container focusable.
 
     this.backgroundLayer.appendTo(this);
@@ -88,11 +88,13 @@ export default class Whiteboard {
     this.operateLayer.appendTo(this);
 
     let handler = this.handler = new EventHandler();
-
     handler.context = this.context;
-    handler.bind(this.operateLayer);
 
-    this.tool = 'selection';
+    if(!this.options.readonly) {
+      handler.bind(this.operateLayer);
+      this.tool = 'selection';
+    }
+
 
     if(this.options.zoom !== 1) {
       this.zoom = this.options.zoom;
@@ -108,34 +110,24 @@ export default class Whiteboard {
    *
    */
   [_createContext]() {
+    //实例化所有的layer
+    let backgroundLayer = this.backgroundLayer = new Layer(this.width, this.height, 'background'),
+      activeLayer = this.activeLayer = new Layer(this.width, this.height, 'active'),
+      operateLayer = this.operateLayer = new OperateLayer(this.width, this.height, 'operate');
 
-    let backgroundLayer = new Layer(this.width, this.height, 'background'),
-      activeLayer = new Layer(this.width, this.height, 'active'),
-      operateLayer = new OperateLayer(this.width, this.height, 'operate');
-
-    let proto = {
-      whiteboard: this,
+    //return context;
+    return {
       backgroundLayer,
       activeLayer,
       operateLayer,
-      currentMode: null,
       refreshCount: 0, //刷新计数，白板所有layers刷新总次数
       settings: Object.freeze(this.options),
-      bounds: new Rect(0, 0, this.width, this.height),
       emit: this.emit.bind(this)
-    }
-
-    // 将context 属性赋值白板实例
-    if (process.env.NODE_ENV === 'development')
-      Object.keys(proto).forEach(key => this[key] = proto[key]);
-
-    //return context;
-    return Object.create(proto);
+    };
   }
 
   /**
    * Watch mode. Redraw layer if it mark as dirty in every tick.
-   *
    */
   watch() {
     if (this._isLoop === true) throw new Error("Can't watch twice!");
@@ -144,12 +136,20 @@ export default class Whiteboard {
       if (this.activeLayer.isDirty) this.activeLayer.refresh();
       if (this.operateLayer.isDirty) this.operateLayer.refresh();
       if (this.backgroundLayer.isDirty) this.backgroundLayer.refresh();
-      requestAnimationFrame(drawDirtyLayer);
+      this._animationFrameId = requestAnimationFrame(drawDirtyLayer);
     }
 
     //invoke immediately！
     drawDirtyLayer();
     this._isLoop = true;
+  }
+
+  /**
+   * unwatch will stop current loop;
+   */
+  unwatch(){
+    this._isLoop =false;
+    cancelAnimationFrame(this._animationFrameId);
   }
 
   /**
@@ -231,7 +231,8 @@ export default class Whiteboard {
   }
 
   set tool(val) {
-    this.handler.tool = getTool(val);
+    if(!this.options.readonly)
+      this.handler.tool = getTool(val);
   }
 
   get tool() {
