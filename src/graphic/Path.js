@@ -1,6 +1,5 @@
 
 import { LineSegment, BezierSegment, MoveSegment, QuadraticSegment, ArcSegment } from './types/Segment';
-import SegmentPoint from './types/SegmentPoint';
 import Point from './types/Point';
 import Rect from './types/Rect';
 import fitCurve from './algorithm/fitCurve';

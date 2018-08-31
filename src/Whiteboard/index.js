@@ -82,7 +82,6 @@ export default class Whiteboard {
     this.context = this[_createContext]();
 
     this.operateLayer.el.tabIndex = 1; //make container focusable.
-
     this.backgroundLayer.appendTo(this);
     this.activeLayer.appendTo(this);
     this.operateLayer.appendTo(this);

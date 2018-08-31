@@ -40,14 +40,15 @@ nebula.Whiteboard = Whiteboard;
 //mount enum on namespace.
 // nebula.enum = { keyCode };
 
-export default nebula;
-export { Whiteboard, Point, Rect, Style, Path }
-
 //tmp for debug
 let wb = playground.init();
 // wb.drawGrid();
 // wb.drawAxes();
 window.nebula = nebula;
+
+export default nebula;
+export { Whiteboard, Point, Rect, Style, Path }
+
 
 
 
