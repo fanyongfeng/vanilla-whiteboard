@@ -33,7 +33,8 @@ export default class MaterialProvider {
     if (cached[url]) return cached[url];
     let material = new Image({}, url);
     this._length++;
-    return (cached[url] = material);
+    cached[url] = material;
+    return cached[url];
   }
 
   /**

@@ -131,9 +131,7 @@ export default class EventHandler {
 
     let _event = this._getMouseEvent(event);
 
-    if (this.invokeToolSlotHandler('onBeforeMouseDown', _event) === false) {
-      return;
-    }
+    if (this.invokeToolSlotHandler('onBeforeMouseDown', _event) === false) return;
 
     this.isMouseDown = true;
     this.draggingTriggered = 0;
@@ -202,7 +200,7 @@ export default class EventHandler {
    * @param  {...any} args arguments
    */
   invokeToolSlotHandler(name, event) {
-    if (!this.tool || typeof this.tool[name] !== 'function') return; //ensure return undefined when handler is null.
+    if (!this.tool || typeof this.tool[name] !== 'function') return null; //ensure return undefined when handler is null.
     // if(process.env.NODE_ENV === 'development')
     //   console.log(this.tool.type, name, 'triggered!');
     return this.tool[name](event);

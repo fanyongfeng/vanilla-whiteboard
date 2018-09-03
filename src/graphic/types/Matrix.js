@@ -1,5 +1,4 @@
 import Point from './Point';
-import Rect from './Rect';
 
 //https://github.com/chrisaljoudi/transformatrix.js
 

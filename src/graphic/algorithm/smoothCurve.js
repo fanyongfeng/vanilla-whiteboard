@@ -10,7 +10,7 @@ import Point from '../types/Point';
  * @param {Array} points
  * @param {Boolean} closed
  */
-export default function smooth(points, closed) {
+export default function smoothCurve(points, closed) {
   let opts = options || {},
     asymmetric = opts.asymmetric, // asymmetric or continuous;
     length = points.length,

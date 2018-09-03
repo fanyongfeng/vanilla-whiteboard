@@ -26,10 +26,11 @@ export default function emittable() {
     target.prototype.on = function(name, fn) {
       if (typeof name !== 'string' || typeof fn !== 'function') throw new Error('Arguments illegal!');
 
-      let handlers = (this.__callbacks[name] = this.__callbacks[name] || []);
+      this.__callbacks[name] = this.__callbacks[name] || [];
+      let handlers = this.__callbacks[name];
 
       if (handlers.indexOf(fn) === -1) {
-        this.__callbacks[name].push(fn);
+        handlers.push(fn);
       }
 
       return this;

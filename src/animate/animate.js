@@ -24,7 +24,7 @@ let cancelAnimationFrame = window.cancelAnimationFrame || window.clearTimeout;
  */
 function animate(options) {
   requestAnimationFrame(function(timestamp) {
-    options || (options = {});
+    options = options || {};
 
     let start = timestamp || +new Date(),
       duration = options.duration || 500,
