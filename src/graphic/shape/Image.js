@@ -66,14 +66,11 @@ class Image extends Item {
   loadImage(fn) {
     if (!this.src && this._image && this.loaded) return;
 
-    // let img = new window.Image;
     let img = document.createElement('img');
     img.setAttribute('crossOrigin', 'anonymous');
     img.src = this.src;
 
     img.onload = () => {
-      // console.log('load');
-
       this.loaded = img && img.src && img.complete;
       this.naturalWidth = img ? img.naturalWidth || img.width : 0;
       this.naturalHeight = img ? img.naturalHeight || img.height : 0;

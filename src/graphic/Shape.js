@@ -28,8 +28,13 @@ class Shape extends Path {
   constructor(options, sp = null, ep = null) {
     super(options);
 
-    sp && (this.startPoint = sp);
-    ep && (this.endPoint = ep);
+    if (sp) {
+      this.startPoint = sp;
+    }
+
+    if (ep) {
+      this.endPoint = ep;
+    }
   }
 
   _buildPath() {

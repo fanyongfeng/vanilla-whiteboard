@@ -81,8 +81,13 @@ function normalizeStyle(style) {
     ret.fillStyle = new Color(fillColor || color);
   }
 
-  typeof lineWidth === 'number' && (ret.lineWidth = lineWidth);
-  typeof fontSize === 'number' && (ret.fontSize = fontSize);
+  if (typeof lineWidth === 'number') {
+    ret.lineWidth = lineWidth;
+  }
+
+  if (typeof fontSize === 'number') {
+    ret.fontSize = fontSize;
+  }
 
   return ret;
 }

@@ -1,7 +1,6 @@
 import { setStyle } from '../util/dom';
 import ItemCollection from './ItemCollection';
 import Matrix from '../graphic/types/Matrix';
-import Item from '../graphic/Item';
 import Rect from '../graphic/types/Rect';
 
 const _items = Symbol('_items');
@@ -133,9 +132,6 @@ export default class Layer {
     this.el.width = this.width * this.deviceRatio;
     this.el.height = this.height * this.deviceRatio;
     this.ctx.scale(this.deviceRatio, this.deviceRatio);
-    // this.matrix
-    //   .scale(this.deviceRatio, this.deviceRatio)
-    //   .applyToContext(this.ctx);
   }
 
   /**

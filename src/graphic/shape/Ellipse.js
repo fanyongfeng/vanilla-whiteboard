@@ -11,7 +11,6 @@ export default class Ellipse extends Shape {
     let b = this.bounds.height / 2;
     let ox = a * kappa; // 水平控制点偏移量
     let oy = b * kappa; // 垂直控制点偏移量
-    // 从椭圆的左端点开始顺时针绘制四条三次贝塞尔曲线
 
     this.moveTo(new Point(x - a, y))
       .bezierCurveTo(new Point(x - a, y - oy), new Point(x - ox, y - b), new Point(x, y - b))

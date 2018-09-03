@@ -14,7 +14,8 @@ export function memoized(cacheKey) {
     descriptor.get = function() {
       let cacheProps = this[cachedPropsKey];
       if (typeof cacheProps[cacheKey] !== 'undefined') return cacheProps[cacheKey];
-      return (cacheProps[cacheKey] = get.apply(this));
+      cacheProps[cacheKey] = get.apply(this);
+      return cacheProps[cacheKey];
     };
 
     return descriptor;
@@ -111,7 +112,6 @@ export function observeProps(desc) {
       if (typeof target.prototype[key] !== 'undefined') throw new Error(`Prop ${key} already exist!`);
 
       let propDesc = desc[key];
-      //let privateKey = Symbol(`_${key}`);
       let privateKey = `__${key}`;
 
       target.prototype[privateKey] = propDesc.default;
@@ -125,7 +125,7 @@ export function observeProps(desc) {
         },
         set(val) {
           checkParam(val);
-          //if not changed, do nothing.
+          // if not changed, do nothing.
           if (val === this[privateKey]) return;
 
           this[privateKey] = val;
