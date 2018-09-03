@@ -51,9 +51,17 @@ export default class Layer {
   constructor(width, height, role) {
     let el = document.createElement('canvas');
     el.setAttribute('data-role', role);
+    el.setAttribute('canvas-id', role);
     this.role = role;
     this.el = el;
-    this.ctx = el.getContext('2d');
+
+    if (wx && wx.createCanvasContext) {
+      // adapt to wechat-mini-app
+      this.ctx = wx.createCanvasContext(role);
+    } else {
+      this.ctx = el.getContext('2d');
+    }
+
     this.width = width;
     this.height = height;
     this._bounds = new Rect(0, 0, this.width, this.height);
