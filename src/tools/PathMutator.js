@@ -6,4 +6,6 @@ import { deepMixin } from '../decorators/mixin';
  * Mutate Path of shape.
  */
 @deepMixin(mutable())
-export default class PathMutator extends Tool {}
+class PathMutator extends Tool {}
+
+export default PathMutator;

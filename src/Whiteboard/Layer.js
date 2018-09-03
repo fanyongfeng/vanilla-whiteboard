@@ -69,7 +69,7 @@ export default class Layer {
     });
 
     if (this.deviceRatio > 1) {
-      this.applyRatio(el);
+      this.applyRatio();
     }
   }
 

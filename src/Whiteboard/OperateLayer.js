@@ -4,8 +4,13 @@ import Layer from './Layer';
  * Support Cursor & Event .. operate layer behavior
  * 最前面的一层, 相较于其他层有特定的行为。
  */
-export default class OperatorLayer extends Layer {
+export default class OperateLayer extends Layer {
   _cursorImage = null;
+
+  constructor(width, height, role) {
+    super(width, height, role);
+    this.el.tabIndex = 1; //make OperateLayer focusable.
+  }
   /**
    * set cursor of layer. Use for operateLayer.
    * @param {*} value

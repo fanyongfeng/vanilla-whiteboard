@@ -7,7 +7,6 @@ import OperateLayer from './OperateLayer';
 import { setStyle } from '../util/dom';
 import EventHandler from './EventHandler';
 import Text from '../graphic/shape/Text';
-import Rect from '../graphic/types/Rect';
 import { getTool } from '../tools';
 import { createItemViaJSON, createItem } from '../graphic/ItemFactory';
 import Grid from '../graphic/component/Grid';
@@ -49,7 +48,7 @@ const _history = Symbol('_history');
  *  - precision (精度)
  */
 @emittable()
-export default class Whiteboard {
+class Whiteboard {
   static instances = [];
 
   _currentTool = null;
@@ -78,11 +77,16 @@ export default class Whiteboard {
     this.wrapper = container;
     this.width = width;
     this.height = height;
-    this.context = this[_createContext]();
-    this.operateLayer.el.tabIndex = 1; //make container focusable.
+
+    //实例化所有的layer
+    this.backgroundLayer = new Layer(this.width, this.height, 'background');
+    this.activeLayer = new Layer(this.width, this.height, 'active');
+    this.operateLayer = new OperateLayer(this.width, this.height, 'operate');
     this.backgroundLayer.appendTo(this);
     this.activeLayer.appendTo(this);
     this.operateLayer.appendTo(this);
+
+    this.context = this[_createContext](backgroundLayer, activeLayer, operateLayer);
 
     let handler = (this.handler = new EventHandler());
     handler.context = this.context;
@@ -105,13 +109,7 @@ export default class Whiteboard {
    * 注意，要区分白板实例的context，和canvas getContext
    *
    */
-  [_createContext]() {
-    //实例化所有的layer
-    let backgroundLayer = (this.backgroundLayer = new Layer(this.width, this.height, 'background')),
-      activeLayer = (this.activeLayer = new Layer(this.width, this.height, 'active')),
-      operateLayer = (this.operateLayer = new OperateLayer(this.width, this.height, 'operate'));
-
-    //return context;
+  [_createContext](backgroundLayer, activeLayer, operateLayer) {
     return {
       backgroundLayer,
       activeLayer,
@@ -279,11 +277,11 @@ export default class Whiteboard {
     let $link = document.createElement('a');
     function downloadCanvas() {
       $link.href = offscreenCanvas.el.toDataURL(`image/${type}`);
-      $link.download = filename;
+      $link.download = `${filename}.${type}`;
       $link.click();
     }
 
-    downloadCanvas(`${filename}.${type}`);
+    downloadCanvas();
   }
 
   dispose() {
@@ -301,3 +299,5 @@ export default class Whiteboard {
     return this;
   }
 }
+
+export default Whiteboard;

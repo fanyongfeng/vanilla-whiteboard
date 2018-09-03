@@ -11,7 +11,7 @@ import { observeProps } from '../decorators/memoized';
   startPoint: { type: Point, default: new Point() },
   endPoint: { type: Point, default: new Point() },
 })
-export default class Shape extends Path {
+class Shape extends Path {
   /**
    * 用与从JSON构造出Shape实例
    *
@@ -85,3 +85,5 @@ export default class Shape extends Path {
     return [[this.startPoint.x, this.startPoint.y], [this.endPoint.x, this.endPoint.y]];
   }
 }
+
+export default Shape;

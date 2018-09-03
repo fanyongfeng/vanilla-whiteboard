@@ -81,7 +81,7 @@ const validateFunc = function validateFunc(type, key) {
     };
   } else {
     return function(val) {
-      if (!val instanceof type) throw new TypeError(`setter '${key}' accept ${type.name} value!`);
+      if (!(val instanceof type)) throw new TypeError(`setter '${key}' accept ${type.name} value!`);
     };
   }
 };

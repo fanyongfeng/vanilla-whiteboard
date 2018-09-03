@@ -13,7 +13,7 @@ import itemCreator from './mixins/itemCreator';
   })
 )
 @deepMixin(itemCreator())
-export default class ShapeDrawing extends Tool {
+class ShapeDrawing extends Tool {
   onMouseDown(event) {
     this.currentShape.startPoint = this.currentShape.endPoint = event.point;
   }
@@ -27,3 +27,5 @@ export default class ShapeDrawing extends Tool {
     this.currentShape = null;
   }
 }
+
+export default ShapeDrawing;

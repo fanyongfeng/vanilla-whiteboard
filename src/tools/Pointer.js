@@ -24,7 +24,7 @@ import { deepMixin } from '../decorators/mixin';
     y: -12,
   })
 )
-export default class Pointer extends Tool {
+class Pointer extends Tool {
   onMouseMove({ point }) {
     this.globalCtx.emit('pointer:move', [point.x, point.y]);
   }
@@ -32,3 +32,5 @@ export default class Pointer extends Tool {
     this.globalCtx.emit('pointer:draw', this.dragRect.toJSON());
   }
 }
+
+export default Pointer;

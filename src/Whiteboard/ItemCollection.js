@@ -134,7 +134,7 @@ class ItemCollection {
    * @param {Item} item
    */
   add(item) {
-    if (!item instanceof Item) throw new TypeError('Only Item can add to Collection!');
+    if (!(item instanceof Item)) throw new TypeError('Only Item can add to Collection!');
 
     item.layer = this.layer;
     this[_items].push(item);

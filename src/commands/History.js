@@ -19,7 +19,7 @@ const defaultOptions = {
 };
 
 @emittable()
-export default class History {
+class History {
   constructor(options) {
     this.clear();
     this.options = Object.assign({}, defaultOptions, options);
@@ -87,3 +87,5 @@ export default class History {
     this.change('undo', 'redo');
   }
 }
+
+export default History;

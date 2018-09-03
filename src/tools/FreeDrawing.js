@@ -48,11 +48,13 @@ class FreeDrawing extends Tool {
  */
 @deepMixin(itemCreator())
 @deepMixin(cursor(markerCursor, { x: 13, y: -15 }))
-export class Marker extends FreeDrawing {}
+class Marker extends FreeDrawing {}
 
 /**
  * 荧光笔工具
  */
 @deepMixin(itemCreator())
 @deepMixin(cursor(highlighterCursor, { x: 12, y: -12 }))
-export class Highlighter extends FreeDrawing {}
+class Highlighter extends FreeDrawing {}
+
+export { Marker, Highlighter };

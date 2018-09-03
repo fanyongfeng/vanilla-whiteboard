@@ -2,11 +2,11 @@ import { createItem } from '../../graphic/ItemFactory';
 
 /**
  * Enable tool add item on mouse event triggered!
- * @param {*} style
+ * @param {Object} style
  */
-export default function itemCreator(style) {
+export default function itemCreator(style = {}) {
   return {
-    _style: {},
+    _style: style,
 
     /**
      * Set style of tool. It will apply to the created item.
@@ -24,9 +24,8 @@ export default function itemCreator(style) {
 
     /**
      * Create item and add to item-collection before mouse down.
-     * @param {MouseEvent} event
      */
-    onBeforeMouseDown(event) {
+    onBeforeMouseDown() {
       this.currentShape = createItem(this.type, this.style);
       this.items.add(this.currentShape);
     },

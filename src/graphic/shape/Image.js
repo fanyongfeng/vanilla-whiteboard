@@ -25,9 +25,9 @@ const viewHeight = 800;
    */
   shadow: { type: Boolean, default: true },
 })
-export default class Image extends Item {
+class Image extends Item {
   static instantiate(options, src) {
-    return new this(options, src);
+    return new Image(options, src);
   }
 
   _src = null;
@@ -179,3 +179,5 @@ export default class Image extends Item {
     return [this.src];
   }
 }
+
+export default Image;

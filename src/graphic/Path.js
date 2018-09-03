@@ -58,7 +58,7 @@ class Path extends Item {
   }
 
   arc(x, y, r, sa, ea) {
-    let segment = new ArcSegment();
+    const segment = new ArcSegment();
     segment.arc = [x, y, r, sa, ea];
     this.add(segment);
     return this;
@@ -66,7 +66,7 @@ class Path extends Item {
   }
 
   arcTo(cp1, cp2, radius) {
-    let segment = new ArcSegment(cp1, cp2, radius);
+    const segment = new ArcSegment(cp1, cp2, radius);
     this.add(segment);
     return this;
     // segment
@@ -79,8 +79,8 @@ class Path extends Item {
    * @param {Number} y
    */
   moveTo(x, y) {
-    let point = Point.instantiate(x, y);
-    let segment = new MoveSegment(point);
+    const point = Point.instantiate(x, y);
+    const segment = new MoveSegment(point);
     this.add(segment);
     return this;
   }
@@ -92,8 +92,8 @@ class Path extends Item {
    * @param {Number} y
    */
   lineTo(x, y) {
-    let point = Point.instantiate(x, y);
-    let segment = new LineSegment(point);
+    const point = Point.instantiate(x, y);
+    const segment = new LineSegment(point);
     this.add(segment);
     return this;
   }
@@ -105,7 +105,7 @@ class Path extends Item {
    * @param {*} point
    */
   bezierCurveTo(cp1, cp2, point) {
-    let segment = new BezierSegment(cp1, cp2, point);
+    const segment = new BezierSegment(cp1, cp2, point);
     this.add(segment);
     return this;
   }
@@ -130,7 +130,7 @@ class Path extends Item {
   }
 
   quadraticCurveTo2(cp, point) {
-    let segment = new QuadraticSegment(cp, point);
+    const segment = new QuadraticSegment(cp, point);
     this.add(segment);
     return this;
   }
@@ -144,28 +144,12 @@ class Path extends Item {
    */
   @memoized()
   get bounds() {
-    let x1 = Infinity,
-      x2 = -x1,
-      y1 = x1,
-      y2 = x2;
-
-    for (let i = 0, l = this.segments.length; i < l; i++) {
-      let bound = this.segments[i].bounds;
-
-      let xn = bound.x,
-        yn = bound.y,
-        xx = bound.x + bound.width,
-        yx = bound.y + bound.height;
-
-      if (xn < x1) x1 = xn;
-      if (xx > x2) x2 = xx;
-      if (yn < y1) y1 = yn;
-      if (yx > y2) y2 = yx;
-    }
-
-    return new Rect(x1, y1, x2 - x1, y2 - y1, this);
+    return this.uniteBoundsOfChildren(this.segments);
   }
 
+  /**
+   * Get bounds with stroke.
+   */
   get strokeBounds() {
     return this.bounds.expand(this.style.lineWidth / 2);
   }
@@ -185,7 +169,7 @@ class Path extends Item {
     //不优化小于3个点的曲线
     if (this.segments.length < 3) return this;
 
-    let segments = fitCurve(this.segments.map(item => item.point), 1);
+    const segments = fitCurve(this.segments.map(item => item.point), 1);
     this[_segments] = [this[_segments][0]].concat(segments);
     this.changed();
     return this;
@@ -195,7 +179,7 @@ class Path extends Item {
    * Smooth current path, and rebuild segments
    */
   smooth() {
-    let segments = smoothCurve(this.segments, this.isClose);
+    const segments = smoothCurve(this.segments, this.isClose);
     this[_segments] = segments;
     this.changed();
     return this;
@@ -274,7 +258,7 @@ class Path extends Item {
   }
 
   toString() {
-    let segmentSVG = this.segments.map(item => item.toString()).join(' ');
+    const segmentSVG = this.segments.map(item => item.toString()).join(' ');
     return `<path d="${segmentSVG} ${this.isClose ? 'z' : ''}"></path>`;
   }
 }

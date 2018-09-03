@@ -14,7 +14,7 @@ import { observeProps } from '../../decorators/memoized';
    */
   right: { type: Boolean, default: false },
 })
-export default class Triangle extends Shape {
+class Triangle extends Shape {
   _buildPath() {
     let t1x, t1y, t2x, t2y;
     let { x: sx, y: sy } = this.startPoint;
@@ -45,3 +45,5 @@ export default class Triangle extends Shape {
       .closePath();
   }
 }
+
+export default Triangle;

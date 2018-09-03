@@ -33,7 +33,8 @@ module.exports = {
     // allow debugger during development
     'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0,
     "arrow-parens": ["error", "as-needed"],
-    "no-underscore-dangle": ["error", { "allow": ["foo_", "_bar"] }]
+    "no-underscore-dangle": "off",
+    //"no-underscore-dangle": ["error", { "allow": ["foo_", "_bar"] }]
   },
   "globals": {
     "window": true,

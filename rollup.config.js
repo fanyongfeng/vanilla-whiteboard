@@ -51,7 +51,7 @@ if (!isProd) {
     })
   );
 } else {
-  config.plugins.push(uglify());
+  // /config.plugins.push(uglify());
 }
 
 export default config;
