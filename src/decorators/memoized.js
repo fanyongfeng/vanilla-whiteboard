@@ -67,22 +67,23 @@ export function memoizable() {
 }
 
 const validateFunc = function validateFunc(type, key) {
-  if (type === Boolean) {
-    return function(val) {
-      if (typeof val !== 'boolean') throw new TypeError(`setter '${key}' accept boolean value!`);
-    };
-  } else if (type === String) {
-    return function(val) {
-      if (typeof val !== 'string') throw new TypeError(`setter '${key}' accept string value!`);
-    };
-  } else if (type === Number) {
-    return function(val) {
-      if (typeof val !== 'number') throw new TypeError(`setter '${key}' accept number value!`);
-    };
-  } else {
-    return function(val) {
-      if (!(val instanceof type)) throw new TypeError(`setter '${key}' accept ${type.name} value!`);
-    };
+  switch (type) {
+    case Boolean:
+      return function(val) {
+        if (typeof val !== 'boolean') throw new TypeError(`setter '${key}' accept boolean value!`);
+      };
+    case String:
+      return function(val) {
+        if (typeof val !== 'string') throw new TypeError(`setter '${key}' accept string value!`);
+      };
+    case Number:
+      return function(val) {
+        if (typeof val !== 'number') throw new TypeError(`setter '${key}' accept number value!`);
+      };
+    default:
+      return function(val) {
+        if (!(val instanceof type)) throw new TypeError(`setter '${key}' accept ${type.name} value!`);
+      };
   }
 };
 

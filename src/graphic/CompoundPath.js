@@ -1,4 +1,3 @@
-import Rect from './types/Rect';
 import Item from './Item';
 import { memoized } from '../decorators/memoized';
 import { createItemViaJSON } from './ItemFactory';

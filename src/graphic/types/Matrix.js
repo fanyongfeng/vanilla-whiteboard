@@ -264,7 +264,6 @@ class Matrix {
    */
   applyToContext(ctx) {
     ctx.transform.apply(ctx, this.m);
-    //ctx.setTransform.apply(ctx, this.m);
   }
 
   /**

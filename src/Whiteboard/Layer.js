@@ -9,7 +9,7 @@ const _items = Symbol('_items');
  * Create canvas layer, and Manage all canvases in whiteboard.
  */
 export default class Layer {
-  [_items] = new ItemCollection(null, this);
+  [_items] = new ItemCollection(this);
   wrapper = null;
   _isDirty = true;
   _bounds = null;

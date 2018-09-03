@@ -82,17 +82,16 @@ class Whiteboard {
     this.backgroundLayer = new Layer(this.width, this.height, 'background');
     this.activeLayer = new Layer(this.width, this.height, 'active');
     this.operateLayer = new OperateLayer(this.width, this.height, 'operate');
+    this.context = this[_createContext](this.backgroundLayer, this.activeLayer, this.operateLayer);
+
     this.backgroundLayer.appendTo(this);
     this.activeLayer.appendTo(this);
     this.operateLayer.appendTo(this);
-
-    this.context = this[_createContext](backgroundLayer, activeLayer, operateLayer);
-
-    let handler = (this.handler = new EventHandler());
-    handler.context = this.context;
+    this.handler = new EventHandler();
+    this.handler.context = this.context;
 
     if (!this.options.readonly) {
-      handler.bind(this.operateLayer);
+      this.handler.bind(this.operateLayer);
       this.tool = 'selection';
     }
 
@@ -284,11 +283,13 @@ class Whiteboard {
     downloadCanvas();
   }
 
+  /**
+   * Dispose current whiteboard.
+   */
   dispose() {
-    let wrapper = this.wrapper;
-    //TODO: remove all canvas DOM.
-    wrapper.removeChild(this.backgroundLayer);
-    wrapper.removeChild(this.activeLayer);
+    this.handler.unbind();
+    this.layers.forEach(layer => layer.dispose());
+    this.items = [];
   }
 
   /**

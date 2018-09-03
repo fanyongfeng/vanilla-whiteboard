@@ -45,7 +45,7 @@ class ItemCollection {
    * @param {Array} items
    * @param {Layer} layer
    */
-  constructor(items = null, layer) {
+  constructor(layer, items) {
     if (items) this[_items] = items;
 
     this.layer = layer;

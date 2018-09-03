@@ -6,18 +6,17 @@
  * 4) manage items of operateLayer.
  */
 
-// const toolStatus = {
-//   move: 'move',
-//   select: 'select',
-//   drawing: 'drawing',
-//   scale: 'scale',
-//   translate: 'translate',
-// };
+const toolStatus = {
+  move: 'move',
+  select: 'select',
+  drawing: 'drawing',
+  scale: 'scale',
+  translate: 'translate',
+};
 export default class Tool {
-  globalCtx = null; // 白板上下文，在实例化后注入；
   _layer = null;
-  _init = null;
-  mode = 'select';
+  globalCtx = null; // 白板上下文，在实例化后注入；
+  mode = toolStatus.select;
 
   constructor(type) {
     this.type = type;

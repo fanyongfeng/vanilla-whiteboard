@@ -43,7 +43,8 @@ export function asin(x) {
 }
 
 export function haversin(x) {
-  return (x = sin(x / 2)) * x;
+  x = sin(x / 2);
+  return x * x;
 }
 
 export function isZero(val) {

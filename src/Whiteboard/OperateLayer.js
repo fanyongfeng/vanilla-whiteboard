@@ -39,4 +39,11 @@ export default class OperateLayer extends Layer {
     if (this._cursorImage) this._cursorImage.draw(this.ctx);
     super._draw();
   }
+
+  /**
+   * 释放该Layer
+   */
+  dispose() {
+    this.wrapper && this.wrapper.removeChild(this.el);
+  }
 }

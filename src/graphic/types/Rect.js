@@ -170,17 +170,6 @@ class Rect {
   }
 
   /**
-   * Detect rectangles either by checking for 'width' on the passed object
-   * or by looking at the amount of elements in the arguments list,
-   * or the passed array:
-   */
-  contains(arg) {
-    return (arg && arg.width !== undefined) || (Array.isArray(arg) ? arg : arguments).length === 4
-      ? this.containsRect(Rect.instantiate(...arguments))
-      : this.containsPoint(Point.instantiate(...arguments));
-  }
-
-  /**
    *  Tests if the specified point is inside the boundary of the rectangle.
    *
    * @function

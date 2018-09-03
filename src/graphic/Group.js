@@ -1,5 +1,4 @@
 import Item from './Item';
-import Rect from './types/Rect';
 import ControlRect from './component/ControlRect';
 import { observeProps } from '../decorators/memoized';
 /**

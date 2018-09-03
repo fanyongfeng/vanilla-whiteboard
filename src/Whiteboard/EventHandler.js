@@ -50,10 +50,11 @@ export default class EventHandler {
 
   bind(layer) {
     this.layer = layer;
-    let canvas = (this.canvas = layer.el);
+    this.canvas = layer.el;
     this.onMouseMove = throttle(this.onMouseMove, 0).bind(this); //
     this.onMouseUp = this.onMouseUp.bind(this);
 
+    let canvas = this.canvas;
     addListener(canvas, mousedown, this.onMouseDown.bind(this));
     addListener(canvas, mousemove, this.onMouseMove);
     addListener(canvas, 'mouseenter', this.onMouseEnter.bind(this));
@@ -61,6 +62,11 @@ export default class EventHandler {
     addListener(canvas, 'keydown', this.onKeyDown.bind(this));
     addListener(canvas, 'keypress', this.onKeyPress.bind(this));
     addListener(canvas, 'keyup', this.onKeyUp.bind(this));
+  }
+
+  unbind() {
+    removeListener(document, mouseup, this.onMouseUp);
+    removeListener(document, mousemove, this.onMouseMove);
   }
 
   onKeyDown(event) {
@@ -97,6 +103,7 @@ export default class EventHandler {
     if (event.keyCode === keyCode.DELETE) {
       items.deleteSelected();
     }
+    return true;
   }
 
   onKeyPress(event) {}
@@ -106,7 +113,7 @@ export default class EventHandler {
       (event.keyCode === keyCode.DELETE || event.keyCode === keyCode.BACKSPACE) &&
       this._currentTool.type === toolTypes.SELECTOR
     ) {
-      if (!toolAvailable) return false;
+      if (!toolAvailable) return;
       commands.delete();
     }
     keyModifiers[event.key] = false;

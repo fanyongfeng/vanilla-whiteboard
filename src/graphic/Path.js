@@ -1,6 +1,5 @@
 import { LineSegment, BezierSegment, MoveSegment, QuadraticSegment, ArcSegment } from './types/Segment';
 import Point from './types/Point';
-import Rect from './types/Rect';
 import fitCurve from './algorithm/fitCurve';
 import smoothCurve from './algorithm/smoothCurve';
 import { memoized, observeProps } from '../decorators/memoized';

@@ -1,6 +1,7 @@
 import { tsid } from '../util/id';
 import Style from './types/Style';
 import Point from './types/Point';
+import Rect from './types/Rect';
 import Matrix from './types/Matrix';
 import { memoizable, observeProps } from '../decorators/memoized';
 import emittable from '../decorators/emitter';

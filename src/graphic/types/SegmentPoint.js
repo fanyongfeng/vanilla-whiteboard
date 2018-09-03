@@ -1,5 +1,5 @@
 /**
- * related to segment, contains:
+ * related to segment, includes:
  * 1) handleIn, control point 2 of prev curve
  * 2) handleOut, control point 1 of next curve
  * 3) point

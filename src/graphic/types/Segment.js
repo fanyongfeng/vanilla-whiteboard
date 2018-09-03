@@ -70,7 +70,6 @@ export class Segment {
    * @param {*} ctx
    */
   draw(ctx) {
-    // ctx.save();
     ctx.fillStyle = '#4f80ff';
     ctx.lineWidth = 1;
     ctx.strokeStyle = '#5887ff';
@@ -83,7 +82,6 @@ export class Segment {
     this.drawControlPoint(ctx, this.point, this.control2);
 
     ctx.stroke();
-    // ctx.restore();
   }
 
   /**
