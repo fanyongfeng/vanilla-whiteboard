@@ -12,7 +12,6 @@ import PathMutator from './PathMutator';
 
 //tools map.
 const tools = {};
-// const freeDrawingTools = ["marker", "highlighter", "signature"];
 const shapeDrawingTools = [
   'rectangle',
   'triangle',
@@ -39,7 +38,8 @@ function create() {
 
 function registerTool(name, ctor) {
   if (tools[name]) throw new Error(`Tool ${name} already exist!`);
-  return (tools[name] = new ctor(name));
+  tools[name] = new ctor(name);
+  return tools[name];
 }
 
 function getTool(name) {

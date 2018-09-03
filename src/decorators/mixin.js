@@ -37,17 +37,21 @@ export function mixin(...srcs) {
  */
 const combineToProto = function combineFunc(proto, name, fn) {
   let origin = proto[name];
-  if (typeof origin === 'undefined') return (proto[name] = fn);
+  if (typeof origin === 'undefined') {
+    proto[name] = fn;
+    return fn;
+  }
   if (typeof origin !== 'function') throw new TypeError(`${name} already exist!`);
 
-  return (proto[name] = function() {
+  proto[name] = function() {
     //call origin function first,
     if (origin.apply(this, arguments) !== false) {
       // cancel second fn call, if origin function return 'false'.
       return fn.apply(this, arguments);
     }
     return false;
-  });
+  };
+  return proto[name];
 };
 
 /**

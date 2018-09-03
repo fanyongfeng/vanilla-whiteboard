@@ -103,9 +103,9 @@ export function createItemViaJSON(json) {
     type = idMap[typeId],
     shape = shapeTypes[type],
     preset = shape.preset || {},
-    ctor;
+    ctor = shape && shape.ctor;
 
-  if (!shape || !(ctor = shape.ctor)) throw new TypeError(`Invalid json!`);
+  if (!ctor) throw new TypeError(`Invalid json!`);
 
   style = normalizeStyle(style);
 

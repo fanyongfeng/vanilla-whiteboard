@@ -61,14 +61,12 @@ class Path extends Item {
     segment.arc = [x, y, r, sa, ea];
     this.add(segment);
     return this;
-    // segment
   }
 
   arcTo(cp1, cp2, radius) {
     const segment = new ArcSegment(cp1, cp2, radius);
     this.add(segment);
     return this;
-    // segment
   }
 
   /**
@@ -220,7 +218,6 @@ class Path extends Item {
           break;
         case 'a':
         case 'A':
-          // ctx.arc.apply(ctx, [...segment.arc]);
           ctx.arcTo.apply(ctx, segment.args);
           break;
         case 'l':

@@ -51,7 +51,6 @@ class Item {
   }
 
   handleRest(preset) {
-    //FIXME: 优化机制
     if (!preset) return;
 
     Object.keys(preset).forEach(key => {
@@ -162,8 +161,6 @@ class Item {
   }
 
   transform(matrix) {
-    //TODO: transform stroke & bounds.
-
     if (matrix) {
       //注意矩阵multify 顺序
       this.matrix = this.matrix.prepend(matrix);

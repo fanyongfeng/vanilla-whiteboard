@@ -24,7 +24,9 @@ function calculateColor(begin, end, pos) {
  * @param {Object} [options] Animation options
  * @param {Function} [options.onChange] Callback; invoked on every value change
  * @param {Function} [options.onComplete] Callback; invoked when value change is completed
- * @param {Function} [options.colorEasing] Easing function. Note that this function only take two arguments (currentTime, duration). Thus the regular animation easing functions cannot be used.
+ * @param {Function} [options.colorEasing] Easing function.
+ * Note that this function only take two arguments (currentTime, duration).
+ * Thus the regular animation easing functions cannot be used.
  */
 function animateColor(fromColor, toColor, duration, options) {
   let startColor = new Color(fromColor).toJSON(),

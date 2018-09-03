@@ -70,6 +70,7 @@ export default class Action {
           },
         };
     }
+    return null;
   }
 
   get redo() {

@@ -30,10 +30,12 @@ const getDirection = (indexY, indexX) => {
   // 将centerX, centerY, 简写为center。
   if (indexY === 0) {
     if (indexX === 0) return 'center';
-    return horizontal[++indexX] + 'Center';
+    return horizontal[indexX + 1] + 'Center';
   }
-  if (indexX === 0) return vertical[++indexY] + 'Center';
-  return vertical[++indexY] + capitalize(horizontal[++indexX]);
+  if (indexX === 0) {
+    return vertical[indexY + 1] + 'Center';
+  }
+  return vertical[indexY + 1] + capitalize(horizontal[indexX + 1]);
 };
 
 /**
