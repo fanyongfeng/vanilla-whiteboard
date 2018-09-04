@@ -40,7 +40,7 @@ export function changed() {
 }
 
 /**
- * Mark class as memoizable, It will inject prop 'cachedProps' and 'changed' method in  prototype:
+ * Mark class as memoizable, It will inject prop:'cachedProps' and method:'changed' in prototype:
  *
  * cachedProps: will cache the complex compute prop. And it will be cleared the changed invoked.
  * changed: Notify the layer to refresh.
@@ -95,10 +95,10 @@ const validateFunc = function validateFunc(type, key) {
  *
  * Code Example:
  *  {
- *    selected: {
- *      type: Boolean,
- *      default: true,
- *      fn: function(newVal) {
+ *    selected: { // Name of prop, (In example 'selected')
+ *      type: Boolean, // Type of prop
+ *      default: true, // Default value of prop
+ *      fn: function(newVal) { //callback when prop changed.
  *        console.log(this)
  *      }
  *    }
@@ -109,7 +109,9 @@ export function observeProps(desc) {
 
   return function(target) {
     for (let key in desc) {
-      if (typeof target.prototype[key] !== 'undefined') throw new Error(`Prop ${key} already exist!`);
+      if (typeof target.prototype[key] !== 'undefined') {
+        throw new Error(`Prop ${key} already exist!`);
+      }
 
       let propDesc = desc[key];
       let privateKey = `__${key}`;

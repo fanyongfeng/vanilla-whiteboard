@@ -35,7 +35,7 @@ export function mixin(...srcs) {
  * @param {*} name 名字
  * @param {*} fn 带绑定的function
  */
-const combineToProto = function combineFunc(proto, name, fn) {
+const combineFnToProto = function combineFnToProto(proto, name, fn) {
   let origin = proto[name];
   if (typeof origin === 'undefined') {
     proto[name] = fn;
@@ -64,7 +64,7 @@ export function deepMixin(srcs) {
       let descriptor = Object.getOwnPropertyDescriptor(srcs, key);
       if (typeof descriptor.value === 'function') {
         // if is function, combine with old function.
-        combineToProto(target.prototype, key, descriptor.value);
+        combineFnToProto(target.prototype, key, descriptor.value);
       } else if (typeof descriptor.get === 'function' || typeof descriptor.set === 'function') {
         if (process.env.NODE_ENV === 'development') {
           target.prototype[key] && console.warn(`${target.name}.${key} already exist!`);

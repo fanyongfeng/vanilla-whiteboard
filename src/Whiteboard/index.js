@@ -240,9 +240,16 @@ class Whiteboard {
 
   [_history] = new History();
 
+  /**
+   * Redo action.
+   */
   redo() {
     this[_history].redo();
   }
+
+  /**
+   * Undo action.
+   */
   undo() {
     this[_history].undo();
   }
@@ -264,7 +271,14 @@ class Whiteboard {
     this.backgroundLayer.items.set(axes, 2);
   }
 
-  saveImage(filename = 'material', type = 'png') {
+  /**
+   * Save canvas content as image.
+   *
+   * @param {String} filename, default value is 'material'
+   * @param {String} type, Image type, default value is 'png'
+   * @param {Number} encoderOptions, quality of image, default value is .92
+   */
+  saveImage(filename = 'material', type = 'png', encoderOptions = 0.92) {
     if (!/^jpeg|jpg|png$/.test(type)) throw new Error(`Can't support type ${type}`);
 
     //创建离屏canvas，绘制layers；
@@ -275,7 +289,7 @@ class Whiteboard {
 
     let $link = document.createElement('a');
     function downloadCanvas() {
-      $link.href = offscreenCanvas.el.toDataURL(`image/${type}`);
+      $link.href = offscreenCanvas.el.toDataURL(`image/${type}`, encoderOptions);
       $link.download = `${filename}.${type}`;
       $link.click();
     }

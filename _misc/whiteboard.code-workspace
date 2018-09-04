@@ -71,6 +71,15 @@
     },
     {
       "path": "/Users/daniel_jhe/work/github-project/graphic/html2canvas"
+    },
+    {
+      "path": "/Users/daniel_jhe/work/github-project/misc/hyperapp"
+    },
+    {
+      "path": "/Users/daniel_jhe/work/github-project/graphic/phaser"
+    },
+    {
+      "path": "/Users/daniel_jhe/work/github-project/graphic/egret-core"
     }
   ],
   "settings": {}

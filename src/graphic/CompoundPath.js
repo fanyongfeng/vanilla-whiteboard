@@ -41,7 +41,9 @@ class CompoundPath extends Item {
   get segments() {
     let children = this._children,
       segments = [];
-    for (let i = 0, l = children.length; i < l; i++) segments.push.apply(segments, children[i].segments);
+    for (let i = 0, l = children.length; i < l; i++) {
+      segments.push.apply(segments, children[i].segments);
+    }
     return segments;
   }
 
