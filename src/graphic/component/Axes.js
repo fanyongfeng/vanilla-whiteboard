@@ -21,7 +21,6 @@ export default class Axes extends Item {
 
   drawXAxis(ctx, width, height) {
     this.drawLine(ctx, 0, height / 2, width, height / 2);
-    //TODO:render arrow;
 
     let mark = this.minX;
     let x = 10;

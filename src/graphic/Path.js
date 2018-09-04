@@ -63,6 +63,12 @@ class Path extends Item {
     return this;
   }
 
+  /**
+   * Append  Arc Segment
+   * @param {Point} cp1
+   * @param {Point} cp2
+   * @param {Number} radius
+   */
   arcTo(cp1, cp2, radius) {
     const segment = new ArcSegment(cp1, cp2, radius);
     this.add(segment);
@@ -189,7 +195,6 @@ class Path extends Item {
   containsPoint(point) {
     // If point not in bounds of path, return false.
     if (!super.containsPoint(point)) return false;
-    //TODO: 准确fill状态下判断是否包含指定点，先简化处理
     if (this.fill) return true;
 
     let seg = this.segments.find(item => item.containsPoint(point, this.style.lineWidth));

@@ -1,4 +1,4 @@
-import { MouseEvent, KeyEvent, keyCode } from './EventType';
+import { MouseEvent, keyCode } from './EventType';
 import throttle from '../util/throttle';
 import { addListener, removeListener } from '../util/dom';
 
@@ -15,9 +15,9 @@ const mouseup = 'mouseup';
  *
  * @param {Point} prev
  * @param {Point} next
- * @param {Number} distance, default value is 10
+ * @param {Number} distance, default value is 5
  */
-function throttleDistance(prev, next, distance = 10) {
+function throttleDistance(prev, next, distance = 5) {
   if (!prev) return true;
   return !next.nearby(prev, distance);
 }
@@ -74,23 +74,11 @@ export default class EventHandler {
 
     keyModifiers[event.key] = true;
     const eventKey = ['z', 'y', 'a'];
-    // windows keyboard
-    if (keyModifiers.control) {
-      if (!toolAvailable && eventKey.includes(event.key)) return false;
-      if (event.key === 'z') {
-        commands.undo();
-      } else if (event.key === 'y') {
-        commands.redo();
-      } else if (event.key === 'a') {
-        items.selectAll();
-        event.preventDefault();
-      }
-    }
-
-    // mac keyboard
-    if (keyModifiers.meta) {
-      if (!toolAvailable && eventKey.includes(event.key)) return false;
-      if (keyModifiers.shift && event.key === 'z') {
+    // windows keyboard or mac keyboard
+    if (keyModifiers.control || keyModifiers.meta) {
+      if (!toolAvailable && eventKey.includes(event.key)) return;
+      let isRedo = keyModifiers.meta ? keyModifiers.shift && event.key === 'z' : event.key === 'y';
+      if (isRedo) {
         commands.redo();
       } else if (event.key === 'z') {
         commands.undo();
@@ -103,7 +91,6 @@ export default class EventHandler {
     if (event.keyCode === keyCode.DELETE) {
       items.deleteSelected();
     }
-    return true;
   }
 
   onKeyPress(event) {}
@@ -162,7 +149,9 @@ export default class EventHandler {
     let _event = this._getMouseEvent(event),
       point = _event.point;
 
-    // if(!throttleDistance(point, 10)) return;
+    const distance = this.context.settings.distance;
+
+    if (distance && !throttleDistance(point, this.lastPoint, distance)) return;
     if (_event.target !== this.canvas) return;
 
     let contain = this.layer.bounds.containsPoint(point);

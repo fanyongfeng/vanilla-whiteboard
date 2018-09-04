@@ -121,7 +121,7 @@ export function createItemViaJSON(json) {
 
   //workaround: if fillStyle is true, set fill-mode in shape;
   if (style.fillStyle) {
-    // ins.fill = true;
+    ins.fill = true;
   }
 
   return ins;

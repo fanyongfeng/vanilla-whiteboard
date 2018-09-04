@@ -1,4 +1,3 @@
-import Point from './Point';
 import Rect from './Rect';
 import { containStroke, containStrokeArc, containStrokeLine, calcBoundsOfBezier } from '../algorithm/calcCurve';
 
@@ -181,7 +180,7 @@ export class BezierSegment extends Segment {
   }
 
   containsPoint(point, lineWidth) {
-    let ret = containStroke(
+    return containStroke(
       this.contextPoint.x,
       this.contextPoint.y,
       this.control1.x,
@@ -194,7 +193,6 @@ export class BezierSegment extends Segment {
       point.x,
       point.y
     );
-    return ret;
   }
 
   get fullArgs() {
@@ -292,8 +290,7 @@ export class ArcSegment extends Segment {
   }
 
   containsPoint(point, lineWidth) {
-    //TODO:
-    let ret = containStrokeArc(
+    return containStrokeArc(
       this.contextPoint.x,
       this.contextPoint.y,
       this.control1.x,
@@ -306,7 +303,6 @@ export class ArcSegment extends Segment {
       point.x,
       point.y
     );
-    return ret;
   }
 
   get args() {

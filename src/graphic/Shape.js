@@ -21,8 +21,9 @@ class Shape extends Path {
   static instantiate(options, [sp, ep]) {
     let startPoint = new Point(sp[0], sp[1]);
     let endPoint = new Point(ep[0], ep[1]);
+    let Ctor = this;
 
-    return new this(options, startPoint, endPoint);
+    return new Ctor(options, startPoint, endPoint);
   }
 
   constructor(options, sp = null, ep = null) {

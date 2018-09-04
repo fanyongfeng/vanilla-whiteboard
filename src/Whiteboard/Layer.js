@@ -55,7 +55,7 @@ export default class Layer {
     this.role = role;
     this.el = el;
 
-    if (wx && wx.createCanvasContext) {
+    if (typeof wx !== 'undefined' && wx.createCanvasContext) {
       // adapt to wechat-mini-app
       this.ctx = wx.createCanvasContext(role);
     } else {

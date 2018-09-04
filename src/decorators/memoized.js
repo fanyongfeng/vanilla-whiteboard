@@ -60,7 +60,7 @@ export function memoizable() {
       if (this.layer) {
         this.layer.markAsDirty();
       }
-      this[cachedPropsKey] = {}; //TODO: 策略清缓存
+      this[cachedPropsKey] = {};
     };
 
     return target;
