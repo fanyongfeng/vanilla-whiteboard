@@ -6,6 +6,8 @@ import { deepMixin } from '../decorators/mixin';
 /**
  * Eraser， 橡皮擦工具
  *
+ * Inject following behaviors for tool 'Eraser'
+ *
  * 1) 当鼠标点击时，删除选中元素
  * 2) 当拖拽时生成“拖拽框”，并在鼠标释放时删除所有选中元素
  * 3）当在移动时显示光标为“橡皮擦”

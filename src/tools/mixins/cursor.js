@@ -13,7 +13,7 @@ export default function cursor(url, offset = null) {
 
   return {
     /**
-     * All _init method should invoked in constructor of base;
+     * All _init method should be invoked in constructor of base;
      */
     _init() {
       if (typeof url === 'function') {

@@ -48,6 +48,10 @@ export default class MaterialProvider {
     return img;
   }
 
+  clear() {
+    this.cached = {};
+  }
+
   get length() {
     return this._length;
   }

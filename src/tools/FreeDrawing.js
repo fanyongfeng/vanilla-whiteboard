@@ -45,6 +45,10 @@ class FreeDrawing extends Tool {
 
 /**
  * 白板笔工具
+ *
+ * Inject following behaviors for tool 'Marker'
+ * 1) 当mousedown时新建Item
+ * 2) 在鼠标移动时生成一个“白板笔”光标
  */
 @deepMixin(itemCreator())
 @deepMixin(cursor(markerCursor, { x: 13, y: -15 }))
@@ -52,6 +56,10 @@ class Marker extends FreeDrawing {}
 
 /**
  * 荧光笔工具
+ *
+ * Inject following behaviors for tool 'Marker'
+ * 1) 当mousedown时新建Item
+ * 2) 在鼠标移动时生成一个“荧光笔”光标
  */
 @deepMixin(itemCreator())
 @deepMixin(cursor(highlighterCursor, { x: 12, y: -12 }))

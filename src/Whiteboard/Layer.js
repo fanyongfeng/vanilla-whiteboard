@@ -17,13 +17,19 @@ export default class Layer {
 
   /**
    * Move items from one to other
+   * @param {Layer} source layer
+   * @param {Layer} target layer
+   * @param {Function | undefined} fn callback.
    */
   static elevator(source, target, fn) {
-    target.forEach(element => {
-      top.remove(element);
-      bottom.add(element);
-    });
-    refreshAll();
+    let sourceItems = source.items;
+
+    for (let i = 0, len = sourceItems.length; i < len; i++) {
+      let element = sourceItems.get(0);
+      source.items.remove(element);
+      target.items.add(element);
+    }
+    fn && fn();
   }
 
   /**
@@ -39,6 +45,14 @@ export default class Layer {
    */
   append(item) {
     this.items.add(item);
+  }
+
+  /**
+   * Alias of items.remove .
+   * @param {Item} item
+   */
+  remove(item) {
+    this.items.remove(item);
   }
 
   /**
@@ -186,6 +200,13 @@ export default class Layer {
 
     //ref whiteboard context.
     this.globalCtx = whiteboard.context;
+  }
+
+  /**
+   *
+   */
+  elevateTo(target) {
+    Layer.elevator(this, target);
   }
 
   /**

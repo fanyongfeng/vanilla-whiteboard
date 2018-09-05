@@ -29,10 +29,10 @@ let config = {
     replace({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'), //production | development
     }),
-    eslint({
-      include: ['src/**/*.js'],
-      exclude: 'node_modules/**',
-    }),
+    // eslint({
+    //   include: ['src/**/*.js'],
+    //   exclude: 'node_modules/**',
+    // }),
     babel({
       include: 'src/**',
       exclude: 'node_modules/**',

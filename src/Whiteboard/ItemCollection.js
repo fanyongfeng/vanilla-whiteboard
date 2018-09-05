@@ -187,6 +187,16 @@ class ItemCollection {
   }
 
   /**
+   * Remove item at specified index.
+   * @param {Item} item1
+   */
+  removeAt(index) {
+    let item = this[_items][index];
+    this.remove(item);
+    return item;
+  }
+
+  /**
    * Delete items of current collection.
    * It will trigger layer-refresh;
    * @param {Function} fn, filter determine which item should be removed.
