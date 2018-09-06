@@ -1,12 +1,16 @@
 import Item from '../Item';
+import { observeProps } from '../../decorators/memoized';
 
 /**
  * 简单网格
  * Component Grid.
- * options: {
- *  minor: false, // If minor grid is shown
- * }
  */
+@observeProps({
+  /**
+   * 是否有Sub grid
+   */
+  minor: { type: Boolean, default: true },
+})
 export default class Grid extends Item {
   draw(ctx) {
     let { width, height } = this.layer;

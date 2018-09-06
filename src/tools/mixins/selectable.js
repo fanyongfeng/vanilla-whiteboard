@@ -45,7 +45,7 @@ export default function selectable(multiSelect = true) {
         item = this.items.get(i - 1);
         if (item.containsPoint(point)) {
           this.target = item;
-          this.setLayerCursor('pointer');
+          this.setLayerCursor('all-scroll');
           return true;
         }
       }

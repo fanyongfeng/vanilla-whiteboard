@@ -374,8 +374,8 @@
 
         let lastValue = 0;
 
-        console.time('anim');
-        animation({
+        console.time('--animate--');
+        nebula.util.animate({
           startValue: 0,
           endValue: 360,
           duration: 400,
@@ -390,7 +390,7 @@
             lastValue = value;
           },
           onComplete(value, valueProgress, timeProgress) {
-            console.timeEnd('anim');
+            console.timeEnd('--animate--');
           }
         });
       });
