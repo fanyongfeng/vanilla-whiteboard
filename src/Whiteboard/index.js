@@ -1,7 +1,7 @@
 /**
  * Entry of whiteboard.
  */
-import emittable from '../decorators/emitter';
+import emittable, { Emitter } from '../decorators/emitter';
 import Layer from './Layer';
 import OperateLayer from './OperateLayer';
 import { setStyle } from '../util/dom';
@@ -109,6 +109,7 @@ class Whiteboard {
    *
    */
   [_createContext](backgroundLayer, activeLayer, operateLayer) {
+    let emitter = new Emitter();
     return {
       backgroundLayer,
       activeLayer,
@@ -116,6 +117,7 @@ class Whiteboard {
       refreshCount: 0, //刷新计数，白板所有layers刷新总次数
       settings: Object.freeze(this.options),
       emit: this.emit.bind(this),
+      emitter,
     };
   }
 

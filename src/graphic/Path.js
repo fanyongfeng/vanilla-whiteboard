@@ -13,7 +13,7 @@ const _points = Symbol('_points');
  */
 @observeProps({
   fill: { type: Boolean, default: false },
-  showAuxiliary: { type: Boolean, default: true },
+  showAuxiliary: { type: Boolean, default: false },
   stroke: { type: Boolean, default: true },
 })
 class Path extends Item {
