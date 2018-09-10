@@ -1,4 +1,5 @@
 import Item from '../Item';
+import { observeProps } from '../../decorators/memoized';
 
 const defaultOptions = {
   showX: true,
@@ -13,10 +14,16 @@ const gap = 50; //in pixels
  * 简单坐标轴
  * simple axes
  */
+@observeProps({
+  /**
+   * 是否有Sub grid
+   */
+  showX: { type: Boolean, default: true },
+  showY: { type: Boolean, default: true },
+})
 export default class Axes extends Item {
   constructor(options = {}) {
     super(options);
-    this.options = Object.assign({}, defaultOptions, options);
   }
 
   drawXAxis(ctx, width, height) {
@@ -76,11 +83,11 @@ export default class Axes extends Item {
     this.minX = -parseInt(width / gap / 2);
     this.minY = -parseInt(height / gap / 2);
 
-    if (this.options.showX) {
+    if (this.showX) {
       this.drawXAxis(ctx, width, height);
     }
 
-    if (this.options.showY) {
+    if (this.showY) {
       this.drawYAxis(ctx, width, height);
     }
   }

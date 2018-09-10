@@ -6,6 +6,7 @@ import { mixin } from '../decorators/mixin';
 import Item from '../graphic/Item';
 
 const _items = Symbol('_items');
+const _buffered = Symbol('_buffered');
 const arrMethods = {};
 const arr = Array.prototype;
 
@@ -24,6 +25,7 @@ const arr = Array.prototype;
 @mixin(arrMethods)
 class ItemCollection {
   [_items] = [];
+  [_buffered] = [];
 
   /**
    * Compare 2 ItemCollection by id
@@ -148,11 +150,26 @@ class ItemCollection {
     return this;
   }
 
+  buffer(item) {
+    if (!(item instanceof Item)) throw new TypeError('Only Item can add to Collection!');
+
+    item.layer = this.layer;
+    this[_buffered].push(item);
+    this.changed();
+    return this;
+  }
+
+  flush() {
+    this[_items].push(...this[_buffered]);
+    this[_buffered] = [];
+  }
+
   /**
    * Clear items.
    */
   clear() {
     this[_items] = [];
+    this[_buffered] = [];
     this.changed();
     return this;
   }
@@ -184,6 +201,16 @@ class ItemCollection {
    */
   remove(item1) {
     return this.delete(item2 => item2 === item1);
+  }
+
+  /**
+   * Remove item at specified index.
+   * @param {Item} item1
+   */
+  removeAt(index) {
+    let item = this[_items][index];
+    this.remove(item);
+    return item;
   }
 
   /**

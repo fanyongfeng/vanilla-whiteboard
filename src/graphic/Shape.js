@@ -81,6 +81,7 @@ class Shape extends Path {
    * @param {Matrix} matrix
    */
   transformContent(matrix) {
+    // FIXME: rotate issue.
     // also apply to start & end point.
     matrix.applyToPoint(this.startPoint);
     matrix.applyToPoint(this.endPoint);

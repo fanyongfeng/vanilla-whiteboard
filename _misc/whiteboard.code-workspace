@@ -80,6 +80,15 @@
     },
     {
       "path": "/Users/daniel_jhe/work/github-project/graphic/egret-core"
+    },
+    {
+      "path": "/Users/daniel_jhe/work/github-project/graphic/phaser-examples"
+    },
+    {
+      "path": "/Users/daniel_jhe/work/github-project/graphic/cocos2d-html5"
+    },
+    {
+      "path": "/Users/daniel_jhe/work/github-project/frameworks/angular/angular"
     }
   ],
   "settings": {}

@@ -1,5 +1,6 @@
 import Group from '../../graphic/Group';
 import { boundsPoi, antiDir, cursorMap } from '../../graphic/algorithm/corner';
+import { getAngle, getAngle2 } from '../../graphic/algorithm/trigonometry';
 
 /**
  * enable tool has transform behavior.
@@ -9,6 +10,7 @@ import { boundsPoi, antiDir, cursorMap } from '../../graphic/algorithm/corner';
 export default function transformable(enableRotate = false) {
   return {
     realTimeSize: null,
+    enableRotate,
 
     _init() {
       this.transformGroup = new Group();
@@ -20,10 +22,10 @@ export default function transformable(enableRotate = false) {
       this.layer.items.set(this.transformGroup);
       this.transformGroup.children = this._selected;
 
-      let isPointOnResize = this._pointOnResize(this._downPoint);
+      let action = this._pointOnResize(this._downPoint);
 
-      if (isPointOnResize) {
-        this.mode = 'resize';
+      if (action !== '') {
+        this.mode = action;
       } else if (this.mode === 'select') {
         this.items.unselect();
         this.transformGroup.children = [];
@@ -32,7 +34,7 @@ export default function transformable(enableRotate = false) {
       return false;
     },
 
-    onMouseDrag({ delta }) {
+    onMouseDrag({ delta, point }) {
       if (this.mode === 'select') {
         this.transformGroup.children = this._selected;
       } else if (this.mode === 'resize') {
@@ -59,6 +61,10 @@ export default function transformable(enableRotate = false) {
         this.realTimeSize = size;
       } else if (this.mode === 'move') {
         this.transformGroup.translate(delta);
+      } else if (this.mode === 'rotate') {
+        let lastPoint = point.subtract(delta);
+        let angle = getAngle(this.transformGroup.bounds.center, lastPoint, point);
+        this.transformGroup.rotate(angle);
       }
     },
 
@@ -77,20 +83,27 @@ export default function transformable(enableRotate = false) {
     _pointOnResize(point) {
       let corner, bounds;
 
+      let rotatePoint = this.transformGroup.control.rotateControlPoint;
+      if (this.enableRotate && rotatePoint && point.nearby(rotatePoint)) {
+        this.setLayerCursor('pointer');
+        return 'rotate';
+      }
+
       bounds = this.transformGroup.bounds;
       corner = boundsPoi.find(key => point.nearby(bounds[key]));
 
       if (!corner) {
         this.setLayerCursor('default');
-        return false;
+        return '';
       }
+
       this.setLayerCursor(cursorMap[corner]);
       this.basePoint = bounds[antiDir[corner]];
       this.target = bounds.owner;
       this.corner = bounds[corner];
       this.resizeDir = corner;
       this.realTimeSize = this.corner.subtract(this.basePoint);
-      return true;
+      return 'resize';
     },
   };
 }

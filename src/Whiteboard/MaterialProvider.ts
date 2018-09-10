@@ -8,8 +8,8 @@ interface ICached {
  */
 export default class MaterialProvider {
   public cached: ICached = {};
-  public preload: number = 1;
-  private length: number = 0;
+  public preload = 1;
+  private length = 0;
 
   /**
    * Init MaterialProvider with image src list. order-sensitive
@@ -54,4 +54,9 @@ export default class MaterialProvider {
   get len(): number {
     return this.length;
   }
+
+  clear() {
+    this.cached = {};
+  }
+
 }

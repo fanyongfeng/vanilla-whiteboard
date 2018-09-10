@@ -4,6 +4,9 @@ import Style from './graphic/types/Style';
 import Color from './graphic/types/Color.ts';
 import Matrix from './graphic/types/Matrix.ts';
 import Path from './graphic/Path';
+import Layer from './Whiteboard/Layer';
+import animate from './animate/animate';
+import animateColor from './animate/animateColor';
 import Whiteboard from './Whiteboard';
 import playground from './playground'; // for debug,
 // import keyCode from '';
@@ -28,10 +31,10 @@ import { RGB2HSL, HSL2RGB, RGB2Gray, Gray2RGB, Gray2HSB } from './graphic/algori
  */
 
 //mount graphic on namespace (top-level).
-let nebula = typeof nebula !== 'undefined' ? nebula : { Point, Rect, Style, Path, Color, Matrix };
+let nebula = typeof nebula !== 'undefined' ? nebula : { Point, Rect, Style, Path, Color, Matrix, Layer };
 
 //mount util on namespace.
-nebula.util = { RGB2HSL, HSL2RGB, RGB2Gray, Gray2RGB, Gray2HSB };
+nebula.util = { RGB2HSL, HSL2RGB, RGB2Gray, Gray2RGB, Gray2HSB, animateColor, animate };
 
 //mount Whiteboard constructor on namespace.
 nebula.Whiteboard = Whiteboard;

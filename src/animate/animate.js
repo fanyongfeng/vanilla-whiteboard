@@ -33,11 +33,7 @@ function animate(options) {
       onChange = options.onChange || noop,
       abort = options.abort || noop,
       onComplete = options.onComplete || noop,
-      easing =
-        options.easing ||
-        function(k) {
-          return k;
-        },
+      easing = options.easing || (k => k),
       startValue = 'startValue' in options ? options.startValue : 0,
       endValue = 'endValue' in options ? options.endValue : 100,
       byValue = options.byValue || endValue - startValue;

@@ -1,6 +1,7 @@
 import { boundsPoi } from '../algorithm/corner';
 import Point from '../types/Point';
 import Item from '../Item';
+import { observeProps } from '../../decorators/memoized';
 
 const POINT_WIDTH = 4;
 const OFFSET = POINT_WIDTH / 2;
@@ -10,6 +11,12 @@ const strokeStyle = '#96cef6';
  * 拖动缩放的辅助框
  * simple axes
  */
+@observeProps({
+  /**
+   * 是否有Sub grid
+   */
+  showRotate: { type: Boolean, default: true },
+})
 export default class ControlRect extends Item {
   draw(ctx, bounds) {
     ctx.save();
@@ -33,6 +40,7 @@ export default class ControlRect extends Item {
       const tc = bounds.topCenter;
       ctx.moveTo(tc.x, tc.y);
       point = tc.add(new Point(0, -50));
+      this.rotateControlPoint = point;
       ctx.lineTo(point.x, point.y);
       ctx.fillRect(point.x - OFFSET, point.y - OFFSET, POINT_WIDTH, POINT_WIDTH);
     }

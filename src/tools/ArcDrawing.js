@@ -13,8 +13,6 @@ export default class ArcDrawing extends Tool {
   }
 
   onMouseMove(event) {}
-
   onMouseDrag(event) {}
-
   onMouseUp(event) {}
 }
