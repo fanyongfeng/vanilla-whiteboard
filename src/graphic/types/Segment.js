@@ -1,4 +1,4 @@
-import Rect from './Rect';
+import Rect from './Rect.ts';
 import { containStroke, containStrokeArc, containStrokeLine, calcBoundsOfBezier } from '../algorithm/calcCurve';
 
 const POINT_WIDTH = 4;

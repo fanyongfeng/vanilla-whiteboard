@@ -1,4 +1,4 @@
-import Image from '../../graphic/shape/Image';
+import Img from '../../graphic/shape/Image.ts';
 
 /**
  * Custom tool cursor as specified image.
@@ -19,7 +19,7 @@ export default function cursor(url, offset = null) {
       if (typeof url === 'function') {
         url = url(this.type);
       }
-      this._cursor = new Image({}, url);
+      this._cursor = new Img({}, url);
     },
 
     /**

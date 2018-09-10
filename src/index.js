@@ -1,8 +1,8 @@
-import Point from './graphic/types/Point';
+import Point from './graphic/types/Point.ts';
 import Rect from './graphic/types/Rect';
 import Style from './graphic/types/Style';
-import Color from './graphic/types/Color';
-import Matrix from './graphic/types/Matrix';
+import Color from './graphic/types/Color.ts';
+import Matrix from './graphic/types/Matrix.ts';
 import Path from './graphic/Path';
 import Whiteboard from './Whiteboard';
 import playground from './playground'; // for debug,

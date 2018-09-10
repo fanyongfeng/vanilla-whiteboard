@@ -7,29 +7,38 @@ import { mixinProps } from '../../decorators/mixin';
  */
 @mixinProps(props)
 class Rect {
+
   /**
    * static method to create instance from params
    */
   static instantiate(x, y, width, height) {
     if (typeof x === 'undefined') throw TypeError('Invalid arguments!');
-    if (typeof x === 'number') return new Rect(x, y, width, height);
+    return new Rect(x, y, width, height, null);
     // if x is Rect
-    return x.clone();
+    // return x.clone();
   }
 
-  constructor(x = 0, y = 0, width = 0, height = 0, owner = null) {
+  x = 0;
+  y = 0;
+  width = 0;
+  height = 0;
+  owner: IItem | null; // tool instance
+  center: IPoint;
+
+  constructor(x, y, width, height, owner) {
     this.x = x;
     this.y = y;
     this.width = width;
     this.height = height;
     this.owner = owner;
+    this.center = Point.instantiate(this.centerX, this.centerY);
   }
 
   /**
    * Assign x, y, width, height from other rect.
    * @param {Rect} rect
    */
-  assign(x, y, width, height) {
+  assign(x: number, y: number, width: number, height: number) {
     let rect = Rect.instantiate(x, y, width, height);
     this.x = rect.x;
     this.y = rect.y;
@@ -45,10 +54,10 @@ class Rect {
    * @type Number
    *
    */
-  get top() {
+  get top(): number {
     return this.y;
   }
-  set top(top) {
+  set top(top: number) {
     this.y = top;
   }
 
@@ -58,10 +67,10 @@ class Rect {
    * @type Number
    *
    */
-  get left() {
+  get left(): number {
     return this.x;
   }
-  set left(left) {
+  set left(left: number) {
     this.x = left;
   }
 
@@ -71,10 +80,10 @@ class Rect {
    * @type Number
    *
    */
-  get bottom() {
+  get bottom(): number {
     return this.y + this.height;
   }
-  set bottom(bottom) {
+  set bottom(bottom: number) {
     this.y = bottom - this.height;
   }
 
@@ -86,7 +95,7 @@ class Rect {
   get right() {
     return this.x + this.width;
   }
-  set right(right) {
+  set right(right: number) {
     this.x = right - this.width;
   }
 
@@ -99,7 +108,7 @@ class Rect {
     return this.x + this.width / 2;
   }
 
-  set centerX(val) {
+  set centerX(val: number) {
     this.x = val - this.width / 2;
   }
 
@@ -112,14 +121,13 @@ class Rect {
     return this.y + this.height / 2;
   }
 
-  set centerY(val) {
+  set centerY(val: number) {
     this.y = val - this.height / 2;
   }
 
   //alias for setter ‘center’
-  setCenter(x, y) {
-    let point = Point.instantiate(point);
-    this.center = point;
+  setCenter(x: number, y: number): IRect {
+    this.center = Point.instantiate(x, y);
     return this;
   }
 
@@ -129,7 +137,7 @@ class Rect {
    * @bean
    * @type Number
    */
-  get area() {
+  get area(): number {
     return this.width * this.height;
   }
 
@@ -141,13 +149,13 @@ class Rect {
    * @return {Rect} the smallest rectangle containing both the specified
    * rectangle and this rectangle
    */
-  unite(rect) {
+  unite(rect: IRect): IRect {
     let x1 = Math.min(this.x, rect.x),
       y1 = Math.min(this.y, rect.y),
       x2 = Math.max(this.x + this.width, rect.x + rect.width),
       y2 = Math.max(this.y + this.height, rect.y + rect.height);
 
-    return new Rect(x1, y1, x2 - x1, y2 - y1);
+    return new Rect(x1, y1, x2 - x1, y2 - y1, null);
   }
 
   /**
@@ -158,13 +166,13 @@ class Rect {
    * @return {Rect | null} the smallest rectangle containing both the specified, if
    * rectangle and this rectangle
    */
-  intersect(rect) {
+  intersect(rect: IRect): IRect | null {
     let x1 = Math.max(this.x, rect.x);
     var width1 = Math.min(this.x + this.width, rect.x + rect.width);
     var y1 = Math.max(this.y, rect.y);
     var height1 = Math.min(this.y + this.height, rect.y + rect.height);
     if (width1 >= x1 && height1 >= y1) {
-      return new Rect(x1, y1, width1, height1);
+      return new Rect(x1, y1, width1, height1, null);
     }
     return null;
   }
@@ -177,7 +185,7 @@ class Rect {
    * @type Boolean
    * @ignore
    */
-  containsPoint(point) {
+  containsPoint(point: IPoint): boolean {
     var x = point.x,
       y = point.y;
     return x >= this.x && y >= this.y && x <= this.x + this.width && y <= this.y + this.height;
@@ -191,7 +199,7 @@ class Rect {
    * @type Boolean
    * @ignore
    */
-  containsRect(rect) {
+  containsRect(rect: IRect): boolean {
     var x = rect.x,
       y = rect.y;
     return (
@@ -206,14 +214,14 @@ class Rect {
    * @type Point
    */
   clone() {
-    return new Rect(this.x, this.y, this.width, this.height);
+    return new Rect(this.x, this.y, this.width, this.height, null);
   }
 
   /**
    * If the rect is equal to the other rect.
    * @param {Rect} other
    */
-  equals(other) {
+  equals(other: IRect): boolean {
     return (
       this === other ||
       (this.x === other.x && this.y === other.y && this.width === other.width && this.height === other.height)
@@ -225,10 +233,10 @@ class Rect {
    * @param {Number} width
    * @param {Number} height
    */
-  expand(width, height) {
+  expand(width: number, height?: number): IRect {
     if (typeof height === 'undefined') height = width;
 
-    return new Rect(this.x - width / 2, this.y - height / 2, this.width + width, this.height + height);
+    return new Rect(this.x - width / 2, this.y - height / 2, this.width + width, this.height + height, null);
   }
 
   /**
@@ -242,14 +250,14 @@ class Rect {
   /**
    * return point data as JSON-format: [x, y, width, height]
    */
-  toJSON() {
+  toJSON(): number[] {
     return [this.x, this.y, this.width, this.height];
   }
 
   /**
    * return string format.
    */
-  toString() {
+  toString(): string {
     return '{ x: ' + this.x + ', y: ' + this.y + ', width: ' + this.width + ', height: ' + this.height + ' }';
   }
 }

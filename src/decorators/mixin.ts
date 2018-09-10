@@ -22,9 +22,9 @@ function assign(target, frm) {
  * myClass.blorg(); // => 'blorg!'
  *
  */
-export function mixin(...srcs) {
+export function mixin(srcs: Object): Object {
   return target => {
-    assign(target.prototype, ...srcs);
+    assign(target.prototype, srcs);
     return target;
   };
 }
@@ -56,12 +56,12 @@ const combineFnToProto = function combineFnToProto(proto, name, fn) {
 
 /**
  * Deep mixins an object into the classes prototype.
- * @param  {...any} srcs
  */
-export function deepMixin(srcs) {
+export function deepMixin(srcs: Object) {
   return target => {
     for (let key in srcs) {
       let descriptor = Object.getOwnPropertyDescriptor(srcs, key);
+      if (!descriptor) continue;
       if (typeof descriptor.value === 'function') {
         // if is function, combine with old function.
         combineFnToProto(target.prototype, key, descriptor.value);
@@ -88,10 +88,10 @@ export function deepMixin(srcs) {
  * Mixins property into the classes prototype.
  * @param {Map} props
  */
-export function mixinProps(props) {
+export function mixinProps(props: Object) {
   //Object.defineProperty
   return target => {
-    for (let key in props) {
+    for (const key in props) {
       Object.defineProperty(target.prototype, key, props[key]);
     }
     return target;

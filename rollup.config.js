@@ -5,6 +5,7 @@ import resolve from 'rollup-plugin-node-resolve';
 import replace from 'rollup-plugin-replace';
 import { uglify } from 'rollup-plugin-uglify';
 import { eslint } from 'rollup-plugin-eslint';
+import typescript from 'rollup-plugin-typescript2';
 const isProd = process.env.NODE_ENV === 'production';
 
 let config = {
@@ -29,15 +30,16 @@ let config = {
     replace({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'), //production | development
     }),
-    eslint({
-      include: ['src/**/*.js'],
-      exclude: 'node_modules/**',
-    }),
+    // eslint({
+    //   include: ['src/**/*.js'],
+    //   exclude: 'node_modules/**',
+    // }),
     babel({
       include: 'src/**',
       exclude: 'node_modules/**',
       runtimeHelpers: true,
     }),
+    typescript({ verbosity: 0, clean: true })
   ],
 };
 
