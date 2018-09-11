@@ -7,8 +7,8 @@ interface ICached {
  * Manage & cache materials of whiteboard.
  */
 export default class MaterialProvider {
-  public cached: ICached = {};
-  public preload = 1;
+  cached: ICached = {};
+  private preload = 1;
   private length = 0;
 
   /**

@@ -50,7 +50,7 @@ export default class Point {
    * point.
    * The object itself is not modified!
    */
-  multiply(x: number, y: number): IPoint {
+  multiply(x: number | IPoint, y?: number): IPoint {
     let point = Point.instantiate(x, y);
     return new Point(this.x * point.x, this.y * point.y);
   }
@@ -60,7 +60,7 @@ export default class Point {
    * the point as a new point.
    * The object itself is not modified!
    */
-  subtract(x: number, y: number): IPoint {
+  subtract(x: number | IPoint, y: number): IPoint {
     let point = Point.instantiate(x, y);
     return new Point(this.x - point.x, this.y - point.y);
   }

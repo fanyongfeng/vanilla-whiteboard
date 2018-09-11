@@ -79,7 +79,7 @@ class Item {
    * Unite bounds of children , and return a new Rect.
    * @param {Array} children
    */
-  uniteBoundsOfChildren(children) {
+  uniteBoundsOfChildren(children): IRect {
     let x1 = Infinity,
       x2 = -x1,
       y1 = x1,

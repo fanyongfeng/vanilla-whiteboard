@@ -2,8 +2,8 @@
  * ItemCollection Embedded-Array 版本
  */
 
-import { mixin } from '../decorators/mixin';
-import Item from '../graphic/Item';
+import { mixin } from '../decorators/mixin.ts';
+import Item from '../graphic/Item.ts';
 
 const _items = Symbol('_items');
 const _buffered = Symbol('_buffered');

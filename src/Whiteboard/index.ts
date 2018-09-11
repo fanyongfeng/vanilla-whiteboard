@@ -16,7 +16,7 @@ import MaterialProvider from './MaterialProvider';
 import History from '../commands/History';
 import Item from '../graphic/Item';
 
-const _createContext = Symbol('_createContext');
+// const _createContext = Symbol('_createContext');
 const defaultOptions = {
   selectionMode: 'bounds',
   refreshMode: 'loop',
@@ -31,10 +31,13 @@ const defaultOptions = {
   verbose: false,
   precision: 1,
   zoom: 1,
-  dragThreshold: 2,
+  dragThreshold: 2
 };
 
-const _history = Symbol('_history');
+
+export type WhiteboardOptions =  {
+  container: HTMLDivElement
+}
 
 /**
  * 白板的初始化选项。
@@ -50,15 +53,23 @@ const _history = Symbol('_history');
  */
 @emittable()
 export default class Whiteboard {
-  static instances = [];
-
-  _currentTool = null;
-  backgroundLayer = null;
-  activeLayer = null;
-  operateLayer = null;
+  static instances: IWhiteboard[] = [];
+  private options: typeof defaultOptions & WhiteboardOptions;
+  private isLoop = false;
+  private _zoom = 1;
+  wrapper: HTMLDivElement;
+  width: number;
+  height: number;
+  // private _currentTool = null;
+  backgroundLayer: ILayer;
+  activeLayer: ILayer;
+  operateLayer: ILayer;
   material = new MaterialProvider();
+  private context: Object;
+  handler: typeof EventHandler;
+  emit = () => {};
 
-  constructor(options = {}) {
+  constructor(options: WhiteboardOptions) {
     this.options = Object.assign({}, defaultOptions, options);
 
     let { container, width, height } = this.options;
@@ -66,6 +77,7 @@ export default class Whiteboard {
     /** 一个container不能加载两个白板*/
     Whiteboard.instances.find(instance => {
       if (instance.wrapper === container) throw new Error("Can't instance at same container twice!");
+      return false;
     });
 
     setStyle(container, {
@@ -77,7 +89,7 @@ export default class Whiteboard {
     this.wrapper = container;
     this.width = width;
     this.height = height;
-    this.context = this[_createContext]();
+    this.context = this._createContext();
 
     this.operateLayer.el.tabIndex = 1; //make container focusable.
     this.backgroundLayer.appendTo(this);
@@ -85,7 +97,6 @@ export default class Whiteboard {
     this.operateLayer.appendTo(this);
 
     let handler = (this.handler = new EventHandler());
-
     handler.context = this.context;
     handler.bind(this.operateLayer);
 
@@ -104,7 +115,7 @@ export default class Whiteboard {
    * 注意，要区分白板实例的context，和canvas getContext
    *
    */
-  [_createContext]() {
+  private _createContext() {
     let backgroundLayer = new Layer(this.width, this.height, 'background'),
       activeLayer = new Layer(this.width, this.height, 'active'),
       operateLayer = new OperateLayer(this.width, this.height, 'operate');
@@ -117,12 +128,13 @@ export default class Whiteboard {
       currentMode: null,
       refreshCount: 0, //刷新计数，白板所有layers刷新总次数
       settings: Object.freeze(this.options),
-      bounds: new Rect(0, 0, this.width, this.height),
+      bounds: new Rect(0, 0, this.width, this.height, null),
       emit: this.emit.bind(this),
     };
 
     // 将context 属性赋值白板实例
-    if (process.env.NODE_ENV === 'development') Object.keys(proto).forEach(key => (this[key] = proto[key]));
+    // if (process.env.NODE_ENV === 'development') Object.keys(proto).forEach(key => (this[key] = proto[key]));
+    Object.keys(proto).forEach(key => (this[key] = proto[key]));
 
     //return context;
     return Object.create(proto);
@@ -133,7 +145,7 @@ export default class Whiteboard {
    *
    */
   watch() {
-    if (this._isLoop === true) throw new Error("Can't watch twice!");
+    if (this.isLoop === true) throw new Error("Can't watch twice!");
 
     const drawDirtyLayer = () => {
       if (this.activeLayer.isDirty) this.activeLayer.refresh();
@@ -144,7 +156,7 @@ export default class Whiteboard {
 
     //invoke immediately！
     drawDirtyLayer();
-    this._isLoop = true;
+    this.isLoop = true;
   }
 
   /**
@@ -169,8 +181,6 @@ export default class Whiteboard {
   get data() {
     return this.items.toJSON();
   }
-
-  _zoom = 1;
 
   /**
    * Get zoom of current whiteboard.
@@ -197,7 +207,7 @@ export default class Whiteboard {
     this.items.add(item);
   }
 
-  createItem(type: object, style: object): any {
+  createItem(type: object, style?: object): any {
     if (!type) throw new TypeError('Argument illegal!');
     if (typeof type === 'string') return createItem(type, style);
     if (type instanceof Item) return type;
@@ -240,13 +250,13 @@ export default class Whiteboard {
     return [this.backgroundLayer, this.activeLayer, this.operateLayer];
   }
 
-  [_history] = new History();
+  private history = new History();
 
   redo() {
-    this[_history].redo();
+    this.history.redo();
   }
   undo() {
-    this[_history].undo();
+    this.history.undo();
   }
 
   command() {}
@@ -282,14 +292,14 @@ export default class Whiteboard {
       $link.click();
     }
 
-    downloadCanvas(`${filename}.${type}`);
+    downloadCanvas();
   }
 
   dispose() {
     let wrapper = this.wrapper;
     //TODO: remove all canvas DOM.
-    wrapper.removeChild(this.backgroundLayer);
-    wrapper.removeChild(this.activeLayer);
+    wrapper.removeChild(this.backgroundLayer.el);
+    wrapper.removeChild(this.activeLayer.el);
   }
 
   /**

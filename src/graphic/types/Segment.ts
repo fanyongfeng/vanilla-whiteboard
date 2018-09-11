@@ -1,4 +1,5 @@
-import Rect from './Rect.ts';
+import Rect from './Rect';
+import Point from './Point';
 import { containStroke, containStrokeArc, containStrokeLine, calcBoundsOfBezier } from '../algorithm/calcCurve';
 
 const POINT_WIDTH = 4;
@@ -7,31 +8,37 @@ export class Segment {
   /**
    * record start point via context
    */
-  contextPoint = null;
-  point = null;
-  owner = null;
+  command?: string;
+  contextPoint: IPoint = new Point(0, 0);;
+  point: IPoint = new Point(0, 0);
+  owner: IItem | null = null;
+  // style: IStyle;
+  control: IPoint = new Point(0, 0);
+  control1: IPoint = new Point(0, 0);
+  control2: IPoint = new Point(0, 0);
 
   nearby() {
     return false;
   }
 
-  get points() {
+  get points(): IPoint[] {
     return [this.point];
   }
 
-  get strokeBounds() {
-    return this.bounds.expand(this.style.lineWidth) / 2;
-  }
+  // get strokeBounds() {
+    // return this.bounds.expand(this.style.lineWidth) / 2;
+    // return this.bounds.expand(this.style.lineWidth);
+  // }
 
-  get bounds() {
-    return new Rect(this.point.x, this.point.y, 0, 0);
+  get bounds(): IRect {
+    return new Rect(this.point.x, this.point.y, 0, 0, null);
   }
 
   get length() {
     return 0;
   }
 
-  transformCoordinates(matrix) {
+  transformCoordinates(matrix: IMatrix) {
     let point = this.point,
       control1 = this.control1 || null,
       control2 = this.control2 || null;
@@ -47,8 +54,8 @@ export class Segment {
     }
   }
 
-  containsPoint() {
-    return false;
+  protected containsPoint(point: IPoint, lineWidth: number): boolean {
+    throw `must have $${point} ${lineWidth}`;
   }
 
   drawPoint(ctx, point) {
@@ -68,7 +75,7 @@ export class Segment {
    * tmp method for debugger bezier
    * @param {*} ctx
    */
-  draw(ctx) {
+  draw(ctx: CanvasRenderingContext2D) {
     ctx.fillStyle = '#4f80ff';
     ctx.lineWidth = 1;
     ctx.strokeStyle = '#5887ff';
@@ -86,7 +93,7 @@ export class Segment {
   /**
    * Arguments fot Canvas context api.
    */
-  get args() {
+  get args(): IPoint[] | number[] {
     return this.points.slice(1).reduce((acc, item) => {
       [].push.apply(acc, item.toJSON());
       return acc;
@@ -123,7 +130,7 @@ export class LineSegment extends Segment {
     this.point = point;
   }
 
-  containsPoint(point, lineWidth) {
+  containsPoint(point: IPoint, lineWidth: number): boolean {
     return containStrokeLine(
       this.contextPoint.x,
       this.contextPoint.y,
@@ -135,7 +142,7 @@ export class LineSegment extends Segment {
     );
   }
 
-  get bounds() {
+  get bounds(): IRect {
     let frm = this.contextPoint,
       x = frm.x,
       y = frm.y,
@@ -155,7 +162,7 @@ export class LineSegment extends Segment {
       y = to.y;
       height = -height;
     }
-    return new Rect(x, y, width, height);
+    return new Rect(x, y, width, height, null);
   }
 
   get length() {
@@ -172,6 +179,10 @@ export class LineSegment extends Segment {
  */
 export class BezierSegment extends Segment {
   command = 'C';
+  control1: IPoint;
+  control2: IPoint;
+  point: IPoint;
+
   constructor(cp1, cp2, point) {
     super();
     this.control1 = cp1;
@@ -179,7 +190,7 @@ export class BezierSegment extends Segment {
     this.point = point;
   }
 
-  containsPoint(point, lineWidth) {
+  containsPoint(point: IPoint, lineWidth: number) {
     return containStroke(
       this.contextPoint.x,
       this.contextPoint.y,
@@ -256,16 +267,19 @@ export class BezierSegment extends Segment {
  */
 export class QuadraticSegment extends Segment {
   command = 'Q';
+  control: IPoint;
+  point: IPoint;
+
   constructor(cp, point) {
     super();
     this.control = cp;
     this.point = point;
   }
 
-  get bounds() {
-    //转成三阶算
-    return calcBoundsOfBezier(this.fullArgs);
-  }
+  // get bounds() {
+  //   //转成三阶算
+  //   return calcBoundsOfBezier(this.fullArgs);
+  // }
 
   get length() {
     //转成三阶算
@@ -280,16 +294,17 @@ export class QuadraticSegment extends Segment {
 export class ArcSegment extends Segment {
   command = 'A';
   radius = 0;
+  arc?: number[];
 
-  constructor(cp1, cp2, radius) {
+  constructor(cp1?: IPoint, cp2?: IPoint, radius?: number) { // TODO: problem
     super();
-    this.control1 = cp1;
-    this.control2 = cp2;
-    this.point = cp1;
-    this.radius = radius;
+    cp1 && (this.control1 = cp1);
+    cp2 && (this.control2 = cp2);
+    cp1 && (this.point = cp1);
+    radius && (this.radius = radius);
   }
 
-  containsPoint(point, lineWidth) {
+  containsPoint(point: IPoint, lineWidth: number): boolean {
     return containStrokeArc(
       this.contextPoint.x,
       this.contextPoint.y,
@@ -297,8 +312,8 @@ export class ArcSegment extends Segment {
       this.control1.y,
       this.control2.x,
       this.control2.y,
-      this.point.x,
-      this.point.y,
+      // this.point.x,
+      // this.point.y,
       lineWidth,
       point.x,
       point.y

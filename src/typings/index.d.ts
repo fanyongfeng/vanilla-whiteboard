@@ -41,8 +41,8 @@ declare interface IPoint {
   angle: number,
   length: number,
   isZero(): boolean,
-  add(x: number | IPoint, y: number): IPoint,
-  multiply(x: number, y: number): IPoint,
+  add(x: number | IPoint, y?: number): IPoint,
+  multiply(x: number | IPoint, y?: number): IPoint,
   toString(): string,
   toJSON(precision: number): number[],
   clone(): IPoint,
@@ -59,7 +59,8 @@ declare interface IPoint {
   addEquals(other: IPoint): IPoint,
   transform(matrix: any): IPoint,
   divide(x: number, y: number): IPoint,
-  subtract(x: number, y: number): IPoint,
+  subtract(x: number | IPoint, y?: number): IPoint,
+  toJSON(precision?: number): number[]
 }
 
 declare interface IMatrix {
@@ -95,4 +96,8 @@ declare interface IColor {
   toHexString(): string,
   toJSON(): number[],
   toString(): string
+}
+
+declare interface IStyle {
+  lineWidth: number
 }
