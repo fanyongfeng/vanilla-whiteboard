@@ -7,7 +7,7 @@ import Star from './shape/Star';
 import Writing from './shape/Writing';
 import Text from './shape/Text';
 import ChatBox from './shape/ChatBox';
-import Image from './shape/Image';
+import Img from './shape/Image.ts';
 import Color from './types/Color';
 import CompoundPath from './CompoundPath';
 
@@ -31,7 +31,7 @@ import CompoundPath from './CompoundPath';
  */
 
 export const shapeTypes = {
-  pointer: { id: 0, ctor: Image },
+  pointer: { id: 0, ctor: Img },
   marker: { id: 1, ctor: Writing },
   highlighter: { id: 2, ctor: Writing, preset: { alpha: 0.5 } },
   ellipse: { id: 3, ctor: Ellipse },
@@ -40,9 +40,9 @@ export const shapeTypes = {
   rectangle: { id: 6, ctor: Rectangle },
   arrow: { id: 7, ctor: Arrow },
   text: { id: 8, ctor: Text },
-  image: { id: 9, ctor: Image },
-  selector: { id: 10, ctor: Image },
-  eraser: { id: 11, ctor: Image },
+  image: { id: 9, ctor: Img },
+  selector: { id: 10, ctor: Img },
+  eraser: { id: 11, ctor: Img },
   dashed: {
     id: 12,
     ctor: Line,
@@ -53,7 +53,7 @@ export const shapeTypes = {
   star: { id: 15, ctor: Star },
   chatBox: { id: 16, ctor: ChatBox },
   compoundPath: { id: 100, ctor: CompoundPath },
-  material: { id: 9.1, ctor: Image },
+  material: { id: 9.1, ctor: Img },
 };
 
 const idMap = {};

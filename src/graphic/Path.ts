@@ -5,8 +5,6 @@ import smoothCurve from './algorithm/smoothCurve';
 import { memoized, observeProps } from '../decorators/memoized';
 import Item from './Item';
 
-const _segments = Symbol('_segments');
-const _points = Symbol('_points');
 /**
  * A full path and base class of all single path shapes.
  * 所有绘制图形的父类
@@ -18,19 +16,13 @@ const _points = Symbol('_points');
 })
 class Path extends Item {
   //props
-  [_segments] = [];
-  [_points] = [];
-  contextPoint = null;
+  private segments: any[] = [];
+  // private points = [];
+  contextPoint?: IPoint;
   isClose = false;
-
-  get segments() {
-    return this[_segments];
-  }
-
-  get points() {
-    return this[_points];
-  }
-
+  fill: boolean = false;
+  showAuxiliary: boolean = false;
+  stroke: boolean = true;
   /**
    * Add Segement in path.
    * @param {Segment} segment
@@ -53,7 +45,7 @@ class Path extends Item {
   }
 
   clear() {
-    this[_segments] = [];
+    this.segments = [];
   }
 
   arc(x, y, r, sa, ea) {
@@ -69,7 +61,7 @@ class Path extends Item {
    * @param {Point} cp2
    * @param {Number} radius
    */
-  arcTo(cp1, cp2, radius) {
+  arcTo(cp1: IPoint, cp2: IPoint, radius = 0) {
     const segment = new ArcSegment(cp1, cp2, radius);
     this.add(segment);
     return this;
@@ -81,7 +73,7 @@ class Path extends Item {
    * @param {Number} x
    * @param {Number} y
    */
-  moveTo(x, y) {
+  moveTo(x: number, y: number) {
     const point = Point.instantiate(x, y);
     const segment = new MoveSegment(point);
     this.add(segment);
@@ -94,7 +86,7 @@ class Path extends Item {
    * @param {Number} x
    * @param {Number} y
    */
-  lineTo(x, y) {
+  lineTo(x: number, y: number) {
     const point = Point.instantiate(x, y);
     const segment = new LineSegment(point);
     this.add(segment);
@@ -118,10 +110,11 @@ class Path extends Item {
    * @param {*} cp
    * @param {*} point
    */
-  quadraticCurveTo(cp, point) {
+  quadraticCurveTo(cp: IPoint, point: IPoint) {
     //二阶转三阶
 
     let current = this.contextPoint;
+    if (!current) return this;
 
     // This is exact:
     // If we have the three quad points: A E D,
@@ -173,7 +166,7 @@ class Path extends Item {
     if (this.segments.length < 3) return this;
 
     const segments = fitCurve(this.segments.map(item => item.point), 1);
-    this[_segments] = [this[_segments][0]].concat(segments);
+    this.segments = [this.segments[0]].concat(segments);
     this.changed();
     return this;
   }
@@ -183,7 +176,7 @@ class Path extends Item {
    */
   smooth() {
     const segments = smoothCurve(this.segments, this.isClose);
-    this[_segments] = segments;
+    this.segments = segments;
     this.changed();
     return this;
   }
@@ -208,7 +201,7 @@ class Path extends Item {
     this.matrix.reset();
   }
 
-  _draw(ctx) {
+  protected _draw(ctx) {
     ctx.beginPath();
 
     for (let i = 0, segment, len = this.segments.length; i < len; ++i) {
@@ -254,7 +247,7 @@ class Path extends Item {
     if (this.showAuxiliary) this.segments.forEach(segment => segment.draw(ctx));
   }
 
-  _toJSON() {
+  protected _toJSON() {
     return this.segments.map(item => item.toJSON());
   }
 

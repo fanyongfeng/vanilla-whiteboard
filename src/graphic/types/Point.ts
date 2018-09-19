@@ -15,6 +15,8 @@ export default class Point {
     return x.clone();
   }
 
+  x = 0;
+  y = 0;
   /**
    * Create Point with x, y
    *
@@ -29,7 +31,7 @@ export default class Point {
   /**
    * 返回是否小于极小值
    */
-  isZero() {
+  isZero(): boolean {
     return isZero(this.x) && isZero(this.y);
   }
 
@@ -38,7 +40,7 @@ export default class Point {
    * the point as a new point.
    * The object itself is not modified!
    */
-  add(x, y) {
+  add(x: number | IPoint, y?: number): IPoint {
     let point = Point.instantiate(x, y);
     return new Point(this.x + point.x, this.y + point.y);
   }
@@ -48,7 +50,7 @@ export default class Point {
    * point.
    * The object itself is not modified!
    */
-  multiply(x, y) {
+  multiply(x: number | IPoint, y?: number): IPoint {
     let point = Point.instantiate(x, y);
     return new Point(this.x * point.x, this.y * point.y);
   }
@@ -58,7 +60,7 @@ export default class Point {
    * the point as a new point.
    * The object itself is not modified!
    */
-  subtract(x, y) {
+  subtract(x: number | IPoint, y: number): IPoint {
     let point = Point.instantiate(x, y);
     return new Point(this.x - point.x, this.y - point.y);
   }
@@ -68,7 +70,7 @@ export default class Point {
    * the point as a new point.
    * The object itself is not modified!
    */
-  divide(x, y) {
+  divide(x: number, y: number): IPoint {
     let point = Point.instantiate(x, y);
     return new Point(this.x / point.x, this.y / point.y);
   }
@@ -78,9 +80,8 @@ export default class Point {
    * not modified!
    *
    * @param {Matrix} matrix
-   * @return {Point} the transformed point
    */
-  transform(matrix) {
+  transform(matrix): IPoint {
     matrix.applyToPoint(this);
     return this;
   }
@@ -89,7 +90,7 @@ export default class Point {
    * Add and return this
    * @param {Point} other
    */
-  addEquals(other) {
+  addEquals(other: IPoint): IPoint {
     this.x += other.x;
     this.y += other.y;
     return this;
@@ -99,7 +100,7 @@ export default class Point {
    * Assign x, y from other point.
    * @param {*} point
    */
-  assign(point) {
+  assign(point: IPoint): IPoint {
     this.x = point.x;
     this.y = point.y;
     return this;
@@ -109,7 +110,7 @@ export default class Point {
    * If the point coord is equal to the other point.
    * @param {Point} other
    */
-  equals(other) {
+  equals(other: IPoint): boolean {
     return this === other || (this.x === other.x && this.y === other.y);
   }
 
@@ -119,7 +120,7 @@ export default class Point {
    * @param {Number} time , position of interpolation, between 0 and 1 default 0.5
    * @return {Point}
    */
-  lerp(other, time = 0.5) {
+  lerp(other: IPoint, time = 0.5): IPoint {
     if (time > 1 || time < 0) throw new TypeError(`Param 'Time' must between 0 and 1;`);
     time = Math.max(Math.min(1, time), 0);
     return new Point(this.x + (other.x - this.x) * time, this.y + (other.y - this.y) * time);
@@ -130,7 +131,7 @@ export default class Point {
    * @param {Point} other
    * @return {Point}
    */
-  midPointFrom(other) {
+  midPointFrom(other: IPoint): IPoint {
     return this.lerp(other);
   }
 
@@ -138,8 +139,8 @@ export default class Point {
    * Returns distance from other point.
    * @param {point} other
    */
-  getDistance(other) {
-    let dx = this.x - other.x,
+  getDistance(other: IPoint): number {
+    const dx = this.x - other.x,
       dy = this.y - other.y;
 
     return Math.sqrt(dx * dx + dy * dy);
@@ -150,28 +151,28 @@ export default class Point {
    * @param {Point} point
    * @param {number} threshold
    */
-  nearby(point, threshold = 4) {
+  nearby(point: IPoint, threshold = 4): boolean {
     return this.getDistance(point) < threshold;
   }
 
   /**
    * negate point & return a new point.
    */
-  negate() {
+  negate(): IPoint {
     return new Point(-this.x, -this.y);
   }
 
   /**
    * get the length of point from (0,0);
    */
-  get length() {
+  get length(): number {
     return Math.sqrt(this.x * this.x + this.y * this.y);
   }
 
   /**
    * Get Angle In Radians, Vector
    */
-  get angle() {
+  get angle(): number {
     if (!this.length) return 0;
     return Math.atan2(this.y, this.x);
   }
@@ -187,17 +188,17 @@ export default class Point {
    * @param {Point} center the center point of the rotation
    * @return {Point} the rotated point
    */
-  rotate(angle, center) {
+  rotate(angle: number, center?: IPoint): IPoint {
     if (angle === 0) return this.clone();
     angle = (angle * Math.PI) / 180;
 
-    let point = center ? this.subtract(center) : this,
+    let point = center ? this.subtract(center.x, center.y) : this,
       sin = Math.sin(angle),
       cos = Math.cos(angle);
 
     point = new Point(point.x * cos - point.y * sin, point.x * sin + point.y * cos);
 
-    return center ? point.add(center) : point;
+    return center ? point.add(center, 0) : point;
   }
 
   /**
@@ -210,9 +211,7 @@ export default class Point {
    * @return {Point} the normalized vector of the vector that is represented
    *     by this point's coordinates
    */
-  normalize(length) {
-    if (length === undefined) length = 1;
-
+  normalize(length = 1): IPoint {
     let current = this.length,
       scale = current !== 0 ? length / current : 0;
 
@@ -226,7 +225,7 @@ export default class Point {
    * @param {Point} point
    * @return {Number} the dot product of the two points
    */
-  dot(point) {
+  dot(point: IPoint): number {
     return this.x * point.x + this.y * point.y;
   }
 
@@ -234,14 +233,14 @@ export default class Point {
    * return a cloned instance of the point
    * @return {Point}
    */
-  clone() {
+  clone(): IPoint {
     return new Point(this.x, this.y);
   }
 
   /**
    * return point data as JSON-format: [x, y]
    */
-  toJSON(precision = -1) {
+  toJSON(precision = -1): number[] {
     if (precision === -1) return [this.x, this.y];
 
     let multiplier = Math.pow(10, precision);
@@ -251,7 +250,7 @@ export default class Point {
   /**
    * return point data as String-format
    */
-  toString() {
+  toString(): string {
     return '{ x: ' + this.x + ', y: ' + this.y + ' }';
   }
 }

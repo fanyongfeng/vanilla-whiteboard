@@ -12,6 +12,10 @@ import { observeProps } from '../decorators/memoized';
   endPoint: { type: Point, default: new Point() },
 })
 class Shape extends Path {
+
+  startPoint: IPoint = new Point();
+  endPoint: IPoint = new Point();
+
   /**
    * 用与从JSON构造出Shape实例
    *
@@ -19,26 +23,20 @@ class Shape extends Path {
    * @param {Array} points, startPoint , endPoint
    */
   static instantiate(options, [sp, ep]) {
-    let startPoint = new Point(sp[0], sp[1]);
-    let endPoint = new Point(ep[0], ep[1]);
-    let Ctor = this;
+    const startPoint = new Point(sp[0], sp[1]);
+    const endPoint = new Point(ep[0], ep[1]);
+    const Ctor = this;
 
     return new Ctor(options, startPoint, endPoint);
   }
 
-  constructor(options, sp = null, ep = null) {
+  constructor(options, sp?: IPoint, ep?: IPoint) {
     super(options);
-
-    if (sp) {
-      this.startPoint = sp;
-    }
-
-    if (ep) {
-      this.endPoint = ep;
-    }
+    if (sp) this.startPoint = sp;
+    if (ep) this.endPoint = ep;
   }
 
-  _buildPath() {
+  protected _buildPath() {
     throw new Error('must overwrite!');
   }
 
@@ -47,13 +45,13 @@ class Shape extends Path {
     this._buildPath();
   }
 
-  _draw(ctx) {
+  protected _draw(ctx: CanvasRenderingContext2D) {
     this.buildPath();
     super._draw(ctx);
   }
 
   // override bounds for dragging-shapes
-  get bounds() {
+  get bounds(): IRect {
     let frm = this.startPoint,
       x = frm.x,
       y = frm.y,
@@ -80,7 +78,7 @@ class Shape extends Path {
    * Transform segments and startPoint * endPoint.
    * @param {Matrix} matrix
    */
-  transformContent(matrix) {
+  transformContent(matrix: IMatrix) {
     // FIXME: rotate issue.
     // also apply to start & end point.
     matrix.applyToPoint(this.startPoint);
@@ -88,7 +86,7 @@ class Shape extends Path {
     super.transformContent(matrix);
   }
 
-  _toJSON() {
+  protected _toJSON() {
     return [[this.startPoint.x, this.startPoint.y], [this.endPoint.x, this.endPoint.y]];
   }
 }

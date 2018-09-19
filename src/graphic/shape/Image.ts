@@ -1,12 +1,23 @@
-import Item from '../Item';
+import Item, { ItemOptions } from '../Item';
 import Rect from '../types/Rect';
 import { observeProps } from '../../decorators/memoized';
 
-const viewWidth = 1000;
-const viewHeight = 800;
+export interface IImage extends IItem {
+  loaded: boolean,
+  ctx?: CanvasRenderingContext2D,
+  bounds: any,
+  imageData: any,
+  alpha: number,
+  shadow: boolean,
+  calcInitBounds(): any,
+  drawImageAndStroke(ctx: CanvasRenderingContext2D): void,
+}
+
+const viewWidth: number = 1000;
+const viewHeight: number = 800;
 /**
  * The Raster item represents an image.
- * Image transform 靠 matrix , 而非指定的初始x, y;
+ * Image transform 靠 ? , 而非指定的初始x, y;
  */
 @observeProps({
   /**
@@ -25,35 +36,40 @@ const viewHeight = 800;
    */
   shadow: { type: Boolean, default: true },
 })
-class Image extends Item {
-  static instantiate(options, src) {
-    return new Image(options, src);
+class Img extends Item {
+  static instantiate(options: Partial<ItemOptions>, src: string) {
+    return new Img(options, src);
   }
 
-  _src = null;
-  _bounds = null;
-  loaded = false;
-  strokeDashArray = [0, 1];
+  private initBounds: any; // TODO: Rect
+  private _src: string;
+  public loaded: boolean = false;
+  readonly strokeDashArray: number[] = [0, 1];
+  public image: HTMLImageElement = document.createElement('img');
+  public ctx?: CanvasRenderingContext2D;
+  public naturalWidth: number = 0;
+  public naturalHeight: number = 0;
+  public align: 'center' | 'start' = 'start';
+  public shadow: boolean = true;
+  public alpha: number = 1;
 
-  constructor(options, src) {
+  constructor(options: Partial<ItemOptions>, src: string) {
     super(options);
-    if (src) {
-      this.src = src;
-      this.loadImage();
-    }
-  }
-
-  set src(src) {
-    this.loaded = false;
     this._src = src;
+    this.loadImage();
   }
 
-  get src() {
+  set src(_src: string) {
+    this.loaded = false;
+    this.src = _src;
+  }
+
+  get src(): string {
     return this._src;
   }
 
   get bounds() {
-    let bound = this._initBounds.clone();
+    let bound = this.initBounds.clone();
     this.matrix.applyToRect(bound);
     bound.owner = this;
     return bound;
@@ -63,58 +79,58 @@ class Image extends Item {
    * Load image & trigger callback;
    * @param {Function} fn callback
    */
-  loadImage(fn) {
-    if (!this.src && this._image && this.loaded) return;
+  public loadImage(fn?: () => void): void {
+    if (!this.src && this.image && this.loaded) return;
 
     let img = document.createElement('img');
     img.setAttribute('crossOrigin', 'anonymous');
     img.src = this.src;
 
     img.onload = () => {
-      this.loaded = img && img.src && img.complete;
+      this.loaded = !!(img && img.src && img.complete);
       this.naturalWidth = img ? img.naturalWidth || img.width : 0;
       this.naturalHeight = img ? img.naturalHeight || img.height : 0;
 
       //TODO:Emit load event
-      this._initBounds = this.calcInitBounds();
+      this.initBounds = this.calcInitBounds();
 
       fn && fn.call(this, img);
-      img = img.onload = img.onerror = null;
+      img.onload = img.onerror = () => {};
     };
 
-    img.onerror = function() {
+    img.onerror = () => {
       console.warn(`can't load image '${this.src}'`);
       //TODO:Emit error event
-      img = img.onload = img.onerror = null;
+      img.onload = img.onerror = () => {};
     };
 
-    this._image = img;
+    this.image = img;
   }
 
   /**
    * 通过图像原始大小，算出宽高及起始位置，并返回bounds.(保持图片原始宽高比)
    */
   calcInitBounds() {
-    const viewRadio = viewWidth / viewHeight;
+    const viewRadio =  viewWidth / viewHeight;
     const imgRadio = this.naturalWidth / this.naturalHeight;
 
     let x, y, width, height;
 
-    if (this.naturalHeight < viewHeight && this.naturalWidth < viewWidth) {
+    if (this.naturalHeight < viewHeight && this.naturalWidth <  viewWidth) {
       width = this.naturalWidth;
       height = this.naturalHeight;
-      x = this.align === 'center' ? (viewWidth - width) / 2 : 0;
+      x = this.align === 'center' ? ( viewWidth - width) / 2 : 0;
       y = this.align === 'center' ? (viewHeight - height) / 2 : 0;
     } else if (imgRadio > viewRadio) {
-      width = viewWidth;
-      height = viewWidth / imgRadio;
+      width =  viewWidth;
+      height =  viewWidth / imgRadio;
       x = 0;
       y = this.align === 'center' ? (viewHeight - height) / 2 : 0;
     } else {
       height = viewHeight;
       width = height * imgRadio;
       y = 0;
-      x = this.align === 'center' ? (viewWidth - width) / 2 : 0;
+      x = this.align === 'center' ? ( viewWidth - width) / 2 : 0;
     }
 
     return new Rect(x, y, width, height, this);
@@ -124,18 +140,22 @@ class Image extends Item {
    * Get Image Data of specified area from canvas.
    * @return {TypedArray} data
    */
-  get imageData() {
+  get imageData(): ImageData {
     let { x, y, width, height } = this.bounds;
-    return this._ctx.getImageData(x, y, width, height);
+    if (this.ctx) {
+      return this.ctx.getImageData(x, y, width, height);
+    } else {
+      return new ImageData(0, 0);
+    }
   }
 
   /**
    * Set TypedArray Data to canvas.
    * @param {TypedArray} data
    */
-  set imageData(data) {
+  set imageData(data: ImageData) {
     let { x, y } = this.bounds;
-    this._ctx.putImageData(data, x, y);
+    this.ctx && this.ctx.putImageData(data, x, y);
   }
 
   /**
@@ -148,8 +168,8 @@ class Image extends Item {
    *
    * @param {CanvasRenderingContext2D} ctx
    */
-  drawImageAndStroke(ctx) {
-    let { x, y, width, height } = this._initBounds;
+  public drawImageAndStroke(ctx: CanvasRenderingContext2D) {
+    let { x, y, width, height } = this.initBounds;
 
     if (this.shadow) {
       ctx.shadowOffsetX = 8;
@@ -159,11 +179,11 @@ class Image extends Item {
     }
 
     ctx.globalAlpha = this.alpha;
-    ctx.drawImage(this._image, x, y, width, height);
+    ctx.drawImage(this.image, x, y, width, height);
   }
 
-  _draw(ctx) {
-    this._ctx = ctx;
+  _draw(ctx: CanvasRenderingContext2D) {
+    this.ctx = ctx;
 
     if (this.loaded) {
       this.drawImageAndStroke(ctx);
@@ -172,9 +192,9 @@ class Image extends Item {
     }
   }
 
-  _toJSON() {
-    return [this.src];
+  public _toJSON(): string[] {
+    return [this._src];
   }
 }
 
-export default Image;
+export default Img;

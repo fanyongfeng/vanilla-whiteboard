@@ -1,12 +1,13 @@
 /**
  * Entry of whiteboard.
  */
-import emittable, { Emitter } from '../decorators/emitter';
+import emittable from '../decorators/emitter';
 import Layer from './Layer';
 import OperateLayer from './OperateLayer';
 import { setStyle } from '../util/dom';
 import EventHandler from './EventHandler';
 import Text from '../graphic/shape/Text';
+import Rect from '../graphic/types/Rect';
 import { getTool } from '../tools';
 import { createItemViaJSON, createItem } from '../graphic/ItemFactory';
 import Grid from '../graphic/component/Grid';
@@ -15,7 +16,7 @@ import MaterialProvider from './MaterialProvider';
 import History from '../commands/History';
 import Item from '../graphic/Item';
 
-const _createContext = Symbol('_createContext');
+// const _createContext = Symbol('_createContext');
 const defaultOptions = {
   selectionMode: 'bounds',
   refreshMode: 'loop',
@@ -30,10 +31,13 @@ const defaultOptions = {
   verbose: false,
   precision: 1,
   zoom: 1,
-  dragThreshold: 2,
+  dragThreshold: 2
 };
 
-const _history = Symbol('_history');
+
+export type WhiteboardOptions =  {
+  container: HTMLDivElement
+}
 
 /**
  * 白板的初始化选项。
@@ -48,17 +52,24 @@ const _history = Symbol('_history');
  *  - precision (精度)
  */
 @emittable()
-class Whiteboard {
-  static instances = [];
-
-  _currentTool = null;
-  _animationFrameId = -Infinity;
-  backgroundLayer = null;
-  activeLayer = null;
-  operateLayer = null;
+export default class Whiteboard {
+  static instances: IWhiteboard[] = [];
+  private options: typeof defaultOptions & WhiteboardOptions;
+  private isLoop = false;
+  private _zoom = 1;
+  wrapper: HTMLDivElement;
+  width: number;
+  height: number;
+  // private _currentTool = null;
+  backgroundLayer: ILayer;
+  activeLayer: ILayer;
+  operateLayer: ILayer;
   material = new MaterialProvider();
+  private context: Object;
+  handler: typeof EventHandler;
+  emit = () => {};
 
-  constructor(options = {}) {
+  constructor(options: WhiteboardOptions) {
     this.options = Object.assign({}, defaultOptions, options);
 
     let { container, width, height } = this.options;
@@ -66,6 +77,7 @@ class Whiteboard {
     /** 一个container不能加载两个白板*/
     Whiteboard.instances.find(instance => {
       if (instance.wrapper === container) throw new Error("Can't instance at same container twice!");
+      return false;
     });
 
     setStyle(container, {
@@ -77,23 +89,18 @@ class Whiteboard {
     this.wrapper = container;
     this.width = width;
     this.height = height;
+    this.context = this._createContext();
 
-    //实例化所有的layer
-    this.backgroundLayer = new Layer(this.width, this.height, 'background');
-    this.activeLayer = new Layer(this.width, this.height, 'active');
-    this.operateLayer = new OperateLayer(this.width, this.height, 'operate');
-    this.context = this[_createContext](this.backgroundLayer, this.activeLayer, this.operateLayer);
-
+    this.operateLayer.el.tabIndex = 1; //make container focusable.
     this.backgroundLayer.appendTo(this);
     this.activeLayer.appendTo(this);
     this.operateLayer.appendTo(this);
-    this.handler = new EventHandler();
-    this.handler.context = this.context;
 
-    if (!this.options.readonly) {
-      this.handler.bind(this.operateLayer);
-      this.tool = 'selection';
-    }
+    let handler = (this.handler = new EventHandler());
+    handler.context = this.context;
+    handler.bind(this.operateLayer);
+
+    this.tool = 'selection';
 
     if (this.options.zoom !== 1) {
       this.zoom = this.options.zoom;
@@ -108,43 +115,48 @@ class Whiteboard {
    * 注意，要区分白板实例的context，和canvas getContext
    *
    */
-  [_createContext](backgroundLayer, activeLayer, operateLayer) {
-    let emitter = new Emitter();
-    return {
+  private _createContext() {
+    let backgroundLayer = new Layer(this.width, this.height, 'background'),
+      activeLayer = new Layer(this.width, this.height, 'active'),
+      operateLayer = new OperateLayer(this.width, this.height, 'operate');
+
+    let proto = {
+      whiteboard: this,
       backgroundLayer,
       activeLayer,
       operateLayer,
+      currentMode: null,
       refreshCount: 0, //刷新计数，白板所有layers刷新总次数
       settings: Object.freeze(this.options),
+      bounds: new Rect(0, 0, this.width, this.height, null),
       emit: this.emit.bind(this),
-      emitter,
     };
+
+    // 将context 属性赋值白板实例
+    // if (process.env.NODE_ENV === 'development') Object.keys(proto).forEach(key => (this[key] = proto[key]));
+    Object.keys(proto).forEach(key => (this[key] = proto[key]));
+
+    //return context;
+    return Object.create(proto);
   }
 
   /**
    * Watch mode. Redraw layer if it mark as dirty in every tick.
+   *
    */
   watch() {
-    if (this._isLoop === true) throw new Error("Can't watch twice!");
+    if (this.isLoop === true) throw new Error("Can't watch twice!");
 
     const drawDirtyLayer = () => {
       if (this.activeLayer.isDirty) this.activeLayer.refresh();
       if (this.operateLayer.isDirty) this.operateLayer.refresh();
       if (this.backgroundLayer.isDirty) this.backgroundLayer.refresh();
-      this._animationFrameId = requestAnimationFrame(drawDirtyLayer);
+      requestAnimationFrame(drawDirtyLayer);
     };
 
     //invoke immediately！
     drawDirtyLayer();
-    this._isLoop = true;
-  }
-
-  /**
-   * unwatch will stop current loop;
-   */
-  unwatch() {
-    this._isLoop = false;
-    cancelAnimationFrame(this._animationFrameId);
+    this.isLoop = true;
   }
 
   /**
@@ -169,8 +181,6 @@ class Whiteboard {
   get data() {
     return this.items.toJSON();
   }
-
-  _zoom = 1;
 
   /**
    * Get zoom of current whiteboard.
@@ -197,7 +207,7 @@ class Whiteboard {
     this.items.add(item);
   }
 
-  createItem(type, style) {
+  createItem(type: object, style?: object): any {
     if (!type) throw new TypeError('Argument illegal!');
     if (typeof type === 'string') return createItem(type, style);
     if (type instanceof Item) return type;
@@ -226,7 +236,7 @@ class Whiteboard {
   }
 
   set tool(val) {
-    if (!this.options.readonly) this.handler.tool = getTool(val);
+    this.handler.tool = getTool(val);
   }
 
   get tool() {
@@ -240,20 +250,13 @@ class Whiteboard {
     return [this.backgroundLayer, this.activeLayer, this.operateLayer];
   }
 
-  [_history] = new History();
+  private history = new History();
 
-  /**
-   * Redo action.
-   */
   redo() {
-    this[_history].redo();
+    this.history.redo();
   }
-
-  /**
-   * Undo action.
-   */
   undo() {
-    this[_history].undo();
+    this.history.undo();
   }
 
   command() {}
@@ -273,14 +276,7 @@ class Whiteboard {
     this.backgroundLayer.items.set(axes, 2);
   }
 
-  /**
-   * Save canvas content as image.
-   *
-   * @param {String} filename, default value is 'material'
-   * @param {String} type, Image type, default value is 'png'
-   * @param {Number} encoderOptions, quality of image, default value is .92
-   */
-  saveImage(filename = 'material', type = 'png', encoderOptions = 0.92) {
+  saveImage(filename = 'material', type = 'png') {
     if (!/^jpeg|jpg|png$/.test(type)) throw new Error(`Can't support type ${type}`);
 
     //创建离屏canvas，绘制layers；
@@ -291,21 +287,19 @@ class Whiteboard {
 
     let $link = document.createElement('a');
     function downloadCanvas() {
-      $link.href = offscreenCanvas.el.toDataURL(`image/${type}`, encoderOptions);
-      $link.download = `${filename}.${type}`;
+      $link.href = offscreenCanvas.el.toDataURL(`image/${type}`);
+      $link.download = filename;
       $link.click();
     }
 
     downloadCanvas();
   }
 
-  /**
-   * Dispose current whiteboard.
-   */
   dispose() {
-    this.handler.unbind();
-    this.layers.forEach(layer => layer.dispose());
-    this.items = [];
+    let wrapper = this.wrapper;
+    //TODO: remove all canvas DOM.
+    wrapper.removeChild(this.backgroundLayer.el);
+    wrapper.removeChild(this.activeLayer.el);
   }
 
   /**
@@ -316,5 +310,3 @@ class Whiteboard {
     return this;
   }
 }
-
-export default Whiteboard;

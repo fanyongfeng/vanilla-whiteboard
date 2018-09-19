@@ -6,6 +6,14 @@ import Matrix from './types/Matrix';
 import { memoizable, observeProps } from '../decorators/memoized';
 import emittable from '../decorators/emitter';
 
+export interface ItemOptions {
+  type: IToolType,
+  typeId: number,
+  id: number,
+  style: object,
+  [key: string]: any
+}
+
 // 白板所有元素的父类
 @emittable()
 @memoizable()
@@ -29,15 +37,23 @@ class Item {
    */
   globalCompositeOperation = 'source-over'; //'xor'
   filter = 'blur(5px)'; //experiment feature.
-  selectable = true;
   scaleMode = 'free'; //no-scale, free, proportion
-  layer = null; //inject when it is added on layer.
 
-  constructor(options) {
+  layer?: any = {}; //inject when it is added on layer.
+  type?: IToolType;
+  typeId?: number;
+  id?: number;
+
+  style;
+  matrix: IMatrix;
+  changed = () => {};
+  selected: boolean = false;
+  children: IItem[] = [];
+
+  constructor(options?: Partial<ItemOptions>) {
     if (options) {
-      let { type, typeId, id, style, ...rest } = options;
-
-      this.type = type || this.constructor.name;
+      const { type, typeId, id, style, ...rest } = options;
+      type && (this.type = type);
       this.typeId = typeId || -Infinity;
       this.id = id || tsid();
       this.style = new Style(style);
@@ -63,7 +79,7 @@ class Item {
    * Unite bounds of children , and return a new Rect.
    * @param {Array} children
    */
-  uniteBoundsOfChildren(children) {
+  uniteBoundsOfChildren(children): IRect {
     let x1 = Infinity,
       x2 = -x1,
       y1 = x1,
@@ -89,7 +105,7 @@ class Item {
   /**
    * Get bounds of current item.
    */
-  get bounds() {
+  protected get bounds(): IRect { // TODO:
     throw new Error('getter bounds must be overwrite!');
   }
 
@@ -103,14 +119,14 @@ class Item {
   /**
    * Get position based-on center point of current item.
    */
-  get position() {
+  get position(): IPoint {
     return this.bounds.center;
   }
 
   /**
    * Set position of current item.
    */
-  set position(value) {
+  set position(value: IPoint) {
     this.setPosition(value.x, value.y);
   }
 
@@ -122,7 +138,7 @@ class Item {
    * Translate to point.
    * @param {Point} point
    */
-  translate(point) {
+  translate(point: IPoint) {
     let mx = new Matrix();
     return this.transform(mx.translate(point));
   }
@@ -133,7 +149,7 @@ class Item {
    * @param {Number | undefined} sy, if it not set, use sx by default.
    * @param {Point} point Base point.
    */
-  scale(sx, sy, point = null) {
+  scale(sx, sy, point?: IPoint) {
     if (typeof sx !== 'number') throw new TypeError("param 'sx' of scale must be number!");
 
     if (this.scaleMode === 'proportion') {
@@ -152,7 +168,7 @@ class Item {
    * @param {Number} deg, degree of Rotation.
    * @param {Point} point, Base point.
    */
-  rotate(deg, point = null) {
+  rotate(deg, point?: IPoint) {
     if (typeof deg !== 'number') throw new TypeError("param 'deg' of rotate must be number!");
 
     let mx = new Matrix();
@@ -160,7 +176,7 @@ class Item {
     return this.transform(mx.rotate(deg, point));
   }
 
-  transform(matrix) {
+  transform(matrix: IMatrix) {
     if (matrix) {
       //注意矩阵multify 顺序
       this.matrix = this.matrix.prepend(matrix);
@@ -175,7 +191,7 @@ class Item {
    * Transform group & compoundPath & Segment of path;
    * @param {*} matrix
    */
-  transformContent(matrix) {
+  transformContent(matrix: IMatrix) {
     if (this.children) {
       this.children.forEach(item => item.transform(matrix));
       this.matrix.reset();
@@ -186,11 +202,12 @@ class Item {
    * If point in the bounds of item.
    * @param {Point} point
    */
-  containsPoint(point) {
+  containsPoint(point: IPoint) {
     return this.bounds.containsPoint(point);
   }
 
-  _draw(ctx) {
+  protected _draw(ctx: CanvasRenderingContext2D) {
+    console.log(ctx);
     throw new Error('Abstract method must be overwrite!');
   }
 
@@ -198,7 +215,7 @@ class Item {
    * Draw item on specified canvas context.
    * @param {*} ctx
    */
-  draw(ctx) {
+  draw(ctx: CanvasRenderingContext2D) {
     ctx.save();
     this.style.apply(ctx);
     ctx.globalCompositeOperation = this.globalCompositeOperation;
@@ -218,6 +235,10 @@ class Item {
     return [this.typeId, this.id, this._toJSON(), this.style.toShortJSON()];
   }
 
+  protected _toJSON() {
+    throw new Error('_toJSON method must be overwrite!');
+  }
+
   /**
    * remove from collection of layers;
    */
@@ -229,7 +250,7 @@ class Item {
    * 绘制边界矩形
    * @param {*} ctx
    */
-  drawBoundRect(ctx) {
+  drawBoundRect(ctx: CanvasRenderingContext2D) {
     ctx.save();
     ctx.strokeStyle = '#009dec';
     ctx.lineWidth = 1;

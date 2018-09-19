@@ -1,25 +1,28 @@
-import Image from '../graphic/shape/Image';
+import Img, { IImage } from '../graphic/shape/Image';
 
+interface ICached {
+  [url: string]: IImage
+}
 /**
  * Manage & cache materials of whiteboard.
  */
 export default class MaterialProvider {
-  cached = {};
-  preload = 1;
-  _length = 0;
+  cached: ICached = {};
+  private preload = 1;
+  private length = 0;
 
   /**
    * Init MaterialProvider with image src list. order-sensitive
    * @param {Array} images
    * @param {Object} options
    */
-  constructor(images, options = {}) {
+  constructor(images?: string[]) {
     if (!images) return;
 
     for (let url of images) {
-      let material = new Image({}, url);
-      if (this._length < this.preload) material.loadImage();
-      this._length++;
+      let material = new Img({}, url);
+      if (this.length < this.preload) material.loadImage();
+      this.length++;
       this.cached[url] = material;
     }
   }
@@ -28,11 +31,11 @@ export default class MaterialProvider {
    * Get material image by url.
    * @param {String} url
    */
-  get(url) {
+  get(url: string): IImage {
     let cached = this.cached;
     if (cached[url]) return cached[url];
-    let material = new Image({}, url);
-    this._length++;
+    let material = new Img({}, url);
+    this.length++;
     cached[url] = material;
     return cached[url];
   }
@@ -41,18 +44,19 @@ export default class MaterialProvider {
    * Remove material image by url.
    * @param {String} url
    */
-  remove(url) {
+  remove(url: string): IImage  {
     let img = this.cached[url];
     delete this.cached[url];
-    this._length--;
+    this.length--;
     return img;
+  }
+
+  get len(): number {
+    return this.length;
   }
 
   clear() {
     this.cached = {};
   }
 
-  get length() {
-    return this._length;
-  }
 }

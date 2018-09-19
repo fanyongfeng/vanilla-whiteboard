@@ -15,12 +15,11 @@ class Color {
 
   /**
    *
-   * @param {String | Array ?} colorStr . CSS color
    *  e.g.
    *  String: '#fff','#ac78bf', 'rgb(30, 30, 30)', 'rgba(30, 30, 30, 0.5)'
    *  Array: [128, 128, 128, 0.5],  [250, 250, 250]
    */
-  constructor(colorStr) {
+  constructor(colorStr?: string | number[]) {
     if (typeof colorStr === 'string') this.normalizeColor(colorStr);
     else if (Array.isArray(colorStr)) {
       this.red = colorStr[0];
@@ -38,15 +37,17 @@ class Color {
    *
    * @param {String} colorStr
    */
-  normalizeColor(colorStr) {
-    let color;
+  normalizeColor(colorStr: string) {
+    let color: number[] = [];
 
     if (hexRE.test(colorStr)) {
       color = HEX2RGB(colorStr);
     } else {
-      let match = colorStr.match(rgbaRE),
-        parts = match[1].split(',');
-      color = parts.map(part => +part);
+      const match = colorStr.match(rgbaRE);
+      if (match) {
+        const parts = match[1].split(',');
+        color = parts.map(part => +part);
+      }
     }
 
     this.red = color[0];
@@ -60,7 +61,7 @@ class Color {
    * If equals other color.
    * @param {Color} other
    */
-  equals(color) {
+  equals(color: IColor): boolean {
     return (
       this === color ||
       (this.red === color.red && this.green === color.green && this.blue === color.blue && this.alpha === color.alpha)
@@ -70,16 +71,16 @@ class Color {
   /**
    * Return a new duplicate of this instance.
    */
-  clone() {
+  clone(): IColor {
     let ret = new Color();
-    Object.assign(ret, ...this); // ...this, remain red, blue, green, alpha.
+    Object.assign(ret, this); // ...this, remain red, blue, green, alpha.
     return ret;
   }
 
   /**
    * Convert to HSL format.
    */
-  toHSL() {
+  toHSL(): number[] {
     return RGB2HSL(this.red, this.green, this.blue);
   }
 
@@ -93,7 +94,7 @@ class Color {
   /**
    * Convert to HEX string.
    */
-  toHexString() {
+  toHexString(): string {
     let colorStr = this.toHex().toString(16);
     return '#000000'.substr(0, 7 - colorStr.length) + colorStr;
   }
