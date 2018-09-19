@@ -17,7 +17,7 @@ import History from '../commands/History';
 import Item from '../graphic/Item';
 
 // const _createContext = Symbol('_createContext');
-const defaultOptions = {
+export const defaultOptions = {
   selectionMode: 'bounds',
   refreshMode: 'loop',
   readonly: false,
@@ -34,8 +34,7 @@ const defaultOptions = {
   dragThreshold: 2
 };
 
-
-export type WhiteboardOptions =  {
+type WhiteboardOptions =  {
   container: HTMLDivElement
 }
 
@@ -115,7 +114,7 @@ export default class Whiteboard {
    * 注意，要区分白板实例的context，和canvas getContext
    *
    */
-  private _createContext() {
+  private _createContext(): IContext {
     let backgroundLayer = new Layer(this.width, this.height, 'background'),
       activeLayer = new Layer(this.width, this.height, 'active'),
       operateLayer = new OperateLayer(this.width, this.height, 'operate');

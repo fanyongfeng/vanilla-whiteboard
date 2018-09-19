@@ -2,6 +2,8 @@ import { MouseEvent, keyCode } from './EventType';
 import throttle from '../util/throttle';
 import { addListener, removeListener } from '../util/dom';
 
+import { IContext } from './Whiteboard'
+
 // bind both mouse & touch event.
 // const mousedown = 'mousedown touchstart';
 // const mousemove = 'mousemove touchmove';
@@ -17,23 +19,24 @@ const mouseup = 'mouseup';
  * @param {Point} next
  * @param {Number} distance, default value is 5
  */
-function throttleDistance(prev, next, distance = 5) {
+function throttleDistance(prev: IPoint, next: IPoint, distance = 5) {
   if (!prev) return true;
   return !next.nearby(prev, distance);
 }
 
 export default class EventHandler {
-  isDragging = false;
-  isMouseDown = false;
+  private isDragging = false;
+  private isMouseDown = false;
   keyModifiers = {};
-  lastPoint = null; //绑定流程和一般拖拽类似
-  _currentTool = null;
-
-  constructor() {}
+  private lastPoint?: IPoint; //绑定流程和一般拖拽类似
+  private _currentTool?: ITool;
+  layer: ILayer;
+  canvas: HTMLCanvasElement;
+  context: IContext;
 
   set tool(tool) {
     this._currentTool = tool;
-    if (tool) {
+    if (this._currentTool) {
       this._currentTool.layer = this.layer;
       this._currentTool.globalCtx = this.context;
       this.layer.clear();

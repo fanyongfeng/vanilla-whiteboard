@@ -7,7 +7,7 @@ interface ICached {
  * Manage & cache materials of whiteboard.
  */
 export default class MaterialProvider {
-  cached: ICached = {};
+  private cached: ICached = {};
   private preload = 1;
   private length = 0;
 
@@ -49,10 +49,6 @@ export default class MaterialProvider {
     delete this.cached[url];
     this.length--;
     return img;
-  }
-
-  get len(): number {
-    return this.length;
   }
 
   clear() {

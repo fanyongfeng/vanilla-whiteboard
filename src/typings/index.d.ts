@@ -1,6 +1,4 @@
 declare type IToolType = "highlighter" | "marker" | "text" | "selection" | "pointer" | "eraser" | "pathMutator";
-
-
 declare interface IItem {
   matrix: any,
   type?: IToolType,
