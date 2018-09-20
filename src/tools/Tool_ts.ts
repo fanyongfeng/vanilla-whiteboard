@@ -1,4 +1,3 @@
-import { IContext } from '../Whiteboard'
 /**
  * Base class of tools, for:
  * 1) create item.
@@ -15,12 +14,12 @@ const toolStatus = {
   translate: 'translate',
 };
 export default class Tool {
-  private _layer: ILayer;
+  private _init: any;
+  private _cursor?: string;
   globalCtx?: IContext; // 白板上下文，在实例化后注入；
   mode = toolStatus.select;
   type: IToolType;
-  private _init: any;
-  private _cursor: string;
+  layer?: ILayer;
 
   constructor(type) {
     this.type = type;
@@ -31,24 +30,24 @@ export default class Tool {
   }
 
   setLayerCursor(cursor) {
-    if (!this._cursor) this.layer.setCursor(cursor);
+    if (!this._cursor && this.layer) this.layer.setCursor(cursor);
   }
 
   /**
    * Items of activeLayer.
    */
-  // get items() {
-  //   return items;
+  get items() {
+    return items;
+  }
+
+  // /**
+  //  * Get layer of tool
+  //  */
+  // set layer(value: ILayer) {
+  //   this._layer = value;
   // }
 
-  /**
-   * Get layer of tool
-   */
-  set layer(value: ILayer) {
-    this._layer = value;
-  }
-
-  get layer(): ILayer {
-    return this._layer;
-  }
+  // get layer(): ILayer {
+  //   return this._layer;
+  // }
 }

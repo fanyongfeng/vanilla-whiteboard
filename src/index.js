@@ -7,7 +7,7 @@ import Path from './graphic/Path';
 import Layer from './Whiteboard/Layer';
 import animate from './animate/animate';
 import animateColor from './animate/animateColor';
-import Whiteboard from './Whiteboard/index.ts';
+import Whiteboard from './Whiteboard';
 import playground from './playground'; // for debug,
 // import keyCode from '';
 
