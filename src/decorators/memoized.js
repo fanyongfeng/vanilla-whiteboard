@@ -57,7 +57,7 @@ export function memoizable() {
      * mark the item instance as 'dirty', it will trigger canvas refresh and re-calc the memozied props.
      */
     target.prototype.changed = function() {
-      if (this.layer) {
+      if (this.layer && this.layer.markAsDirty) {
         this.layer.markAsDirty();
       }
       this[cachedPropsKey] = {};

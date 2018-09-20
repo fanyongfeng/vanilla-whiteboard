@@ -46,7 +46,6 @@ class Item {
 
   style;
   matrix: IMatrix;
-  changed = () => {};
   selected: boolean = false;
   children: IItem[] = [];
 
@@ -183,6 +182,7 @@ class Item {
     }
 
     this.transformContent(matrix);
+    // @ts-ignore
     this.changed();
     return this;
   }
