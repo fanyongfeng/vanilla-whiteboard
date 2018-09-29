@@ -2,8 +2,8 @@ import Shape from '../Shape';
 import Point from '../types/Point';
 
 export default class Line extends Shape {
+  public dash: Array<number> = [];
 
-  public dash: boolean;
   constructor(options, sp?: Point, ep?: Point) {
     super(options, sp, ep);
     this.style.dashArray = this.dash || [];

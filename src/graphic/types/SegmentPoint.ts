@@ -1,3 +1,5 @@
+import Point from "./Point";
+
 /**
  * related to segment, includes:
  * 1) handleIn, control point 2 of prev curve
@@ -5,6 +7,11 @@
  * 3) point
  */
 export class SegmentPoint {
+  handleIn: Point | null;
+  handleOut: Point | null;
+  point: Point | null;
+  prev: SegmentPoint | null;
+  next: SegmentPoint | null;
   constructor() {
     this.handleIn = null;
     this.handleOut = null;
