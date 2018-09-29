@@ -20,7 +20,8 @@ const strokeStyle = '#96cef6';
 export default class ControlRect extends Item {
   private rotateControlPoint: Point;
   public showRotate: Boolean;
-  protected _draw(ctx:CanvasRenderingContext2D, bounds?) {
+
+  _draw(ctx:CanvasRenderingContext2D, bounds?) {
     ctx.save();
     ctx.fillStyle = fillStyle;
     ctx.lineWidth = 1;

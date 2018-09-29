@@ -6,6 +6,17 @@ import { mixin } from '../decorators/mixin';
 import Item from '../graphic/Item';
 import Layer from './Layer';
 
+// type MethodKey = 'splice'|'push'|'unshift'|'sort'|'map'|'forEach'|'find'|'reduce'|'reduceRight'|'filter'|'includes'
+
+// type ArrayProto<T = any> = {
+//   [key in MethodKey]: Array<T>[key]
+// }
+
+
+interface ItemCollection {
+  forEach(callbackfn: (value: Item) => void, thisArg?: any): void;
+}
+
 const arrMethods = {
 };
 const arr = Array.prototype;

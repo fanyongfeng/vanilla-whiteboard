@@ -10,6 +10,8 @@ import { observeProps } from '../decorators/memoized';
   children: { type: Array, default: [] },
 })
 class Group extends Item {
+  private control: ControlRect;
+
   constructor(options, items = []) {
     super(options);
     this.children = items;
@@ -40,7 +42,7 @@ class Group extends Item {
    * Data for serialization.
    */
   _toJSON() {
-    return this._children.map(item => item.toJSON());
+    return this.children.map(item => item.toJSON());
   }
 }
 

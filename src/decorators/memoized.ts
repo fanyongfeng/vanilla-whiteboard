@@ -4,18 +4,18 @@ const cachedPropsKey = '__cachedProps';
  * mark getter as memoized prop, the value is cached till the instance mark as dirty,
  * @param {String} cacheKey, Specify the cacheKey of prop (default value: PropName)
  */
-export function memoized(cacheKey) {
+export function memoized(cacheKey?: string) {
   return function(target, name, descriptor) {
     if (typeof descriptor.get !== 'function') throw new Error(`Can't decorate ${name}, Only used for getter~`);
 
-    cacheKey = cacheKey || `${name}`;
+    let propKey = cacheKey || `${name}`;
     const { get } = descriptor;
 
     descriptor.get = function() {
       let cacheProps = this[cachedPropsKey];
-      if (typeof cacheProps[cacheKey] !== 'undefined') return cacheProps[cacheKey];
-      cacheProps[cacheKey] = get.apply(this);
-      return cacheProps[cacheKey];
+      if (typeof cacheProps[propKey] !== 'undefined') return cacheProps[propKey];
+      cacheProps[propKey] = get.apply(this);
+      return cacheProps[propKey];
     };
 
     return descriptor;

@@ -37,11 +37,14 @@ const fontStyles = {
 };
 
 export default class Style {
-  constructor(options = {}) {
+  private _strokeStyle: Color;
+  private _fillStyle: Color;
+
+  constructor(options?: typeof defaultStyles & typeof fontStyles) {
     /** new copy of color instance! */
     this._strokeStyle = new Color('#c69');
     this._fillStyle = new Color('#c69');
-    Object.assign(this, defaultStyles, fontStyles, options);
+    Object.assign(this, defaultStyles, fontStyles, options || {});
   }
 
   get strokeStyle() {

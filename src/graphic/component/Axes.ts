@@ -22,8 +22,8 @@ const gap = 50; //in pixels
   showY: { type: Boolean, default: true },
 })
 export default class Axes extends Item {
-  private minX: number;
-  private minY: number;
+  private minX: number = 0;
+  private minY: number = 0;
 
   protected showX: boolean;
   protected showY: boolean;

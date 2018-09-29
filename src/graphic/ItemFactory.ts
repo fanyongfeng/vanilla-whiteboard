@@ -7,7 +7,7 @@ import Star from './shape/Star';
 import Writing from './shape/Writing';
 import Text from './shape/Text';
 import ChatBox from './shape/ChatBox';
-import Img from './shape/Image.ts';
+import Img from './shape/Image';
 import Color from './types/Color';
 import CompoundPath from './CompoundPath';
 
@@ -62,7 +62,7 @@ for (let key in shapeTypes) {
 }
 
 function normalizeStyle(style) {
-  let ret = {};
+  let ret: any = {};
 
   if (!style) return ret;
 
