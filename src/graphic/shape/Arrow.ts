@@ -4,7 +4,7 @@
 import Shape from '../Shape';
 import Point from '../types/Point';
 
-function calcArrow(sx, sy, ex, ey) {
+function calcArrow(sx: number, sy: number, ex: number, ey: number) {
   let l = Math.sqrt(Math.pow(ex - sx, 2) + Math.pow(ey - sy, 2)),
     e0 = ex - (((ex - sx) * Math.cos(0.5) - (ey - sy) * Math.sin(0.5)) * 10) / l,
     e1 = ey - (((ey - sy) * Math.cos(0.5) + (ex - sx) * Math.sin(0.5)) * 10) / l,

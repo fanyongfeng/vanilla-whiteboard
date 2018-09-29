@@ -15,6 +15,9 @@ import Layer from './Layer';
 
 interface ItemCollection {
   forEach(callbackfn: (value: Item) => void, thisArg?: any): void;
+  map(callbackfn: (value: Item, index: number) => any, thisArg?: any): Item[];
+  includes(callbackfn: (value: Item) => boolean) : boolean;
+  filter(callbackfn: (value: Item, index: number) => boolean , thisArg?: any): Item[];
 }
 
 const arrMethods = {
@@ -257,8 +260,8 @@ class ItemCollection {
    * Delete items by ids.
    * @param {Array} ids
    */
-  deleteById(ids = []) {
-    return this.delete(item => ids.includes(item.id));
+  deleteById(ids: number[] = []) {
+    return this.delete(item => !~ids.lastIndexOf(item.id));
   }
 
   /**
