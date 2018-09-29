@@ -37,7 +37,7 @@ export default class Tool {
    * Items of activeLayer.
    */
   get items() {
-    return items;
+    return this.globalCtx.activeLayer.items;
   }
 
   // /**

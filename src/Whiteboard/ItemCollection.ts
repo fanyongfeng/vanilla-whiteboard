@@ -2,19 +2,19 @@
  * ItemCollection Embedded-Array 版本
  */
 
-import { mixin } from '../decorators/mixin.ts';
-import Item from '../graphic/Item.ts';
+import { mixin } from '../decorators/mixin';
+import Item from '../graphic/Item';
+import Layer from './Layer';
 
-const _items = Symbol('_items');
-const _buffered = Symbol('_buffered');
-const arrMethods = {};
+const arrMethods = {
+};
 const arr = Array.prototype;
 
 //Inject Array methods into ItemCollection.
 ['splice', 'push', 'unshift', 'sort', 'map', 'forEach', 'find', 'reduce', 'reduceRight', 'filter', 'includes'].forEach(
   method =>
-    (arrMethods[method] = function() {
-      return arr[method].apply(this[_items], arguments);
+    (arrMethods[method] = function () {
+      return arr[method].apply(this['items'], arguments);
     })
 );
 
@@ -24,8 +24,11 @@ const arr = Array.prototype;
  */
 @mixin(arrMethods)
 class ItemCollection {
-  [_items] = [];
-  [_buffered] = [];
+  public layer: Layer
+  private items: Item[] = [];
+  private buffered: Item[] = [];
+
+  // private includes: () => Array<Item>;
 
   /**
    * Compare 2 ItemCollection by id
@@ -47,8 +50,8 @@ class ItemCollection {
    * @param {Array} items
    * @param {Layer} layer
    */
-  constructor(layer, items) {
-    if (items) this[_items] = items;
+  constructor(layer?, items?) {
+    if (items) this.items = items;
 
     this.layer = layer;
   }
@@ -57,14 +60,14 @@ class ItemCollection {
    * Get length of items.
    */
   get length() {
-    return this[_items].length;
+    return this.items.length;
   }
 
   /**
    * Internal getter, visit item-array directly
    */
   get array() {
-    return this[_items];
+    return this.items;
   }
 
   /**
@@ -78,15 +81,15 @@ class ItemCollection {
    * filter duplicated items
    */
   distinct() {
-    this[_items] = Array.from(new Set(this[_items]));
+    this.items = Array.from(new Set(this.items));
   }
 
   /*
   * Implements iterator.
   **/
   *[Symbol.iterator]() {
-    for (let i = 0, len = this[_items].length; i < len; i++) {
-      yield this[_items][i];
+    for (let i = 0, len = this.items.length; i < len; i++) {
+      yield this.items[i];
     }
   }
 
@@ -103,7 +106,7 @@ class ItemCollection {
    * @param {Number} index
    */
   get(index) {
-    return this[_items][index];
+    return this.items[index];
   }
 
   /**
@@ -112,7 +115,7 @@ class ItemCollection {
    * @param {Item} item, whiteboard item to be add.
    */
   set(item, index) {
-    if (this[_items][index] === item) return false;
+    if (this.items[index] === item) return false;
 
     if (typeof index === 'undefined') {
       //add same item only once.
@@ -121,7 +124,7 @@ class ItemCollection {
     }
 
     item.layer = this.layer;
-    this[_items][index] = item;
+    this.items[index] = item;
 
     if (process.env.NODE_ENV === 'development') {
       this[index] = item;
@@ -139,10 +142,10 @@ class ItemCollection {
     if (!(item instanceof Item)) throw new TypeError('Only Item can add to Collection!');
 
     item.layer = this.layer;
-    this[_items].push(item);
+    this.items.push(item);
 
     if (process.env.NODE_ENV === 'development') {
-      let index = this[_items].length - 1;
+      let index = this.items.length - 1;
       this[index] = item;
     }
 
@@ -154,22 +157,22 @@ class ItemCollection {
     if (!(item instanceof Item)) throw new TypeError('Only Item can add to Collection!');
 
     item.layer = this.layer;
-    this[_buffered].push(item);
+    this.buffered.push(item);
     this.changed();
     return this;
   }
 
   flush() {
-    this[_items].push(...this[_buffered]);
-    this[_buffered] = [];
+    this.items.push(...this.buffered);
+    this.buffered = [];
   }
 
   /**
    * Clear items.
    */
   clear() {
-    this[_items] = [];
-    this[_buffered] = [];
+    this.items = [];
+    this.buffered = [];
     this.changed();
     return this;
   }
@@ -208,7 +211,7 @@ class ItemCollection {
    * @param {Item} item1
    */
   removeAt(index) {
-    let item = this[_items][index];
+    let item = this.items[index];
     this.remove(item);
     return item;
   }
@@ -221,7 +224,7 @@ class ItemCollection {
   delete(fn) {
     let deleted = new ItemCollection();
 
-    this[_items] = this[_items].filter(item => {
+    this.items = this.items.filter(item => {
       if (!fn(item)) return true;
       deleted.add(item);
       return false;

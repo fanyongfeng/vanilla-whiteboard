@@ -22,6 +22,12 @@ const gap = 50; //in pixels
   showY: { type: Boolean, default: true },
 })
 export default class Axes extends Item {
+  private minX: number;
+  private minY: number;
+
+  protected showX: boolean;
+  protected showY: boolean;
+
   constructor(options = {}) {
     super(options);
   }
@@ -73,15 +79,15 @@ export default class Axes extends Item {
     ctx.lineTo(x2, y2);
   }
 
-  draw(ctx) {
+  protected _draw(ctx) {
     let { width, height } = this.layer;
     ctx.lineWidth = 1;
     ctx.fontSize = 10;
     ctx.font = '9px serif';
     ctx.strokeStyle = '#000';
 
-    this.minX = -parseInt(width / gap / 2);
-    this.minY = -parseInt(height / gap / 2);
+    this.minX = -Math.floor(width / gap / 2);
+    this.minY = -Math.floor(height / gap / 2);
 
     if (this.showX) {
       this.drawXAxis(ctx, width, height);

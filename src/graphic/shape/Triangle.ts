@@ -15,6 +15,9 @@ import { observeProps } from '../../decorators/memoized';
   right: { type: Boolean, default: false },
 })
 class Triangle extends Shape {
+  private right: boolean;
+  private anti: boolean;
+
   _buildPath() {
     let t1x, t1y, t2x, t2y;
     let { x: sx, y: sy } = this.startPoint;

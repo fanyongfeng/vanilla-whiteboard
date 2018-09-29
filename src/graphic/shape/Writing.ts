@@ -6,6 +6,7 @@ import Path from '../Path';
  * Marker & highlighter.
  */
 export default class Writing extends Path {
+  public alpha: number;
   // set alpha of path style.
   //alpha = 1;
 

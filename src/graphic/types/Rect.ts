@@ -25,7 +25,7 @@ class Rect {
   owner: IItem | null; // tool instance
   center: IPoint;
 
-  constructor(x, y, width, height, owner) {
+  constructor(x, y, width, height, owner?) {
     this.x = x;
     this.y = y;
     this.width = width;

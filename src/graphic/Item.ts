@@ -21,7 +21,7 @@ export interface ItemOptions {
   selected: { type: Boolean, default: false },
   style: { type: Style, default: null },
 })
-class Item {
+abstract class Item {
   /**
    * Composite rule used for canvas globalCompositeOperation
    * possible value:
@@ -206,10 +206,7 @@ class Item {
     return this.bounds.containsPoint(point);
   }
 
-  protected _draw(ctx: CanvasRenderingContext2D) {
-    console.log(ctx);
-    throw new Error('Abstract method must be overwrite!');
-  }
+  protected abstract _draw(ctx: CanvasRenderingContext2D);
 
   /**
    * Draw item on specified canvas context.

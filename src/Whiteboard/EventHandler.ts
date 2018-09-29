@@ -1,6 +1,7 @@
 import { MouseEvent, keyCode } from './EventType';
 import throttle from '../util/throttle';
 import { addListener, removeListener } from '../util/dom';
+import Layer from './Layer';
 
 // bind both mouse & touch event.
 // const mousedown = 'mousedown touchstart';
@@ -28,7 +29,7 @@ export default class EventHandler {
   keyModifiers = {};
   private lastPoint?: IPoint; //绑定流程和一般拖拽类似
   private _currentTool?: ITool;
-  layer: ILayer;
+  layer: Layer;
   canvas: HTMLCanvasElement;
   context: IContext;
 

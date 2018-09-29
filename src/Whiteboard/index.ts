@@ -51,8 +51,8 @@ export type WhiteboardOptions =  {
  *  - precision (精度)
  */
 @emittable()
-export default class Whiteboard {
-  static instances: IWhiteboard[] = [];
+export default class Whiteboard  {
+  static instances: Whiteboard[] = [];
   private options: typeof defaultOptions & WhiteboardOptions;
   private isLoop = false;
   private _zoom = 1;
@@ -60,12 +60,13 @@ export default class Whiteboard {
   width: number;
   height: number;
   // private _currentTool = null;
-  backgroundLayer: ILayer;
-  activeLayer: ILayer;
-  operateLayer: ILayer;
+  backgroundLayer!: Layer;
+  activeLayer!: Layer;
+  operateLayer!: Layer;
+  handler: EventHandler;
+  context: IContext;
+
   material = new MaterialProvider();
-  private context: Object;
-  handler: typeof EventHandler;
   emit = () => {};
 
   constructor(options: WhiteboardOptions) {
@@ -234,7 +235,7 @@ export default class Whiteboard {
     return this.activeLayer.items;
   }
 
-  set tool(val) {
+  set tool(val: string) {
     this.handler.tool = getTool(val);
   }
 

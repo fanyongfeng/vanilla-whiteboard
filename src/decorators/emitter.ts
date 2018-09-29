@@ -13,7 +13,7 @@
  * ins.on('changed', (event)=>{ //dosomething });
  *
  */
-export default function emittable() {
+export default function emittable(): ClassDecorator {
   return function(target) {
     target.prototype.__callbacks = {};
 
@@ -23,7 +23,7 @@ export default function emittable() {
      * @param {String} name Name of Event.
      * @param {Function} fn Handler of Event.
      */
-    target.prototype.on = function(name, fn) {
+    target.prototype.on = function(name: string, fn) {
       if (typeof name !== 'string' || typeof fn !== 'function') throw new Error('Arguments illegal!');
 
       this.__callbacks[name] = this.__callbacks[name] || [];
@@ -85,7 +85,7 @@ export default function emittable() {
         let fn = handlers[i];
 
         if (fn.apply(this, args) === false) {
-          if (event && event.stop) event.stop();
+          if (event && event.stopPropagation) event.stopPropagation();
           break;
         }
       }

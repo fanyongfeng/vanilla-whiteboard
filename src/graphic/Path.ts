@@ -5,6 +5,7 @@ import smoothCurve from './algorithm/smoothCurve';
 import { memoized, observeProps } from '../decorators/memoized';
 import Item from './Item';
 
+
 /**
  * A full path and base class of all single path shapes.
  * 所有绘制图形的父类
@@ -20,9 +21,9 @@ class Path extends Item {
   // private points = [];
   contextPoint?: IPoint;
   isClose = false;
-  fill: boolean = false;
-  showAuxiliary: boolean = false;
-  stroke: boolean = true;
+  fill!: boolean ;
+  showAuxiliary!: boolean;
+  stroke!: boolean;
   /**
    * Add Segement in path.
    * @param {Segment} segment
@@ -45,11 +46,11 @@ class Path extends Item {
     }
   }
 
-  clear() {
+  public clear() {
     this.segments = [];
   }
 
-  arc(x, y, r, sa, ea) {
+  public arc(x, y, r, sa, ea) {
     const segment = new ArcSegment();
     segment.arc = [x, y, r, sa, ea];
     this.add(segment);
@@ -62,7 +63,7 @@ class Path extends Item {
    * @param {Point} cp2
    * @param {Number} radius
    */
-  arcTo(cp1: IPoint, cp2: IPoint, radius = 0) {
+  public arcTo(cp1: IPoint, cp2: IPoint, radius = 0) {
     const segment = new ArcSegment(cp1, cp2, radius);
     this.add(segment);
     return this;
@@ -71,10 +72,15 @@ class Path extends Item {
   /**
    * Append Move segment for current path.
    *
-   * @param {Number} x
+   * @param {Number | IPoint} x
    * @param {Number} y
    */
-  moveTo(x: number, y: number) {
+  public moveTo(x: number , y: number): Path
+  /**
+   * Append Move segment for current path.
+   */
+  public moveTo(x:Point): Path
+  public moveTo(x: number | IPoint, y?: number) {
     const point = Point.instantiate(x, y);
     const segment = new MoveSegment(point);
     this.add(segment);
@@ -87,7 +93,7 @@ class Path extends Item {
    * @param {Number} x
    * @param {Number} y
    */
-  lineTo(x: number, y: number) {
+  public lineTo(x: number | IPoint, y?: number) {
     const point = Point.instantiate(x, y);
     const segment = new LineSegment(point);
     this.add(segment);
@@ -100,18 +106,18 @@ class Path extends Item {
    * @param {*} cp2
    * @param {*} point
    */
-  bezierCurveTo(cp1, cp2, point) {
+  public bezierCurveTo(cp1, cp2, point) {
     const segment = new BezierSegment(cp1, cp2, point);
     this.add(segment);
     return this;
   }
 
   /**
-   *
+   * Add quadratic Curve Segment.
    * @param {*} cp
    * @param {*} point
    */
-  quadraticCurveTo(cp: IPoint, point: IPoint) {
+  public quadraticCurveTo(cp: IPoint, point: IPoint) {
     //二阶转三阶
 
     let current = this.contextPoint;
@@ -126,13 +132,13 @@ class Path extends Item {
     return this;
   }
 
-  quadraticCurveTo2(cp, point) {
+  public quadraticCurveTo2(cp: IPoint, point: IPoint) {
     const segment = new QuadraticSegment(cp, point);
     this.add(segment);
     return this;
   }
 
-  closePath() {
+  public closePath() {
     this.isClose = true;
   }
 
@@ -211,7 +217,7 @@ class Path extends Item {
       segment = this.segments[i];
 
       switch (
-        segment.command // first letter
+      segment.command // first letter
       ) {
         case 'm':
         case 'M': // moveTo, absolute

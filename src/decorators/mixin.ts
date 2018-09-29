@@ -22,7 +22,7 @@ function assign(target, frm) {
  * myClass.blorg(); // => 'blorg!'
  *
  */
-export function mixin(srcs: Object): Object {
+export function mixin(srcs: Object): ClassDecorator {
   return target => {
     assign(target.prototype, srcs);
     return target;
@@ -32,8 +32,8 @@ export function mixin(srcs: Object): Object {
 /**
  * 组合两个function
  * @param {Object} proto, prototype of class.
- * @param {*} name 名字
- * @param {*} fn 带绑定的function
+ * @param {String} name 名字
+ * @param {Function} fn 带绑定的function
  */
 const combineFnToProto = function combineFnToProto(proto, name, fn) {
   let origin = proto[name];

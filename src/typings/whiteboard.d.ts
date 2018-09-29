@@ -1,3 +1,4 @@
+// import ItemCollection from '../Whiteboard/ItemCollection'
 declare interface IWhiteboard {
   wrapper: HTMLDivElement | HTMLCanvasElement,
   backgroundLayer: ILayer,

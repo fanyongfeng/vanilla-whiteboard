@@ -2,16 +2,24 @@ import { setStyle } from '../util/dom';
 import ItemCollection from './ItemCollection';
 import Matrix from '../graphic/types/Matrix';
 import Rect from '../graphic/types/Rect';
+import Whiteboard from '.';
 
-const _items = Symbol('_items');
 /**
  * Create canvas layer, and Manage all canvases in whiteboard.
  */
 export default class Layer {
-  [_items] = new ItemCollection(this);
-  wrapper = null;
+  width: number;
+  height: number;
+  ctx: CanvasRenderingContext2D;
+  globalCtx: any;
+  role: string;
+  el: HTMLCanvasElement;
+  _bounds: Rect | null = null;
+  wrapper: HTMLElement | null = null;
+
+  private _items = new ItemCollection(this);
+
   _isDirty = true;
-  _bounds = null;
   matrix = new Matrix();
   offscreen = false;
 
@@ -21,7 +29,7 @@ export default class Layer {
    * @param {Layer} target layer
    * @param {Function | undefined} fn callback.
    */
-  static elevator(source, target, fn) {
+  static elevator(source: Layer, target: Layer, fn?) {
     let sourceItems = source.items;
 
     for (let i = 0, len = sourceItems.length; i < len; i++) {
@@ -62,19 +70,20 @@ export default class Layer {
    * @param {Number} height
    * @param {String} role
    */
-  constructor(width, height, role) {
+  constructor(width, height, role: string = '') {
     let el = document.createElement('canvas');
     el.setAttribute('data-role', role);
     el.setAttribute('canvas-id', role);
     this.role = role;
     this.el = el;
 
-    if (typeof wx !== 'undefined' && wx.createCanvasContext) {
-      // adapt to wechat-mini-app
-      this.ctx = wx.createCanvasContext(role);
-    } else {
-      this.ctx = el.getContext('2d');
-    }
+    // if (typeof wx !== 'undefined' && wx.createCanvasContext) {
+    //   // adapt to wechat-mini-app
+    //   this.ctx = wx.createCanvasContext(role);
+    // } else {
+    //   this.ctx = el.getContext('2d') as CanvasRenderingContext2D;
+    // }
+    this.ctx = el.getContext('2d') as CanvasRenderingContext2D;
 
     this.width = width;
     this.height = height;
@@ -96,7 +105,7 @@ export default class Layer {
 
   _draw() {
     this.globalCtx.refreshCount++;
-    this[_items].filter(item => !item.input).forEach(item => item && item.draw(this.ctx));
+    this._items.filter(item => !item.input).forEach(item => item && item.draw(this.ctx));
   }
 
   /**
@@ -110,7 +119,7 @@ export default class Layer {
   }
 
   get items() {
-    return this[_items];
+    return this._items;
   }
 
   get deviceRatio() {
@@ -119,7 +128,8 @@ export default class Layer {
 
   get pixelRadio() {
     let ctx = this.ctx;
-    if (!/^off|false$/.test(canvas.getAttribute('hidpi'))) {
+    let canvas = document.createElement('canvas');
+    if (!/^off|false$/.test(canvas.getAttribute('hidpi') || '')) {
       let backingStoreRatio =
         ctx.webkitBackingStorePixelRatio ||
         ctx.mozBackingStorePixelRatio ||
@@ -191,7 +201,7 @@ export default class Layer {
     this.markAsDirty();
   }
 
-  appendTo(whiteboard) {
+  appendTo(whiteboard: Whiteboard) {
     //appendTo wrapper.
     if (this.offscreen) return;
 

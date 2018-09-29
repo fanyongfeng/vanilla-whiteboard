@@ -13,14 +13,21 @@ import emittable from '../decorators/emitter';
  */
 //TODO: 返回undo stack 和 redo stack 为空的callback，方便UI展示按钮的disable状态
 
+
 const defaultOptions = {
   maxStack: 300,
   enableKeyboard: true,
 };
 
+
 @emittable()
 class History {
-  constructor(options) {
+  private stack: any;
+  private options: typeof defaultOptions;
+  private lastRecorded: number = 0;
+  // private emit: (eventName: string, args: Object) => void;
+
+  constructor(options = {}) {
     this.clear();
     this.options = Object.assign({}, defaultOptions, options);
   }

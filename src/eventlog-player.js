@@ -42,6 +42,8 @@ class EventPlayer {
     this.snapshotProvider = new SnapshotProvider();
   }
 
+  sanitize() {}
+
   _preprocess({ head, events }) {
     this.members = head.minfo.map(item => JSON.parse(item));
     this.roomInfo = typeof head.rinfo === 'string' ? JSON.parse(head.rinfo) : head.rinfo;

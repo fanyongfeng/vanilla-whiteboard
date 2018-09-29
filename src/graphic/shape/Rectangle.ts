@@ -12,6 +12,8 @@ import { observeProps } from '../../decorators/memoized';
   radius: { type: Number, default: 0 },
 })
 class Rectangle extends Shape {
+
+  public radius: number;
   _buildPath() {
     let { x: sx, y: sy } = this.startPoint;
     let { x: ex, y: ey } = this.endPoint;

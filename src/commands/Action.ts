@@ -13,6 +13,8 @@ const ActionType = {
  * Action of redo-undo history
  */
 export default class Action {
+  private type: string;
+
   recordTimeStamp = +new Date();
   _redo = null;
   _undo = null;

@@ -12,7 +12,9 @@ import { observeProps } from '../../decorators/memoized';
   minor: { type: Boolean, default: true },
 })
 export default class Grid extends Item {
-  draw(ctx) {
+
+  public minor: Boolean;
+  protected _draw(ctx) {
     let { width, height } = this.layer;
     ctx.save();
     //preset context2d styles
@@ -26,7 +28,7 @@ export default class Grid extends Item {
     ctx.restore();
   }
 
-  drawMajorGrid(ctx, width, height) {
+  private drawMajorGrid(ctx, width, height) {
     ctx.strokeStyle = '#c0c0c0';
     let x = 0;
     while (x < width) {
@@ -43,7 +45,7 @@ export default class Grid extends Item {
     }
   }
 
-  drawMinorGrid(ctx, width, height) {
+  private drawMinorGrid(ctx, width, height) {
     ctx.strokeStyle = '#f0f0f0';
     let x = 0;
     while (x < width) {
@@ -58,14 +60,14 @@ export default class Grid extends Item {
     }
   }
 
-  drawLine(ctx, x1, y1, x2, y2) {
+  private drawLine(ctx, x1, y1, x2, y2) {
     ctx.beginPath();
     ctx.moveTo(x1, y1);
     ctx.lineTo(x2, y2);
     ctx.stroke();
   }
 
-  drawPixelText(ctx, text, x, y) {
+  private drawPixelText(ctx, text, x, y) {
     ctx.fillText(text, x, y);
   }
 }

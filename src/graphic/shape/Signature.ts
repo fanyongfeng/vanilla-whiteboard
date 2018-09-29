@@ -1,6 +1,9 @@
 import Path from '../Path';
 
 export default class Signature extends Path {
+  private _ctx: CanvasRenderingContext2D;
+  public dotSize: number;
+
   _drawDot(point) {
     let { x, y } = point;
     const ctx = this._ctx;

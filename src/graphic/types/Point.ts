@@ -2,7 +2,7 @@ import { isZero } from '../algorithm/math';
 /**
  * The base type of graphic ,(location & vector)
  */
-export default class Point {
+export default class Point implements IPoint {
   /**
    * static method to create instance from params
    */
