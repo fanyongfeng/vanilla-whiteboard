@@ -104,9 +104,7 @@ abstract class Item {
   /**
    * Get bounds of current item.
    */
-  protected get bounds(): IRect { // TODO:
-    throw new Error('getter bounds must be overwrite!');
-  }
+  abstract get bounds(): Rect
 
   /**
    * Get bounds with stroke of current item.
@@ -118,14 +116,14 @@ abstract class Item {
   /**
    * Get position based-on center point of current item.
    */
-  get position(): IPoint {
+  get position(): Point {
     return this.bounds.center;
   }
 
   /**
    * Set position of current item.
    */
-  set position(value: IPoint) {
+  set position(value: Point) {
     this.setPosition(value.x, value.y);
   }
 
@@ -137,37 +135,57 @@ abstract class Item {
    * Translate to point.
    * @param {Point} point
    */
-  translate(point: IPoint) {
+  translate(point: Point) {
     let mx = new Matrix();
     return this.transform(mx.translate(point));
   }
 
+
   /**
-   * Scale current item.
-   * @param {Number} sx horizantal
-   * @param {Number | undefined} sy, if it not set, use sx by default.
-   * @param {Point} point Base point.
-   */
-  scale(sx, sy, point?: IPoint) {
+ * Scale current item, Base on center of item.
+ * @param scale horizontal & vertical scale ratio
+ */
+  public scale(scale: number)
+
+  /**
+ * Scale current item.
+ * @param scale horizontal & vertical scale ratio
+ * @param point Base point.
+ */
+  public scale(scale: number, point: Point)
+  /**
+ * Scale current item, Base on center of item.
+ * @param sx horizontal
+ * @param sy, if it not set, use sx by default.
+ */
+  public scale(sx: number, sy: number)
+  /**
+ * Scale current item.
+ * @param sx horizontal
+ * @param sy vertical scale ratio
+ * @param point Base point.
+ */
+  public scale(sx: number, sy: number, point: Point)
+  public scale(sx: number, sy?: number | Point, point?: Point) {
     if (typeof sx !== 'number') throw new TypeError("param 'sx' of scale must be number!");
 
+    if (typeof sy !== 'number') sy = sx;
     if (this.scaleMode === 'proportion') {
       let scaleRadio = Math.min(sx, sy);
       sx = sy = scaleRadio;
     }
 
     let mx = new Matrix();
-    if (typeof sy === 'undefined') sy = sx;
     point = point || this.bounds.center;
     return this.transform(mx.scale(sx, sy, point));
   }
 
   /**
    * Rotate current item.
-   * @param {Number} deg, degree of Rotation.
-   * @param {Point} point, Base point.
+   * @param deg degree of Rotation.
+   * @param point Base point.
    */
-  rotate(deg, point?: IPoint) {
+  rotate(deg: number, point?: IPoint) {
     if (typeof deg !== 'number') throw new TypeError("param 'deg' of rotate must be number!");
 
     let mx = new Matrix();
@@ -210,7 +228,9 @@ abstract class Item {
 
   /**
    * Draw item on specified canvas context.
-   * @param {*} ctx
+   *
+   * @param ctx context of current canvas.
+   *
    */
   draw(ctx: CanvasRenderingContext2D) {
     ctx.save();
