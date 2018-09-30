@@ -133,7 +133,7 @@ abstract class Item {
 
   /**
    * Translate to point.
-   * @param {Point} point
+   * @param point Translate delta.
    */
   translate(point: Point) {
     let mx = new Matrix();
@@ -142,7 +142,7 @@ abstract class Item {
 
 
   /**
- * Scale current item, Base on center of item.
+ * Scale current item, base on center of item.
  * @param scale horizontal & vertical scale ratio
  */
   public scale(scale: number)
@@ -154,7 +154,7 @@ abstract class Item {
  */
   public scale(scale: number, point: Point)
   /**
- * Scale current item, Base on center of item.
+ * Scale current item, base on center of item.
  * @param sx horizontal
  * @param sy, if it not set, use sx by default.
  */
@@ -187,7 +187,6 @@ abstract class Item {
    */
   rotate(deg: number, point?: IPoint) {
     if (typeof deg !== 'number') throw new TypeError("param 'deg' of rotate must be number!");
-
     let mx = new Matrix();
     point = point || this.bounds.center;
     return this.transform(mx.rotate(deg, point));
@@ -265,7 +264,7 @@ abstract class Item {
 
   /**
    * 绘制边界矩形
-   * @param {*} ctx
+   * @param ctx
    */
   drawBoundRect(ctx: CanvasRenderingContext2D) {
     ctx.save();
