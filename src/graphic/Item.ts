@@ -44,8 +44,8 @@ abstract class Item {
   typeId?: number;
   id?: number;
 
-  style;
-  matrix: IMatrix;
+  style: Style;
+  matrix: Matrix;
   selected: boolean = false;
   children: IItem[] = [];
 
@@ -65,7 +65,7 @@ abstract class Item {
     this.matrix = new Matrix();
   }
 
-  handleRest(preset) {
+  handleRest(preset: object) {
     if (!preset) return;
 
     Object.keys(preset).forEach(key => {
@@ -76,9 +76,9 @@ abstract class Item {
 
   /**
    * Unite bounds of children , and return a new Rect.
-   * @param {Array} children
+   * @param children
    */
-  uniteBoundsOfChildren(children): IRect {
+  uniteBoundsOfChildren(children): Rect {
     let x1 = Infinity,
       x2 = -x1,
       y1 = x1,
@@ -192,7 +192,7 @@ abstract class Item {
     return this.transform(mx.rotate(deg, point));
   }
 
-  transform(matrix: IMatrix) {
+  transform(matrix: Matrix) {
     if (matrix) {
       //注意矩阵multify 顺序
       this.matrix = this.matrix.prepend(matrix);
@@ -208,7 +208,7 @@ abstract class Item {
    * Transform group & compoundPath & Segment of path;
    * @param {*} matrix
    */
-  transformContent(matrix: IMatrix) {
+  transformContent(matrix: Matrix) {
     if (this.children) {
       this.children.forEach(item => item.transform(matrix));
       this.matrix.reset();
@@ -217,9 +217,9 @@ abstract class Item {
 
   /**
    * If point in the bounds of item.
-   * @param {Point} point
+   * @param point
    */
-  containsPoint(point: IPoint) {
+  containsPoint(point: Point) {
     return this.bounds.containsPoint(point);
   }
 
@@ -251,9 +251,7 @@ abstract class Item {
     return [this.typeId, this.id, this._toJSON(), this.style.toShortJSON()];
   }
 
-  protected _toJSON() {
-    throw new Error('_toJSON method must be overwrite!');
-  }
+  protected abstract _toJSON();
 
   /**
    * remove from collection of layers;

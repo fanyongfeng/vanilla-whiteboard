@@ -1,4 +1,4 @@
-import { LineSegment, BezierSegment, MoveSegment, QuadraticSegment, ArcSegment } from './types/Segment';
+import { Segment, LineSegment, BezierSegment, MoveSegment, QuadraticSegment, ArcSegment } from './types/Segment';
 import Point from './types/Point';
 import fitCurve from './algorithm/fitCurve';
 import smoothCurve from './algorithm/smoothCurve';
@@ -19,16 +19,16 @@ class Path extends Item {
   //props
   private segments: any[] = [];
   // private points = [];
-  contextPoint?: IPoint;
+  contextPoint: IPoint = new Point(0, 0);
   isClose = false;
   fill!: boolean ;
   showAuxiliary!: boolean;
   stroke!: boolean;
   /**
    * Add Segement in path.
-   * @param {Segment} segment
+   * @param segment
    */
-  add(segment) {
+  add(segment: Segment) {
     segment.owner = this;
     segment.contextPoint = this.contextPoint;
     this.segments.push(segment);

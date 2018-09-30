@@ -126,7 +126,7 @@ class Rect {
   }
 
   //alias for setter ‘center’
-  setCenter(x: number, y: number): IRect {
+  setCenter(x: number, y: number) {
     this.center = Point.instantiate(x, y);
     return this;
   }
@@ -149,7 +149,7 @@ class Rect {
    * @return {Rect} the smallest rectangle containing both the specified
    * rectangle and this rectangle
    */
-  unite(rect: IRect): IRect {
+  unite(rect: Rect): Rect {
     let x1 = Math.min(this.x, rect.x),
       y1 = Math.min(this.y, rect.y),
       x2 = Math.max(this.x + this.width, rect.x + rect.width),
@@ -166,7 +166,7 @@ class Rect {
    * @return {Rect | null} the smallest rectangle containing both the specified, if
    * rectangle and this rectangle
    */
-  intersect(rect: IRect): IRect | null {
+  intersect(rect: Rect): Rect | null {
     let x1 = Math.max(this.x, rect.x);
     var width1 = Math.min(this.x + this.width, rect.x + rect.width);
     var y1 = Math.max(this.y, rect.y);
@@ -199,7 +199,7 @@ class Rect {
    * @type Boolean
    * @ignore
    */
-  containsRect(rect: IRect): boolean {
+  containsRect(rect: Rect): boolean {
     var x = rect.x,
       y = rect.y;
     return (
@@ -221,7 +221,7 @@ class Rect {
    * If the rect is equal to the other rect.
    * @param {Rect} other
    */
-  equals(other: IRect): boolean {
+  equals(other: Rect): boolean {
     return (
       this === other ||
       (this.x === other.x && this.y === other.y && this.width === other.width && this.height === other.height)
@@ -233,7 +233,7 @@ class Rect {
    * @param {Number} width
    * @param {Number} height
    */
-  expand(width: number, height?: number): IRect {
+  expand(width: number, height?: number): Rect {
     if (typeof height === 'undefined') height = width;
 
     return new Rect(this.x - width / 2, this.y - height / 2, this.width + width, this.height + height, null);

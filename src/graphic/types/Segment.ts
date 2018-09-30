@@ -9,7 +9,7 @@ export class Segment {
    * record start point via context
    */
   command?: string;
-  contextPoint: IPoint = new Point(0, 0);;
+  contextPoint: IPoint;
   point: IPoint = new Point(0, 0);
   owner: IItem | null = null;
   // style: IStyle;

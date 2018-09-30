@@ -7,7 +7,7 @@ const fillRule = {
 /**
  * default style settings of path
  */
-const defaultStyles = {
+export const defaultStyles = {
   //reset default value to adapt whiteboard.
   // Paths
   fillRule: fillRule.nonzero,
@@ -27,7 +27,7 @@ const defaultStyles = {
 /**
  * default font=style settings of fillText
  */
-const fontStyles = {
+export const fontStyles = {
   // Characters
   strokeColor: 'rgba(232, 20, 20, 1)',
   fontSize: 36,
@@ -40,7 +40,7 @@ export default class Style {
   private _strokeStyle: Color;
   private _fillStyle: Color;
 
-  constructor(options?: typeof defaultStyles & typeof fontStyles) {
+  constructor(options?: Partial<typeof defaultStyles & typeof fontStyles>) {
     /** new copy of color instance! */
     this._strokeStyle = new Color('#c69');
     this._fillStyle = new Color('#c69');
