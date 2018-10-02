@@ -44,7 +44,6 @@
     "babel-eslint": "latest",
     "babel-loader": "^8.0.0",
     "babel-minify": "^0.4.3",
-    "babel-preset-es2015-rollup": "^3.0.0",
     "chalk": "^2.0.1",
     "copy-webpack-plugin": "^4.0.1",
     "core-js": "^2.5.7",

@@ -6,3 +6,7 @@
   oBackingStorePixelRatio?: number,
   backingStorePixelRatio?: number,
  }
+
+declare interface Window {
+  [key: string]: any,
+}

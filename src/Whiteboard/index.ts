@@ -56,7 +56,7 @@ export default class Whiteboard  {
   private options: typeof defaultOptions & WhiteboardOptions;
   private isLoop = false;
   private _zoom = 1;
-  wrapper: HTMLDivElement;
+  wrapper?: HTMLDivElement;
   width: number;
   height: number;
   // private _currentTool = null;

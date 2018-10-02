@@ -3,6 +3,9 @@ import throttle from '../util/throttle';
 import { addListener, removeListener } from '../util/dom';
 import Layer from './Layer';
 
+import Point from '../graphic/types/Point';
+import Tool from '../tools';
+
 // bind both mouse & touch event.
 // const mousedown = 'mousedown touchstart';
 // const mousemove = 'mousemove touchmove';
@@ -13,25 +16,25 @@ const mousemove = 'mousemove';
 const mouseup = 'mouseup';
 
 /**
- *
- * @param {Point} prev
- * @param {Point} next
- * @param {Number} distance, default value is 5
+ * Determine if the distance between the two points is less than a value
+ * @param prev
+ * @param next
+ * @param distance, default value is 5
  */
-function throttleDistance(prev: IPoint, next: IPoint, distance = 5) {
+function throttleDistance(prev: Point, next: Point, distance = 5): boolean {
   if (!prev) return true;
   return !next.nearby(prev, distance);
 }
 
 export default class EventHandler {
-  private isDragging = false;
+  // private isDragging = false;
   private isMouseDown = false;
-  keyModifiers = {};
-  private lastPoint?: IPoint; //绑定流程和一般拖拽类似
-  private _currentTool?: ITool;
-  layer: Layer;
-  canvas: HTMLCanvasElement;
-  context: IContext;
+  private lastPoint!: Point; //绑定流程和一般拖拽类似
+  private _currentTool!: Tool;
+  keyModifiers: {[key: string]: boolean} = {};
+  layer!: Layer;
+  canvas!: HTMLCanvasElement;
+  context!: IContext;
 
   set tool(tool) {
     this._currentTool = tool;
@@ -49,14 +52,18 @@ export default class EventHandler {
   get inverseMatrix() {
     return this.layer.matrix.inverse();
   }
-
-  bind(layer) {
+  
+  /**
+   * Bind mouseEvent and keyboardEvent to layer
+   * @param layer the instance of Layer
+   */
+  bind(layer: Layer) {
     this.layer = layer;
     this.canvas = layer.el;
     this.onMouseMove = throttle(this.onMouseMove, 0).bind(this); //
     this.onMouseUp = this.onMouseUp.bind(this);
 
-    let canvas = this.canvas;
+    const canvas = this.canvas;
     addListener(canvas, mousedown, this.onMouseDown.bind(this));
     addListener(canvas, mousemove, this.onMouseMove);
     addListener(canvas, 'mouseenter', this.onMouseEnter.bind(this));
@@ -71,27 +78,28 @@ export default class EventHandler {
     removeListener(document, mousemove, this.onMouseMove);
   }
 
-  onKeyDown(event) {
+  onKeyDown(event: KeyboardEvent) {
     let keyModifiers = this.keyModifiers;
 
     keyModifiers[event.key] = true;
     const eventKey = ['z', 'y', 'a'];
     // windows keyboard or mac keyboard
     if (keyModifiers.control || keyModifiers.meta) {
-      if (!toolAvailable && eventKey.includes(event.key)) return;
-      let isRedo = keyModifiers.meta ? keyModifiers.shift && event.key === 'z' : event.key === 'y';
+      // if (!toolAvailable && eventKey.includes(event.key)) return;
+      if (eventKey.includes(event.key)) return;
+      const isRedo = keyModifiers.meta ? keyModifiers.shift && event.key === 'z' : event.key === 'y';
       if (isRedo) {
-        commands.redo();
+        window.commands.redo();
       } else if (event.key === 'z') {
-        commands.undo();
+        window.commands.undo();
       } else if (event.key === 'a') {
-        items.selectAll();
+        window.items.selectAll();
         event.preventDefault();
       }
     }
 
     if (event.keyCode === keyCode.DELETE) {
-      items.deleteSelected();
+      window.items.deleteSelected();
     }
   }
 
