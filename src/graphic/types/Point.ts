@@ -131,7 +131,7 @@ export default class Point implements Point {
 
   /**
    * If the point coord is equal to the other point.
-   * @param {Point} other
+   * @param other
    */
   equals(other: Point) {
     return this === other || (this.x === other.x && this.y === other.y);
@@ -199,7 +199,13 @@ export default class Point implements Point {
     if (!this.length) return 0;
     return Math.atan2(this.y, this.x);
   }
-
+  
+  /**
+   *
+   * Rotates the point the given angle around origin center point;
+   * @param angle
+   */
+  rotate(angle: number);
   /**
    * Rotates the point by the given angle around an optional center point.
    * The object itself is not modified.
@@ -211,7 +217,7 @@ export default class Point implements Point {
    * @param {Point} center the center point of the rotation
    * @return {Point} the rotated point
    */
-  rotate(angle: number, center?: Point): Point {
+  rotate(angle: number, center?: Point) {
     if (angle === 0) return this.clone();
     angle = (angle * Math.PI) / 180;
 
@@ -234,7 +240,7 @@ export default class Point implements Point {
    * @return {Point} the normalized vector of the vector that is represented
    *     by this point's coordinates
    */
-  normalize(length = 1): Point {
+  normalize(length = 1) {
     let current = this.length,
       scale = current !== 0 ? length / current : 0;
 
@@ -248,22 +254,21 @@ export default class Point implements Point {
    * @param {Point} point
    * @return {Number} the dot product of the two points
    */
-  dot(point: Point): number {
+  dot(point: Point) {
     return this.x * point.x + this.y * point.y;
   }
 
   /**
    * return a cloned instance of the point
-   * @return {Point}
    */
-  clone(): Point {
+  clone() {
     return new Point(this.x, this.y);
   }
 
   /**
    * return point data as JSON-format: [x, y]
    */
-  toJSON(precision = -1): number[] {
+  toJSON(precision = -1) {
     if (precision === -1) return [this.x, this.y];
 
     let multiplier = Math.pow(10, precision);
@@ -273,7 +278,7 @@ export default class Point implements Point {
   /**
    * return point data as String-format
    */
-  toString(): string {
+  toString() {
     return '{ x: ' + this.x + ', y: ' + this.y + ' }';
   }
 }
