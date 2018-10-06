@@ -36,7 +36,7 @@ function create() {
   registerTool('pathMutator', PathMutator);
 }
 
-function registerTool(name, ctor) {
+function registerTool(name: string, ctor:  { new(...args: any[]): any }) {
   if (tools[name]) throw new Error(`Tool ${name} already exist!`);
   tools[name] = new ctor(name);
   return tools[name];

@@ -2,11 +2,11 @@ import { isZero } from '../algorithm/math';
 /**
  * The base type of graphic ,(location & vector)
  */
-export default class Point implements IPoint {
+export default class Point implements Point {
   /**
    * static method to create instance from params
    */
-  static instantiate(x, y) {
+  static instantiate(x, y): Point {
     if (typeof x === 'undefined') throw TypeError('Invalid arguments!');
     if (typeof x === 'number') {
       return typeof y === 'number' ? new Point(x, y) : new Point(x, x);
@@ -40,27 +40,50 @@ export default class Point implements IPoint {
    * the point as a new point.
    * The object itself is not modified!
    */
-  add(x: number | IPoint, y?: number): IPoint {
+  add(x: number, y: number);
+  add(x: Point);
+  add(x: number | Point, y?: number) {
     let point = Point.instantiate(x, y);
     return new Point(this.x + point.x, this.y + point.y);
   }
-
+  
+  /**
+   * 
+   * @param x point.x
+   * @param y point.y
+   */
+  multiply(x: number, y: number);
+  multiply(x: number);
+  /**
+   *
+   * @param {Point} x
+   */
+  multiply(x: Point);
   /**
    * Returns the multiplication of the supplied point to the point as a new
    * point.
    * The object itself is not modified!
    */
-  multiply(x: number | IPoint, y?: number): IPoint {
+  multiply(x: number | Point, y?: number) {
     let point = Point.instantiate(x, y);
     return new Point(this.x * point.x, this.y * point.y);
   }
 
   /**
+   * @param x point.x
+   * @param y point.y
+   */
+  subtract(x: number, y: number);
+  /**
+   * @param x instance of Pint
+   */
+  subtract(x: Point);
+  /**
    * Returns the subtraction of the supplied value to both coordinates of
    * the point as a new point.
    * The object itself is not modified!
    */
-  subtract(x: number | IPoint, y: number): IPoint {
+  subtract(x: number | Point, y?: number) {
     let point = Point.instantiate(x, y);
     return new Point(this.x - point.x, this.y - point.y);
   }
@@ -70,7 +93,7 @@ export default class Point implements IPoint {
    * the point as a new point.
    * The object itself is not modified!
    */
-  divide(x: number, y: number): IPoint {
+  divide(x: number, y: number) {
     let point = Point.instantiate(x, y);
     return new Point(this.x / point.x, this.y / point.y);
   }
@@ -81,7 +104,7 @@ export default class Point implements IPoint {
    *
    * @param {Matrix} matrix
    */
-  transform(matrix): IPoint {
+  transform(matrix) {
     matrix.applyToPoint(this);
     return this;
   }
@@ -90,7 +113,7 @@ export default class Point implements IPoint {
    * Add and return this
    * @param {Point} other
    */
-  addEquals(other: IPoint): IPoint {
+  addEquals(other: Point) {
     this.x += other.x;
     this.y += other.y;
     return this;
@@ -100,7 +123,7 @@ export default class Point implements IPoint {
    * Assign x, y from other point.
    * @param {*} point
    */
-  assign(point: IPoint): IPoint {
+  assign(point: Point) {
     this.x = point.x;
     this.y = point.y;
     return this;
@@ -110,7 +133,7 @@ export default class Point implements IPoint {
    * If the point coord is equal to the other point.
    * @param {Point} other
    */
-  equals(other: IPoint): boolean {
+  equals(other: Point) {
     return this === other || (this.x === other.x && this.y === other.y);
   }
 
@@ -120,7 +143,7 @@ export default class Point implements IPoint {
    * @param {Number} time , position of interpolation, between 0 and 1 default 0.5
    * @return {Point}
    */
-  lerp(other: IPoint, time = 0.5): IPoint {
+  lerp(other: Point, time = 0.5) {
     if (time > 1 || time < 0) throw new TypeError(`Param 'Time' must between 0 and 1;`);
     time = Math.max(Math.min(1, time), 0);
     return new Point(this.x + (other.x - this.x) * time, this.y + (other.y - this.y) * time);
@@ -131,7 +154,7 @@ export default class Point implements IPoint {
    * @param {Point} other
    * @return {Point}
    */
-  midPointFrom(other: IPoint): IPoint {
+  midPointFrom(other: Point) {
     return this.lerp(other);
   }
 
@@ -139,7 +162,7 @@ export default class Point implements IPoint {
    * Returns distance from other point.
    * @param {point} other
    */
-  getDistance(other: IPoint): number {
+  getDistance(other: Point) {
     const dx = this.x - other.x,
       dy = this.y - other.y;
 
@@ -151,28 +174,28 @@ export default class Point implements IPoint {
    * @param {Point} point
    * @param {number} threshold
    */
-  nearby(point: IPoint, threshold = 4): boolean {
+  nearby(point: Point, threshold = 4) {
     return this.getDistance(point) < threshold;
   }
 
   /**
    * negate point & return a new point.
    */
-  negate(): IPoint {
+  negate() {
     return new Point(-this.x, -this.y);
   }
 
   /**
    * get the length of point from (0,0);
    */
-  get length(): number {
+  get length() {
     return Math.sqrt(this.x * this.x + this.y * this.y);
   }
 
   /**
    * Get Angle In Radians, Vector
    */
-  get angle(): number {
+  get angle() {
     if (!this.length) return 0;
     return Math.atan2(this.y, this.x);
   }
@@ -188,7 +211,7 @@ export default class Point implements IPoint {
    * @param {Point} center the center point of the rotation
    * @return {Point} the rotated point
    */
-  rotate(angle: number, center?: IPoint): IPoint {
+  rotate(angle: number, center?: Point): Point {
     if (angle === 0) return this.clone();
     angle = (angle * Math.PI) / 180;
 
@@ -211,7 +234,7 @@ export default class Point implements IPoint {
    * @return {Point} the normalized vector of the vector that is represented
    *     by this point's coordinates
    */
-  normalize(length = 1): IPoint {
+  normalize(length = 1): Point {
     let current = this.length,
       scale = current !== 0 ? length / current : 0;
 
@@ -225,7 +248,7 @@ export default class Point implements IPoint {
    * @param {Point} point
    * @return {Number} the dot product of the two points
    */
-  dot(point: IPoint): number {
+  dot(point: Point): number {
     return this.x * point.x + this.y * point.y;
   }
 
@@ -233,7 +256,7 @@ export default class Point implements IPoint {
    * return a cloned instance of the point
    * @return {Point}
    */
-  clone(): IPoint {
+  clone(): Point {
     return new Point(this.x, this.y);
   }
 

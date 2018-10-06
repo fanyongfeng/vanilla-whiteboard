@@ -14,7 +14,7 @@ function calcArrow(sx: number, sy: number, ex: number, ey: number) {
   return [new Point(e0, e1), new Point(ex, ey), new Point(e2, e3)];
 }
 export default class Arrow extends Shape {
-  _buildPath() {
+  protected _buildPath() {
     let { x: sx, y: sy } = this.startPoint;
     let { x: ex, y: ey } = this.endPoint;
 

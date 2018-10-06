@@ -1,5 +1,6 @@
 import Tool from './Tool';
-import { drawTextImg } from '../graphic/shape/Text';
+import Style from '../graphic/types/Style';
+import ShapeText, { drawTextImg } from '../graphic/shape/Text';
 import { createItem } from '../graphic/ItemFactory';
 
 /**
@@ -7,20 +8,23 @@ import { createItem } from '../graphic/ItemFactory';
  */
 
 export default class Text extends Tool {
+  
+  private _style!: Style;
+  public currentShape!: ShapeText;
   constructor(type) {
     super(type);
-    window.drawText = this.drawText.bind(this);
+    window.drawText = this.drawText.bind(this); // for test
   }
 
   onMouseDown(event) {
     this.currentShape = createItem(this.type);
     this.currentShape.editable = true;
     this.currentShape.startPoint = this.currentShape.endPoint = event.point;
-    items.add(this.currentShape);
+    window.items.add(this.currentShape);
     // this.currentShape.editable = false;
   }
 
-  set style(value) {
+  set style(value: Style) {
     this._style = value;
   }
 
@@ -29,8 +33,18 @@ export default class Text extends Tool {
   }
 
   drawText() {
-    items.filter(item => item.type === this.type).map(item => {
+    window.items.filter(item => item.type === this.type).map(item => {
       drawTextImg(item.input, this.layer.ctx);
+    });
+  }
+
+  /**
+   * set all Text disabled
+   * toolChanged
+   */
+  public toolChanged() {
+    window.items.filter(item => item.type === this.type).map(item => {
+      item.editable = false;
     });
   }
 }

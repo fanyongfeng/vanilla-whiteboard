@@ -1,27 +1,29 @@
 import Rect from './Rect';
 import Point from './Point';
+import Matrix from './Matrix';
+
 import { containStroke, containStrokeArc, containStrokeLine, calcBoundsOfBezier } from '../algorithm/calcCurve';
 
 const POINT_WIDTH = 4;
 const OFFSET = POINT_WIDTH / 2;
-export class Segment {
+export abstract class Segment {
   /**
    * record start point via context
    */
-  command?: string;
-  contextPoint: IPoint;
-  point: IPoint = new Point(0, 0);
+  command!: string;
+  contextPoint!: Point;
+  point!: Point;
   owner: IItem | null = null;
   // style: IStyle;
-  control: IPoint = new Point(0, 0);
-  control1: IPoint = new Point(0, 0);
-  control2: IPoint = new Point(0, 0);
+  control!: Point;
+  control1!: Point;
+  control2!: Point;
 
   nearby() {
     return false;
   }
 
-  get points(): IPoint[] {
+  get points() {
     return [this.point];
   }
 
@@ -30,7 +32,7 @@ export class Segment {
     // return this.bounds.expand(this.style.lineWidth);
   // }
 
-  get bounds(): IRect {
+  get bounds(): Rect {
     return new Rect(this.point.x, this.point.y, 0, 0, null);
   }
 
@@ -38,7 +40,7 @@ export class Segment {
     return 0;
   }
 
-  transformCoordinates(matrix: IMatrix) {
+  transformCoordinates(matrix: Matrix) {
     let point = this.point,
       control1 = this.control1 || null,
       control2 = this.control2 || null;
@@ -54,16 +56,14 @@ export class Segment {
     }
   }
 
-  protected containsPoint(point: IPoint, lineWidth: number): boolean {
-    throw `must have $${point} ${lineWidth}`;
-  }
+  abstract containsPoint(point: Point, lineWidth: number);
 
-  drawPoint(ctx, point) {
+  drawPoint(ctx: CanvasRenderingContext2D, point?: Point) {
     if (!point) return;
     ctx.strokeRect(point.x - OFFSET, point.y - OFFSET, POINT_WIDTH, POINT_WIDTH);
   }
 
-  drawControlPoint(ctx, point, controlPoint) {
+  drawControlPoint(ctx: CanvasRenderingContext2D, point: Point, controlPoint?: Point) {
     if (!controlPoint) return;
     ctx.fillRect(controlPoint.x - OFFSET, controlPoint.y - OFFSET, POINT_WIDTH, POINT_WIDTH);
 
@@ -73,7 +73,7 @@ export class Segment {
 
   /**
    * tmp method for debugger bezier
-   * @param {*} ctx
+   * @param ctx
    */
   draw(ctx: CanvasRenderingContext2D) {
     ctx.fillStyle = '#4f80ff';
@@ -93,7 +93,7 @@ export class Segment {
   /**
    * Arguments fot Canvas context api.
    */
-  get args(): IPoint[] | number[] {
+  get args(): Point[] | number[] {
     return this.points.slice(1).reduce((acc, item) => {
       [].push.apply(acc, item.toJSON());
       return acc;
@@ -121,7 +121,9 @@ export class MoveSegment extends Segment {
     super();
     this.point = point;
   }
-}
+  containsPoint() {
+  }
+} 
 
 export class LineSegment extends Segment {
   command = 'L';
@@ -130,7 +132,7 @@ export class LineSegment extends Segment {
     this.point = point;
   }
 
-  containsPoint(point: IPoint, lineWidth: number): boolean {
+  containsPoint(point: Point, lineWidth: number): boolean {
     return containStrokeLine(
       this.contextPoint.x,
       this.contextPoint.y,
@@ -142,7 +144,7 @@ export class LineSegment extends Segment {
     );
   }
 
-  get bounds(): IRect {
+  get bounds(): Rect {
     let frm = this.contextPoint,
       x = frm.x,
       y = frm.y,
@@ -179,9 +181,6 @@ export class LineSegment extends Segment {
  */
 export class BezierSegment extends Segment {
   command = 'C';
-  control1: IPoint;
-  control2: IPoint;
-  point: IPoint;
 
   constructor(cp1, cp2, point) {
     super();
@@ -190,7 +189,7 @@ export class BezierSegment extends Segment {
     this.point = point;
   }
 
-  containsPoint(point: IPoint, lineWidth: number) {
+  containsPoint(point: Point, lineWidth: number) {
     return containStroke(
       this.contextPoint.x,
       this.contextPoint.y,
@@ -267,14 +266,14 @@ export class BezierSegment extends Segment {
  */
 export class QuadraticSegment extends Segment {
   command = 'Q';
-  control: IPoint;
-  point: IPoint;
 
   constructor(cp, point) {
     super();
     this.control = cp;
     this.point = point;
   }
+
+  containsPoint() {}
 
   // get bounds() {
   //   //转成三阶算
@@ -293,10 +292,10 @@ export class QuadraticSegment extends Segment {
 
 export class ArcSegment extends Segment {
   command = 'A';
+  arc!: number[];
   radius = 0;
-  arc?: number[];
 
-  constructor(cp1?: IPoint, cp2?: IPoint, radius?: number) { // TODO: problem
+  constructor(cp1?: Point, cp2?: Point, radius?: number) { // TODO: problem
     super();
     cp1 && (this.control1 = cp1);
     cp2 && (this.control2 = cp2);
@@ -304,14 +303,14 @@ export class ArcSegment extends Segment {
     radius && (this.radius = radius);
   }
 
-  containsPoint(point: IPoint, lineWidth: number): boolean {
+  containsPoint(point: Point, lineWidth: number): boolean {
     return containStrokeArc(
       this.contextPoint.x,
       this.contextPoint.y,
       this.control1.x,
       this.control1.y,
       this.control2.x,
-      this.control2.y,
+      !!this.control2.y,
       // this.point.x,
       // this.point.y,
       lineWidth,

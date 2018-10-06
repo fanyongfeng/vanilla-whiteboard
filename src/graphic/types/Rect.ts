@@ -1,6 +1,7 @@
 import Point from './Point';
 import { props } from '../algorithm/corner';
 import { mixinProps } from '../../decorators/mixin';
+import Item from '../Item';
 
 /**
  *  Type Rect
@@ -22,8 +23,8 @@ class Rect {
   y = 0;
   width = 0;
   height = 0;
-  owner: IItem | null; // tool instance
-  center: IPoint;
+  owner: Item | null; // tool instance
+  center: Point;
 
   constructor(x, y, width, height, owner?) {
     this.x = x;
@@ -185,7 +186,7 @@ class Rect {
    * @type Boolean
    * @ignore
    */
-  containsPoint(point: IPoint): boolean {
+  containsPoint(point: Point): boolean {
     var x = point.x,
       y = point.y;
     return x >= this.x && y >= this.y && x <= this.x + this.width && y <= this.y + this.height;

@@ -59,9 +59,9 @@ class Color {
 
   /**
    * If equals other color.
-   * @param {Color} other
+   * @param other
    */
-  equals(color: IColor): boolean {
+  equals(color: Color): boolean {
     return (
       this === color ||
       (this.red === color.red && this.green === color.green && this.blue === color.blue && this.alpha === color.alpha)
@@ -71,7 +71,7 @@ class Color {
   /**
    * Return a new duplicate of this instance.
    */
-  clone(): IColor {
+  clone(): Color {
     let ret = new Color();
     Object.assign(ret, this); // ...this, remain red, blue, green, alpha.
     return ret;

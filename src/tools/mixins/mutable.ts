@@ -1,16 +1,18 @@
+import Point from '../../graphic/types/Point';
+import { CustomizeMouseEvent } from '../../Whiteboard/EventType'; 
 /**
  * enable tool has mutate behavior.
  */
-export default function mutable() {
+export default function mutable(): { [key: string]: any } {
   return {
-    onMouseDown(event) {
+    onMouseDown(event: CustomizeMouseEvent) {
       const point = event.point;
       if (this._pointOnPoint(point)) {
         return;
       }
     },
 
-    onMouseDrag(event) {
+    onMouseDrag(event: CustomizeMouseEvent) {
       const point = event.point;
       if (this.mode === 'mutate') {
         this.targetPoint.assign(point);
@@ -22,7 +24,7 @@ export default function mutable() {
       return !this._pointOnPoint(point);
     },
 
-    _pointOnPoint(point) {
+    _pointOnPoint(point: Point) {
       let nearbyPoint, seg, segments;
       for (let item of this.items) {
         segments = item.segments;

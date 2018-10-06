@@ -1,4 +1,5 @@
 import Item from './Item';
+import Path from './Path';
 import { memoized } from '../decorators/memoized';
 import { createItemViaJSON } from './ItemFactory';
 
@@ -11,7 +12,7 @@ import { createItemViaJSON } from './ItemFactory';
  * path direction.
  */
 class CompoundPath extends Item {
-  _children = [];
+  private _children: Path[] = [];
 
   static instantiate(options, paths) {
     let instance = new CompoundPath(options);
@@ -19,12 +20,12 @@ class CompoundPath extends Item {
     return instance;
   }
 
-  constructor(options, paths = []) {
+  constructor(options, paths: Path[]  = []) {
     super(options);
     this._children = paths;
   }
 
-  add(path) {
+  add(path: Path) {
     this._children.push(path);
   }
 
@@ -55,7 +56,7 @@ class CompoundPath extends Item {
     return this.uniteBoundsOfChildren(this.children);
   }
 
-  _draw(ctx) {
+  _draw(ctx: CanvasRenderingContext2D) {
     this._children.forEach(path => path.draw(ctx));
   }
 

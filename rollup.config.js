@@ -9,7 +9,7 @@ import typescript from 'rollup-plugin-typescript2';
 const isProd = process.env.NODE_ENV === 'production';
 
 let config = {
-  input: './src/index.js',
+  input: './src/index.ts',
   output: {
     file: isProd ? 'dist/app.min.js' : 'dist/app.js',
     format: 'iife',

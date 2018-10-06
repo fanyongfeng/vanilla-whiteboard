@@ -13,6 +13,7 @@
  * ins.on('changed', (event)=>{ //dosomething });
  *
  */
+
 export default function emittable(): ClassDecorator {
   return function(target) {
     target.prototype.__callbacks = {};
@@ -42,7 +43,7 @@ export default function emittable(): ClassDecorator {
      * @param {String} name Name of Event.
      * @param {Function} fn Handler of Event.
      */
-    target.prototype.off = function(name, fn) {
+    target.prototype.off = function(name: string, fn: () => void) {
       if (!this.__callbacks[name]) return this;
       if (typeof fn === 'undefined') {
         delete this.__callbacks[name];
@@ -66,8 +67,8 @@ export default function emittable(): ClassDecorator {
      * @param {Function} fn Handler of Event.
      */
     target.prototype.once = function(name, fn) {
-      return this.on(name, function() {
-        fn.apply(this, arguments);
+      return this.on(name, (...arg) => {
+        fn.apply(this, arg);
         this.off(name, fn);
       });
     };

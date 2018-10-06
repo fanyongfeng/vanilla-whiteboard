@@ -2,19 +2,8 @@ import Item, { ItemOptions } from '../Item';
 import Rect from '../types/Rect';
 import { observeProps } from '../../decorators/memoized';
 
-export interface IImage extends IItem {
-  loaded: boolean,
-  ctx?: CanvasRenderingContext2D,
-  bounds: any,
-  imageData: any,
-  alpha: number,
-  shadow: boolean,
-  calcInitBounds(): any,
-  drawImageAndStroke(ctx: CanvasRenderingContext2D): void,
-}
-
-const viewWidth: number = 1000;
-const viewHeight: number = 800;
+const viewWidth = 1000;
+const viewHeight = 800;
 /**
  * The Raster item represents an image.
  * Image transform 靠 ? , 而非指定的初始x, y;
@@ -41,17 +30,18 @@ class Img extends Item {
     return new Img(options, src);
   }
 
-  private initBounds: any; // TODO: Rect
+  private initBounds!: Rect;
   private _src: string;
-  public loaded: boolean = false;
+  public loaded = false;
   readonly strokeDashArray: number[] = [0, 1];
-  public image: HTMLImageElement = document.createElement('img');
-  public ctx?: CanvasRenderingContext2D;
-  public naturalWidth: number = 0;
-  public naturalHeight: number = 0;
-  public align: 'center' | 'start' = 'start';
-  public shadow: boolean = true;
-  public alpha: number = 1;
+  private image!: HTMLImageElement;
+  private naturalWidth = 0;
+  private naturalHeight = 0;
+
+  public align!: 'center' | 'start';
+  public shadow!: boolean;
+  public alpha!: number;
+  public ctx!: CanvasRenderingContext2D;
 
   constructor(options: Partial<ItemOptions>, src: string) {
     super(options);
@@ -59,12 +49,12 @@ class Img extends Item {
     this.loadImage();
   }
 
-  set src(_src: string) {
+  set src(_src) {
     this.loaded = false;
-    this.src = _src;
+    this._src = _src;
   }
 
-  get src(): string {
+  get src() {
     return this._src;
   }
 
@@ -77,12 +67,12 @@ class Img extends Item {
 
   /**
    * Load image & trigger callback;
-   * @param {Function} fn callback
+   * @param fn callback
    */
-  public loadImage(fn?: () => void): void {
+  public loadImage(fn?: () => void) {
     if (!this.src && this.image && this.loaded) return;
 
-    let img = document.createElement('img');
+    const img = document.createElement('img');
     img.setAttribute('crossOrigin', 'anonymous');
     img.src = this.src;
 
@@ -166,10 +156,10 @@ class Img extends Item {
    * void ctx.drawImage(image, dx, dy, dWidth, dHeight);// 画布起始位置，和绘制大小（用于缩放）
    * void ctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight); // 原始图片其实位置及大小
    *
-   * @param {CanvasRenderingContext2D} ctx
+   * @param ctx
    */
   public drawImageAndStroke(ctx: CanvasRenderingContext2D) {
-    let { x, y, width, height } = this.initBounds;
+    const { x, y, width, height } = this.initBounds;
 
     if (this.shadow) {
       ctx.shadowOffsetX = 8;
@@ -182,7 +172,7 @@ class Img extends Item {
     ctx.drawImage(this.image, x, y, width, height);
   }
 
-  _draw(ctx: CanvasRenderingContext2D) {
+  protected _draw(ctx: CanvasRenderingContext2D) {
     this.ctx = ctx;
 
     if (this.loaded) {
@@ -192,7 +182,7 @@ class Img extends Item {
     }
   }
 
-  public _toJSON(): string[] {
+  protected _toJSON() {
     return [this._src];
   }
 }

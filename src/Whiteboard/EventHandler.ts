@@ -1,15 +1,18 @@
-import { MouseEvent, keyCode } from './EventType';
+import { CustomizeMouseEvent, keyCode } from './EventType';
 import throttle from '../util/throttle';
 import { addListener, removeListener } from '../util/dom';
-import Layer from './Layer';
+// import Layer from './Layer';
+import OperationLayer from './OperateLayer';
 
 import Point from '../graphic/types/Point';
-import Tool from '../tools';
+import Tool from '../tools/Tool';
 
 // bind both mouse & touch event.
 // const mousedown = 'mousedown touchstart';
 // const mousemove = 'mousemove touchmove';
 // const mouseup = 'mouseup touchend';
+
+export type MouseOrTouchEvent = MouseEvent & TouchEvent;
 
 const mousedown = 'mousedown';
 const mousemove = 'mousemove';
@@ -31,12 +34,17 @@ export default class EventHandler {
   private isMouseDown = false;
   private lastPoint!: Point; //绑定流程和一般拖拽类似
   private _currentTool!: Tool;
+  
   keyModifiers: {[key: string]: boolean} = {};
-  layer!: Layer;
+  layer!: OperationLayer;
   canvas!: HTMLCanvasElement;
   context!: IContext;
+  draggingTriggered!: number
 
   set tool(tool) {
+    if ((this._currentTool && this._currentTool.type) !== tool.type) {
+      this.invokeToolSlotHandler('toolChanged', { type: tool.type });
+    }
     this._currentTool = tool;
     if (this._currentTool) {
       this._currentTool.layer = this.layer;
@@ -57,7 +65,7 @@ export default class EventHandler {
    * Bind mouseEvent and keyboardEvent to layer
    * @param layer the instance of Layer
    */
-  bind(layer: Layer) {
+  bind(layer: OperationLayer) {
     this.layer = layer;
     this.canvas = layer.el;
     this.onMouseMove = throttle(this.onMouseMove, 0).bind(this); //
@@ -103,30 +111,32 @@ export default class EventHandler {
     }
   }
 
-  onKeyPress(event) {}
-
-  onKeyUp(event) {
-    if (
-      (event.keyCode === keyCode.DELETE || event.keyCode === keyCode.BACKSPACE) &&
-      this._currentTool.type === toolTypes.SELECTOR
-    ) {
-      if (!toolAvailable) return;
-      commands.delete();
-    }
-    keyModifiers[event.key] = false;
+  onKeyPress(event: KeyboardEvent) {
+    console.log(event);
   }
 
-  _getMouseEvent(event) {
-    let _event = new MouseEvent(event);
-    let point = _event.point;
+  onKeyUp(event: KeyboardEvent) {
+    if (
+      (event.keyCode === keyCode.DELETE || event.keyCode === keyCode.BACKSPACE)
+      // this._currentTool.type === toolTypes.SELECTOR
+    ) {
+      // if (!toolAvailable) return;
+      window.commands.delete();
+    }
+    this.keyModifiers[event.key] = false;
+  }
+
+  _getMouseEvent(event: MouseOrTouchEvent) {
+    const _event = new CustomizeMouseEvent(event);
+    const point = _event.point;
     this.inverseMatrix.applyToPoint(point);
     return _event;
   }
 
-  onMouseDown(event) {
+  onMouseDown(event: MouseOrTouchEvent) {
     event.preventDefault();
 
-    let _event = this._getMouseEvent(event);
+    const _event = this._getMouseEvent(event);
 
     if (this.invokeToolSlotHandler('onBeforeMouseDown', _event) === false) return;
 
@@ -140,11 +150,11 @@ export default class EventHandler {
     removeListener(this.canvas, mousemove, this.onMouseMove);
   }
 
-  onMouseUp(event) {
+  onMouseUp(event: MouseOrTouchEvent) {
     event.preventDefault();
 
     this.isMouseDown = false;
-    this.isDragging = false;
+    // this.isDragging = false;
 
     this.invokeToolSlotHandler('onMouseUp', this._getMouseEvent(event));
 
@@ -153,7 +163,7 @@ export default class EventHandler {
     addListener(this.canvas, mousemove, this.onMouseMove);
   }
 
-  onMouseMove(event) {
+  onMouseMove(event: MouseOrTouchEvent) {
     event.preventDefault();
 
     let _event = this._getMouseEvent(event),
@@ -174,7 +184,7 @@ export default class EventHandler {
     // mouseenter, mouseleave.
 
     if (this.isMouseDown) {
-      this.isDragging = true;
+      // this.isDragging = true;
       if (this.draggingTriggered === 0 && this.invokeToolSlotHandler('onBeforeMouseDrag', _event) === false) return;
 
       this.draggingTriggered++;

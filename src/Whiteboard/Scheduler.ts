@@ -1,5 +1,5 @@
 export default class Scheduler {
-  _tasks = [];
+  protected _tasks = [];
   constructor() {}
 
   scheduleWork() {}

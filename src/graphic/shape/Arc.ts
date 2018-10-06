@@ -10,7 +10,7 @@ export default class Arc extends Path {
     clockwise: true,
   };
 
-  _buildPath(ctx, shape) {
+  protected _buildPath(ctx: CanvasRenderingContext2D, shape) {
     let x = shape.cx;
     let y = shape.cy;
     let r = Math.max(shape.r, 0);

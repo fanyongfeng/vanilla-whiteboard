@@ -1,12 +1,13 @@
 import Item from '../Item';
 import { observeProps } from '../../decorators/memoized';
+import Rect from '../types/Rect';
 
-const defaultOptions = {
-  showX: true,
-  showY: true,
-  mode: 'numeric',
-  position: 'center',
-};
+// const defaultOptions = {
+//   showX: true,
+//   showY: true,
+//   mode: 'numeric',
+//   position: 'center',
+// };
 
 const gap = 50; //in pixels
 
@@ -22,17 +23,23 @@ const gap = 50; //in pixels
   showY: { type: Boolean, default: true },
 })
 export default class Axes extends Item {
-  private minX: number = 0;
-  private minY: number = 0;
+  private minX = 0;
+  private minY = 0;
 
-  protected showX: boolean;
-  protected showY: boolean;
+  protected showX!: boolean;
+  protected showY!: boolean;
 
   constructor(options = {}) {
     super(options);
   }
-
-  drawXAxis(ctx, width, height) {
+  
+  /**
+   * draw X axis
+   * @param ctx
+   * @param width
+   * @param height
+   */
+  drawXAxis(ctx: CanvasRenderingContext2D, width: number, height: number) {
     this.drawLine(ctx, 0, height / 2, width, height / 2);
 
     let mark = this.minX;
@@ -47,7 +54,7 @@ export default class Axes extends Item {
     ctx.stroke();
   }
 
-  drawYAxis(ctx, width, height) {
+  drawYAxis(ctx: CanvasRenderingContext2D, width: number, height: number) {
     this.drawLine(ctx, width / 2, height, width / 2, 0);
     let mark = this.minY;
     let y = height;
@@ -79,10 +86,10 @@ export default class Axes extends Item {
     ctx.lineTo(x2, y2);
   }
 
-  protected _draw(ctx) {
+  protected _draw(ctx: CanvasRenderingContext2D) {
     let { width, height } = this.layer;
     ctx.lineWidth = 1;
-    ctx.fontSize = 10;
+    // ctx.fontSize = 10;
     ctx.font = '9px serif';
     ctx.strokeStyle = '#000';
 
@@ -97,4 +104,16 @@ export default class Axes extends Item {
       this.drawYAxis(ctx, width, height);
     }
   }
+
+  /**
+   * just for ts lint, no sense
+   */
+  protected _toJSON() {
+    return '';
+  }
+  
+  /**
+   * just for ts lint, no sense
+   */
+  protected get bounds(): Rect { return new Rect(0, 0, 0, 0) }
 }

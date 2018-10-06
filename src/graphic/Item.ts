@@ -5,6 +5,7 @@ import Rect from './types/Rect';
 import Matrix from './types/Matrix';
 import { memoizable, observeProps } from '../decorators/memoized';
 import emittable from '../decorators/emitter';
+import Layer from '../Whiteboard/Layer';
 
 export interface ItemOptions {
   type: IToolType,
@@ -39,15 +40,17 @@ abstract class Item {
   filter = 'blur(5px)'; //experiment feature.
   scaleMode = 'free'; //no-scale, free, proportion
 
-  layer?: any = {}; //inject when it is added on layer.
+  layer!: Layer; //inject when it is added on layer.
   type?: IToolType;
-  typeId?: number;
-  id?: number;
+  typeId!: number;
+  id!: number;
 
   style: Style;
   matrix: Matrix;
-  selected: boolean = false;
-  children: IItem[] = [];
+  selected!: boolean;
+  children!: Item[];
+  input?: HTMLDivElement; // for  Text Item
+  changed!: () => void
 
   constructor(options?: Partial<ItemOptions>) {
     if (options) {
@@ -104,7 +107,7 @@ abstract class Item {
   /**
    * Get bounds of current item.
    */
-  abstract get bounds(): Rect
+  protected abstract get bounds(): Rect
 
   /**
    * Get bounds with stroke of current item.
@@ -127,7 +130,7 @@ abstract class Item {
     this.setPosition(value.x, value.y);
   }
 
-  setPosition(x, y) {
+  setPosition(x: number, y: number) {
     return this.translate(Point.instantiate(x, y).subtract(this.position));
   }
 
@@ -199,7 +202,6 @@ abstract class Item {
     }
 
     this.transformContent(matrix);
-    // @ts-ignore
     this.changed();
     return this;
   }

@@ -1,26 +1,26 @@
 /**
  * enum of action type
  */
-const ActionType = {
-  translate: 'translate',
-  add: 'add',
-  remove: 'remove',
-  scale: 'scale',
-  typing: 'typing',
-};
+// const ActionType = {
+//   translate: 'translate',
+//   add: 'add',
+//   remove: 'remove',
+//   scale: 'scale',
+//   typing: 'typing',
+// };
 
 /**
  * Action of redo-undo history
  */
 export default class Action {
-  private type: string;
+  public type: "translate" | "add" | "scale" | "typing";
 
   recordTimeStamp = +new Date();
-  _redo = null;
-  _undo = null;
-  _hot = 0; // 操作热度计数
+  private _redo!: object;
+  private _undo!: object;
+  // private _hot = 0; // 操作热度计数
 
-  constructor(delta, oldDelta = null) {
+  constructor(delta) {
     this.type = delta.type;
     this._redo = {};
   }
@@ -30,7 +30,7 @@ export default class Action {
    * @param {Object} delta
    * @param {Object} oldDelta used fro anti-action
    */
-  _calcUndo(delta, oldDelta) {
+  _calcUndo(delta) { // delete oldDelta
     let hash = delta.data;
     switch (delta.action) {
       case 'ADD':

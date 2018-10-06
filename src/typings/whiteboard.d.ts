@@ -14,7 +14,6 @@ declare interface ILayer {
   // items: IItemCollection[],
   zoom(radio: number): void,
   clear(): void,
-  setCursor(cursor: string): void,
   appendTo(whiteboard: IWhiteboard): void
 }
 
@@ -24,7 +23,7 @@ declare interface IContext {
   backgroundLayer: ILayer,
   activeLayer: ILayer,
   operateLayer: ILayer,
-  currentMode: String,
+  currentMode: string,
   refreshCount: 0, //刷新计数，白板所有layers刷新总次数
   settings: {
     selectionMode: 'bounds',
@@ -41,8 +40,9 @@ declare interface IContext {
     precision: 1,
     zoom: 1,
     dragThreshold: 2,
+    distance: 0,
     container: HTMLDivElement
   },
   bounds: IRect,
-  emit(): void,
+  emit(name: string, data?: any): void,
 }

@@ -4,6 +4,8 @@ import fitCurve from './algorithm/fitCurve';
 import smoothCurve from './algorithm/smoothCurve';
 import { memoized, observeProps } from '../decorators/memoized';
 import Item from './Item';
+import Style from './types/Style';
+import Matrix from './types/Matrix';
 
 
 /**
@@ -17,13 +19,16 @@ import Item from './Item';
 })
 class Path extends Item {
   //props
-  private segments: any[] = [];
+  segments: Segment[] = [];
   // private points = [];
-  contextPoint: IPoint = new Point(0, 0);
+  contextPoint!: Point;
   isClose = false;
   fill!: boolean ;
   showAuxiliary!: boolean;
   stroke!: boolean;
+  style!: Style;
+  changed!: () => void;
+
   /**
    * Add Segement in path.
    * @param segment
@@ -33,7 +38,6 @@ class Path extends Item {
     segment.contextPoint = this.contextPoint;
     this.segments.push(segment);
     this.contextPoint = segment.point;
-    // @ts-ignore
     this.changed();
   }
 
@@ -63,7 +67,7 @@ class Path extends Item {
    * @param {Point} cp2
    * @param {Number} radius
    */
-  public arcTo(cp1: IPoint, cp2: IPoint, radius = 0) {
+  public arcTo(cp1: Point, cp2: Point, radius = 0) {
     const segment = new ArcSegment(cp1, cp2, radius);
     this.add(segment);
     return this;
@@ -72,7 +76,7 @@ class Path extends Item {
   /**
    * Append Move segment for current path.
    *
-   * @param {Number | IPoint} x
+   * @param {Number | Point} x
    * @param {Number} y
    */
   public moveTo(x: number , y: number): Path
@@ -80,7 +84,7 @@ class Path extends Item {
    * Append Move segment for current path.
    */
   public moveTo(x:Point): Path
-  public moveTo(x: number | IPoint, y?: number) {
+  public moveTo(x: number | Point, y?: number) {
     const point = Point.instantiate(x, y);
     const segment = new MoveSegment(point);
     this.add(segment);
@@ -90,10 +94,12 @@ class Path extends Item {
   /**
    * Append LineTo segment for current path.
    *
-   * @param {Number} x
+   * @param {Number | Point} x
    * @param {Number} y
    */
-  public lineTo(x: number | IPoint, y?: number) {
+  public lineTo(x: Point);
+  public lineTo(x: number, y: number);
+  public lineTo(x: number | Point, y?: number) {
     const point = Point.instantiate(x, y);
     const segment = new LineSegment(point);
     this.add(segment);
@@ -102,11 +108,11 @@ class Path extends Item {
 
   /**
    * Support chaining-call
-   * @param {*} cp1
-   * @param {*} cp2
-   * @param {*} point
+   * @param cp1
+   * @param cp2
+   * @param point
    */
-  public bezierCurveTo(cp1, cp2, point) {
+  public bezierCurveTo(cp1: Point, cp2: Point, point: Point) {
     const segment = new BezierSegment(cp1, cp2, point);
     this.add(segment);
     return this;
@@ -114,10 +120,10 @@ class Path extends Item {
 
   /**
    * Add quadratic Curve Segment.
-   * @param {*} cp
-   * @param {*} point
+   * @param cp
+   * @param point
    */
-  public quadraticCurveTo(cp: IPoint, point: IPoint) {
+  public quadraticCurveTo(cp: Point, point: Point) {
     //二阶转三阶
 
     let current = this.contextPoint;
@@ -132,7 +138,7 @@ class Path extends Item {
     return this;
   }
 
-  public quadraticCurveTo2(cp: IPoint, point: IPoint) {
+  public quadraticCurveTo2(cp: Point, point: Point) {
     const segment = new QuadraticSegment(cp, point);
     this.add(segment);
     return this;
@@ -168,13 +174,12 @@ class Path extends Item {
   /**
    * Simplify current path, and rebuild segments
    */
-  simplify() {
+  public simplify() {
     //不优化小于3个点的曲线
     if (this.segments.length < 3) return this;
 
     const segments = fitCurve(this.segments.map(item => item.point), 1);
     this.segments = [this.segments[0]].concat(segments);
-    // @ts-ignore
     this.changed();
     return this;
   }
@@ -182,35 +187,39 @@ class Path extends Item {
   /**
    * Smooth current path, and rebuild segments
    */
-  smooth() {
+  public smooth() {
     const segments = smoothCurve(this.segments, this.isClose);
     this.segments = segments;
-    // @ts-ignore
     this.changed();
     return this;
   }
 
   /**
    * If point in path.
-   * @param {Point} point
+   * @param point
    */
-  containsPoint(point) {
+  public containsPoint(point: Point) {
     // If point not in bounds of path, return false.
     if (!super.containsPoint(point)) return false;
     if (this.fill) return true;
 
-    let seg = this.segments.find(item => item.containsPoint(point, this.style.lineWidth));
+    const seg = this.segments.find(item => item.containsPoint(point, this.style.lineWidth));
     return !!seg;
   }
-
-  transformContent(matrix) {
+  
+  /**
+   *
+   * transform matrix
+   * @param matrix
+   */
+  public transformContent(matrix: Matrix) {
     this.segments.forEach(item => {
       item.transformCoordinates(matrix);
     });
     this.matrix.reset();
   }
 
-  protected _draw(ctx) {
+  protected _draw(ctx: CanvasRenderingContext2D) {
     ctx.beginPath();
 
     for (let i = 0, segment, len = this.segments.length; i < len; ++i) {
@@ -256,11 +265,11 @@ class Path extends Item {
     if (this.showAuxiliary) this.segments.forEach(segment => segment.draw(ctx));
   }
 
-  protected _toJSON() {
+  protected _toJSON(): any {
     return this.segments.map(item => item.toJSON());
   }
 
-  toString() {
+  public toString() {
     const segmentSVG = this.segments.map(item => item.toString()).join(' ');
     return `<path d="${segmentSVG} ${this.isClose ? 'z' : ''}"></path>`;
   }

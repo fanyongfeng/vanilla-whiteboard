@@ -2,7 +2,7 @@ import Point from '../types/Point';
 import Shape from '../Shape';
 
 export default class ChatBox extends Shape {
-  _buildPath() {
+  protected _buildPath() {
     let { x: sx, y: sy } = this.startPoint;
     let { x: ex, y: ey } = this.endPoint;
     let s1x = (sx + ex) / 2;

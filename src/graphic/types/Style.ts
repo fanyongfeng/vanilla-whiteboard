@@ -39,12 +39,29 @@ export const fontStyles = {
 export default class Style {
   private _strokeStyle: Color;
   private _fillStyle: Color;
+  fillRule!: "nonzero" | "evenodd";
+  lineWidth!: number;
+  lineCap!: "butt" | "round" | "square"; 
+  lineJoin!: "bevel" | "round" | "miter";
+  miterLimit!: number;
+  lineDashOffset!: number;
+  dashArray!: number[];
+  shadowColor!: Color;
+  shadowBlur!: number;
+  shadowOffsetX!: number;
+  shadowOffsetY!: number;
+  strokeColor!: string;
+  fontSize!: number;
+  fontFamily!: string;
+  textAlign!: string;
+  justification!: string;
 
-  constructor(options?: Partial<typeof defaultStyles & typeof fontStyles>) {
+  constructor(options: Partial<typeof defaultStyles & typeof fontStyles> = {}) {
     /** new copy of color instance! */
     this._strokeStyle = new Color('#c69');
     this._fillStyle = new Color('#c69');
-    Object.assign(this, defaultStyles, fontStyles, options || {});
+    this.lineWidth = 3;
+    Object.assign(this, defaultStyles, fontStyles, options);
   }
 
   get strokeStyle() {
@@ -65,7 +82,7 @@ export default class Style {
   get fillStyle() {
     return this._fillStyle;
   }
-
+  
   /**
    * ensure Color type
    */
@@ -79,9 +96,9 @@ export default class Style {
 
   /**
    * Apply styles on canvas context.
-   * @param {CanvasRenderingContext2D} ctx, canvas context.
+   * @param ctx, canvas context.
    */
-  apply(ctx) {
+  apply(ctx: CanvasRenderingContext2D) {
     ctx.lineWidth = this.lineWidth;
     ctx.lineJoin = this.lineJoin;
     ctx.lineCap = this.lineCap;
@@ -103,8 +120,8 @@ export default class Style {
    * Return a new duplicate of this instance.
    */
   clone() {
-    let ret = new Style();
-    let { strokeStyle, fillStyle, ...rest } = this;
+    const ret = new Style();
+    const { strokeStyle, fillStyle, ...rest } = Object.create(this);
     Object.assign(ret, rest);
 
     ret.fillStyle = fillStyle.clone();
@@ -114,10 +131,10 @@ export default class Style {
 
   /**
    * If equals other style.
-   * @param {Style} style
+   * @param style
    */
-  equals(other) {
-    function compare(style1, style2, secondary) {
+  equals(other: Style) {
+    function compare(style1, style2) {
       let values1 = style1.values,
         values2 = style2.values;
 
@@ -191,7 +208,8 @@ export default class Style {
    * Convert to JSON format.
    */
   toJSON() {
-    return { ...this };
+    // return { ...this };
+    return Object.assign({}, this);
   }
 
   /**
@@ -199,7 +217,8 @@ export default class Style {
    * e.g. 'stokeStyle=rgba(0,0,0,1) lineWidth=10'
    */
   toString() {
-    return Object.keys({ ...this })
+    // return Object.keys({ ...this })
+    return Object.keys(this)
       .filter(key => this[key] && this[key].length !== 0)
       .map(key => `${key} = ${this[key].toString()}`)
       .join(';');

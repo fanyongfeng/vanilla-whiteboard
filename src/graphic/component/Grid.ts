@@ -1,5 +1,6 @@
 import Item from '../Item';
 import { observeProps } from '../../decorators/memoized';
+import Rect from '../types/Rect';
 
 /**
  * 简单网格
@@ -13,7 +14,7 @@ import { observeProps } from '../../decorators/memoized';
 })
 export default class Grid extends Item {
 
-  public minor: Boolean;
+  public minor!: Boolean;
   protected _draw(ctx) {
     let { width, height } = this.layer;
     ctx.save();
@@ -70,4 +71,16 @@ export default class Grid extends Item {
   private drawPixelText(ctx, text, x, y) {
     ctx.fillText(text, x, y);
   }
+
+  /**
+   * just for ts lint, no sense
+   */
+  public _toJSON() {
+    return '';
+  }
+  
+  /**
+   * just for ts lint, no sense
+   */
+  public get bounds(): Rect { return new Rect(0, 0, 0, 0) }
 }

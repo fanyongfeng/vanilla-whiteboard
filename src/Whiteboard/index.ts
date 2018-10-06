@@ -56,13 +56,13 @@ export default class Whiteboard  {
   private options: typeof defaultOptions & WhiteboardOptions;
   private isLoop = false;
   private _zoom = 1;
-  wrapper?: HTMLDivElement;
+  wrapper!: HTMLDivElement;
   width: number;
   height: number;
   // private _currentTool = null;
   backgroundLayer!: Layer;
   activeLayer!: Layer;
-  operateLayer!: Layer;
+  operateLayer!: OperateLayer;
   handler: EventHandler;
   context: IContext;
 
@@ -100,7 +100,7 @@ export default class Whiteboard  {
     handler.context = this.context;
     handler.bind(this.operateLayer);
 
-    this.tool = 'selection';
+    // this.tool = 'selection';
 
     if (this.options.zoom !== 1) {
       this.zoom = this.options.zoom;
@@ -235,7 +235,7 @@ export default class Whiteboard  {
     return this.activeLayer.items;
   }
 
-  set tool(val: string) {
+  set tool(val) {
     this.handler.tool = getTool(val);
   }
 

@@ -71,7 +71,7 @@ export default function smoothCurve(points, closed) {
   }
   // Set up the knots array now, taking the paddings into account.
   n += paddingLeft + paddingRight;
-  if (n <= 1) return;
+  if (n <= 1) return segments; // change by fan  for Path.ts smooth method
   for (let i = 0, j = from - paddingLeft; i <= n; i++, j++) {
     knots[i] = segments[(j < 0 ? j + length : j) % length]._point;
   }
@@ -141,4 +141,5 @@ export default function smoothCurve(points, closed) {
     if (loop || i < max) segment.control2 = new Point(hx, hy);
     if (loop || i > paddingLeft) segment.control1 = new Point(-hx, -hy);
   }
+  return segments;
 }

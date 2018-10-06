@@ -2,6 +2,11 @@ import Tool from './Tool';
 import dragBounds from './mixins/dragBounds';
 import cursor from './mixins/cursor';
 import { deepMixin } from '../decorators/mixin';
+import Rectangle from '../graphic/shape/Rectangle';
+
+interface Pointer {
+  dragRect: Rectangle
+} 
 
 /**
  * Pointer of whiteboard.
