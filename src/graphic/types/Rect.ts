@@ -14,7 +14,7 @@ class Rect {
    */
   static instantiate(x, y, width, height) {
     if (typeof x === 'undefined') throw TypeError('Invalid arguments!');
-    return new Rect(x, y, width, height, null);
+    return new Rect(x, y, width, height);
     // if x is Rect
     // return x.clone();
   }
@@ -26,12 +26,12 @@ class Rect {
   owner: Item | null; // tool instance
   center: Point;
 
-  constructor(x, y, width, height, owner?) {
+  constructor(x: number, y: number, width: number, height: number, owner?: Item) {
     this.x = x;
     this.y = y;
     this.width = width;
     this.height = height;
-    this.owner = owner;
+    this.owner = owner || null;
     this.center = Point.instantiate(this.centerX, this.centerY);
   }
 
@@ -156,7 +156,7 @@ class Rect {
       x2 = Math.max(this.x + this.width, rect.x + rect.width),
       y2 = Math.max(this.y + this.height, rect.y + rect.height);
 
-    return new Rect(x1, y1, x2 - x1, y2 - y1, null);
+    return new Rect(x1, y1, x2 - x1, y2 - y1);
   }
 
   /**
@@ -173,7 +173,7 @@ class Rect {
     var y1 = Math.max(this.y, rect.y);
     var height1 = Math.min(this.y + this.height, rect.y + rect.height);
     if (width1 >= x1 && height1 >= y1) {
-      return new Rect(x1, y1, width1, height1, null);
+      return new Rect(x1, y1, width1, height1);
     }
     return null;
   }
@@ -215,7 +215,7 @@ class Rect {
    * @type Point
    */
   clone() {
-    return new Rect(this.x, this.y, this.width, this.height, null);
+    return new Rect(this.x, this.y, this.width, this.height);
   }
 
   /**
@@ -237,7 +237,7 @@ class Rect {
   expand(width: number, height?: number): Rect {
     if (typeof height === 'undefined') height = width;
 
-    return new Rect(this.x - width / 2, this.y - height / 2, this.width + width, this.height + height, null);
+    return new Rect(this.x - width / 2, this.y - height / 2, this.width + width, this.height + height);
   }
 
   /**

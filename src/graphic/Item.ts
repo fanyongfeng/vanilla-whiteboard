@@ -188,7 +188,7 @@ abstract class Item {
    * @param deg degree of Rotation.
    * @param point Base point.
    */
-  rotate(deg: number, point?: IPoint) {
+  rotate(deg: number, point?: Point) {
     if (typeof deg !== 'number') throw new TypeError("param 'deg' of rotate must be number!");
     let mx = new Matrix();
     point = point || this.bounds.center;

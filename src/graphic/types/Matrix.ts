@@ -1,4 +1,5 @@
 import Point from './Point';
+import { Rect } from '../..';
 
 //https://github.com/chrisaljoudi/transformatrix.js
 
@@ -30,7 +31,7 @@ class Matrix {
   /**
    *reset to initial value
    */
-  reset(): IMatrix {
+  reset() {
     this.m = [1, 0, 0, 1, 0, 0];
     return this;
   }
@@ -38,7 +39,7 @@ class Matrix {
   /**
    * Return a duplicate matrix.
    */
-  clone(): IMatrix {
+  clone() {
     return new Matrix(this.m.map(i => i));
   }
 
@@ -46,9 +47,9 @@ class Matrix {
    *
    * 一个矩阵作用该矩阵，支持链式书写
    * 等价于 `(this matrix) * (specified matrix)`.
-   * @param {Matrix} m
+   * @param m
    */
-  append(m: number[] | IMatrix ): IMatrix {
+  append(m: number[] | Matrix ) {
     const m1 = this.m;
     let m2;
 
@@ -78,9 +79,9 @@ class Matrix {
   /**
    * 一个矩阵作用于该矩阵，支持链式书写
    * 等价于： `(specified matrix) * (this matrix)`.
-   * @param {Matrix} m specified matrix
+   * @param m specified matrix
    */
-  prepend(m: number[] | IMatrix): IMatrix {
+  prepend(m: number[] | Matrix) {
     const m1 = this.m;
     let m2;
 
@@ -111,7 +112,7 @@ class Matrix {
   /**
    * 返回反操作矩阵
    */
-  inverse(): IMatrix {
+  inverse() {
     const inv = new Matrix(this.m),
       invm = inv.m;
 
@@ -137,7 +138,7 @@ class Matrix {
     (1, 0, sx)
     (0, 1, sy)
    * */
-  translate(point: IPoint): IMatrix {
+  translate(point: Point) {
     return this.append([1, 0, 0, 1, point.x, point.y]);
   }
 
@@ -147,7 +148,7 @@ class Matrix {
       (cos, -sin, 0)
       (sin, cos, 0)
    */
-  rotate(deg: number, point?: IPoint): IMatrix {
+  rotate(deg: number, point?: Point) {
     let rad = (deg * Math.PI) / 180,
       c = Math.cos(rad),
       s = Math.sin(rad),
@@ -173,7 +174,7 @@ class Matrix {
    *  (1, tx, 0)
    *  (ty, 1, 0)
    */
-  skew(degX = 0, degY = 0, point?: IPoint): IMatrix {
+  skew(degX = 0, degY = 0, point?: Point) {
     if (point) this.translate(point);
     degY |= 0;
     const radX = (degX * Math.PI) / 180,
@@ -193,7 +194,7 @@ class Matrix {
    * (sx, 0, 0)
    * (0, sy, 0)
    */
-  scale(sx = 0, sy = 0, point?: IPoint): IMatrix {
+  scale(sx = 0, sy = 0, point?: Point) {
     if (point) this.translate(point);
     this.append([sx, 0, 0, sy, 0, 0]);
     if (point) this.translate(point.negate());
@@ -202,10 +203,10 @@ class Matrix {
 
   /**
    * transform Coordinate.
-   * @param {Number} x
-   * @param {Number} y
+   * @param x
+   * @param y
    */
-  transformCoordinate(x: number, y: number): number[] {
+  transformCoordinate(x: number, y: number) {
     return [x * this.m[0] + y * this.m[2] + this.m[4], x * this.m[1] + y * this.m[3] + this.m[5]];
   }
 
@@ -213,12 +214,12 @@ class Matrix {
    * 变形边界矩阵
    * @param {*} bounds
    */
-  applyToRect(bounds: IRect): IMatrix {
-    let { x, y, width, height } = bounds;
-    let pointTL = new Point(x, y);
-    let pointTR = new Point(x, y + height);
-    let pointBL = new Point(x + width, y);
-    let pointBR = new Point(x + width, y + height);
+  applyToRect(bounds: Rect) {
+    const { x, y, width, height } = bounds;
+    const pointTL = new Point(x, y);
+    const pointTR = new Point(x, y + height);
+    const pointBL = new Point(x + width, y);
+    const pointBR = new Point(x + width, y + height);
 
     this.applyToPoint(pointTL)
       .applyToPoint(pointTR)
@@ -235,7 +236,7 @@ class Matrix {
    * 变形一个点
    * @param {*} point
    */
-  applyToPoint(point: IPoint): IMatrix {
+  applyToPoint(point: Point) {
     let { x, y } = point;
 
     point.x = x * this.m[0] + y * this.m[2] + this.m[4];
@@ -249,7 +250,7 @@ class Matrix {
    * 去除位移相关变换
    * @param {*} point
    */
-  applyToVector(point: IPoint): IMatrix {
+  applyToVector(point: Point) {
     let { x, y } = point;
 
     point.x = x * this.m[0] + y * this.m[2];
@@ -277,7 +278,7 @@ class Matrix {
    * Convert to CSS style string.
    * e.g 'matrix(1,0,0,1,0,0)'
    */
-  toString(): string {
+  toString() {
     return `matrix(${this.toJSON().join(',')});`;
   }
 }

@@ -33,7 +33,7 @@ export abstract class Segment {
   // }
 
   get bounds(): Rect {
-    return new Rect(this.point.x, this.point.y, 0, 0, null);
+    return new Rect(this.point.x, this.point.y, 0, 0);
   }
 
   get length() {
@@ -164,7 +164,7 @@ export class LineSegment extends Segment {
       y = to.y;
       height = -height;
     }
-    return new Rect(x, y, width, height, null);
+    return new Rect(x, y, width, height);
   }
 
   get length() {
