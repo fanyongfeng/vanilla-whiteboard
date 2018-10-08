@@ -12,17 +12,17 @@ import { observeProps } from '../decorators/memoized';
 class Group extends Item {
   private control: ControlRect;
 
-  constructor(options, items = []) {
+  constructor(options, items: Item[] = []) {
     super(options);
     this.children = items;
     this.control = new ControlRect({ linked: this });
   }
 
-  append(item) {
+  append(item: Item) {
     this.children.push(item);
   }
 
-  prepend(item) {
+  prepend(item: Item) {
     this.children.unshift(item);
   }
 
@@ -34,14 +34,14 @@ class Group extends Item {
     return this.uniteBoundsOfChildren(this.children);
   }
 
-  _draw(ctx) {
-    this.control.draw(ctx, this.bounds);
+  protected _draw(ctx:CanvasRenderingContext2D) {
+    this.control.draw(ctx);
   }
 
   /**
    * Data for serialization.
    */
-  _toJSON() {
+  protected _toJSON() {
     return this.children.map(item => item.toJSON());
   }
 }

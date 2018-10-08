@@ -1,6 +1,7 @@
 import Path from './Path';
 import Point from './types/Point';
 import Rect from './types/Rect';
+import Matrix from './types/Matrix';
 import { observeProps } from '../decorators/memoized';
 
 /**
@@ -13,8 +14,8 @@ import { observeProps } from '../decorators/memoized';
 })
 class Shape extends Path {
 
-  startPoint: IPoint = new Point();
-  endPoint: IPoint = new Point();
+  startPoint!: Point;
+  endPoint!: Point;
 
   /**
    * 用与从JSON构造出Shape实例
@@ -30,7 +31,7 @@ class Shape extends Path {
     return new Ctor(options, startPoint, endPoint);
   }
 
-  constructor(options, sp?: IPoint, ep?: IPoint) {
+  constructor(options, sp?: Point, ep?: Point) {
     super(options);
     if (sp) this.startPoint = sp;
     if (ep) this.endPoint = ep;
@@ -51,7 +52,7 @@ class Shape extends Path {
   }
 
   // override bounds for dragging-shapes
-  get bounds(): IRect {
+  get bounds() {
     let frm = this.startPoint,
       x = frm.x,
       y = frm.y,
@@ -76,9 +77,9 @@ class Shape extends Path {
 
   /**
    * Transform segments and startPoint * endPoint.
-   * @param {Matrix} matrix
+   * @param matrix
    */
-  transformContent(matrix: IMatrix) {
+  transformContent(matrix: Matrix) {
     // FIXME: rotate issue.
     // also apply to start & end point.
     matrix.applyToPoint(this.startPoint);

@@ -3,12 +3,22 @@
  */
 
 import Point from '../graphic/types/Point';
+import { MouseOrTouchEvent } from './EventHandler';
+
 
 /**
  * Mouse Event Class
  */
-export class MouseEvent {
-  constructor(originEvent) {
+export class CustomizeMouseEvent {
+  
+  private _point!: Point;
+  public originEvent: MouseOrTouchEvent;
+  public type: string;
+  public target: EventTarget | null;
+  public offsetX: number;
+  public offsetY: number;
+
+  constructor(originEvent: MouseOrTouchEvent) {
     this.originEvent = originEvent;
     this.type = originEvent.type;
     this.target = originEvent.target;
@@ -16,7 +26,6 @@ export class MouseEvent {
     this.offsetY = originEvent.offsetY;
   }
 
-  _point = null;
   get point() {
     if (!this._point) {
       this._point = new Point(this.offsetX, this.offsetY);
@@ -49,7 +58,14 @@ export class MouseEvent {
  * Keyboard Event Class
  */
 export class KeyEvent {
-  constructor(originEvent) {
+
+  public originEvent: KeyboardEvent;
+  public type: string;
+  public target: EventTarget | null;
+  public key: string;
+  public keyCode: number;
+
+  constructor(originEvent: KeyboardEvent) {
     this.originEvent = originEvent;
     this.type = originEvent.type;
     this.target = originEvent.target;

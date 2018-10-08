@@ -4,7 +4,7 @@ import { createItem } from '../../graphic/ItemFactory';
  * Enable tool add item on mouse event triggered!
  * @param {Object} style
  */
-export default function itemCreator(style = {}) {
+export default function itemCreator(style = {}): { [key: string]: any } {
   return {
     _style: style,
 

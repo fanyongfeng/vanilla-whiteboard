@@ -3,6 +3,11 @@ import cursor from './mixins/cursor';
 import { deepMixin } from '../decorators/mixin';
 import itemCreator from './mixins/itemCreator';
 
+import Point from '../graphic/types/Point';
+import Shape from '../graphic/Shape';
+import { CustomizeMouseEvent } from '../Whiteboard/EventType';
+
+
 const markerCursor = 'https://www-stage.tutormeetplus.com/v2/static/media/pen.3ec0e0e7.png';
 const highlighterCursor = 'https://www-stage.tutormeetplus.com/v2/static/media/mark_pen.901db183.png';
 
@@ -10,25 +15,28 @@ const highlighterCursor = 'https://www-stage.tutormeetplus.com/v2/static/media/m
  * Base class og marker tool & highlighter tool.
  */
 class FreeDrawing extends Tool {
-  _style = {};
+  // _style = {};
 
-  lastPoint = null;
+  private lastPoint!: Point;
+  public currentShape!: Shape | null
   /**
    * Invoked on mouse down
-   * @param {Object} pointer
+   * @param event
    */
-  onMouseDown(event) {
+  onMouseDown(event: CustomizeMouseEvent) {
+    if (!this.currentShape) return;
     this.currentShape.moveTo(event.point);
     this.lastPoint = event.point;
   }
 
   /**
    * Invoked on mouse move
-   * @param {Object} pointer
+   * @param event
    */
-  onMouseDrag(event) {
-    var point = event.point;
-    var midPoint = point.midPointFrom(this.lastPoint);
+  onMouseDrag(event: CustomizeMouseEvent) {
+    if (!this.currentShape) return;
+    const point = event.point;
+    const midPoint = point.midPointFrom(this.lastPoint);
     this.currentShape.quadraticCurveTo(this.lastPoint, midPoint);
     this.lastPoint = point;
   }
@@ -36,7 +44,8 @@ class FreeDrawing extends Tool {
   /**
    * Invoked on mouse up
    */
-  onMouseUp(event) {
+  onMouseUp(_event: CustomizeMouseEvent) {
+    if (!this.currentShape) return;
     this.currentShape.simplify();
     this.globalCtx.emit('item:add', this.currentShape.toJSON());
     this.currentShape = null;

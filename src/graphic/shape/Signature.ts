@@ -1,10 +1,11 @@
 import Path from '../Path';
+import point from '../types/Point';
 
 export default class Signature extends Path {
-  private _ctx: CanvasRenderingContext2D;
-  public dotSize: number;
+  private _ctx!: CanvasRenderingContext2D;
+  public dotSize!: number;
 
-  _drawDot(point) {
+  protected _drawDot(point: point) {
     let { x, y } = point;
     const ctx = this._ctx;
     const size = this.dotSize;
@@ -16,7 +17,8 @@ export default class Signature extends Path {
     ctx.fill();
   }
 
-  _draw(ctx) {
+  protected _draw(ctx: CanvasRenderingContext2D) {
+    this._ctx = ctx;
     //TODO: calc width of Dot.
   }
 }

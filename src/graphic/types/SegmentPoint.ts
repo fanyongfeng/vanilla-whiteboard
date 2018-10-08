@@ -25,6 +25,6 @@ export class SegmentPoint {
   }
 
   toJSON() {
-    return this.points.map(point => [point.x, point.y]);
+    return this.points.map(point => point ? [point.x, point.y] : []);
   }
 }

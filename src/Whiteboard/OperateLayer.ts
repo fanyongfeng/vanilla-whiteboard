@@ -1,24 +1,31 @@
 import Layer from './Layer';
+import Img from '../graphic/shape/Image';
 
 /**
  * Support Cursor & Event .. operate layer behavior
  * 最前面的一层, 相较于其他层有特定的行为。
  */
 export default class OperateLayer extends Layer {
-  _cursorImage = null;
+  private _cursorImage?: Img;
 
-  constructor(width, height, role) {
+  constructor(width: number, height: number, role: string) {
     super(width, height, role);
     this.el.tabIndex = 1; //make OperateLayer focusable.
   }
   /**
    * set cursor of layer. Use for operateLayer.
-   * @param {*} value
+   * @param value Img instance
    */
-  setCursor(value) {
+  setCursor(value: Img);
+  setCursor(value: string);
+  /**
+   * set cursor of layer. Use for operateLayer.
+   * @param value css cursor string
+   */
+  setCursor(value: string | Img) {
     if (typeof value === 'string') {
       this.el.style.cursor = value;
-      this._cursorImage = null;
+      this._cursorImage = undefined;
     } else {
       this._cursorImage = value;
       this._cursorImage.layer = this;
@@ -33,9 +40,11 @@ export default class OperateLayer extends Layer {
     super.clear();
     this.setCursor('default');
   }
-
+  
+  /**
+   * draw items and cursor, but draw cursor first!
+   */
   _draw() {
-    // draw cursor first!
     if (this._cursorImage) this._cursorImage.draw(this.ctx);
     super._draw();
   }

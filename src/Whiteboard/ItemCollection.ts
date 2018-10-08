@@ -150,10 +150,10 @@ class ItemCollection {
 
   /**
    * Add whiteboard item.
-   * @param {Item} item
+   * @param item
    */
-  add(item) {
-    if (!(item instanceof Item)) throw new TypeError('Only Item can add to Collection!');
+  add(item: Item) {
+    // if (!(item instanceof Item)) throw new TypeError('Only Item can add to Collection!');
 
     item.layer = this.layer;
     this.items.push(item);

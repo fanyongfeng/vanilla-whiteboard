@@ -1,13 +1,15 @@
+import { CustomizeMouseEvent } from '../../Whiteboard/EventType'; 
+import Point from '../../graphic/types/Point';
 /**
  * enable tool has select behavior.
  */
-export default function selectable(multiSelect = true) {
+export default function selectable(_multiSelect = true): { [key: string]: any } {
   return {
     _downPoint: null,
     _lastSelected: [],
     _selected: [],
 
-    onMouseDown(event) {
+    onMouseDown(event: CustomizeMouseEvent) {
       this._downPoint = event.point;
 
       if (this._pointOnElement(this._downPoint)) {
@@ -22,7 +24,7 @@ export default function selectable(multiSelect = true) {
       return true;
     },
 
-    onMouseDrag(event) {
+    onMouseDrag(event: CustomizeMouseEvent) {
       if (this.mode !== 'select') return;
 
       let point = event.point;
@@ -39,7 +41,7 @@ export default function selectable(multiSelect = true) {
       return !isPointOnElement;
     },
 
-    _pointOnElement(point) {
+    _pointOnElement(point: Point) {
       for (let len = this.items.length, i = len, item; i > 0; i--) {
         // find from right
         item = this.items.get(i - 1);

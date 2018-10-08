@@ -5,6 +5,7 @@ import Rect from './types/Rect';
 import Matrix from './types/Matrix';
 import { memoizable, observeProps } from '../decorators/memoized';
 import emittable from '../decorators/emitter';
+import Layer from '../Whiteboard/Layer';
 
 export interface ItemOptions {
   type: IToolType,
@@ -39,15 +40,17 @@ abstract class Item {
   filter = 'blur(5px)'; //experiment feature.
   scaleMode = 'free'; //no-scale, free, proportion
 
-  layer?: any = {}; //inject when it is added on layer.
+  layer!: Layer; //inject when it is added on layer.
   type?: IToolType;
-  typeId?: number;
-  id?: number;
+  typeId!: number;
+  id!: number;
 
-  style;
-  matrix: IMatrix;
-  selected: boolean = false;
-  children: IItem[] = [];
+  style: Style;
+  matrix: Matrix;
+  selected!: boolean;
+  children!: Item[];
+  input?: HTMLDivElement; // for  Text Item
+  changed!: () => void
 
   constructor(options?: Partial<ItemOptions>) {
     if (options) {
@@ -65,7 +68,7 @@ abstract class Item {
     this.matrix = new Matrix();
   }
 
-  handleRest(preset) {
+  handleRest(preset: object) {
     if (!preset) return;
 
     Object.keys(preset).forEach(key => {
@@ -76,9 +79,9 @@ abstract class Item {
 
   /**
    * Unite bounds of children , and return a new Rect.
-   * @param {Array} children
+   * @param children
    */
-  uniteBoundsOfChildren(children): IRect {
+  uniteBoundsOfChildren(children): Rect {
     let x1 = Infinity,
       x2 = -x1,
       y1 = x1,
@@ -104,9 +107,7 @@ abstract class Item {
   /**
    * Get bounds of current item.
    */
-  protected get bounds(): IRect { // TODO:
-    throw new Error('getter bounds must be overwrite!');
-  }
+  protected abstract get bounds(): Rect
 
   /**
    * Get bounds with stroke of current item.
@@ -118,71 +119,89 @@ abstract class Item {
   /**
    * Get position based-on center point of current item.
    */
-  get position(): IPoint {
+  get position(): Point {
     return this.bounds.center;
   }
 
   /**
    * Set position of current item.
    */
-  set position(value: IPoint) {
+  set position(value: Point) {
     this.setPosition(value.x, value.y);
   }
 
-  setPosition(x, y) {
+  setPosition(x: number, y: number) {
     return this.translate(Point.instantiate(x, y).subtract(this.position));
   }
 
   /**
    * Translate to point.
-   * @param {Point} point
+   * @param point Translate delta.
    */
-  translate(point: IPoint) {
+  translate(point: Point) {
     let mx = new Matrix();
     return this.transform(mx.translate(point));
   }
 
+
   /**
-   * Scale current item.
-   * @param {Number} sx horizantal
-   * @param {Number | undefined} sy, if it not set, use sx by default.
-   * @param {Point} point Base point.
-   */
-  scale(sx, sy, point?: IPoint) {
+ * Scale current item, base on center of item.
+ * @param scale horizontal & vertical scale ratio
+ */
+  public scale(scale: number)
+
+  /**
+ * Scale current item.
+ * @param scale horizontal & vertical scale ratio
+ * @param point Base point.
+ */
+  public scale(scale: number, point: Point)
+  /**
+ * Scale current item, base on center of item.
+ * @param sx horizontal
+ * @param sy, if it not set, use sx by default.
+ */
+  public scale(sx: number, sy: number)
+  /**
+ * Scale current item.
+ * @param sx horizontal
+ * @param sy vertical scale ratio
+ * @param point Base point.
+ */
+  public scale(sx: number, sy: number, point: Point)
+  public scale(sx: number, sy?: number | Point, point?: Point) {
     if (typeof sx !== 'number') throw new TypeError("param 'sx' of scale must be number!");
 
+    if (typeof sy !== 'number') sy = sx;
     if (this.scaleMode === 'proportion') {
       let scaleRadio = Math.min(sx, sy);
       sx = sy = scaleRadio;
     }
 
     let mx = new Matrix();
-    if (typeof sy === 'undefined') sy = sx;
     point = point || this.bounds.center;
     return this.transform(mx.scale(sx, sy, point));
   }
 
   /**
    * Rotate current item.
-   * @param {Number} deg, degree of Rotation.
-   * @param {Point} point, Base point.
+   * @param deg degree of Rotation.
+   * @param point Base point.
    */
-  rotate(deg, point?: IPoint) {
+  rotate(deg: number, point?: Point) {
     if (typeof deg !== 'number') throw new TypeError("param 'deg' of rotate must be number!");
-
     let mx = new Matrix();
     point = point || this.bounds.center;
     return this.transform(mx.rotate(deg, point));
   }
 
-  transform(matrix: IMatrix) {
+  transform(matrix: Matrix) {
     if (matrix) {
       //注意矩阵multify 顺序
       this.matrix = this.matrix.prepend(matrix);
     }
 
     this.transformContent(matrix);
-    // @ts-ignore
     this.changed();
     return this;
   }
@@ -191,7 +210,7 @@ abstract class Item {
    * Transform group & compoundPath & Segment of path;
    * @param {*} matrix
    */
-  transformContent(matrix: IMatrix) {
+  transformContent(matrix: Matrix) {
     if (this.children) {
       this.children.forEach(item => item.transform(matrix));
       this.matrix.reset();
@@ -200,9 +219,9 @@ abstract class Item {
 
   /**
    * If point in the bounds of item.
-   * @param {Point} point
+   * @param point
    */
-  containsPoint(point: IPoint) {
+  containsPoint(point: Point) {
     return this.bounds.containsPoint(point);
   }
 
@@ -210,7 +229,9 @@ abstract class Item {
 
   /**
    * Draw item on specified canvas context.
-   * @param {*} ctx
+   *
+   * @param ctx context of current canvas.
+   *
    */
   draw(ctx: CanvasRenderingContext2D) {
     ctx.save();
@@ -232,9 +253,7 @@ abstract class Item {
     return [this.typeId, this.id, this._toJSON(), this.style.toShortJSON()];
   }
 
-  protected _toJSON() {
-    throw new Error('_toJSON method must be overwrite!');
-  }
+  protected abstract _toJSON();
 
   /**
    * remove from collection of layers;
@@ -245,7 +264,7 @@ abstract class Item {
 
   /**
    * 绘制边界矩形
-   * @param {*} ctx
+   * @param ctx
    */
   drawBoundRect(ctx: CanvasRenderingContext2D) {
     ctx.save();

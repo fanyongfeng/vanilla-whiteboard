@@ -59,9 +59,9 @@ class Color {
 
   /**
    * If equals other color.
-   * @param {Color} other
+   * @param other
    */
-  equals(color: IColor): boolean {
+  equals(color: Color) {
     return (
       this === color ||
       (this.red === color.red && this.green === color.green && this.blue === color.blue && this.alpha === color.alpha)
@@ -71,7 +71,7 @@ class Color {
   /**
    * Return a new duplicate of this instance.
    */
-  clone(): IColor {
+  clone() {
     let ret = new Color();
     Object.assign(ret, this); // ...this, remain red, blue, green, alpha.
     return ret;
@@ -94,8 +94,8 @@ class Color {
   /**
    * Convert to HEX string.
    */
-  toHexString(): string {
-    let colorStr = this.toHex().toString(16);
+  toHexString() {
+    const colorStr = this.toHex().toString(16);
     return '#000000'.substr(0, 7 - colorStr.length) + colorStr;
   }
 

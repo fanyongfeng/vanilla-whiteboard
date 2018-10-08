@@ -1,4 +1,5 @@
-import Img from '../../graphic/shape/Image.ts';
+import Img from '../../graphic/shape/Image';
+import Point from '../../graphic/types/Point';
 
 /**
  * Custom tool cursor as specified image.
@@ -7,9 +8,9 @@ import Img from '../../graphic/shape/Image.ts';
  * code example:
  * @cursor('https://example/x.png', {x : 10, y: 10});
  */
-export default function cursor(url, offset = null) {
-  let offsetX = offset ? offset.x : 0;
-  let offsetY = offset ? offset.y : 0;
+export default function cursor(url, offset: {x: number, y: number}): { [key: string]: any } {
+  const offsetX = offset ? offset.x : 0; 
+  const offsetY = offset ? offset.y : 0;
 
   return {
     /**
@@ -40,7 +41,7 @@ export default function cursor(url, offset = null) {
      * Update position of image on mousemove & mouseDrag.
      * @param {Point} point
      */
-    _move(point) {
+    _move(point: Point) {
       if (this.cursor.loaded) {
         this.cursor.position = point.add(offsetX, offsetY);
       }

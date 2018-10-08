@@ -10,6 +10,10 @@ declare interface IItem {
   draw(ctx: CanvasRenderingContext2D): IItem;
 }
 
+declare interface IItemCollection {
+
+}
+
 declare interface IRect {
   x: number,
   y: number,

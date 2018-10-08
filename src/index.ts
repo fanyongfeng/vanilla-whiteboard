@@ -1,14 +1,14 @@
-import Point from './graphic/types/Point.ts';
+import Point from './graphic/types/Point';
 import Rect from './graphic/types/Rect';
 import Style from './graphic/types/Style';
-import Color from './graphic/types/Color.ts';
-import Matrix from './graphic/types/Matrix.ts';
+import Color from './graphic/types/Color';
+import Matrix from './graphic/types/Matrix';
 import Path from './graphic/Path';
 import Layer from './Whiteboard/Layer';
 import animate from './animate/animate';
 import animateColor from './animate/animateColor';
 import Whiteboard from './Whiteboard';
-import playground from './playground'; // for debug,
+import playground from './playground.js'; // for debug,
 // import keyCode from '';
 
 import { RGB2HSL, HSL2RGB, RGB2Gray, Gray2RGB, Gray2HSB } from './graphic/algorithm/color';
@@ -31,7 +31,12 @@ import { RGB2HSL, HSL2RGB, RGB2Gray, Gray2RGB, Gray2HSB } from './graphic/algori
  */
 
 //mount graphic on namespace (top-level).
+//@ts-ignore
 let nebula = typeof nebula !== 'undefined' ? nebula : { Point, Rect, Style, Path, Color, Matrix, Layer };
+// let nebula;
+// if (typeof nebula === 'undefined') {
+//   nebula = { Point, Rect, Style, Path, Color, Matrix, Layer };
+// }
 
 //mount util on namespace.
 nebula.util = { RGB2HSL, HSL2RGB, RGB2Gray, Gray2RGB, Gray2HSB, animateColor, animate };
@@ -43,7 +48,7 @@ nebula.Whiteboard = Whiteboard;
 // nebula.enum = { keyCode };
 
 //tmp for debug
-let wb = playground.init();
+playground.init();
 
 window.nebula = nebula;
 

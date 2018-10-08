@@ -9,9 +9,9 @@ export default class Line extends Shape {
     this.style.dashArray = this.dash || [];
   }
 
-  _buildPath() {
-    let { x, y } = this.startPoint;
-    let { x: ex, y: ey } = this.endPoint;
+  protected _buildPath() {
+    const { x, y } = this.startPoint;
+    const { x: ex, y: ey } = this.endPoint;
 
     this.moveTo(x, y).lineTo(ex, ey);
 

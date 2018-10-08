@@ -1,7 +1,7 @@
-import Img, { IImage } from '../graphic/shape/Image';
+import Img from '../graphic/shape/Image';
 
 interface ICached {
-  [url: string]: IImage
+  [url: string]: Img
 }
 /**
  * Manage & cache materials of whiteboard.
@@ -29,9 +29,9 @@ export default class MaterialProvider {
 
   /**
    * Get material image by url.
-   * @param {String} url
+   * @param url
    */
-  get(url: string): IImage {
+  get(url: string): Img {
     let cached = this.cached;
     if (cached[url]) return cached[url];
     let material = new Img({}, url);
@@ -44,7 +44,7 @@ export default class MaterialProvider {
    * Remove material image by url.
    * @param {String} url
    */
-  remove(url: string): IImage  {
+  remove(url: string): Img  {
     let img = this.cached[url];
     delete this.cached[url];
     this.length--;

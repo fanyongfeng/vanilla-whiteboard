@@ -11,17 +11,18 @@ export default class Layer {
   width: number;
   height: number;
   ctx: CanvasRenderingContext2D;
-  globalCtx: any;
+  globalCtx!: IContext;
   role: string;
   el: HTMLCanvasElement;
-  _bounds: Rect | null = null;
-  wrapper: HTMLElement | null = null;
-
-  private _items = new ItemCollection(this);
-
-  _isDirty = true;
+  wrapper!: HTMLElement;
+  
   matrix = new Matrix();
   offscreen = false;
+
+  private _bounds!: Rect;
+  private _items = new ItemCollection(this);
+  private _isDirty = true;
+
 
   /**
    * Move items from one to other
@@ -66,11 +67,11 @@ export default class Layer {
   /**
    * Create whiteboard layer with specified width & height.
    *
-   * @param {Number} width
-   * @param {Number} height
-   * @param {String} role
+   * @param width
+   * @param height
+   * @param role
    */
-  constructor(width, height, role: string = '') {
+  constructor(width: number, height: number, role: string = '') {
     let el = document.createElement('canvas');
     el.setAttribute('data-role', role);
     el.setAttribute('canvas-id', role);
@@ -186,9 +187,9 @@ export default class Layer {
 
   /**
    * 等比缩放画布
-   * @param {Number} radio
+   * @param radio
    */
-  zoom(radio) {
+  zoom(radio: number) {
     // /this.ctx.scale(radio, radio);
     this.matrix.scale(radio, radio);
     setStyle(this.el, {
@@ -213,9 +214,10 @@ export default class Layer {
   }
 
   /**
-   *
+   * Move own items to target
+   * @param {Layer} target
    */
-  elevateTo(target) {
+  elevateTo(target: Layer) {
     Layer.elevator(this, target);
   }
 

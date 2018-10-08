@@ -1,3 +1,5 @@
+import OperateLayer from '../Whiteboard/OperateLayer';
+
 /**
  * Base class of tools, for:
  * 1) create item.
@@ -5,7 +7,6 @@
  * 3) emit event for websocket.
  * 4) manage items of operateLayer.
  */
-
 const toolStatus = {
   move: 'move',
   select: 'select',
@@ -14,9 +15,13 @@ const toolStatus = {
   translate: 'translate',
 };
 export default class Tool {
-  _layer = null;
-  globalCtx = null; // 白板上下文，在实例化后注入；
-  mode = toolStatus.select;
+  private _layer!: OperateLayer;
+  private _cursor!: string;
+  private _init!: () => void;
+
+  public globalCtx!: IContext; // 白板上下文，在实例化后注入；
+  public mode = toolStatus.select;
+  public type: IToolType;
 
   constructor(type) {
     this.type = type;
@@ -26,7 +31,7 @@ export default class Tool {
     }
   }
 
-  setLayerCursor(cursor) {
+  setLayerCursor(cursor: string) {
     if (!this._cursor) this.layer.setCursor(cursor);
   }
 
@@ -34,7 +39,7 @@ export default class Tool {
    * Items of activeLayer.
    */
   get items() {
-    return items;
+    return window.items;
   }
 
   /**

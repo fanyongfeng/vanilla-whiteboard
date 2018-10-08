@@ -19,12 +19,15 @@ const defaultOptions = {
   enableKeyboard: true,
 };
 
+interface History {
+  emit: (name: string, data: any) => void
+}
 
 @emittable()
 class History {
   private stack: any;
   private options: typeof defaultOptions;
-  private lastRecorded: number = 0;
+  public lastRecorded = 0;
   // private emit: (eventName: string, args: Object) => void;
 
   constructor(options = {}) {
@@ -42,15 +45,14 @@ class History {
 
   /**
    * Record changed and store to stack
-   * @param {Object} delta
-   * @param {Object} oldDelta
+   * @param delta
    */
-  record(delta, oldDelta) {
+  record(delta: object) {
     if (!delta) throw TypeError('Invalid record point.');
     // clear redo list on an new record point.
     this.stack.redo = [];
 
-    let action = new Action(delta, oldDelta);
+    const action = new Action(delta);
     this.stack.undo.push(action);
 
     if (this.stack.undo.length > this.options.maxStack) {
@@ -60,10 +62,10 @@ class History {
 
   /**
    * handle undo/redo actions
-   * @param {string} source, "undo" or "redo"
-   * @param {string} dest, "redo" or "undo"
+   * @param source, "undo" or "redo"
+   * @param dest, "redo" or "undo"
    */
-  change(source, dest) {
+  change(source: "redo" | "undo", dest: "redo" | "undo") {
     if (!this.options.enableKeyboard) return;
     if (this.stack[source].length === 0) return;
 

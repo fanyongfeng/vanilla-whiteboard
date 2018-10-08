@@ -6,6 +6,7 @@ const defaultStyle = {
   dashArray: [5, 2],
 };
 
+
 /**
  *
  * enable tool has drag behavior.
@@ -14,10 +15,11 @@ const defaultStyle = {
  * @param {Object} style
  * @param {Boolean} removeOnNextDrag, If true drag-rect will be removed on next mouse-down, else on mouse-up
  */
-export default function dragBounds(style, removeOnNextDrag = false) {
+export default function dragBounds(style = {}, removeOnNextDrag = false): { [key: string]: any } {
   style = Object.assign({}, defaultStyle, style);
-
+  
   return {
+    
     _dragRect: new Rectangle({ style }),
 
     get dragRect() {

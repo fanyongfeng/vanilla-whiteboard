@@ -5,7 +5,7 @@ const cachedPropsKey = '__cachedProps';
  * @param {String} cacheKey, Specify the cacheKey of prop (default value: PropName)
  */
 export function memoized(cacheKey?: string) {
-  return function(target, name, descriptor) {
+  return function(_, name, descriptor) {
     if (typeof descriptor.get !== 'function') throw new Error(`Can't decorate ${name}, Only used for getter~`);
 
     let propKey = cacheKey || `${name}`;
@@ -26,7 +26,7 @@ export function memoized(cacheKey?: string) {
  * mark setter. if the value changed, it will trigger canvas refresh OR mark layer as dirty.
  */
 export function changed() {
-  return function(target, name, descriptor) {
+  return function(_, name, descriptor) {
     if (typeof descriptor.set !== 'function') throw new Error(`Can't decorate ${name}, Only used for setter~`);
 
     const { set } = descriptor;
