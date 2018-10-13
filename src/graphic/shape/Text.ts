@@ -48,9 +48,9 @@ export default class Text extends Item {
   /**
    * static method to create instance from params
    */
-  static instantiate(...rest) {
-    const text = new Text();
-    text.startPoint = new Point(rest[3]);
+  static instantiate(options, ...rest) {
+    const text = new Text(options);
+    text.startPoint = new Point(rest[0]);
     return text;
   }
 

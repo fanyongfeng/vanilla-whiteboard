@@ -8,7 +8,6 @@ import { createItem } from '../graphic/ItemFactory';
  */
 export default class Text extends Tool {
 
-  private _style!: Style;
   public currentShape!: ShapeText;
   constructor(type) {
     super(type);
@@ -16,20 +15,12 @@ export default class Text extends Tool {
   }
 
   onMouseDown(event) {
-    this.currentShape = createItem(this.type);
+    this.currentShape = createItem(this.type, {});
     this.currentShape.editable = true;
     this.currentShape.startPoint = this.currentShape.endPoint = event.point;
     this.items.add(this.currentShape);
     this.globalCtx.emit('item:add', this.currentShape.toJSON());
     this.currentShape.onTyping = value => this.globalCtx.emit('item:typing', value);
-  }
-
-  set style(value: Style) {
-    this._style = value;
-  }
-
-  get style() {
-    return this._style;
   }
 
   drawText() {
