@@ -1,10 +1,12 @@
 import Tool from './Tool';
 import ShapeText from '../graphic/shape/Text';
-import { createItem } from '../graphic/ItemFactory';
+import { deepMixin } from '../decorators/mixin';
+import itemCreator from './mixins/itemCreator';
 
 /**
  * Tool to input text on whiteboard
  */
+@deepMixin(itemCreator())
 export default class Text extends Tool {
 
   public currentShape!: ShapeText;
@@ -14,7 +16,6 @@ export default class Text extends Tool {
   }
 
   onMouseDown(event) {
-    this.currentShape = createItem(this.type, {});
     this.currentShape.editable = true;
     this.currentShape.startPoint = this.currentShape.endPoint = event.point;
     this.items.add(this.currentShape);

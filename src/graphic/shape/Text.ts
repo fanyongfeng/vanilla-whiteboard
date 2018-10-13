@@ -80,12 +80,12 @@ export default class Text extends Item {
       this.input.setAttribute('autocapitalize', 'off');
       this.input.setAttribute('autocorrect', 'off');
       this.input.setAttribute('autocomplete', 'off');
-
+      console.log('strokeColor', this.style.strokeColor);
       Object.assign(this.input.style, {
         fontFamily: this.style.font || 'sans-serif',
         'min-width': '100px',
         'font-weight': 400,
-        color: this.style.strokeColor,
+        color: this.style.strokeStyle, // 不可 color strokeColor
         // 'font-style': this.style.italic ? 'italic' : 'normal',
         'font-size': `${this.style.fontSize}px`,
         position: 'absolute',
