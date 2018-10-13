@@ -1,5 +1,4 @@
 import Tool from './Tool';
-import Style from '../graphic/types/Style';
 import ShapeText from '../graphic/shape/Text';
 import { createItem } from '../graphic/ItemFactory';
 
