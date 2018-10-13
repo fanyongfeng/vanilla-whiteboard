@@ -1,4 +1,4 @@
-import { CustomizeMouseEvent } from '../../Whiteboard/EventType'; 
+import { CustomizeMouseEvent } from '../../Whiteboard/EventType';
 import Point from '../../graphic/types/Point';
 /**
  * enable tool has select behavior.

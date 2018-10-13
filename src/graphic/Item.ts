@@ -225,7 +225,7 @@ abstract class Item {
     return this.bounds.containsPoint(point);
   }
 
-  protected abstract _draw(ctx: CanvasRenderingContext2D);
+  protected abstract _draw(ctx: CanvasRenderingContext2D, bounds?);
 
   /**
    * Draw item on specified canvas context.
@@ -238,7 +238,7 @@ abstract class Item {
     this.style.apply(ctx);
     ctx.globalCompositeOperation = this.globalCompositeOperation;
     this.matrix.applyToContext(ctx);
-    this._draw(ctx);
+    this._draw(ctx, this.bounds);
     ctx.restore();
 
     if (this.selected) this.drawBoundRect(ctx);

@@ -34,7 +34,7 @@ export default class EventHandler {
   private isMouseDown = false;
   private lastPoint!: Point; //绑定流程和一般拖拽类似
   private _currentTool!: Tool;
-  
+
   keyModifiers: {[key: string]: boolean} = {};
   layer!: OperationLayer;
   canvas!: HTMLCanvasElement;
@@ -42,10 +42,10 @@ export default class EventHandler {
   draggingTriggered!: number
 
   set tool(tool) {
-    if ((this._currentTool && this._currentTool.type) !== tool.type) {
-      this.invokeToolSlotHandler('toolChanged', { type: tool.type });
-    }
+    const isChanged = !!this._currentTool && this._currentTool.type !== tool.type;
+    isChanged && this.invokeToolSlotHandler('toolChanged', { type: tool.type }); // notice pre tool
     this._currentTool = tool;
+    isChanged && this.invokeToolSlotHandler('toolChanged', { type: tool.type }); // notice next tool
     if (this._currentTool) {
       this._currentTool.layer = this.layer;
       this._currentTool.globalCtx = this.context;
@@ -60,7 +60,7 @@ export default class EventHandler {
   get inverseMatrix() {
     return this.layer.matrix.inverse();
   }
-  
+
   /**
    * Bind mouseEvent and keyboardEvent to layer
    * @param layer the instance of Layer

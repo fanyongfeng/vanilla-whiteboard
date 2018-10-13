@@ -206,7 +206,7 @@ class Path extends Item {
     const seg = this.segments.find(item => item.containsPoint(point, this.style.lineWidth));
     return !!seg;
   }
-  
+
   /**
    *
    * transform matrix

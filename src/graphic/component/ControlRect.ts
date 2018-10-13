@@ -59,7 +59,7 @@ export default class ControlRect extends Item {
   protected _toJSON() {
     return '';
   }
-  
+
   /**
    * just for ts lint, no sense
    */

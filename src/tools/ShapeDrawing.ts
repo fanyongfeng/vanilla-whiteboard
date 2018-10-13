@@ -4,7 +4,7 @@ import dragBounds from './mixins/dragBounds';
 import { deepMixin } from '../decorators/mixin';
 import itemCreator from './mixins/itemCreator';
 
-import { CustomizeMouseEvent } from '../Whiteboard/EventType'; 
+import { CustomizeMouseEvent } from '../Whiteboard/EventType';
 
 /**
  * 绘制两点图形工具
@@ -17,7 +17,7 @@ import { CustomizeMouseEvent } from '../Whiteboard/EventType';
 )
 @deepMixin(itemCreator())
 class ShapeDrawing extends Tool {
-  
+
   public currentShape!: Shape | null;
 
   onMouseDown(event) {
@@ -33,7 +33,7 @@ class ShapeDrawing extends Tool {
   onMouseUp(_event: CustomizeMouseEvent) {
     if (!this.currentShape) return;
     this.globalCtx.emit('item:add', this.currentShape.toJSON());
-    this.currentShape = null;  // think about that; beforeMouseDown will refresh this.currentShape 
+    this.currentShape = null;  // think about that; beforeMouseDown will refresh this.currentShape
   }
 }
 

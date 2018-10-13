@@ -15,7 +15,7 @@ export default class Layer {
   role: string;
   el: HTMLCanvasElement;
   wrapper!: HTMLElement;
-  
+
   matrix = new Matrix();
   offscreen = false;
 
@@ -106,7 +106,7 @@ export default class Layer {
 
   _draw() {
     this.globalCtx.refreshCount++;
-    this._items.filter(item => !item.input).forEach(item => item && item.draw(this.ctx));
+    this._items.forEach(item => item && item.draw(this.ctx));
   }
 
   /**

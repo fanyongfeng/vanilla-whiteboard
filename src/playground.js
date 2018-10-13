@@ -40,7 +40,6 @@ export default {
       .on('item:add', arg => {
         console.log('item:add', arg);
       });
-
     this.whiteboard.watch();
     this.whiteboard2.watch();
     this.simulateComm();
@@ -95,6 +94,9 @@ export default {
       })
       .on('pointer:draw', arg => {
         pointerDraw();
+      })
+      .on('item:typing', arg => {
+        console.log(arg);
       });
   },
 

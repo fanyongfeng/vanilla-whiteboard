@@ -1,14 +1,13 @@
 import Tool from './Tool';
 import Style from '../graphic/types/Style';
-import ShapeText, { drawTextImg } from '../graphic/shape/Text';
+import ShapeText from '../graphic/shape/Text';
 import { createItem } from '../graphic/ItemFactory';
 
 /**
  * Tool to input text on whiteboard
  */
-
 export default class Text extends Tool {
-  
+
   private _style!: Style;
   public currentShape!: ShapeText;
   constructor(type) {
@@ -20,8 +19,9 @@ export default class Text extends Tool {
     this.currentShape = createItem(this.type);
     this.currentShape.editable = true;
     this.currentShape.startPoint = this.currentShape.endPoint = event.point;
-    window.items.add(this.currentShape);
-    // this.currentShape.editable = false;
+    this.items.add(this.currentShape);
+    this.globalCtx.emit('item:add', this.currentShape.toJSON());
+    this.currentShape.onTyping = value => this.globalCtx.emit('item:typing', value);
   }
 
   set style(value: Style) {
@@ -33,18 +33,16 @@ export default class Text extends Tool {
   }
 
   drawText() {
-    window.items.filter(item => item.type === this.type).map(item => {
-      drawTextImg(item.input, this.layer.ctx);
-    });
+    this.items.filter(item => item.type === this.type).map(item => item.drawTextImg())
   }
 
   /**
    * set all Text disabled
    * toolChanged
    */
-  public toolChanged() {
-    window.items.filter(item => item.type === this.type).map(item => {
-      item.editable = false;
+  public toolChanged({ type }) {
+    this.items.filter(item => item.type === this.type).map(item => {
+      item.editable = type === this.type;
     });
   }
 }

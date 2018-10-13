@@ -67,7 +67,7 @@ export default class Whiteboard  {
   context: IContext;
 
   material = new MaterialProvider();
-  emit = () => {};
+  emit!: () => void;
 
   constructor(options: WhiteboardOptions) {
     this.options = Object.assign({}, defaultOptions, options);
@@ -261,18 +261,18 @@ export default class Whiteboard  {
 
   command() {}
 
-  drawMaterial(url) {
-    let material = this.material.get(url);
+  drawMaterial(url: string) {
+    const material = this.material.get(url);
     this.backgroundLayer.items.set(material, 0);
   }
 
   drawGrid(minor = false) {
-    let grid = new Grid({ minor });
+    const grid = new Grid({ minor });
     this.backgroundLayer.items.set(grid, 1);
   }
 
   drawAxes() {
-    let axes = new Axes();
+    const axes = new Axes();
     this.backgroundLayer.items.set(axes, 2);
   }
 
@@ -296,7 +296,7 @@ export default class Whiteboard  {
   }
 
   dispose() {
-    let wrapper = this.wrapper;
+    const wrapper = this.wrapper;
     //TODO: remove all canvas DOM.
     wrapper.removeChild(this.backgroundLayer.el);
     wrapper.removeChild(this.activeLayer.el);

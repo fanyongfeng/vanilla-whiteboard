@@ -5,8 +5,8 @@
  * @param {*} element
  * @param {*} styles
  */
-export function setStyle(element, styles) {
-  let elementStyle = element.style;
+export function setStyle(element: HTMLElement, styles: object) {
+  const elementStyle = element.style;
   if (!elementStyle) {
     return element;
   }
@@ -14,6 +14,7 @@ export function setStyle(element, styles) {
   for (let property in styles) {
     let normalizedProperty =
       property === 'float' || property === 'cssFloat'
+      //@ts-ignore
         ? typeof elementStyle.styleFloat === 'undefined'
           ? 'cssFloat'
           : 'styleFloat'
@@ -29,7 +30,7 @@ export function setStyle(element, styles) {
  * @param {String} eventType, e.g. "mousemove", "mousemove mousedown"
  * @param {Function} handler
  */
-export function addListener(element, eventType, handler) {
+export function addListener(element, eventType: string, handler: (event: any) => any) {
   if (!element) return;
 
   let events = eventType.split(' ');
@@ -42,7 +43,9 @@ export function addListener(element, eventType, handler) {
 
   if (element.addEventListener) {
     element.addEventListener(eventType, handler, false);
+    //@ts-ignore
   } else if (element.attachEvent) {
+    //@ts-ignore
     element.attachEvent('on' + eventType, handler);
   } else {
     element['on' + eventType] = handler;
@@ -55,7 +58,7 @@ export function addListener(element, eventType, handler) {
  * @param {String} eventType, e.g. "mousemove", "mousemove mousedown"
  * @param {Function} handler
  */
-export function removeListener(element, eventType, handler) {
+export function removeListener(element, eventType: string, handler: (event: any) => any) {
   if (!element) return;
 
   let events = eventType.split(' ');
@@ -68,7 +71,9 @@ export function removeListener(element, eventType, handler) {
 
   if (element.removeEventListener) {
     element.removeEventListener(eventType, handler, false);
+    //@ts-ignore
   } else if (element.detachEvent) {
+    //@ts-ignore
     element.detachEvent('on' + eventType, handler);
   } else {
     element['on' + eventType] = null;

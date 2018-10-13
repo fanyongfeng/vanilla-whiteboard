@@ -28,8 +28,8 @@ export abstract class Segment {
   }
 
   // get strokeBounds() {
-    // return this.bounds.expand(this.style.lineWidth) / 2;
-    // return this.bounds.expand(this.style.lineWidth);
+  // return this.bounds.expand(this.style.lineWidth) / 2;
+  // return this.bounds.expand(this.style.lineWidth);
   // }
 
   get bounds(): Rect {
@@ -123,7 +123,7 @@ export class MoveSegment extends Segment {
   }
   containsPoint() {
   }
-} 
+}
 
 export class LineSegment extends Segment {
   command = 'L';
@@ -273,7 +273,7 @@ export class QuadraticSegment extends Segment {
     this.point = point;
   }
 
-  containsPoint() {}
+  containsPoint() { }
 
   // get bounds() {
   //   //转成三阶算
