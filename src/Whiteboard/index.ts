@@ -6,7 +6,6 @@ import Layer from './Layer';
 import OperateLayer from './OperateLayer';
 import { setStyle } from '../util/dom';
 import EventHandler from './EventHandler';
-import Text from '../graphic/shape/Text';
 import Rect from '../graphic/types/Rect';
 import { getTool } from '../tools';
 import { createItemViaJSON, createItem } from '../graphic/ItemFactory';
@@ -106,6 +105,8 @@ export default class Whiteboard  {
       this.zoom = this.options.zoom;
     }
 
+    this.context.zoom = this.options.zoom;
+
     Whiteboard.instances.push(this);
   }
 
@@ -121,6 +122,7 @@ export default class Whiteboard  {
       operateLayer = new OperateLayer(this.width, this.height, 'operate');
 
     let proto = {
+      wrapper: this.wrapper,
       whiteboard: this,
       backgroundLayer,
       activeLayer,
@@ -211,7 +213,17 @@ export default class Whiteboard  {
     if (!type) throw new TypeError('Argument illegal!');
     if (typeof type === 'string') return createItem(type, style);
     if (type instanceof Item) return type;
-    return createItemViaJSON(type);
+    const ins = createItemViaJSON(type);
+    if (ins.type === 'text') { // TODO: need to refactor
+      ins.wrapper = this.wrapper;
+      ins.zoom = this.zoom;
+    }
+    return ins;
+  }
+
+  typingText(hash) {
+    const input = this.items.find(item => item.id === hash[0]).input;
+    input && (input.innerHTML = hash[1]);
   }
 
   add(json) {
@@ -221,10 +233,6 @@ export default class Whiteboard  {
 
   remove(json) {
     this.items.deleteById(json);
-  }
-
-  addText(text) {
-    this.items.add(new Text(text));
   }
 
   /**

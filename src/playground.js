@@ -64,7 +64,7 @@ export default {
     }
 
     function typingText(hash) {
-      wb2.remove(hash);
+      wb2.typingText(hash);
     }
 
     function pointerMove(hash) {

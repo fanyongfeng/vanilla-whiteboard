@@ -50,7 +50,7 @@ export default class Text extends Item {
    */
   static instantiate(options, ...rest) {
     const text = new Text(options);
-    text.startPoint = new Point(rest[0]);
+    text.startPoint = new Point(rest[0][0], rest[0][1]);
     return text;
   }
 
@@ -59,6 +59,9 @@ export default class Text extends Item {
   private _editable!: boolean;
   // private _crossBorder = false; // can cross a boundary
   private _cxt!: CanvasRenderingContext2D;
+
+  public wrapper!: HTMLDivElement;
+  public zoom: number = 1;
 
   public startPoint!: Point;
   public endPoint!: Point;
@@ -85,22 +88,21 @@ export default class Text extends Item {
         fontFamily: this.style.font || 'sans-serif',
         'min-width': '100px',
         'font-weight': 400,
-        color: this.style.strokeStyle, // 不可 color strokeColor
+        color: this.style.strokeStyle, // can't color or strokeColor
         // 'font-style': this.style.italic ? 'italic' : 'normal',
-        'font-size': `${this.style.fontSize}px`,
+        'font-size': `${this.style.fontSize * this.zoom}px`,
         position: 'absolute',
-        left: `${x}px`,
-        top: `${y - 10}px`,
+        left: `${x * this.zoom}px`,
+        top: `${(y - 10) * this.zoom }px`,
       });
-      const panelWrapper = document.getElementById('draw-panel');
-      if (!panelWrapper) {
+      if (!this.wrapper) {
         throw ("can not find div about draw-panel");
       }
-      panelWrapper.appendChild(this.input);
+      this.wrapper.appendChild(this.input);
       this.bindInputEvent();
     }
     this._editable && this.input.focus();
-    this.drawTextImg(this._editable);
+    // this.drawTextImg(this._editable);
   }
 
   set editable(val: boolean) {

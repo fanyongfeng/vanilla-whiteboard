@@ -18,6 +18,7 @@ interface ItemCollection {
   map(callbackfn: (value: Item, index: number) => any, thisArg?: any): Item[];
   includes(callbackfn: (value: Item) => boolean) : boolean;
   filter(callbackfn: (value: Item, index: number) => boolean , thisArg?: any): Item[];
+  find(callbackfn: (value: Item, index: number) => boolean, thisArg?: any): Item;
 }
 
 const arrMethods = {
