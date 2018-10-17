@@ -2,6 +2,7 @@ import Item from '../Item';
 import Rect from '../types/Rect';
 import Point from '../types/Point';
 import { observeProps } from '../../decorators/memoized';
+import { setStyle } from '../../util/dom';
 
 const replaceAll = (target: string, search: string, replacement: string): string => target.replace(new RegExp(search, 'g'), replacement);
 
@@ -60,7 +61,7 @@ export default class Text extends Item {
   // private _crossBorder = false; // can cross a boundary
   private _cxt!: CanvasRenderingContext2D;
 
-  public wrapper!: HTMLDivElement;
+  public textWrapper!: HTMLDivElement;
   public zoom: number = 1;
 
   public startPoint!: Point;
@@ -95,10 +96,10 @@ export default class Text extends Item {
         left: `${x * this.zoom}px`,
         top: `${(y - 10) * this.zoom }px`,
       });
-      if (!this.wrapper) {
+      if (!this.textWrapper) {
         throw ("can not find div about draw-panel");
       }
-      this.wrapper.appendChild(this.input);
+      this.textWrapper.appendChild(this.input);
       this.bindInputEvent();
     }
     this._editable && this.input.focus();
@@ -107,7 +108,12 @@ export default class Text extends Item {
 
   set editable(val: boolean) {
     this._editable = val;
-    if (this.input) this.input.setAttribute('contenteditable', val.toString());
+    if (this.input) {
+      setStyle(this.input, {
+        'pointer-events': this._editable ? 'initial' : 'none',
+      });
+      this.input.setAttribute('contenteditable', val.toString());
+    }
   }
 
   bindInputEvent() {

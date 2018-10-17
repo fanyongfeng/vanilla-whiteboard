@@ -42,15 +42,15 @@ export default class EventHandler {
   draggingTriggered!: number
 
   set tool(tool) {
-    const isChanged = !!this._currentTool && this._currentTool.type !== tool.type;
+    const isChanged = (!!this._currentTool && this._currentTool.type) !== tool.type;
     isChanged && this.invokeToolSlotHandler('toolChanged', { type: tool.type }); // notice pre tool
     this._currentTool = tool;
-    isChanged && this.invokeToolSlotHandler('toolChanged', { type: tool.type }); // notice next tool
     if (this._currentTool) {
       this._currentTool.layer = this.layer;
       this._currentTool.globalCtx = this.context;
       this.layer.clear();
     }
+    isChanged && this.invokeToolSlotHandler('toolChanged', { type: tool.type }); // notice next tool
   }
 
   get tool() {

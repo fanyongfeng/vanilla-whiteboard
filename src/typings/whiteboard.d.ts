@@ -20,7 +20,7 @@ declare interface ILayer {
 
 declare interface IContext {
   zoom: number,
-  wrapper: HTMLDivElement,
+  textWrapper: HTMLDivElement,
   whiteboard: IWhiteboard,
   backgroundLayer: ILayer,
   activeLayer: ILayer,

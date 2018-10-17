@@ -58,7 +58,6 @@ export default class Whiteboard  {
   wrapper!: HTMLDivElement;
   width: number;
   height: number;
-  // private _currentTool = null;
   backgroundLayer!: Layer;
   activeLayer!: Layer;
   operateLayer!: OperateLayer;
@@ -108,6 +107,7 @@ export default class Whiteboard  {
     this.context.zoom = this.options.zoom;
 
     Whiteboard.instances.push(this);
+
   }
 
   /**
@@ -122,7 +122,7 @@ export default class Whiteboard  {
       operateLayer = new OperateLayer(this.width, this.height, 'operate');
 
     let proto = {
-      wrapper: this.wrapper,
+      textWrapper: this.wrapper,
       whiteboard: this,
       backgroundLayer,
       activeLayer,
@@ -215,7 +215,7 @@ export default class Whiteboard  {
     if (type instanceof Item) return type;
     const ins = createItemViaJSON(type);
     if (ins.type === 'text') { // TODO: need to refactor
-      ins.wrapper = this.wrapper;
+      ins.textWrapper = this.wrapper;
       ins.zoom = this.zoom;
     }
     return ins;

@@ -120,9 +120,9 @@ export function createItemViaJSON(json) {
   let ins = ctor.instantiate(options, data);
 
   //workaround: if fillStyle is true, set fill-mode in shape;
-  if (style.fillStyle) {
-    ins.fill = true;
-  }
+  // if (style.fillStyle) {
+  //   ins.fill = true;
+  // }
 
   return ins;
 }

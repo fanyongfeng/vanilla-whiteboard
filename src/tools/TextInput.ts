@@ -18,7 +18,7 @@ export default class Text extends Tool {
   onMouseDown(event) {
     this.currentShape.editable = true;
     this.currentShape.startPoint = this.currentShape.endPoint = event.point;
-    this.currentShape.wrapper = this.globalCtx.wrapper;
+    this.currentShape.textWrapper = this.globalCtx.textWrapper;
     this.currentShape.zoom = this.globalCtx.zoom;
     this.items.add(this.currentShape);
     this.globalCtx.emit('item:add', this.currentShape.toJSON());
