@@ -89,6 +89,21 @@
     },
     {
       "path": "/Users/daniel_jhe/work/github-project/frameworks/angular/angular"
+    },
+    {
+      "path": "/Users/daniel_jhe/work/github-project/frameworks/libs/rxjs"
+    },
+    {
+      "path": "/Users/daniel_jhe/work/github-project/graphic/konva"
+    },
+    {
+      "path": "/Users/daniel_jhe/work/github-project/graphic/sketch.js"
+    },
+    {
+      "path": "/Users/daniel_jhe/work/github-project/graphic/Proton"
+    },
+    {
+      "path": "/Users/daniel_jhe/work/github-project/frameworks/libs/lodash-decorators"
     }
   ],
   "settings": {}
