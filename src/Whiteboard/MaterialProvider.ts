@@ -42,7 +42,7 @@ export default class MaterialProvider {
 
   /**
    * Remove material image by url.
-   * @param {String} url
+   * @param url
    */
   remove(url: string): Img  {
     let img = this.cached[url];

@@ -14,12 +14,12 @@ import Axes from '../graphic/component/Axes';
 import MaterialProvider from './MaterialProvider';
 import History from '../commands/History';
 import Item from '../graphic/Item';
+import Point from '../graphic/types/Point';
 
 // const _createContext = Symbol('_createContext');
 export const defaultOptions = {
   selectionMode: 'bounds',
   refreshMode: 'loop',
-  readonly: false,
   width: 1000,
   height: 800,
   showGrid: false,
@@ -45,7 +45,6 @@ export type WhiteboardOptions =  {
  *  - selectionMode: 'bounds', 'path'
  *  - alignToGrid: boolean 对齐到网格
  *  - loop / notify
- *  - readonly
  *  - command-mode: verbose // 当绘制时发送更多的指令
  *  - precision (精度)
  */
@@ -135,7 +134,7 @@ export default class Whiteboard  {
     };
 
     // 将context 属性赋值白板实例
-    // if (process.env.NODE_ENV === 'development') Object.keys(proto).forEach(key => (this[key] = proto[key]));
+    // if (!IS_PRODUCTION) Object.keys(proto).forEach(key => (this[key] = proto[key]));
     Object.keys(proto).forEach(key => (this[key] = proto[key]));
 
     //return context;
@@ -221,9 +220,9 @@ export default class Whiteboard  {
     return ins;
   }
 
-  typingText(hash) {
-    const input = this.items.find(item => item.id === hash[0]).input;
-    input && (input.innerHTML = hash[1]);
+  typingText(json) {
+    const input = this.items.find(item => item.id === json[0]).input;
+    input && (input.innerHTML = json[1]);
   }
 
   add(json) {
@@ -233,6 +232,19 @@ export default class Whiteboard  {
 
   remove(json) {
     this.items.deleteById(json);
+    this.context.emit('items:delete', json);
+  }
+
+  resize(json) {
+    const ids = json[0];
+    const [sx, sy, X, Y] = json[1];
+    this.items.filter(item => ids.includes(item.id)).map(item => item.scale(sx, sy, new Point(X, Y)));
+  }
+
+  move(json) {
+    const ids = json[0];
+    const [x, y] = json[1];
+    this.items.filter(item => ids.includes(item.id)).map(item => item.translate(new Point(x, y)));
   }
 
   /**
@@ -243,7 +255,7 @@ export default class Whiteboard  {
     return this.activeLayer.items;
   }
 
-  set tool(val) {
+  set tool(val) { //TODO: set Tool type !== get Tool type
     this.handler.tool = getTool(val);
   }
 
@@ -315,6 +327,7 @@ export default class Whiteboard  {
    */
   clear() {
     this.layers.forEach(layer => layer.clear());
+    this.context.emit('layers:clear');
     return this;
   }
 }

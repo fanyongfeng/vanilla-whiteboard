@@ -20,8 +20,8 @@ export default class Point implements Point {
   /**
    * Create Point with x, y
    *
-   * @param {Number} x
-   * @param {Number} y
+   * @param x
+   * @param y
    */
   constructor(x = 0, y = 0) {
     this.x = x;
@@ -31,7 +31,7 @@ export default class Point implements Point {
   /**
    * 返回是否小于极小值
    */
-  isZero(): boolean {
+  isZero() {
     return isZero(this.x) && isZero(this.y);
   }
 
@@ -46,9 +46,9 @@ export default class Point implements Point {
     let point = Point.instantiate(x, y);
     return new Point(this.x + point.x, this.y + point.y);
   }
-  
+
   /**
-   * 
+   *
    * @param x point.x
    * @param y point.y
    */
@@ -199,7 +199,7 @@ export default class Point implements Point {
     if (!this.length) return 0;
     return Math.atan2(this.y, this.x);
   }
-  
+
   /**
    *
    * Rotates the point the given angle around origin center point;

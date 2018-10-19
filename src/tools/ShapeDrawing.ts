@@ -20,7 +20,7 @@ class ShapeDrawing extends Tool {
 
   public currentShape!: Shape | null;
 
-  onMouseDown(event) {
+  onMouseDown(event: CustomizeMouseEvent) {
     if (!this.currentShape) return;
     this.currentShape.startPoint = this.currentShape.endPoint = event.point;
   }

@@ -74,14 +74,19 @@ export default {
     function pointerDraw(hash) {
       wb2.remove(hash);
     }
+    function moveItem(hash) {
+      wb2.move(hash);
+    }
+    function resizeItems(hash) {
+      wb2.resize(hash);
+    }
 
     this.whiteboard
       .on('item:add', arg => {
         addItem(arg);
       })
       .on('item:remove', arg => {
-        let ids = arg;
-        removeItem(ids);
+        removeItem(arg);
       })
       .on('item:transform', arg => {
         transformItem(arg);
@@ -95,8 +100,11 @@ export default {
       .on('pointer:draw', arg => {
         pointerDraw();
       })
-      .on('item:typing', arg => {
-        console.log(arg);
+      .on('items:move', arg => {
+        moveItem(arg);
+      })
+      .on('items:resize', arg => {
+        resizeItems(arg);
       });
   },
 

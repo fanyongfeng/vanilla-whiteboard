@@ -24,6 +24,8 @@ const shapeDrawingTools = [
   'chatBox',
 ];
 
+const toolTypes: string[] = [];
+
 function create() {
   registerTool('marker', Marker);
   registerTool('highlighter', Highlighter);
@@ -39,6 +41,7 @@ function create() {
 function registerTool(name: string, ctor:  { new(...args: any[]): any }) {
   if (tools[name]) throw new Error(`Tool ${name} already exist!`);
   tools[name] = new ctor(name);
+  toolTypes.push(name);
   return tools[name];
 }
 
@@ -50,4 +53,4 @@ function getTool(name) {
 
 create();
 
-export { registerTool, getTool };
+export { registerTool, getTool, toolTypes };

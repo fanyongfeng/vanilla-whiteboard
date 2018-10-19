@@ -28,7 +28,7 @@ let config = {
       include: ['node_modules/**'],
     }),
     replace({
-      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'), //production | development
+      'IS_PRODUCTION': isProd
     }),
     // eslint({
     //   include: ['src/**/*.js'],

@@ -16,7 +16,7 @@ import Layer from './Layer';
 interface ItemCollection {
   forEach(callbackfn: (value: Item) => void, thisArg?: any): void;
   map(callbackfn: (value: Item, index: number) => any, thisArg?: any): Item[];
-  includes(callbackfn: (value: Item) => boolean) : boolean;
+  includes(value: Item, Index?: number): boolean;
   filter(callbackfn: (value: Item, index: number) => boolean , thisArg?: any): Item[];
   find(callbackfn: (value: Item, index: number) => boolean, thisArg?: any): Item;
 }
@@ -33,6 +33,7 @@ const arr = Array.prototype;
     })
 );
 
+
 /**
  * path collection of canvas.
  * Behavior like an array.
@@ -48,10 +49,10 @@ class ItemCollection {
   /**
    * Compare 2 ItemCollection by id
    *
-   * @param {ItemCollection} left
-   * @param {ItemCollection} right
+   * @param left
+   * @param right
    */
-  static diff(left, right) {
+  static diff(left: ItemCollection, right: ItemCollection) {
     if (left.length !== right.length) return true;
 
     for (let i = 0, len = left.length; i < len; i++) {
@@ -110,26 +111,26 @@ class ItemCollection {
 
   /**
    * Compare with other ItemCollection.
-   * @param {ItemCollection} other
+   * @param other
    */
-  diff(other) {
+  diff(other: ItemCollection) {
     return ItemCollection.diff(this, other);
   }
 
   /**
    * Get item via index, equal to this[index]
-   * @param {Number} index
+   * @param index
    */
-  get(index) {
+  get(index: number) {
     return this.items[index];
   }
 
   /**
    * Set item at specified position,
-   * @param {Number} index, specified position
-   * @param {Item} item, whiteboard item to be add.
+   * @param index, specified position
+   * @param item, whiteboard item to be add.
    */
-  set(item, index) {
+  set(item: Item, index: number) {
     if (this.items[index] === item) return false;
 
     if (typeof index === 'undefined') {
@@ -140,8 +141,8 @@ class ItemCollection {
 
     item.layer = this.layer;
     this.items[index] = item;
-
-    if (process.env.NODE_ENV === 'development') {
+    //@ts-ignore
+    if (!IS_PRODUCTION) {
       this[index] = item;
     }
 
@@ -158,8 +159,8 @@ class ItemCollection {
 
     item.layer = this.layer;
     this.items.push(item);
-
-    if (process.env.NODE_ENV === 'development') {
+    //@ts-ignore
+    if (!IS_PRODUCTION) {
       let index = this.items.length - 1;
       this[index] = item;
     }
@@ -168,7 +169,7 @@ class ItemCollection {
     return this;
   }
 
-  buffer(item) {
+  buffer(item: Item) {
     if (!(item instanceof Item)) throw new TypeError('Only Item can add to Collection!');
 
     item.layer = this.layer;
@@ -215,17 +216,17 @@ class ItemCollection {
 
   /**
    * Remove specified item from list.
-   * @param {Item} item1
+   * @param item1
    */
-  remove(item1) {
-    return this.delete(item2 => item2 === item1);
+  remove(targetItem: Item) {
+    return this.delete(item => item === targetItem);
   }
 
   /**
    * Remove item at specified index.
-   * @param {Item} item1
+   * @param index
    */
-  removeAt(index) {
+  removeAt(index: number) {
     let item = this.items[index];
     this.remove(item);
     return item;
@@ -234,9 +235,9 @@ class ItemCollection {
   /**
    * Delete items of current collection.
    * It will trigger layer-refresh;
-   * @param {Function} fn, filter determine which item should be removed.
+   * @param fn, filter determine which item should be removed.
    */
-  delete(fn) {
+  delete(fn: (item: Item) => boolean) {
     let deleted = new ItemCollection();
 
     this.items = this.items.filter(item => {

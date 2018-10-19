@@ -63,9 +63,9 @@ class Path extends Item {
 
   /**
    * Append  Arc Segment
-   * @param {Point} cp1
-   * @param {Point} cp2
-   * @param {Number} radius
+   * @param cp1
+   * @param cp2
+   * @param radius
    */
   public arcTo(cp1: Point, cp2: Point, radius = 0) {
     const segment = new ArcSegment(cp1, cp2, radius);
@@ -76,8 +76,8 @@ class Path extends Item {
   /**
    * Append Move segment for current path.
    *
-   * @param {Number | Point} x
-   * @param {Number} y
+   * @param x
+   * @param y
    */
   public moveTo(x: number , y: number): Path
   /**
@@ -94,8 +94,8 @@ class Path extends Item {
   /**
    * Append LineTo segment for current path.
    *
-   * @param {Number | Point} x
-   * @param {Number} y
+   * @param x
+   * @param y
    */
   public lineTo(x: Point);
   public lineTo(x: number, y: number);

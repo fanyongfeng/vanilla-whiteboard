@@ -210,7 +210,7 @@ export default class EventHandler {
    */
   invokeToolSlotHandler(name, event) {
     if (!this.tool || typeof this.tool[name] !== 'function') return null; //ensure return undefined when handler is null.
-    // if(process.env.NODE_ENV === 'development')
+    // if(!IS_PRODUCTION)
     //   console.log(this.tool.type, name, 'triggered!');
     return this.tool[name](event);
   }

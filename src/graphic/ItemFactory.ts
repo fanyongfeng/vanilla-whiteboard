@@ -129,10 +129,10 @@ export function createItemViaJSON(json) {
 
 /**
  *
- * @param {String} type
- * @param {Object} style, Style of item.
+ * @param type
+ * @param style, Style of item.
  */
-export function createItem(type, style = {}) {
+export function createItem(type: string, style = {}) {
   // attach to nebula!
   let shape = shapeTypes[type],
     ctor = shape.ctor,

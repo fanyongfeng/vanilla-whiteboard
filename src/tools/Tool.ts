@@ -23,7 +23,7 @@ export default class Tool {
   public mode = toolStatus.select;
   public type: IToolType;
 
-  constructor(type) {
+  constructor(type: IToolType) {
     this.type = type;
 
     if (typeof this._init === 'function') {

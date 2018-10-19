@@ -12,9 +12,9 @@ import { deepMixin } from '../decorators/mixin';
  * 2) 当拖拽时选中白板Items
  * 3）当拖拽控制点时可以变形Items
  */
+@deepMixin(dragBounds())
 @deepMixin(transformable())
 @deepMixin(selectable())
-@deepMixin(dragBounds())
 class Selection extends Tool {}
 
 export default Selection;

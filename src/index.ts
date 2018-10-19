@@ -48,7 +48,10 @@ nebula.Whiteboard = Whiteboard;
 // nebula.enum = { keyCode };
 
 //tmp for debug
-playground.init();
+//@ts-ignore
+if (!IS_PRODUCTION) {
+  playground.init();
+}
 
 window.nebula = nebula;
 

@@ -26,11 +26,11 @@ export default class Layer {
 
   /**
    * Move items from one to other
-   * @param {Layer} source layer
-   * @param {Layer} target layer
-   * @param {Function | undefined} fn callback.
+   * @param source layer
+   * @param target layer
+   * @param fn callback.
    */
-  static elevator(source: Layer, target: Layer, fn?) {
+  static elevator(source: Layer, target: Layer, fn?: () => void) {
     let sourceItems = source.items;
 
     for (let i = 0, len = sourceItems.length; i < len; i++) {
