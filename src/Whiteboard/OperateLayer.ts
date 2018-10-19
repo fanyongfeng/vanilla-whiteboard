@@ -40,7 +40,7 @@ export default class OperateLayer extends Layer {
     super.clear();
     this.setCursor('default');
   }
-  
+
   /**
    * draw items and cursor, but draw cursor first!
    */

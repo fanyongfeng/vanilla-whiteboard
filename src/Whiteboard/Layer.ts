@@ -3,6 +3,7 @@ import ItemCollection from './ItemCollection';
 import Matrix from '../graphic/types/Matrix';
 import Rect from '../graphic/types/Rect';
 import Whiteboard from '.';
+import Item from '../graphic/Item';
 
 /**
  * Create canvas layer, and Manage all canvases in whiteboard.
@@ -50,17 +51,17 @@ export default class Layer {
 
   /**
    * Alias of items.append .
-   * @param {Item} item
+   * @param item
    */
-  append(item) {
+  append(item: Item) {
     this.items.add(item);
   }
 
   /**
    * Alias of items.remove .
-   * @param {Item} item
+   * @param item
    */
-  remove(item) {
+  remove(item: Item) {
     this.items.remove(item);
   }
 
@@ -215,7 +216,7 @@ export default class Layer {
 
   /**
    * Move own items to target
-   * @param {Layer} target
+   * @param target
    */
   elevateTo(target: Layer) {
     Layer.elevator(this, target);

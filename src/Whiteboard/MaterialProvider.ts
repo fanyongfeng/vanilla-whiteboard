@@ -31,7 +31,7 @@ export default class MaterialProvider {
    * Get material image by url.
    * @param url
    */
-  get(url: string): Img {
+  get(url: string) {
     let cached = this.cached;
     if (cached[url]) return cached[url];
     let material = new Img({}, url);
@@ -44,7 +44,7 @@ export default class MaterialProvider {
    * Remove material image by url.
    * @param url
    */
-  remove(url: string): Img  {
+  remove(url: string) {
     let img = this.cached[url];
     delete this.cached[url];
     this.length--;
