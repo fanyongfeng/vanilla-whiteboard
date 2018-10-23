@@ -1,4 +1,5 @@
 import OperateLayer from '../Whiteboard/OperateLayer';
+import ItemCollection from '../Whiteboard/ItemCollection';
 
 /**
  * Base class of tools, for:
@@ -22,6 +23,7 @@ export default class Tool {
   public globalCtx!: IContext; // 白板上下文，在实例化后注入；
   public mode = toolStatus.select;
   public type: IToolType;
+  public items!: ItemCollection
 
   constructor(type: IToolType) {
     this.type = type;
@@ -37,10 +39,10 @@ export default class Tool {
 
   /**
    * Items of activeLayer.
-   */
-  get items() {
-    return window.items;
-  }
+  //  */
+  // get items() {
+  //   return window.items;
+  // }
 
   /**
    * Get layer of tool
@@ -52,4 +54,5 @@ export default class Tool {
   get layer() {
     return this._layer;
   }
+
 }

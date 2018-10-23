@@ -59,10 +59,6 @@ export default {
       wb2.remove(hash);
     }
 
-    function transformItem(hash) {
-      wb2.remove(hash);
-    }
-
     function typingText(hash) {
       wb2.typingText(hash);
     }
@@ -85,17 +81,14 @@ export default {
       .on('item:add', arg => {
         addItem(arg);
       })
-      .on('item:remove', arg => {
+      .on('items:delete', arg => {
         removeItem(arg);
-      })
-      .on('item:transform', arg => {
-        transformItem(arg);
       })
       .on('item:typing', arg => {
         typingText(arg);
       })
       .on('pointer:move', arg => {
-        pointerMove();
+        pointerMove(arg);
       })
       .on('pointer:draw', arg => {
         pointerDraw();

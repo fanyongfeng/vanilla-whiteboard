@@ -232,7 +232,6 @@ export default class Whiteboard  {
 
   remove(json) {
     this.items.deleteById(json);
-    this.context.emit('items:delete', json);
   }
 
   resize(json) {
@@ -257,6 +256,7 @@ export default class Whiteboard  {
 
   set tool(val) { //TODO: set Tool type !== get Tool type
     this.handler.tool = getTool(val);
+    this.handler.tool.items = this.items;
   }
 
   get tool() {

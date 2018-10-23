@@ -6,7 +6,6 @@ import Matrix from './types/Matrix';
 import { memoizable, observeProps } from '../decorators/memoized';
 import emittable from '../decorators/emitter';
 import Layer from '../Whiteboard/Layer';
-import { Segment } from './types/Segment';
 
 export interface ItemOptions {
   type: IToolType,
@@ -82,7 +81,7 @@ abstract class Item {
    * Unite bounds of children , and return a new Rect.
    * @param children
    */
-  uniteBoundsOfChildren(children: Segment[]) {
+  uniteBoundsOfChildren(children) {
     let x1 = Infinity,
       x2 = -x1,
       y1 = x1,
@@ -273,6 +272,10 @@ abstract class Item {
     ctx.strokeRect.apply(ctx, this.strokeBounds.toJSON());
     ctx.restore();
   }
+
+  // for text Item
+  set editable(_value) { }
+  drawTextImg() { }
 }
 
 export default Item;

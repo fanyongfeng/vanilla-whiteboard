@@ -255,7 +255,9 @@ class ItemCollection {
    * Delete selected items of current collection.
    */
   deleteSelected() {
-    return this.delete(item => item.selected);
+    const deleted = this.delete(item => item.selected);
+    this.layer.globalCtx.emit('items:delete', deleted.map(item => item.id));
+    return deleted;
   }
 
   /**

@@ -22,7 +22,7 @@ let config = {
       module: true,
       jsnext: true,
       main: true,
-      extensions: ['.js'],
+      extensions: ['.js', '.ts'],
     }),
     commonjs({
       include: ['node_modules/**'],

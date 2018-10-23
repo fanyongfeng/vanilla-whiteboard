@@ -57,9 +57,10 @@ export default class Text extends Item {
 
   // private _mode = 'textarea'; // textarea
   // private _autoBreak = true; // if _autoBreak is true, Text line will break if out of canvas bounds.
-  private _editable!: boolean;
   // private _crossBorder = false; // can cross a boundary
   private _cxt!: CanvasRenderingContext2D;
+
+  public _editable!: boolean;
 
   public textWrapper!: HTMLDivElement;
   public zoom: number = 1;

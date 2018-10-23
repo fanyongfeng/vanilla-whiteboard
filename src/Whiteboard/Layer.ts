@@ -191,7 +191,7 @@ export default class Layer {
    * @param radio
    */
   zoom(radio: number) {
-    // /this.ctx.scale(radio, radio);
+    // this.ctx.scale(radio, radio);
     this.matrix.scale(radio, radio);
     setStyle(this.el, {
       width: `${this.width * radio}px`,
