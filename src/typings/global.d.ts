@@ -7,13 +7,13 @@
   backingStorePixelRatio?: number,
  }
 
-declare interface EventTarget {
+interface EventTarget {
   innerHTML: string,
   width: number,
   height: number
 }  
 
-declare interface Window {
+interface Window {
   [key: string]: any,
 }
 

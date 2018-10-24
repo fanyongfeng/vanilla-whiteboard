@@ -52,7 +52,7 @@ abstract class Item {
   input?: HTMLDivElement; // for  Text Item
   changed!: () => void
 
-  constructor(options?: Partial<ItemOptions>) {
+  constructor(options?: Partial<ItemOptions>) { //TODO; refactor
     if (options) {
       const { type, typeId, id, style, ...rest } = options;
       type && (this.type = type);
@@ -112,7 +112,7 @@ abstract class Item {
   /**
    * Get bounds with stroke of current item.
    */
-  get strokeBounds() {
+  get strokeBounds() { // TODO: to strokeBounds.
     return this.bounds;
   }
 
@@ -143,6 +143,7 @@ abstract class Item {
     return this.transform(mx.translate(point));
   }
 
+  //TODO: add return value type.
 
   /**
  * Scale current item, base on center of item.

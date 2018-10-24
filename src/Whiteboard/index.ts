@@ -135,7 +135,7 @@ export default class Whiteboard  {
 
     // 将context 属性赋值白板实例
     // if (!IS_PRODUCTION) Object.keys(proto).forEach(key => (this[key] = proto[key]));
-    Object.keys(proto).forEach(key => (this[key] = proto[key]));
+    Object.keys(proto).forEach(key => (this[key] = proto[key])); //TODO: 重构
 
     //return context;
     return Object.create(proto);

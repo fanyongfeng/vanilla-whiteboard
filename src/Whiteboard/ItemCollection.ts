@@ -12,7 +12,7 @@ import Layer from './Layer';
 //   [key in MethodKey]: Array<T>[key]
 // }
 
-
+//TODO: 重构：http://tech.tutorabc.com.cn/topic/94/%E5%B7%A7%E7%94%A8-typescript-%E4%B8%80/2
 interface ItemCollection {
   forEach(callbackfn: (value: Item) => void, thisArg?: any): void;
   map(callbackfn: (value: Item, index: number) => any, thisArg?: any): Item[];
@@ -97,7 +97,7 @@ class ItemCollection {
    * filter duplicated items
    */
   distinct() {
-    this.items = Array.from(new Set(this.items));
+    this.items = [...(new Set(this.items))];
   }
 
   /*

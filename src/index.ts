@@ -49,7 +49,7 @@ nebula.Whiteboard = Whiteboard;
 
 //tmp for debug
 //@ts-ignore
-if (!IS_PRODUCTION) {
+if (!IS_PRODUCTION) { //TODO: 定义
   playground.init();
 }
 

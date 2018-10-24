@@ -46,7 +46,7 @@ export function changed() {
  * changed: Notify the layer to refresh.
  *
  */
-export function memoizable() {
+export function memoizable() { //TODO: classDecorator.
   return function(target) {
     if (typeof target.prototype.changed === 'function') throw new Error(`can't decorate memoizable twice!`);
 

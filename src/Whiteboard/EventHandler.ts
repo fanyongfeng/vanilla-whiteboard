@@ -12,7 +12,7 @@ import Tool from '../tools/Tool';
 // const mousemove = 'mousemove touchmove';
 // const mouseup = 'mouseup touchend';
 
-export type MouseOrTouchEvent = MouseEvent & TouchEvent;
+export type MouseOrTouchEvent = MouseEvent & TouchEvent; // TODO: 联合类型
 
 const mousedown = 'mousedown';
 const mousemove = 'mousemove';
@@ -72,6 +72,7 @@ export default class EventHandler {
     this.onMouseUp = this.onMouseUp.bind(this);
 
     const canvas = this.canvas;
+    //TODO: 改为箭头函数，private， readonly
     addListener(canvas, mousedown, this.onMouseDown.bind(this));
     addListener(canvas, mousemove, this.onMouseMove);
     addListener(canvas, 'mouseenter', this.onMouseEnter.bind(this));
@@ -163,7 +164,7 @@ export default class EventHandler {
     addListener(this.canvas, mousemove, this.onMouseMove);
   }
 
-  onMouseMove(event: MouseOrTouchEvent) {
+  onMouseMove = (event: MouseOrTouchEvent) => {
     event.preventDefault();
 
     let _event = this._getMouseEvent(event),

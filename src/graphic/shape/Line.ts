@@ -2,7 +2,7 @@ import Shape from '../Shape';
 import Point from '../types/Point';
 
 export default class Line extends Shape {
-  public dash: Array<number> = [];
+  public dash: Array<number> = []; //TODO: tuple
 
   constructor(options, sp?: Point, ep?: Point) {
     super(options, sp, ep);

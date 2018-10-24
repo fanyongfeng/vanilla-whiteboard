@@ -15,6 +15,6 @@ import { deepMixin } from '../decorators/mixin';
 @deepMixin(dragBounds())
 @deepMixin(transformable())
 @deepMixin(selectable())
-class Selection extends Tool {}
+class Selection extends Tool {} // TODO : try to fix via doc of ts
 
 export default Selection;

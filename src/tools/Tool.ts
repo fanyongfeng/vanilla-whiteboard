@@ -8,7 +8,7 @@ import ItemCollection from '../Whiteboard/ItemCollection';
  * 3) emit event for websocket.
  * 4) manage items of operateLayer.
  */
-const toolStatus = {
+const toolStatus = { // TODO: refactor to enum
   move: 'move',
   select: 'select',
   drawing: 'drawing',
