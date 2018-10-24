@@ -8,7 +8,7 @@ import Layer from './Whiteboard/Layer';
 import animate from './animate/animate';
 import animateColor from './animate/animateColor';
 import Whiteboard from './Whiteboard';
-// import playground from './playground.js'; // for debug,
+import playground from './playground.js'; // for debug,
 // import keyCode from '';
 
 import { RGB2HSL, HSL2RGB, RGB2Gray, Gray2RGB, Gray2HSB } from './graphic/algorithm/color';
@@ -49,9 +49,9 @@ nebula.Whiteboard = Whiteboard;
 
 //tmp for debug
 //@ts-ignore
-// if (!IS_PRODUCTION) {
-//   playground.init();
-// }
+if (!IS_PRODUCTION) {
+  playground.init();
+}
 
 window.nebula = nebula;
 

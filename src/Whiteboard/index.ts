@@ -115,7 +115,7 @@ export default class Whiteboard  {
    * 注意，要区分白板实例的context，和canvas getContext
    *
    */
-  private _createContext(): IContext {
+  private _createContext() {
     let backgroundLayer = new Layer(this.width, this.height, 'background'),
       activeLayer = new Layer(this.width, this.height, 'active'),
       operateLayer = new OperateLayer(this.width, this.height, 'operate');
@@ -204,7 +204,7 @@ export default class Whiteboard  {
     });
   }
 
-  addItem(item) {
+  addItem(item: Item) {
     this.items.add(item);
   }
 
