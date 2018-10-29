@@ -24,7 +24,7 @@ export default function emittable(): ClassDecorator {
      * @param {String} name Name of Event.
      * @param {Function} fn Handler of Event.
      */
-    target.prototype.on = function(name: string, fn) {
+    target.prototype.on = function(name: string, fn: () => void) {
       if (typeof name !== 'string' || typeof fn !== 'function') throw new Error('Arguments illegal!');
 
       this.__callbacks[name] = this.__callbacks[name] || [];
@@ -66,8 +66,8 @@ export default function emittable(): ClassDecorator {
      * @param {String} name Name of Event.
      * @param {Function} fn Handler of Event.
      */
-    target.prototype.once = function(name, fn) {
-      return this.on(name, (...arg) => {
+    target.prototype.once = function(name: string, fn: () => void) {
+      return this.on(name, (...arg: any[]) => {
         fn.apply(this, arg);
         this.off(name, fn);
       });
@@ -78,7 +78,7 @@ export default function emittable(): ClassDecorator {
      *
      * @param {String} name Name of Event.
      */
-    target.prototype.emit = function(name, ...args) {
+    target.prototype.emit = function(name: string, ...args: any[]) {
       let handlers = this.__callbacks[name];
       if (!handlers) return;
 

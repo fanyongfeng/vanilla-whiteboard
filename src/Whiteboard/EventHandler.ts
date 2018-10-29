@@ -12,7 +12,7 @@ import Tool from '../tools/Tool';
 // const mousemove = 'mousemove touchmove';
 // const mouseup = 'mouseup touchend';
 
-export type MouseOrTouchEvent = MouseEvent & TouchEvent; // TODO: 联合类型
+export type MouseOrTouchEvent = MouseEvent | TouchEvent;
 
 const mousedown = 'mousedown';
 const mousemove = 'mousemove';
@@ -127,7 +127,7 @@ export default class EventHandler {
     this.keyModifiers[event.key] = false;
   }
 
-  _getMouseEvent(event: MouseOrTouchEvent) {
+  private getMouseEvent(event: MouseOrTouchEvent) {
     const _event = new CustomizeMouseEvent(event);
     const point = _event.point;
     this.inverseMatrix.applyToPoint(point);
@@ -137,7 +137,7 @@ export default class EventHandler {
   onMouseDown(event: MouseOrTouchEvent) {
     event.preventDefault();
 
-    const _event = this._getMouseEvent(event);
+    const _event = this.getMouseEvent(event);
 
     if (this.invokeToolSlotHandler('onBeforeMouseDown', _event) === false) return;
 
@@ -157,7 +157,7 @@ export default class EventHandler {
     this.isMouseDown = false;
     // this.isDragging = false;
 
-    this.invokeToolSlotHandler('onMouseUp', this._getMouseEvent(event));
+    this.invokeToolSlotHandler('onMouseUp', this.getMouseEvent(event));
 
     removeListener(document, mouseup, this.onMouseUp);
     removeListener(document, mousemove, this.onMouseMove);
@@ -167,7 +167,7 @@ export default class EventHandler {
   onMouseMove = (event: MouseOrTouchEvent) => {
     event.preventDefault();
 
-    let _event = this._getMouseEvent(event),
+    let _event = this.getMouseEvent(event),
       point = _event.point;
 
     const distance = this.context.settings.distance;
@@ -177,7 +177,7 @@ export default class EventHandler {
 
     let contain = this.layer.bounds.containsPoint(point);
     if (!contain) return;
-
+    //@ts-ignore
     if (typeof event.touches !== 'undefined' && event.touches.length > 1) {
       return;
     }
@@ -196,11 +196,11 @@ export default class EventHandler {
     this.lastPoint = point;
   }
 
-  onMouseEnter(event) {
+  onMouseEnter(event: MouseOrTouchEvent) {
     this.invokeToolSlotHandler('onMouseEnter', event);
   }
 
-  onMouseLeave(event) {
+  onMouseLeave(event: MouseOrTouchEvent) {
     this.invokeToolSlotHandler('onMouseLeave', event);
   }
 
@@ -209,10 +209,10 @@ export default class EventHandler {
    * @param {String} name Name of handler
    * @param  {...any} args arguments
    */
-  invokeToolSlotHandler(name, event) {
+  invokeToolSlotHandler(name: string, data: any) {
     if (!this.tool || typeof this.tool[name] !== 'function') return null; //ensure return undefined when handler is null.
     // if(!IS_PRODUCTION)
     //   console.log(this.tool.type, name, 'triggered!');
-    return this.tool[name](event);
+    return this.tool[name](data);
   }
 }

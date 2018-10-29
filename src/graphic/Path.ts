@@ -54,7 +54,7 @@ class Path extends Item {
     this.segments = [];
   }
 
-  public arc(x, y, r, sa, ea) {
+  public arc(x: number, y: number, r: number, sa: number, ea: number) {
     const segment = new ArcSegment();
     segment.arc = [x, y, r, sa, ea];
     this.add(segment);
@@ -97,9 +97,9 @@ class Path extends Item {
    * @param x
    * @param y
    */
-  public lineTo(x: Point);
-  public lineTo(x: number, y: number);
-  public lineTo(x: number | Point, y?: number) {
+  public lineTo(x: Point): Path;
+  public lineTo(x: number, y: number): Path;
+  public lineTo(x: number | Point, y?: number): Path {
     const point = Point.instantiate(x, y);
     const segment = new LineSegment(point);
     this.add(segment);
@@ -263,6 +263,7 @@ class Path extends Item {
       ctx.stroke();
 
     if (this.showAuxiliary) this.segments.forEach(segment => segment.draw(ctx));
+    return this;
   }
 
   protected _toJSON(): any {

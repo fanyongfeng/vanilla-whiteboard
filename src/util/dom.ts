@@ -30,7 +30,7 @@ export function setStyle(element: HTMLElement, styles: object) {
  * @param {String} eventType, e.g. "mousemove", "mousemove mousedown"
  * @param {Function} handler
  */
-export function addListener(element, eventType: string, handler: (event: any) => any) {
+export function addListener(element: EventTarget, eventType: string, handler: (event: any) => any) {
   if (!element) return;
 
   let events = eventType.split(' ');
@@ -58,7 +58,7 @@ export function addListener(element, eventType: string, handler: (event: any) =>
  * @param {String} eventType, e.g. "mousemove", "mousemove mousedown"
  * @param {Function} handler
  */
-export function removeListener(element, eventType: string, handler: (event: any) => any) {
+export function removeListener(element: EventTarget, eventType: string, handler: (event: any) => any) {
   if (!element) return;
 
   let events = eventType.split(' ');

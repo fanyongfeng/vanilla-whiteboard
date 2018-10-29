@@ -10,20 +10,20 @@ import { MouseOrTouchEvent } from './EventHandler';
  * Mouse Event Class
  */
 export class CustomizeMouseEvent {
-  
+
   private _point!: Point;
   public originEvent: MouseOrTouchEvent;
   public type: string;
   public target: EventTarget | null;
-  public offsetX: number;
-  public offsetY: number;
+  public offsetX?: number;
+  public offsetY?: number;
 
   constructor(originEvent: MouseOrTouchEvent) {
     this.originEvent = originEvent;
     this.type = originEvent.type;
     this.target = originEvent.target;
-    this.offsetX = originEvent.offsetX;
-    this.offsetY = originEvent.offsetY;
+    if (originEvent instanceof MouseEvent) this.offsetX = originEvent.offsetX;
+    if (originEvent instanceof MouseEvent) this.offsetY = originEvent.offsetY;
   }
 
   get point() {
@@ -34,7 +34,7 @@ export class CustomizeMouseEvent {
   }
 
   get delta() {
-    if (typeof this.originEvent.movementX !== 'undefined') {
+    if (this.originEvent instanceof MouseEvent) {
       return new Point(this.originEvent.movementX, this.originEvent.movementY);
     }
     return new Point(0, 0);

@@ -1,9 +1,12 @@
 import Group from '../../graphic/Group';
+//@ts-ignore
 import { boundsPoi, antiDir, cursorMap } from '../../graphic/algorithm/corner';
 import { getAngle } from '../../graphic/algorithm/trigonometry';
 
 import { CustomizeMouseEvent } from '../../Whiteboard/EventType';
 import Point from '../../graphic/types/Point';
+import Item from '../../graphic/Item';
+import { Rect } from '../..';
 /**
  * enable tool has transform behavior.
  * 依赖于selectable, 必须选中才可以tranform
@@ -37,7 +40,8 @@ export default function transformable(enableRotate = false): { [key: string]: an
       return false;
     },
 
-    onMouseDrag({ delta, point }) {
+    onMouseDrag(event: CustomizeMouseEvent) {
+      const { delta, point } = event;
       if (this.mode === 'select') {
         this.transformGroup.children = this._selected;
       } else if (this.mode === 'resize') {
@@ -85,7 +89,7 @@ export default function transformable(enableRotate = false): { [key: string]: an
 
     onMouseUp() {
       if (!this.actionData) return false;
-      const ids = this.transformGroup.children.map(item => item.id);
+      const ids = this.transformGroup.children.map((item: Item) => item.id);
       if (this.mode === 'move') {
         this.globalCtx.emit('items:move', [ids, [this.actionData.x, this.actionData.y]]);
       } else if (this.mode === 'resize') {
@@ -96,12 +100,13 @@ export default function transformable(enableRotate = false): { [key: string]: an
       this.actionData = null;
     },
 
-    onMouseMove({ point }) {
+    onMouseMove(event: CustomizeMouseEvent) {
+      const { point } = event;
       return !this._pointOnResize(point);
     },
 
     _pointOnResize(point: Point) {
-      let corner, bounds;
+      let corner, bounds: Rect;
 
       let rotatePoint = this.transformGroup.control.rotateControlPoint;
       if (this.enableRotate && rotatePoint && point.nearby(rotatePoint)) {
@@ -110,6 +115,7 @@ export default function transformable(enableRotate = false): { [key: string]: an
       }
 
       bounds = this.transformGroup.bounds;
+      //@ts-ignore
       corner = boundsPoi.find(key => point.nearby(bounds[key]));
 
       if (!corner) {

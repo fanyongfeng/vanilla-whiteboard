@@ -20,7 +20,7 @@ export default class Action {
   private _undo!: object;
   // private _hot = 0; // 操作热度计数
 
-  constructor(delta) {
+  constructor(delta: any) {
     this.type = delta.type;
     this._redo = {};
   }
@@ -30,7 +30,7 @@ export default class Action {
    * @param {Object} delta
    * @param {Object} oldDelta used fro anti-action
    */
-  _calcUndo(delta) { // delete oldDelta
+  _calcUndo(delta: any) { // delete oldDelta
     let hash = delta.data;
     switch (delta.action) {
       case 'ADD':

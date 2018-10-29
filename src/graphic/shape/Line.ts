@@ -1,10 +1,11 @@
 import Shape from '../Shape';
 import Point from '../types/Point';
+import { ItemOptions } from '../Item';
 
 export default class Line extends Shape {
-  public dash: Array<number> = []; //TODO: tuple
+  public dash: number[] = [];
 
-  constructor(options, sp?: Point, ep?: Point) {
+  constructor(options?: Partial<ItemOptions>, sp?: Point, ep?: Point) {
     super(options, sp, ep);
     this.style.dashArray = this.dash || [];
   }

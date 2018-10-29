@@ -2,6 +2,7 @@ import Point from './Point';
 import { props } from '../algorithm/corner';
 import { mixinProps } from '../../decorators/mixin';
 import Item from '../Item';
+import Matrix from './Matrix';
 
 /**
  *  Type Rect
@@ -12,7 +13,7 @@ class Rect {
   /**
    * static method to create instance from params
    */
-  static instantiate(x, y, width, height) {
+  static instantiate(x: number, y: number, width: number, height: number) {
     if (typeof x === 'undefined') throw TypeError('Invalid arguments!');
     return new Rect(x, y, width, height);
     // if x is Rect
@@ -242,16 +243,16 @@ class Rect {
 
   /**
    * transform by matrix
-   * @param {Matrix} matrix
+   * @param matrix
    */
-  transform(matrix) {
+  transform(matrix: Matrix) {
     matrix.applyToRect(this);
   }
 
   /**
    * return point data as JSON-format: [x, y, width, height]
    */
-  toJSON(): number[] {
+  toJSON() {
     return [this.x, this.y, this.width, this.height];
   }
 

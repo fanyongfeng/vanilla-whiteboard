@@ -2,6 +2,7 @@ import Tool from './Tool';
 import ShapeText from '../graphic/shape/Text';
 import { deepMixin } from '../decorators/mixin';
 import itemCreator from './mixins/itemCreator';
+import { CustomizeMouseEvent } from '../Whiteboard/EventType';
 
 /**
  * Tool to input text on whiteboard
@@ -10,12 +11,12 @@ import itemCreator from './mixins/itemCreator';
 export default class Text extends Tool {
 
   public currentShape!: ShapeText;
-  constructor(type) {
+  constructor(type: IToolType) {
     super(type);
     window.drawText = this.drawText.bind(this); // for test
   }
 
-  onMouseDown(event) {
+  onMouseDown(event: CustomizeMouseEvent) {
     this.currentShape.editable = true;
     this.currentShape.startPoint = this.currentShape.endPoint = event.point;
     this.currentShape.textWrapper = this.globalCtx.textWrapper;
@@ -33,7 +34,7 @@ export default class Text extends Tool {
    * set all Text disabled
    * toolChanged
    */
-  public toolChanged({ type }) {
+  public toolChanged({ type }: { type: IToolType }) {
     this.items.filter(item => item.type === this.type).map(item => {
       item.editable = type === this.type;
     });

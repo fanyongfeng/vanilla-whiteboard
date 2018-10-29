@@ -16,13 +16,17 @@ export default class OperateLayer extends Layer {
    * set cursor of layer. Use for operateLayer.
    * @param value Img instance
    */
-  setCursor(value: Img);
-  setCursor(value: string);
+  setCursor(value: Img): void;
+  /**
+   * set cursor of layer. Use for operateLayer.
+   * @param value Img url
+   */
+  setCursor(value: string): void;
   /**
    * set cursor of layer. Use for operateLayer.
    * @param value css cursor string
    */
-  setCursor(value: string | Img) {
+  setCursor(value: string | Img): void {
     if (typeof value === 'string') {
       this.el.style.cursor = value;
       this._cursorImage = undefined;

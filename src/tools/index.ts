@@ -38,14 +38,14 @@ function create() {
   registerTool('pathMutator', PathMutator);
 }
 
-function registerTool(name: string, ctor:  { new(...args: any[]): any }) {
+function registerTool(name: string, ctor: { new(...args: any[]): any }) {
   if (tools[name]) throw new Error(`Tool ${name} already exist!`);
   tools[name] = new ctor(name);
   toolTypes.push(name);
   return tools[name];
 }
 
-function getTool(name) {
+function getTool(name: string) {
   if (typeof name !== 'string') throw new TypeError('setter value must be string!');
   if (!tools[name]) throw new Error(`can't specify tool ${name}!`);
   return tools[name];

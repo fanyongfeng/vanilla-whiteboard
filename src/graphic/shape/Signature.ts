@@ -20,5 +20,6 @@ export default class Signature extends Path {
   protected _draw(ctx: CanvasRenderingContext2D) {
     this._ctx = ctx;
     //TODO: calc width of Dot.
+    return this;
   }
 }

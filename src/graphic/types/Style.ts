@@ -41,7 +41,7 @@ export default class Style {
   private _fillStyle: Color;
   fillRule!: "nonzero" | "evenodd";
   lineWidth!: number;
-  lineCap!: "butt" | "round" | "square"; 
+  lineCap!: "butt" | "round" | "square";
   lineJoin!: "bevel" | "round" | "miter";
   miterLimit!: number;
   lineDashOffset!: number;
@@ -82,7 +82,7 @@ export default class Style {
   get fillStyle() {
     return this._fillStyle;
   }
-  
+
   /**
    * ensure Color type
    */
@@ -134,9 +134,9 @@ export default class Style {
    * @param style
    */
   equals(other: Style) {
-    function compare(style1, style2) {
-      let values1 = style1.values,
-        values2 = style2.values;
+    function compare(style1: Style, style2: Style) {
+      let values1 = Object.keys(style1),
+        values2 = Object.keys(style2);
 
       for (let key in values1) {
         let value1 = values1[key],

@@ -1,5 +1,6 @@
 import { CustomizeMouseEvent } from '../../Whiteboard/EventType';
 import Point from '../../graphic/types/Point';
+import Item from '../../graphic/Item';
 /**
  * enable tool has select behavior.
  */
@@ -29,10 +30,11 @@ export default function selectable(_multiSelect = true): { [key: string]: any } 
 
       let point = event.point;
       this.dragRect.endPoint = point;
-      this._selected = this.items.filter(item => (item.selected = this.dragRect.bounds.containsRect(item.bounds)));
+      this._selected = this.items.filter((item: Item) => (item.selected = this.dragRect.bounds.containsRect(item.bounds)));
     },
 
-    onMouseMove({ point }) {
+    onMouseMove(event: CustomizeMouseEvent) {
+      const { point } = event;
       let isPointOnElement = this._pointOnElement(point);
       if (isPointOnElement) {
         let { target } = this;

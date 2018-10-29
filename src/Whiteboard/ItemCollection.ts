@@ -6,20 +6,13 @@ import { mixin } from '../decorators/mixin';
 import Item from '../graphic/Item';
 import Layer from './Layer';
 
-// type MethodKey = 'splice'|'push'|'unshift'|'sort'|'map'|'forEach'|'find'|'reduce'|'reduceRight'|'filter'|'includes'
+type MethodKey = 'splice'|'push'|'unshift'|'sort'|'map'|'forEach'|'find'|'reduce'|'reduceRight'|'filter'|'includes';
 
-// type ArrayProto<T = any> = {
-//   [key in MethodKey]: Array<T>[key]
-// }
-
-//TODO: 重构：http://tech.tutorabc.com.cn/topic/94/%E5%B7%A7%E7%94%A8-typescript-%E4%B8%80/2
-interface ItemCollection {
-  forEach(callbackfn: (value: Item) => void, thisArg?: any): void;
-  map(callbackfn: (value: Item, index: number) => any, thisArg?: any): Item[];
-  includes(value: Item, Index?: number): boolean;
-  filter(callbackfn: (value: Item, index: number) => boolean , thisArg?: any): Item[];
-  find(callbackfn: (value: Item, index: number) => boolean, thisArg?: any): Item;
+type ArrayProto<T> = {
+  [key in MethodKey]: Array<T>[key]
 }
+
+interface ItemCollection extends ArrayProto<Item> { }
 
 const arrMethods = {
 };
@@ -40,7 +33,7 @@ const arr = Array.prototype;
  */
 @mixin(arrMethods)
 class ItemCollection {
-  public layer: Layer
+  private layer?: Layer;
   private items: Item[] = [];
   private buffered: Item[] = [];
 
@@ -66,7 +59,7 @@ class ItemCollection {
    * @param {Array} items
    * @param {Layer} layer
    */
-  constructor(layer?, items?) {
+  constructor(layer?: Layer, items?: Item[]) {
     if (items) this.items = items;
 
     this.layer = layer;
@@ -138,8 +131,7 @@ class ItemCollection {
       if (this.includes(item)) return false;
       return this.add(item);
     }
-
-    item.layer = this.layer;
+    if (this.layer) item.layer = this.layer;
     this.items[index] = item;
     //@ts-ignore
     if (!IS_PRODUCTION) {
@@ -157,7 +149,7 @@ class ItemCollection {
   add(item: Item) {
     // if (!(item instanceof Item)) throw new TypeError('Only Item can add to Collection!');
 
-    item.layer = this.layer;
+    if (this.layer) item.layer = this.layer;
     this.items.push(item);
     //@ts-ignore
     if (!IS_PRODUCTION) {
@@ -172,7 +164,7 @@ class ItemCollection {
   buffer(item: Item) {
     if (!(item instanceof Item)) throw new TypeError('Only Item can add to Collection!');
 
-    item.layer = this.layer;
+    if (this.layer) item.layer = this.layer;
     this.buffered.push(item);
     this.changed();
     return this;
@@ -256,7 +248,7 @@ class ItemCollection {
    */
   deleteSelected() {
     const deleted = this.delete(item => item.selected);
-    this.layer.globalCtx.emit('items:delete', deleted.map(item => item.id));
+    if (this.layer) this.layer.globalCtx.emit('items:delete', deleted.map(item => item.id));
     return deleted;
   }
 

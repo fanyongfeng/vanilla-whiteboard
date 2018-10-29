@@ -1,4 +1,4 @@
-function assign(target, frm) {
+function assign(target: object, frm: object) {
   return Object.assign(target, frm);
 }
 
@@ -35,7 +35,7 @@ export function mixin(srcs: Object): ClassDecorator {
  * @param {String} name 名字
  * @param {Function} fn 带绑定的function
  */
-const combineFnToProto = function combineFnToProto(proto, name, fn) {
+const combineFnToProto = function combineFnToProto(proto: object, name: string, fn: (...arg: any[]) => any) {
   let origin = proto[name];
   if (typeof origin === 'undefined') {
     proto[name] = fn;
@@ -57,7 +57,7 @@ const combineFnToProto = function combineFnToProto(proto, name, fn) {
 /**
  * Deep mixins an object into the classes prototype.
  */
-export function deepMixin(srcs: Object) {
+export function deepMixin(srcs: Object): ClassDecorator {
   return target => {
     for (let key in srcs) {
       let descriptor = Object.getOwnPropertyDescriptor(srcs, key);
@@ -90,7 +90,7 @@ export function deepMixin(srcs: Object) {
  * Mixins property into the classes prototype.
  * @param {Map} props
  */
-export function mixinProps(props: Object) {
+export function mixinProps(props: Object): ClassDecorator {
   //Object.defineProperty
   return target => {
     for (const key in props) {

@@ -66,7 +66,7 @@ export default class Whiteboard  {
   material = new MaterialProvider();
   emit!: () => void;
 
-  constructor(options: WhiteboardOptions) {
+  constructor(options: Partial<typeof defaultOptions> & WhiteboardOptions) {
     this.options = Object.assign({}, defaultOptions, options);
 
     let { container, width, height } = this.options;
@@ -135,7 +135,10 @@ export default class Whiteboard  {
 
     // 将context 属性赋值白板实例
     // if (!IS_PRODUCTION) Object.keys(proto).forEach(key => (this[key] = proto[key]));
-    Object.keys(proto).forEach(key => (this[key] = proto[key])); //TODO: 重构
+    // Object.keys(proto).forEach(key => (this[key] = proto[key])); //TODO: 重构
+    this.backgroundLayer = backgroundLayer;
+    this.operateLayer = operateLayer;
+    this.activeLayer = activeLayer;
 
     //return context;
     return Object.create(proto);
@@ -220,27 +223,27 @@ export default class Whiteboard  {
     return ins;
   }
 
-  typingText(json) {
-    const input = this.items.find(item => item.id === json[0]).input;
-    input && (input.innerHTML = json[1]);
+  typingText(json: [number, string]) {
+    const textInstance = this.items.find(item => item.id === json[0]);
+    textInstance && textInstance.input && (textInstance.input.innerHTML = json[1]);
   }
 
-  add(json) {
+  add(json: Item) {
     let instance = this.createItem(json);
     this.items.add(instance);
   }
 
-  remove(json) {
+  remove(json: number[]) {
     this.items.deleteById(json);
   }
 
-  resize(json) {
+  resize(json: [number[], number[]]) {
     const ids = json[0];
     const [sx, sy, X, Y] = json[1];
     this.items.filter(item => ids.includes(item.id)).map(item => item.scale(sx, sy, new Point(X, Y)));
   }
 
-  move(json) {
+  move(json: [number[], number[]]) {
     const ids = json[0];
     const [x, y] = json[1];
     this.items.filter(item => ids.includes(item.id)).map(item => item.translate(new Point(x, y)));
@@ -254,12 +257,12 @@ export default class Whiteboard  {
     return this.activeLayer.items;
   }
 
-  set tool(val) { //TODO: set Tool type !== get Tool type
+  set tool(val: string) {
     this.handler.tool = getTool(val);
     this.handler.tool.items = this.items;
   }
 
-  get tool() {
+  getTool() {
     return this.handler.tool;
   }
 

@@ -1,4 +1,5 @@
 import { isZero } from '../algorithm/math';
+import Matrix from './Matrix';
 /**
  * The base type of graphic ,(location & vector)
  */
@@ -6,7 +7,7 @@ export default class Point implements Point {
   /**
    * static method to create instance from params
    */
-  static instantiate(x, y): Point {
+  static instantiate(x: number | Point, y?: number): Point {
     if (typeof x === 'undefined') throw TypeError('Invalid arguments!');
     if (typeof x === 'number') {
       return typeof y === 'number' ? new Point(x, y) : new Point(x, x);
@@ -40,9 +41,9 @@ export default class Point implements Point {
    * the point as a new point.
    * The object itself is not modified!
    */
-  add(x: number, y: number);
-  add(x: Point);
-  add(x: number | Point, y?: number) {
+  add(x: number, y: number): Point;
+  add(x: Point): Point;
+  add(x: number | Point, y?: number): Point {
     let point = Point.instantiate(x, y);
     return new Point(this.x + point.x, this.y + point.y);
   }
@@ -52,19 +53,15 @@ export default class Point implements Point {
    * @param x point.x
    * @param y point.y
    */
-  multiply(x: number, y: number);
-  multiply(x: number);
-  /**
-   *
-   * @param {Point} x
-   */
-  multiply(x: Point);
+  multiply(x: number, y: number): Point;
+  multiply(x: number): Point;
+  multiply(x: Point): Point;
   /**
    * Returns the multiplication of the supplied point to the point as a new
    * point.
    * The object itself is not modified!
    */
-  multiply(x: number | Point, y?: number) {
+  multiply(x: number | Point, y?: number): Point {
     let point = Point.instantiate(x, y);
     return new Point(this.x * point.x, this.y * point.y);
   }
@@ -73,17 +70,17 @@ export default class Point implements Point {
    * @param x point.x
    * @param y point.y
    */
-  subtract(x: number, y: number);
+  subtract(x: number, y: number): Point;
   /**
    * @param x instance of Pint
    */
-  subtract(x: Point);
+  subtract(x: Point): Point;
   /**
    * Returns the subtraction of the supplied value to both coordinates of
    * the point as a new point.
    * The object itself is not modified!
    */
-  subtract(x: number | Point, y?: number) {
+  subtract(x: number | Point, y?: number): Point {
     let point = Point.instantiate(x, y);
     return new Point(this.x - point.x, this.y - point.y);
   }
@@ -102,16 +99,16 @@ export default class Point implements Point {
    * Transforms the point by the matrix as a new point. The object itself is
    * not modified!
    *
-   * @param {Matrix} matrix
+   * @param matrix
    */
-  transform(matrix) {
+  transform(matrix: Matrix) {
     matrix.applyToPoint(this);
     return this;
   }
 
   /**
    * Add and return this
-   * @param {Point} other
+   * @param other
    */
   addEquals(other: Point) {
     this.x += other.x;
@@ -139,9 +136,8 @@ export default class Point implements Point {
 
   /**
    * Returns new point which is the result of linear interpolation with this one and another one
-   * @param {Point} other
-   * @param {Number} time , position of interpolation, between 0 and 1 default 0.5
-   * @return {Point}
+   * @param  other
+   * @param time , position of interpolation, between 0 and 1 default 0.5
    */
   lerp(other: Point, time = 0.5) {
     if (time > 1 || time < 0) throw new TypeError(`Param 'Time' must between 0 and 1;`);
@@ -151,8 +147,7 @@ export default class Point implements Point {
 
   /**
    * Returns the point between this point and another one
-   * @param {Point} other
-   * @return {Point}
+   * @param other
    */
   midPointFrom(other: Point) {
     return this.lerp(other);
@@ -160,7 +155,7 @@ export default class Point implements Point {
 
   /**
    * Returns distance from other point.
-   * @param {point} other
+   * @param other
    */
   getDistance(other: Point) {
     const dx = this.x - other.x,
@@ -171,8 +166,8 @@ export default class Point implements Point {
 
   /**
    *
-   * @param {Point} point
-   * @param {number} threshold
+   * @param point
+   * @param threshold
    */
   nearby(point: Point, threshold = 4) {
     return this.getDistance(point) < threshold;
@@ -205,7 +200,7 @@ export default class Point implements Point {
    * Rotates the point the given angle around origin center point;
    * @param angle
    */
-  rotate(angle: number);
+  rotate(angle: number): Point;
   /**
    * Rotates the point by the given angle around an optional center point.
    * The object itself is not modified.
@@ -213,11 +208,10 @@ export default class Point implements Point {
    * Read more about angle units and orientation in the description of the
    * {@link #angle} property.
    *
-   * @param {Number} angle the rotation angle
-   * @param {Point} center the center point of the rotation
-   * @return {Point} the rotated point
+   * @param angle the rotation angle
+   * @param center the center point of the rotation
    */
-  rotate(angle: number, center?: Point) {
+  rotate(angle: number, center?: Point): Point {
     if (angle === 0) return this.clone();
     angle = (angle * Math.PI) / 180;
 
@@ -227,7 +221,7 @@ export default class Point implements Point {
 
     point = new Point(point.x * cos - point.y * sin, point.x * sin + point.y * cos);
 
-    return center ? point.add(center, 0) : point;
+    return center ? point.add(center) : point;
   }
 
   /**
@@ -236,8 +230,8 @@ export default class Point implements Point {
    * parameter defines the length to normalize to. The object itself is not
    * modified!
    *
-   * @param {Number} [length=1] The length of the normalized vector
-   * @return {Point} the normalized vector of the vector that is represented
+   * @param [length=1] The length of the normalized vector
+   * @return the normalized vector of the vector that is represented
    *     by this point's coordinates
    */
   normalize(length = 1) {
@@ -251,8 +245,8 @@ export default class Point implements Point {
    * {@group-title Vector Math Functions}
    * Returns the dot product of the point and another point.
    *
-   * @param {Point} point
-   * @return {Number} the dot product of the two points
+   * @param point
+   * @return the dot product of the two points
    */
   dot(point: Point) {
     return this.x * point.x + this.y * point.y;

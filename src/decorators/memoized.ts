@@ -4,11 +4,11 @@ const cachedPropsKey = '__cachedProps';
  * mark getter as memoized prop, the value is cached till the instance mark as dirty,
  * @param {String} cacheKey, Specify the cacheKey of prop (default value: PropName)
  */
-export function memoized(cacheKey?: string) {
+export function memoized(cacheKey?: string): MethodDecorator {
   return function(_, name, descriptor) {
-    if (typeof descriptor.get !== 'function') throw new Error(`Can't decorate ${name}, Only used for getter~`);
+    if (typeof descriptor.get !== 'function') throw new Error(`Can't decorate ${String(name)}, Only used for getter~`);
 
-    let propKey = cacheKey || `${name}`;
+    let propKey = cacheKey || `${String(name)}`;
     const { get } = descriptor;
 
     descriptor.get = function() {
@@ -25,12 +25,13 @@ export function memoized(cacheKey?: string) {
 /**
  * mark setter. if the value changed, it will trigger canvas refresh OR mark layer as dirty.
  */
-export function changed() {
+export function changed(): MethodDecorator {
   return function(_, name, descriptor) {
-    if (typeof descriptor.set !== 'function') throw new Error(`Can't decorate ${name}, Only used for setter~`);
+    if (typeof descriptor.set !== 'function') throw new Error(`Can't decorate ${String(name)}, Only used for setter~`);
 
     const { set } = descriptor;
     descriptor.set = function() {
+      //@ts-ignore
       this.changed();
       return set.apply(this, arguments);
     };
@@ -46,7 +47,7 @@ export function changed() {
  * changed: Notify the layer to refresh.
  *
  */
-export function memoizable() { //TODO: classDecorator.
+export function memoizable(): ClassDecorator {
   return function(target) {
     if (typeof target.prototype.changed === 'function') throw new Error(`can't decorate memoizable twice!`);
 
@@ -67,22 +68,22 @@ export function memoizable() { //TODO: classDecorator.
   };
 }
 
-const validateFunc = function validateFunc(type, key) {
+const validateFunc = function validateFunc(type: any, key: string) {
   switch (type) {
     case Boolean:
-      return function(val) {
+      return function(val: any) {
         if (typeof val !== 'boolean') throw new TypeError(`setter '${key}' accept boolean value!`);
       };
     case String:
-      return function(val) {
+      return function (val: any) {
         if (typeof val !== 'string') throw new TypeError(`setter '${key}' accept string value!`);
       };
     case Number:
-      return function(val) {
+      return function (val: any) {
         if (typeof val !== 'number') throw new TypeError(`setter '${key}' accept number value!`);
       };
     default:
-      return function(val) {
+      return function (val: any) {
         if (!(val instanceof type)) throw new TypeError(`setter '${key}' accept ${type.name} value!`);
       };
   }
@@ -104,7 +105,7 @@ const validateFunc = function validateFunc(type, key) {
  *    }
  *  }
  */
-export function observeProps(desc) {
+export function observeProps(desc: object): ClassDecorator {
   if (!Object.keys(desc).length) throw new TypeError('must pass props!');
 
   return function(target) {

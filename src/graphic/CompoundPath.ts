@@ -1,7 +1,8 @@
-import Item from './Item';
+import Item, { ItemOptions } from './Item';
 import Path from './Path';
 import { memoized } from '../decorators/memoized';
 import { createItemViaJSON } from './ItemFactory';
+import { Segment } from './types/Segment';
 
 /**
  * @class A compound path is a complex path that is made up of one or more
@@ -14,13 +15,13 @@ import { createItemViaJSON } from './ItemFactory';
 class CompoundPath extends Item {
   private _children: Path[] = [];
 
-  static instantiate(options, paths) {
+  static instantiate(options: Partial<ItemOptions>, paths: Path[]) {
     let instance = new CompoundPath(options);
     paths.forEach(path => instance.add(createItemViaJSON(path)));
     return instance;
   }
 
-  constructor(options, paths: Path[]  = []) {
+  constructor(options: Partial<ItemOptions>, paths: Path[]  = []) {
     super(options);
     this._children = paths;
   }
@@ -41,7 +42,7 @@ class CompoundPath extends Item {
    */
   get segments() {
     let children = this._children,
-      segments = [];
+      segments: Segment[] = [];
     for (let i = 0, l = children.length; i < l; i++) {
       segments.push.apply(segments, children[i].segments);
     }
@@ -58,6 +59,7 @@ class CompoundPath extends Item {
 
   _draw(ctx: CanvasRenderingContext2D) {
     this._children.forEach(path => path.draw(ctx));
+    return this;
   }
 
   _toJSON() {

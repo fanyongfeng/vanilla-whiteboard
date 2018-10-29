@@ -56,7 +56,7 @@ export abstract class Segment {
     }
   }
 
-  abstract containsPoint(point: Point, lineWidth: number);
+  abstract containsPoint(point: Point, lineWidth: number): boolean;
 
   drawPoint(ctx: CanvasRenderingContext2D, point?: Point) {
     if (!point) return;
@@ -117,17 +117,18 @@ export abstract class Segment {
  */
 export class MoveSegment extends Segment {
   command = 'M';
-  constructor(point) {
+  constructor(point: Point) {
     super();
     this.point = point;
   }
-  containsPoint() {
+  containsPoint(_point: Point, _lineWidth: number) {
+    return false;
   }
 }
 
 export class LineSegment extends Segment {
   command = 'L';
-  constructor(point) {
+  constructor(point: Point) {
     super();
     this.point = point;
   }
@@ -182,7 +183,7 @@ export class LineSegment extends Segment {
 export class BezierSegment extends Segment {
   command = 'C';
 
-  constructor(cp1, cp2, point) {
+  constructor(cp1: Point, cp2: Point, point: Point) {
     super();
     this.control1 = cp1;
     this.control2 = cp2;
@@ -226,7 +227,7 @@ export class BezierSegment extends Segment {
     return [this.contextPoint, this.control1, this.control2, this.point];
   }
 
-  _calcPoint(t, start, c1, c2, end) {
+  _calcPoint(t: number, start: number, c1: number, c2: number, end: number) {
     return (
       start * (1.0 - t) * (1.0 - t) * (1.0 - t) +
       3.0 * c1 * (1.0 - t) * (1.0 - t) * t +
@@ -241,8 +242,8 @@ export class BezierSegment extends Segment {
   get length() {
     const steps = 10;
     let length = 0;
-    let px;
-    let py;
+    let px = 0;
+    let py = 0;
 
     for (let i = 0; i <= steps; i += 1) {
       const t = i / steps;
@@ -267,13 +268,13 @@ export class BezierSegment extends Segment {
 export class QuadraticSegment extends Segment {
   command = 'Q';
 
-  constructor(cp, point) {
+  constructor(cp: Point, point: Point) {
     super();
     this.control = cp;
     this.point = point;
   }
 
-  containsPoint() { }
+  containsPoint(_point: Point, _lineWidth: number) { return false }
 
   // get bounds() {
   //   //转成三阶算

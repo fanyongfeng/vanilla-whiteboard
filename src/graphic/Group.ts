@@ -1,4 +1,4 @@
-import Item from './Item';
+import Item, { ItemOptions } from './Item';
 import ControlRect from './component/ControlRect';
 import { observeProps } from '../decorators/memoized';
 /**
@@ -12,7 +12,7 @@ import { observeProps } from '../decorators/memoized';
 class Group extends Item {
   private control: ControlRect;
 
-  constructor(options, items: Item[] = []) {
+  constructor(options?: Partial<ItemOptions>, items: Item[] = []) {
     super(options);
     this.children = items;
     this.control = new ControlRect({ linked: this });
@@ -36,6 +36,7 @@ class Group extends Item {
 
   protected _draw(ctx:CanvasRenderingContext2D) {
     this.control.draw(ctx);
+    return this;
   }
 
   /**

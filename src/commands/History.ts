@@ -1,5 +1,6 @@
 import Action from './Action';
 import emittable from '../decorators/emitter';
+import { Point } from '..';
 // History Stack for undo/redo
 /**
  * options.maxStack : max length limit in history stack
@@ -47,7 +48,7 @@ class History {
    * Record changed and store to stack
    * @param delta
    */
-  record(delta: object) {
+  record(delta: Point) {
     if (!delta) throw TypeError('Invalid record point.');
     // clear redo list on an new record point.
     this.stack.redo = [];

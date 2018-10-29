@@ -6,6 +6,7 @@ import Matrix from './types/Matrix';
 import { memoizable, observeProps } from '../decorators/memoized';
 import emittable from '../decorators/emitter';
 import Layer from '../Whiteboard/Layer';
+import { Segment } from './types/Segment';
 
 export interface ItemOptions {
   type: IToolType,
@@ -52,14 +53,13 @@ abstract class Item {
   input?: HTMLDivElement; // for  Text Item
   changed!: () => void
 
-  constructor(options?: Partial<ItemOptions>) { //TODO; refactor
+  constructor(options?: Partial<ItemOptions>) { //TODO: refactor
     if (options) {
       const { type, typeId, id, style, ...rest } = options;
       type && (this.type = type);
       this.typeId = typeId || -Infinity;
       this.id = id || tsid();
       this.style = new Style(style);
-
       this.handleRest(rest);
     } else {
       this.style = new Style();
@@ -81,13 +81,14 @@ abstract class Item {
    * Unite bounds of children , and return a new Rect.
    * @param children
    */
-  uniteBoundsOfChildren(children) {
+  uniteBoundsOfChildren(children: Segment[] | Item[]) {
     let x1 = Infinity,
       x2 = -x1,
       y1 = x1,
       y2 = x2;
 
     for (let i = 0, l = children.length; i < l; i++) {
+      //@ts-ignore
       let bound = children[i].bounds;
 
       let xn = bound.x,
@@ -107,7 +108,7 @@ abstract class Item {
   /**
    * Get bounds of current item.
    */
-  protected abstract get bounds(): Rect
+  abstract get bounds(): Rect
 
   /**
    * Get bounds with stroke of current item.
@@ -149,28 +150,28 @@ abstract class Item {
  * Scale current item, base on center of item.
  * @param scale horizontal & vertical scale ratio
  */
-  public scale(scale: number)
+  public scale(scale: number): Item
 
   /**
  * Scale current item.
  * @param scale horizontal & vertical scale ratio
  * @param point Base point.
  */
-  public scale(scale: number, point: Point)
+  public scale(scale: number, point: Point): Item
   /**
  * Scale current item, base on center of item.
  * @param sx horizontal
  * @param sy, if it not set, use sx by default.
  */
-  public scale(sx: number, sy: number)
+  public scale(sx: number, sy: number): Item
   /**
  * Scale current item.
  * @param sx horizontal
  * @param sy vertical scale ratio
  * @param point Base point.
  */
-  public scale(sx: number, sy: number, point: Point)
-  public scale(sx: number, sy?: number | Point, point?: Point) {
+  public scale(sx: number, sy: number, point: Point): Item
+  public scale(sx: number, sy?: number | Point, point?: Point): Item {
     if (typeof sx !== 'number') throw new TypeError("param 'sx' of scale must be number!");
 
     if (typeof sy !== 'number') sy = sx;
@@ -225,7 +226,7 @@ abstract class Item {
     return this.bounds.containsPoint(point);
   }
 
-  protected abstract _draw(ctx: CanvasRenderingContext2D, bounds?);
+  protected abstract _draw(ctx: CanvasRenderingContext2D, bounds?: Rect): Item;
 
   /**
    * Draw item on specified canvas context.
@@ -253,7 +254,7 @@ abstract class Item {
     return [this.typeId, this.id, this._toJSON(), this.style.toShortJSON()];
   }
 
-  protected abstract _toJSON();
+  protected abstract _toJSON(): any[];
 
   /**
    * remove from collection of layers;
@@ -275,7 +276,7 @@ abstract class Item {
   }
 
   // for text Item
-  set editable(_value) { }
+  set editable(_value: boolean) { }
   drawTextImg() { }
 }
 

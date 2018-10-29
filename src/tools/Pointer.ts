@@ -3,10 +3,11 @@ import dragBounds from './mixins/dragBounds';
 import cursor from './mixins/cursor';
 import { deepMixin } from '../decorators/mixin';
 import Rectangle from '../graphic/shape/Rectangle';
+import { CustomizeMouseEvent } from '../Whiteboard/EventType';
 
 interface Pointer {
   dragRect: Rectangle
-} 
+}
 
 /**
  * Pointer of whiteboard.
@@ -32,7 +33,8 @@ interface Pointer {
   })
 )
 class Pointer extends Tool {
-  onMouseMove({ point }) {
+  onMouseMove(event: CustomizeMouseEvent) {
+    const { point } = event;
     this.globalCtx.emit('pointer:move', [point.x, point.y]);
   }
   onMouseUp() {

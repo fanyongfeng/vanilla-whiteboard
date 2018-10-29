@@ -1,4 +1,5 @@
 import Rectangle from '../../graphic/shape/Rectangle';
+import { CustomizeMouseEvent } from '../../Whiteboard/EventType';
 
 const defaultStyle = {
   strokeStyle: '#aaa',
@@ -17,9 +18,9 @@ const defaultStyle = {
  */
 export default function dragBounds(style = {}, removeOnNextDrag = false): { [key: string]: any } {
   style = Object.assign({}, defaultStyle, style);
-  
+
   return {
-    
+
     _dragRect: new Rectangle({ style }),
 
     get dragRect() {
@@ -30,7 +31,8 @@ export default function dragBounds(style = {}, removeOnNextDrag = false): { [key
      * Add drag rectangle when mousemove.
      * @param {*} param0
      */
-    onMouseDown({ point }) {
+    onMouseDown(event: CustomizeMouseEvent) {
+      const { point } = event;
       if (this.mode !== 'select') return;
 
       if (removeOnNextDrag) this.dragRect.remove();
@@ -42,7 +44,8 @@ export default function dragBounds(style = {}, removeOnNextDrag = false): { [key
      * Set size of drag rectangle.
      * @param {*} param0
      */
-    onMouseDrag({ point }) {
+    onMouseDrag(event: CustomizeMouseEvent) {
+      const { point } = event;
       if (this.mode !== 'select') return;
       this.dragRect.endPoint = point;
     },

@@ -5,7 +5,7 @@ const dateTS = 1000 * 3600 * 3; // 3 hours
  * Generate ID as format [0-9a-zA-Z]+
  * @param num
  */
-function genMixId(num: number) {
+function genMixId(num: number): any {
   if (num < 62) return letters[num];
   let rem = num % 62;
   return genMixId(parseInt((num / 62).toString())) + letters[rem];

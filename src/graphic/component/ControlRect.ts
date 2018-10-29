@@ -1,3 +1,4 @@
+//@ts-ignore
 import { boundsPoi } from '../algorithm/corner';
 import Point from '../types/Point';
 import Item from '../Item';
@@ -22,17 +23,18 @@ export default class ControlRect extends Item {
   public rotateControlPoint!: Point;  // check is usable
   public showRotate!: Boolean;
 
-  protected _draw(ctx:CanvasRenderingContext2D, bounds?) {
+  protected _draw(ctx:CanvasRenderingContext2D, bounds: Rect) {
     ctx.save();
     ctx.fillStyle = fillStyle;
     ctx.lineWidth = 1;
     ctx.strokeStyle = strokeStyle;
     ctx.beginPath();
     // 设置上一个点为最后一个点
-
+    //@ts-ignore
     let lastPoint = bounds[boundsPoi[boundsPoi.length - 1]];
     let point;
     ctx.moveTo(lastPoint.x, lastPoint.y);
+    //@ts-ignore
     boundsPoi.forEach(key => {
       point = bounds[key];
       ctx.lineTo(point.x, point.y);
@@ -41,6 +43,8 @@ export default class ControlRect extends Item {
     });
 
     if (this.showRotate) {
+      //TODO: bounds no topCenter
+      //@ts-ignore
       const tc = bounds.topCenter;
       ctx.moveTo(tc.x, tc.y);
       point = tc.add(new Point(0, -50));
@@ -51,17 +55,18 @@ export default class ControlRect extends Item {
 
     ctx.stroke();
     ctx.restore();
+    return this;
   }
 
   /**
    * just for ts lint, no sense
    */
   protected _toJSON() {
-    return '';
+    return [];
   }
 
   /**
    * just for ts lint, no sense
    */
-  protected get bounds(): Rect { return new Rect(0, 0, 0, 0) }
+  get bounds(): Rect { return new Rect(0, 0, 0, 0) }
 }

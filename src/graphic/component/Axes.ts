@@ -32,7 +32,7 @@ export default class Axes extends Item {
   constructor(options = {}) {
     super(options);
   }
-  
+
   /**
    * draw X axis
    * @param ctx
@@ -68,25 +68,25 @@ export default class Axes extends Item {
     ctx.stroke();
   }
 
-  drawMarkY(ctx, x, y, mark) {
+  drawMarkY(ctx: CanvasRenderingContext2D, x: number, y: number, mark: number) {
     ctx.moveTo(x, y);
     ctx.lineTo(x - 4, y);
     ctx.fillText(mark.toString(), x - 12, y - 6);
   }
 
-  drawMark(ctx, x, y, mark) {
+  drawMark(ctx: CanvasRenderingContext2D, x: number, y: number, mark: number) {
     ctx.moveTo(x, y);
     ctx.lineTo(x, y + 4);
     ctx.fillText(mark.toString(), x - 3, y + 15);
   }
 
-  drawLine(ctx, x1, y1, x2, y2) {
+  drawLine(ctx: CanvasRenderingContext2D, x1: number, y1: number, x2: number, y2: number) {
     ctx.beginPath();
     ctx.moveTo(x1, y1);
     ctx.lineTo(x2, y2);
   }
 
-  protected _draw(ctx: CanvasRenderingContext2D) {
+  protected _draw(ctx: CanvasRenderingContext2D): Item {
     let { width, height } = this.layer;
     ctx.lineWidth = 1;
     // ctx.fontSize = 10;
@@ -103,17 +103,18 @@ export default class Axes extends Item {
     if (this.showY) {
       this.drawYAxis(ctx, width, height);
     }
+    return this;
   }
 
   /**
    * just for ts lint, no sense
    */
   protected _toJSON() {
-    return '';
+    return [];
   }
-  
+
   /**
    * just for ts lint, no sense
    */
-  protected get bounds(): Rect { return new Rect(0, 0, 0, 0) }
+  get bounds(): Rect { return new Rect(0, 0, 0, 0) }
 }

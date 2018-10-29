@@ -180,6 +180,7 @@ class Img extends Item {
     } else {
       this.loadImage(() => this.drawImageAndStroke(ctx));
     }
+    return this;
   }
 
   protected _toJSON() {

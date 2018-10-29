@@ -3,11 +3,11 @@ import Point from '../graphic/types/Point.js';
 import { CustomizeMouseEvent } from '../Whiteboard/EventType.js';
 
 export default class ArcDrawing extends Tool {
-  
+
   public center!: Point | null;
   public radius!: number;
 
-  constructor(type) {
+  constructor(type: IToolType) {
     super(type);
     this.center = null;
   }
@@ -18,7 +18,7 @@ export default class ArcDrawing extends Tool {
     } else this.center = event.point;
   }
 
-  onMouseMove(_event) {}
-  onMouseDrag(_event) {}
-  onMouseUp(_event) {}
+  onMouseMove(_event: CustomizeMouseEvent) {}
+  onMouseDrag(_event: CustomizeMouseEvent) {}
+  onMouseUp(_event: CustomizeMouseEvent) {}
 }

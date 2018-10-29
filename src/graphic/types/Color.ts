@@ -19,7 +19,7 @@ class Color {
    *  String: '#fff','#ac78bf', 'rgb(30, 30, 30)', 'rgba(30, 30, 30, 0.5)'
    *  Array: [128, 128, 128, 0.5],  [250, 250, 250]
    */
-  constructor(colorStr?: string | number[]) { //TODO: tuple
+  constructor(colorStr?: string | [number, number, number, number]) {
     if (typeof colorStr === 'string') this.normalizeColor(colorStr);
     else if (Array.isArray(colorStr)) {
       this.red = colorStr[0];
@@ -35,7 +35,7 @@ class Color {
    * hex => rgba;
    * rgb => rgba;
    *
-   * @param {String} colorStr
+   * @param colorStr
    */
   normalizeColor(colorStr: string) {
     let color: number[] = [];

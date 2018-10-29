@@ -1,4 +1,4 @@
-import Item from '../Item';
+import Item, { ItemOptions } from '../Item';
 import Rect from '../types/Rect';
 import Point from '../types/Point';
 import { observeProps } from '../../decorators/memoized';
@@ -6,7 +6,7 @@ import { setStyle } from '../../util/dom';
 
 const replaceAll = (target: string, search: string, replacement: string): string => target.replace(new RegExp(search, 'g'), replacement);
 
-const getStylePropertyValue = (target, property) => {
+const getStylePropertyValue = (target: HTMLDivElement, property: string) => {
   const style = window.getComputedStyle(target, null);
   return parseInt(style.getPropertyValue(property), 10);
 };
@@ -49,7 +49,7 @@ export default class Text extends Item {
   /**
    * static method to create instance from params
    */
-  static instantiate(options, ...rest) {
+  static instantiate(options?: Partial<ItemOptions>, ...rest: any[]) {
     const text = new Text(options);
     text.startPoint = new Point(rest[0][0], rest[0][1]);
     return text;
@@ -105,6 +105,7 @@ export default class Text extends Item {
     }
     this._editable && this.input.focus();
     // this.drawTextImg(this._editable);
+    return this;
   }
 
   set editable(val: boolean) {

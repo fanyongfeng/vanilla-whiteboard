@@ -31,7 +31,7 @@ export default class Star extends Shape {
       }
       this.lineTo(point);
     }
-    this.lineTo(firstPoint.clone()); // clone first point. avoid reference error.
+    firstPoint && this.lineTo(firstPoint.clone()); // clone first point. avoid reference error.
     this.closePath();
   }
 }

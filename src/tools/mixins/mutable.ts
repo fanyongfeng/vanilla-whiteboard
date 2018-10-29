@@ -1,31 +1,33 @@
 import Point from '../../graphic/types/Point';
-import { CustomizeMouseEvent } from '../../Whiteboard/EventType'; 
+import { CustomizeMouseEvent } from '../../Whiteboard/EventType';
+import { Segment } from '../../graphic/types/Segment';
 /**
  * enable tool has mutate behavior.
  */
 export default function mutable(): { [key: string]: any } {
   return {
     onMouseDown(event: CustomizeMouseEvent) {
-      const point = event.point;
+      const { point } = event;
       if (this._pointOnPoint(point)) {
         return;
       }
     },
 
     onMouseDrag(event: CustomizeMouseEvent) {
-      const point = event.point;
+      const { point } = event;
       if (this.mode === 'mutate') {
         this.targetPoint.assign(point);
         this.target.changed();
       }
     },
 
-    onMouseMove({ point }) {
+    onMouseMove(event: CustomizeMouseEvent) {
+      const { point } = event;
       return !this._pointOnPoint(point);
     },
 
     _pointOnPoint(point: Point) {
-      let nearbyPoint, seg, segments;
+      let nearbyPoint, seg, segments: Segment[];
       for (let item of this.items) {
         segments = item.segments;
 
@@ -42,7 +44,7 @@ export default function mutable(): { [key: string]: any } {
       if (nearbyPoint) {
         this.mode = 'mutate';
         this.setLayerCursor('pointer');
-        this.target = seg.owner;
+        seg && (this.target = seg.owner);
         this.targetPoint = nearbyPoint;
         return true;
       }

@@ -13,12 +13,13 @@
     "moduleResolution": "node",
     // "declaration": true,
     "strict": true,
-    "noImplicitAny": false,
+    "noImplicitAny": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "suppressImplicitAnyIndexErrors": true,
     "experimentalDecorators": true,
-    "allowJs": true
+    "allowJs": true,
+    "downlevelIteration": true
   },
   "include": [
     "src/**/*.ts"

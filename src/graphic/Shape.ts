@@ -3,6 +3,7 @@ import Point from './types/Point';
 import Rect from './types/Rect';
 import Matrix from './types/Matrix';
 import { observeProps } from '../decorators/memoized';
+import { ItemOptions } from './Item';
 
 /**
  * The base class of 'two points shapes' that build with start-point & end-point.
@@ -20,10 +21,10 @@ class Shape extends Path {
   /**
    * 用与从JSON构造出Shape实例
    *
-   * @param {Object} options 配置项
-   * @param {Array} points, startPoint , endPoint
+   * @param options 配置项
+   * @param points, startPoint , endPoint
    */
-  static instantiate(options, [sp, ep]) {
+  static instantiate(options: object, [sp, ep]: [Point, Point]) {
     const startPoint = new Point(sp[0], sp[1]);
     const endPoint = new Point(ep[0], ep[1]);
     const Ctor = this;
@@ -31,7 +32,7 @@ class Shape extends Path {
     return new Ctor(options, startPoint, endPoint);
   }
 
-  constructor(options, sp?: Point, ep?: Point) {
+  constructor(options?: Partial<ItemOptions>, sp?: Point, ep?: Point) {
     super(options);
     if (sp) this.startPoint = sp;
     if (ep) this.endPoint = ep;
@@ -49,10 +50,11 @@ class Shape extends Path {
   protected _draw(ctx: CanvasRenderingContext2D) {
     this.buildPath();
     super._draw(ctx);
+    return this;
   }
 
   // override bounds for dragging-shapes
-  get bounds() {
+  get bounds(): Rect {
     let frm = this.startPoint,
       x = frm.x,
       y = frm.y,

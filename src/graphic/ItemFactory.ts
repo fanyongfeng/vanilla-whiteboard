@@ -61,7 +61,7 @@ for (let key in shapeTypes) {
   idMap[shapeTypes[key].id] = key;
 }
 
-function normalizeStyle(style) {
+function normalizeStyle(style: any) {
   let ret: any = {};
 
   if (!style) return ret;
@@ -96,9 +96,9 @@ function normalizeStyle(style) {
  * format [type, id, dataArr, style]
  * e.g. [3,112481770,[[413,200],[588,378]],{"c":"#8ecf54","w":2,"f":20}]
  *
- * @param {Object} json
+ * @param json
  */
-export function createItemViaJSON(json) {
+export function createItemViaJSON(json: any[] | any) {
   let [typeId, id, data, style] = json,
     type = idMap[typeId],
     shape = shapeTypes[type],
@@ -158,7 +158,7 @@ export function createItem(type: string, style = {}) {
  * @param {*} ctor
  * @param {*} id
  */
-export function registerShape(type, ctor, id) {
+export function registerShape(type: string, ctor: { new(...args: any[]): any }, id: number) {
   if (shapeTypes[type]) throw new Error(`Shape '${type}' already exist!`);
 
   shapeTypes[type] = { ctor, id };

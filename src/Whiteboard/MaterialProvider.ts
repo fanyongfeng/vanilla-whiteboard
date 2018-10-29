@@ -13,8 +13,7 @@ export default class MaterialProvider {
 
   /**
    * Init MaterialProvider with image src list. order-sensitive
-   * @param {Array} images
-   * @param {Object} options
+   * @param images image src list
    */
   constructor(images?: string[]) {
     if (!images) return;
