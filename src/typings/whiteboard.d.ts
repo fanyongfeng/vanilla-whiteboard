@@ -17,7 +17,6 @@ declare interface ILayer {
   appendTo(whiteboard: IWhiteboard): void
 }
 
-
 declare interface IContext {
   zoom: number,
   textWrapper: HTMLDivElement,
@@ -26,25 +25,24 @@ declare interface IContext {
   activeLayer: ILayer,
   operateLayer: ILayer,
   currentMode: string,
-  refreshCount: 0, //刷新计数，白板所有layers刷新总次数
+  refreshCount: number, //刷新计数，白板所有layers刷新总次数
   settings: {
-    selectionMode: 'bounds',
-    refreshMode: 'loop',
-    readonly: false,
-    width: 1000,
-    height: 800,
-    showGrid: false,
-    showAxes: false,
-    alignToGrid: false,
-    throttle: 0,
-    minDistance: 0,
-    verbose: false,
-    precision: 1,
-    zoom: 1,
-    dragThreshold: 2,
-    distance: 0,
+    selectionMode: string,
+    refreshMode: string,
+    readonly: boolean,
+    width: number,
+    height: number,
+    showGrid: boolean,
+    showAxes: boolean,
+    alignToGrid: boolean,
+    throttle: number,
+    minDistance: number,
+    verbose: boolean,
+    precision: number,
+    zoom: number,
+    dragThreshold: number,
+    distance: number,
     container: HTMLDivElement
   },
-  bounds: IRect,
   emit(name: string, data?: any): void,
 }

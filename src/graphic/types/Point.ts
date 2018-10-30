@@ -211,7 +211,7 @@ export default class Point implements Point {
    * @param angle the rotation angle
    * @param center the center point of the rotation
    */
-  rotate(angle: number, center?: Point): Point {
+  rotate(angle: number, center?: Point) {
     if (angle === 0) return this.clone();
     angle = (angle * Math.PI) / 180;
 

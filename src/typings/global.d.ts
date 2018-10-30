@@ -11,14 +11,6 @@ interface EventTarget {
   innerHTML: string,
   width: number,
   height: number
-}  
-
-interface Window {
-  [key: string]: any,
 }
 
-declare interface ITool {
-  layer: ILayer;
-  globalCtx?: IContext,
-  type: IToolType;
-}
+declare type IToolType = "highlighter" | "marker" | "text" | "selection" | "pointer" | "eraser" | "pathMutator";

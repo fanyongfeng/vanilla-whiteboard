@@ -1,6 +1,7 @@
 import Rect from './Rect';
 import Point from './Point';
 import Matrix from './Matrix';
+import Item from '../Item';
 
 import { containStroke, containStrokeArc, containStrokeLine, calcBoundsOfBezier } from '../algorithm/calcCurve';
 
@@ -13,7 +14,7 @@ export abstract class Segment {
   command!: string;
   contextPoint!: Point;
   point!: Point;
-  owner: IItem | null = null;
+  owner: Item | null = null;
   // style: IStyle;
   control!: Point;
   control1!: Point;

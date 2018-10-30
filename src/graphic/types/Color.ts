@@ -80,7 +80,7 @@ class Color {
   /**
    * Convert to HSL format.
    */
-  toHSL(): number[] {
+  toHSL() {
     return RGB2HSL(this.red, this.green, this.blue);
   }
 

@@ -38,7 +38,7 @@ class Rect {
 
   /**
    * Assign x, y, width, height from other rect.
-   * @param {Rect} rect
+   * @param rect
    */
   assign(x: number, y: number, width: number, height: number) {
     let rect = Rect.instantiate(x, y, width, height);
@@ -69,7 +69,7 @@ class Rect {
    * @type Number
    *
    */
-  get left(): number {
+  get left() {
     return this.x;
   }
   set left(left: number) {
@@ -82,7 +82,7 @@ class Rect {
    * @type Number
    *
    */
-  get bottom(): number {
+  get bottom() {
     return this.y + this.height;
   }
   set bottom(bottom: number) {
@@ -139,7 +139,7 @@ class Rect {
    * @bean
    * @type Number
    */
-  get area(): number {
+  get area() {
     return this.width * this.height;
   }
 
@@ -147,11 +147,11 @@ class Rect {
    * Returns a new rectangle representing the union of this rectangle with the
    * specified rectangle.
    *
-   * @param {Rect} rect the rectangle to be combined with this rectangle
-   * @return {Rect} the smallest rectangle containing both the specified
+   * @param rect the rectangle to be combined with this rectangle
+   * @return the smallest rectangle containing both the specified
    * rectangle and this rectangle
    */
-  unite(rect: Rect): Rect {
+  unite(rect: Rect) {
     let x1 = Math.min(this.x, rect.x),
       y1 = Math.min(this.y, rect.y),
       x2 = Math.max(this.x + this.width, rect.x + rect.width),
@@ -164,11 +164,11 @@ class Rect {
    * Returns a new rectangle representing the intersection of this rectangle with the
    * specified rectangle.
    *
-   * @param {Rect} rect the rectangle to be combined with this rectangle
-   * @return {Rect | null} the smallest rectangle containing both the specified, if
+   * @param rect the rectangle to be combined with this rectangle
+   * @return the smallest rectangle containing both the specified, if
    * rectangle and this rectangle
    */
-  intersect(rect: Rect): Rect | null {
+  intersect(rect: Rect) {
     let x1 = Math.max(this.x, rect.x);
     var width1 = Math.min(this.x + this.width, rect.x + rect.width);
     var y1 = Math.max(this.y, rect.y);
@@ -183,11 +183,11 @@ class Rect {
    *  Tests if the specified point is inside the boundary of the rectangle.
    *
    * @function
-   * @param {Point} point the specified point
+   * @param point the specified point
    * @type Boolean
    * @ignore
    */
-  containsPoint(point: Point): boolean {
+  containsPoint(point: Point) {
     var x = point.x,
       y = point.y;
     return x >= this.x && y >= this.y && x <= this.x + this.width && y <= this.y + this.height;
@@ -197,11 +197,11 @@ class Rect {
    * Tests if the interior of the rectangle entirely contains the specified
    *
    * @function
-   * @param {Rect} point the specified rectangle
+   * @param point the specified rectangle
    * @type Boolean
    * @ignore
    */
-  containsRect(rect: Rect): boolean {
+  containsRect(rect: Rect) {
     var x = rect.x,
       y = rect.y;
     return (
@@ -221,7 +221,7 @@ class Rect {
 
   /**
    * If the rect is equal to the other rect.
-   * @param {Rect} other
+   * @param other
    */
   equals(other: Rect): boolean {
     return (
@@ -232,8 +232,8 @@ class Rect {
 
   /**
    * Expend width, height. as same keep center
-   * @param {Number} width
-   * @param {Number} height
+   * @param width
+   * @param height
    */
   expand(width: number, height?: number): Rect {
     if (typeof height === 'undefined') height = width;
@@ -259,7 +259,7 @@ class Rect {
   /**
    * return string format.
    */
-  toString(): string {
+  toString() {
     return '{ x: ' + this.x + ', y: ' + this.y + ', width: ' + this.width + ', height: ' + this.height + ' }';
   }
 }
