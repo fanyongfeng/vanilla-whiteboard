@@ -120,7 +120,7 @@ abstract class Item {
   /**
    * Get position based-on center point of current item.
    */
-  get position(): Point {
+  get position() {
     return this.bounds.center;
   }
 
