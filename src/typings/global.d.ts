@@ -14,3 +14,10 @@ interface EventTarget {
 }
 
 declare type IToolType = "highlighter" | "marker" | "text" | "selection" | "pointer" | "eraser" | "pathMutator";
+
+declare const IS_PRODUCTION: boolean;
+
+
+declare interface Window {
+  [key: string]: any
+}

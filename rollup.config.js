@@ -7,12 +7,13 @@ import { uglify } from 'rollup-plugin-uglify';
 import { eslint } from 'rollup-plugin-eslint';
 import typescript from 'rollup-plugin-typescript2';
 const isProd = process.env.NODE_ENV === 'production';
+const buildForEsModule = process.env.MODULE === 'ES';
 
 let config = {
   input: './src/index.ts',
   output: {
     file: isProd ? 'dist/app.min.js' : 'dist/app.js',
-    format: 'iife',
+    format: buildForEsModule ? 'esm' : 'iife', //amd, cjs, esm, iife, umd  iife is for browsers
     name: 'app',
     sourcemap: !isProd,
     exports: 'named',

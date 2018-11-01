@@ -16,7 +16,6 @@ declare interface ILayer {
   clear(): void,
   appendTo(whiteboard: IWhiteboard): void
 }
-
 declare interface IContext {
   zoom: number,
   textWrapper: HTMLDivElement,

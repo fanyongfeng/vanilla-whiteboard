@@ -48,11 +48,10 @@ nebula.Whiteboard = Whiteboard;
 // nebula.enum = { keyCode };
 
 //tmp for debug
-//@ts-ignore
-if (!IS_PRODUCTION) { //TODO: 定义
+if (!IS_PRODUCTION) {
   playground.init();
 }
-
+//@ts-ignore
 window.nebula = nebula;
 
 export default nebula;
