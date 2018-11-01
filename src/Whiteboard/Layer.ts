@@ -192,14 +192,16 @@ export default class Layer {
    */
   zoom(radio: number) {
     // this.ctx.scale(radio, radio);
-    this.matrix.scale(radio, radio);
     setStyle(this.el, {
-      width: `${this.width * radio}px`,
-      height: `${this.height * radio}px`,
+      width: this.width * radio + "px",
+      height: this.height * radio + "px",
     });
-
     this.el.width = this.el.width * radio;
     this.el.height = this.el.height * radio;
+    this.ctx.restore();
+    this.ctx.save();
+    this.ctx.scale(this.deviceRatio, this.deviceRatio);
+    this.ctx.scale(radio, radio);
     this.markAsDirty();
   }
 

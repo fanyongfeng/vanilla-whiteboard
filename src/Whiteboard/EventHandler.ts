@@ -128,7 +128,7 @@ export default class EventHandler {
   }
 
   private getMouseEvent(event: MouseOrTouchEvent) {
-    const _event = new CustomizeMouseEvent(event);
+    const _event = new CustomizeMouseEvent(event, this.context.zoom);
     const point = _event.point;
     this.inverseMatrix.applyToPoint(point);
     return _event;

@@ -12,6 +12,7 @@
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "analy": "npm_config_report=true node build/build.js",
     "start": "rollup config rollup.config.js -c -w --environment NODE_ENV:development",
+    "build:es": "rollup config rollup.config.js -c -w --environment NODE_ENV:production,MODULE:ES",
     "build": "rollup config rollup.config.js -c -w --environment NODE_ENV:production",
     "prettier": "prettier --write",
     "prettier-watch": "onchange '**/*.js' -- prettier --write {{changed}}"

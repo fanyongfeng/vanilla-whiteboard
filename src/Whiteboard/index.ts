@@ -198,6 +198,7 @@ export default class Whiteboard  {
    */
   set zoom(radio) {
     this._zoom = radio;
+    this.context.zoom = radio;
     this.layers.forEach(layer => layer.zoom(radio));
 
     setStyle(this.wrapper, {

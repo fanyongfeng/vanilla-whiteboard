@@ -15,20 +15,22 @@ export class CustomizeMouseEvent {
   public originEvent: MouseOrTouchEvent;
   public type: string;
   public target: EventTarget | null;
-  public offsetX?: number;
-  public offsetY?: number;
+  public offsetX!: number;
+  public offsetY!: number;
+  private zoom: number;
 
-  constructor(originEvent: MouseOrTouchEvent) {
+  constructor(originEvent: MouseOrTouchEvent, zoom: number) {
     this.originEvent = originEvent;
     this.type = originEvent.type;
     this.target = originEvent.target;
+    this.zoom = zoom;
     if (originEvent instanceof MouseEvent) this.offsetX = originEvent.offsetX;
     if (originEvent instanceof MouseEvent) this.offsetY = originEvent.offsetY;
   }
 
   get point() {
     if (!this._point) {
-      this._point = new Point(this.offsetX, this.offsetY);
+      this._point = new Point(this.offsetX * this.zoom, this.offsetY * this.zoom);
     }
     return this._point;
   }

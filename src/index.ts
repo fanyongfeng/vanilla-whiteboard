@@ -51,8 +51,9 @@ nebula.Whiteboard = Whiteboard;
 if (!IS_PRODUCTION) {
   playground.init();
 }
-//@ts-ignore
 window.nebula = nebula;
+//@ts-ignore
+
 
 export default nebula;
 export { Whiteboard, Point, Rect, Style, Path };
