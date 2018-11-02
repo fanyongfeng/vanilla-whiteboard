@@ -30,7 +30,7 @@ export class CustomizeMouseEvent {
 
   get point() {
     if (!this._point) {
-      this._point = new Point(this.offsetX * this.zoom, this.offsetY * this.zoom);
+      this._point = new Point(this.offsetX * (1/this.zoom), this.offsetY * (1/this.zoom));
     }
     return this._point;
   }

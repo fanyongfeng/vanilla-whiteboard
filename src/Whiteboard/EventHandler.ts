@@ -6,6 +6,7 @@ import OperationLayer from './OperateLayer';
 
 import Point from '../graphic/types/Point';
 import Tool from '../tools/Tool';
+import ItemCollection from './ItemCollection';
 
 // bind both mouse & touch event.
 // const mousedown = 'mousedown touchstart';
@@ -39,7 +40,12 @@ export default class EventHandler {
   layer!: OperationLayer;
   canvas!: HTMLCanvasElement;
   context!: IContext;
-  draggingTriggered!: number
+  items: ItemCollection;
+  draggingTriggered!: number;
+
+  constructor(items: ItemCollection) {
+    this.items = items;
+  }
 
   set tool(tool) {
     const isChanged = (!!this._currentTool && this._currentTool.type) !== tool.type;
@@ -50,6 +56,7 @@ export default class EventHandler {
       this._currentTool.globalCtx = this.context;
       this.layer.clear();
     }
+    this._currentTool.items = this.items;
     isChanged && this.invokeToolSlotHandler('toolChanged', { type: tool.type }); // notice next tool
   }
 
@@ -102,13 +109,13 @@ export default class EventHandler {
       } else if (event.key === 'z') {
         window.commands.undo();
       } else if (event.key === 'a') {
-        window.items.selectAll();
+        this.items.selectAll();
         event.preventDefault();
       }
     }
 
     if (event.keyCode === keyCode.DELETE) {
-      window.items.deleteSelected();
+      this.items.deleteSelected();
     }
   }
 

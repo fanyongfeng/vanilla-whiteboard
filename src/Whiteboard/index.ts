@@ -93,10 +93,9 @@ export default class Whiteboard  {
     this.activeLayer.appendTo(this);
     this.operateLayer.appendTo(this);
 
-    let handler = (this.handler = new EventHandler());
+    let handler = (this.handler = new EventHandler(this.items));
     handler.context = this.context;
     handler.bind(this.operateLayer);
-
     // this.tool = 'selection';
 
     if (this.options.zoom !== 1) {
@@ -260,7 +259,6 @@ export default class Whiteboard  {
 
   set tool(val: string) {
     this.handler.tool = getTool(val);
-    this.handler.tool.items = this.items;
   }
 
   getTool() {
