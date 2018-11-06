@@ -140,8 +140,23 @@ abstract class Item {
    * @param point Translate delta.
    */
   translate(point: Point) {
+    if (this.children) {
+      this.children.filter(item => item.type === 'text').map(item => {
+        this.dispatchTextMouseDrag(item, point);
+        return item;
+      });
+    }
+    if (this.type === 'text') {
+      this.dispatchTextMouseDrag(this, point);
+    }
     let mx = new Matrix();
     return this.transform(mx.translate(point));
+  }
+
+  private dispatchTextMouseDrag(item: Item, point: Point) {
+    if (item.onMouseDrag && typeof item.onMouseDrag === 'function') {
+      item.onMouseDrag(point);
+    }
   }
 
   //TODO: add return value type.
@@ -226,7 +241,7 @@ abstract class Item {
     return this.bounds.containsPoint(point);
   }
 
-  protected abstract _draw(ctx: CanvasRenderingContext2D, bounds?: Rect): Item;
+  protected abstract _draw(ctx: CanvasRenderingContext2D): Item;
 
   /**
    * Draw item on specified canvas context.
@@ -239,7 +254,7 @@ abstract class Item {
     this.style.apply(ctx);
     ctx.globalCompositeOperation = this.globalCompositeOperation;
     this.matrix.applyToContext(ctx);
-    this._draw(ctx, this.bounds);
+    this._draw(ctx);
     ctx.restore();
 
     if (this.selected) this.drawBoundRect(ctx);
@@ -278,6 +293,7 @@ abstract class Item {
   // for text Item
   set editable(_value: boolean) { }
   drawTextImg() { }
+  onMouseDrag(_point: Point) {}
 }
 
 export default Item;

@@ -60,7 +60,7 @@ export default class Style {
     /** new copy of color instance! */
     this._strokeStyle = new Color('#c69');
     this._fillStyle = new Color('#c69');
-    this.lineWidth = 3;
+    // this.lineWidth = 3;
     Object.assign(this, defaultStyles, fontStyles, options);
   }
 

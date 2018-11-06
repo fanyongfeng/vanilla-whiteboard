@@ -23,7 +23,8 @@ export default class ControlRect extends Item {
   public rotateControlPoint!: Point;  // check is usable
   public showRotate!: Boolean;
 
-  protected _draw(ctx:CanvasRenderingContext2D, bounds: Rect) {
+  protected _draw(ctx:CanvasRenderingContext2D) {
+    const bounds = this.bounds;
     ctx.save();
     ctx.fillStyle = fillStyle;
     ctx.lineWidth = 1;

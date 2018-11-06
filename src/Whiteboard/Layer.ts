@@ -76,6 +76,8 @@ export default class Layer {
     let el = document.createElement('canvas');
     el.setAttribute('data-role', role);
     el.setAttribute('canvas-id', role);
+    el.setAttribute('width', width.toString());
+    el.setAttribute('height', height.toString());
     this.role = role;
     this.el = el;
 

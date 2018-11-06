@@ -128,6 +128,10 @@ export default class Text extends Item {
     });
   }
 
+  onMouseDrag(point: Point) {
+    this.updatePosition(point)
+  }
+
   /**
    * @param offset object {x, y}
    */
@@ -135,8 +139,8 @@ export default class Text extends Item {
     const { left, top } = this.input.style;
     if (!left || !top) return;
     Object.assign(this.input.style, {
-      left: `${Number(left) - x}px`,
-      top: `${Number(top) - y}px`,
+      left: `${parseInt(left) + x * 1/this.zoom}px`,
+      top: `${parseInt(top) + y * 1/this.zoom}px`,
     });
   }
 
@@ -154,8 +158,8 @@ export default class Text extends Item {
    * just for ts lint, no sense
    */
   public get bounds(): Rect {
-    const { x, y } = this.startPoint;
+    const { left, top } = this.input.style;
     if (!this.input) return new Rect(0, 0, 0, 0);
-    return new Rect(x, y - 10, getStylePropertyValue(this.input, 'width'), getStylePropertyValue(this.input, 'height'), this)
+    return new Rect(parseInt(left || '0') * 1 / this.zoom, parseInt(top || '0') * 1 / this.zoom, getStylePropertyValue(this.input, 'width') * 1 / this.zoom, getStylePropertyValue(this.input, 'height') * 1 / this.zoom, this)
   }
 }
