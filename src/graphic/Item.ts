@@ -153,13 +153,11 @@ abstract class Item {
     return this.transform(mx.translate(point));
   }
 
-  private dispatchTextMouseDrag(item: Item, point: Point) {
+  protected dispatchTextMouseDrag(item: Item, point: Point) {
     if (item.onMouseDrag && typeof item.onMouseDrag === 'function') {
       item.onMouseDrag(point);
     }
   }
-
-  //TODO: add return value type.
 
   /**
  * Scale current item, base on center of item.
