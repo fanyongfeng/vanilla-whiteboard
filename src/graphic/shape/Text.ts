@@ -162,4 +162,13 @@ export default class Text extends Item {
     if (!this.input) return new Rect(0, 0, 0, 0);
     return new Rect(parseInt(left || '0') * 1 / this.zoom, parseInt(top || '0') * 1 / this.zoom, getStylePropertyValue(this.input, 'width') * 1 / this.zoom, getStylePropertyValue(this.input, 'height') * 1 / this.zoom, this)
   }
+
+  /**
+   * remove from collection of layers;
+   */
+  remove() {
+    this.layer && this.layer.items.remove(this);
+    this.input.remove();
+  }
+
 }

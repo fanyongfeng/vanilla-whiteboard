@@ -38,6 +38,10 @@ class Pointer extends Tool {
   private _move!: (point: Point) => void;
   private onMouseEnter!: () => void;
 
+  onMouseDrag(event: CustomizeMouseEvent) {
+    const { point } = event;
+    this.globalCtx.emit('pointer:move', ['m', [point.x, point.y]]);
+  }
   onMouseMove(event: CustomizeMouseEvent) {
     const { point } = event;
     this.globalCtx.emit('pointer:move', ['m', [point.x, point.y]]);
@@ -53,6 +57,12 @@ class Pointer extends Tool {
     if (json[0] === 'm') {
       this.onMouseEnter();
       this._move(new Point(json[1][0], json[1][1]))
+    } else if (json[0] === 'd') {
+      const [sp, ep] = json[1][2];
+      this.dragRect.remove();
+      this.dragRect.startPoint = new Point(sp[0], sp[1]);
+      this.dragRect.endPoint = new Point(ep[0], ep[1]);
+      this.layer.items.add(this.dragRect);
     }
   }
 }

@@ -231,6 +231,7 @@ export default class Whiteboard  {
   add(json: any) {
     let instance = this.createItem(json);
     this.items.add(instance);
+    return instance;
   }
 
   remove(json: number[]) {
@@ -266,7 +267,9 @@ export default class Whiteboard  {
   }
 
   getToolByName(name: string) {
-    return getTool(name);
+    const tool = getTool(name);
+    tool.layer = this.handler.layer;
+    return tool;
   }
 
   /**
