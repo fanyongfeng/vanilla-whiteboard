@@ -228,7 +228,7 @@ export default class Whiteboard  {
     textInstance && textInstance.input && (textInstance.input.innerHTML = json[1]);
   }
 
-  add(json: Item) {
+  add(json: any) {
     let instance = this.createItem(json);
     this.items.add(instance);
   }
@@ -263,6 +263,10 @@ export default class Whiteboard  {
 
   getTool() {
     return this.handler.tool;
+  }
+
+  getToolByName(name: string) {
+    return getTool(name);
   }
 
   /**

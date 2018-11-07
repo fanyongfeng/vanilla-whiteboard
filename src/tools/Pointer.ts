@@ -4,6 +4,7 @@ import cursor from './mixins/cursor';
 import { deepMixin } from '../decorators/mixin';
 import Rectangle from '../graphic/shape/Rectangle';
 import { CustomizeMouseEvent } from '../Whiteboard/EventType';
+import Point from '../graphic/types/Point';
 
 interface Pointer {
   dragRect: Rectangle
@@ -33,12 +34,26 @@ interface Pointer {
   })
 )
 class Pointer extends Tool {
+
+  private _move!: (point: Point) => void;
+  private onMouseEnter!: () => void;
+
   onMouseMove(event: CustomizeMouseEvent) {
     const { point } = event;
-    this.globalCtx.emit('pointer:move', [point.x, point.y]);
+    this.globalCtx.emit('pointer:move', ['m', [point.x, point.y]]);
   }
   onMouseUp() {
-    this.globalCtx.emit('pointer:draw', this.dragRect.toJSON());
+    this.globalCtx.emit('pointer:draw', ['d', this.dragRect.toJSON()]);
+  }
+
+  /**
+  * draw rect by json
+  */
+  moveByJSON(json: any) {
+    if (json[0] === 'm') {
+      this.onMouseEnter();
+      this._move(new Point(json[1][0], json[1][1]))
+    }
   }
 }
 

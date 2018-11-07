@@ -153,6 +153,11 @@ abstract class Item {
     return this.transform(mx.translate(point));
   }
 
+  /**
+   * text move is different from others, so ..
+   * @param item  instanceof Text
+   * @param point delta
+   */
   protected dispatchTextMouseDrag(item: Item, point: Point) {
     if (item.onMouseDrag && typeof item.onMouseDrag === 'function') {
       item.onMouseDrag(point);

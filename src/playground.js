@@ -91,7 +91,7 @@ export default {
         pointerMove(arg);
       })
       .on('pointer:draw', arg => {
-        pointerDraw();
+        pointerDraw(arg);
       })
       .on('items:move', arg => {
         moveItem(arg);
