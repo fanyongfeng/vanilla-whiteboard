@@ -164,11 +164,9 @@ export default class Text extends Item {
   }
 
   /**
-   * remove from collection of layers;
+   * invoked when ItemCollection Delete this
    */
-  remove() {
-    this.layer && this.layer.items.remove(this);
+  onDeleted() {
     this.input.remove();
   }
-
 }

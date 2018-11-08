@@ -293,6 +293,8 @@ abstract class Item {
     ctx.restore();
   }
 
+  public onDeleted() {}
+
   // for text Item
   set editable(_value: boolean) { }
   drawTextImg() { }

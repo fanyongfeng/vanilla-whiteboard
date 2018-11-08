@@ -21,9 +21,8 @@ export default class Layer {
   offscreen = false;
 
   private _bounds!: Rect;
-  private _items = new ItemCollection(this);
+  private _items: ItemCollection;
   private _isDirty = true;
-
 
   /**
    * Move items from one to other
@@ -73,6 +72,7 @@ export default class Layer {
    * @param role
    */
   constructor(width: number, height: number, role: string = '') {
+    this._items = new ItemCollection(this);
     let el = document.createElement('canvas');
     el.setAttribute('data-role', role);
     el.setAttribute('canvas-id', role);

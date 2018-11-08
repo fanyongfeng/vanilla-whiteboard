@@ -61,7 +61,6 @@ class ItemCollection {
    */
   constructor(layer?: Layer, items?: Item[]) {
     if (items) this.items = items;
-
     this.layer = layer;
   }
 
@@ -179,10 +178,19 @@ class ItemCollection {
    * Clear items.
    */
   clear() {
+    this.notifyDeleted(this.items);
     this.items = [];
     this.buffered = [];
     this.changed();
     return this;
+  }
+
+  /**
+   * notify deleted Item
+   * @param items deleted Items
+   */
+  notifyDeleted(items: Item[]) {
+    items.map(item => item.onDeleted())
   }
 
   /**
@@ -239,6 +247,7 @@ class ItemCollection {
     });
 
     this.changed();
+    this.notifyDeleted(deleted.items);
     return deleted;
   }
 
