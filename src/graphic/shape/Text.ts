@@ -119,11 +119,20 @@ export default class Text extends Item {
   }
 
   bindInputEvent() {
+    let locked = false;
     if (!this.input) return;
+    this.input.addEventListener('compositionstart', () => {
+      locked = true;
+    });
+    this.input.addEventListener('compositionend', () => {
+      locked = false;
+    });
     this.input.addEventListener('input', event => {
-      if (!event.target) return;
-      this.value = event.target.innerHTML;
-      this.onTyping([this.id, this.value]);
+      setTimeout(() => {
+        if (!event.target || locked) return;
+        this.value = event.target.innerHTML;
+        this.onTyping([this.id, this.value]);
+      }, 0);
       // this.lines = this.value.split(/\r?\n/);
     });
   }
