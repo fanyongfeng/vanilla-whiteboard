@@ -1,4 +1,5 @@
 const letters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+const lettersLen = letters.length;
 const dateTS = 1000 * 3600 * 3; // 3 hours
 
 /**
@@ -6,9 +7,9 @@ const dateTS = 1000 * 3600 * 3; // 3 hours
  * @param num
  */
 function genMixId(num: number): any {
-  if (num < 62) return letters[num];
-  let rem = num % 62;
-  return genMixId(parseInt((num / 62).toString())) + letters[rem];
+  if (num < lettersLen) return letters[num];
+  let rem = num % lettersLen;
+  return genMixId(parseInt((num / lettersLen).toString())) + letters[rem];
 }
 
 /**

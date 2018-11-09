@@ -29,6 +29,7 @@
     }
   },
   "devDependencies": {
+    "npm": "^6.4.1",
     "@ava/babel-preset-stage-4": "^2.0.0",
     "@babel/core": "^7.0.0",
     "@babel/plugin-proposal-class-properties": "^7.0.0",
@@ -107,8 +108,5 @@
     "> 1%",
     "last 2 versions",
     "not ie <= 8"
-  ],
-  "dependencies": {
-    "npm": "^6.4.1"
-  }
+  ]
 }

@@ -1,5 +1,5 @@
-export let mark;
-export let measure;
+export let mark: (tag: string) => void;
+export let measure: (name: string, startTag?: string, endTag?: string) => void;
 
 /**
  * performance API of browser.
