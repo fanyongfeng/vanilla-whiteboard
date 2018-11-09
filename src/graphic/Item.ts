@@ -22,6 +22,7 @@ export interface ItemOptions {
 @observeProps({
   selected: { type: Boolean, default: false },
   style: { type: Style, default: null },
+  showShadow: { type: Boolean, default: true } //
 })
 abstract class Item {
   /**
@@ -49,6 +50,7 @@ abstract class Item {
   style: Style;
   matrix: Matrix;
   selected!: boolean;
+  showShadow!: boolean;
   children!: Item[];
   input?: HTMLDivElement; // for  Text Item
   changed!: () => void
@@ -60,6 +62,10 @@ abstract class Item {
       this.typeId = typeId || -Infinity;
       this.id = id || tsid();
       this.style = new Style(style);
+      if(this.showShadow) {
+        this.style.shadowColor = this.style.strokeStyle;
+        this.style.shadowBlur = 20;
+      }
       this.handleRest(rest);
     } else {
       this.style = new Style();
@@ -258,6 +264,7 @@ abstract class Item {
     ctx.globalCompositeOperation = this.globalCompositeOperation;
     this.matrix.applyToContext(ctx);
     this._draw(ctx);
+
     ctx.restore();
 
     if (this.selected) this.drawBoundRect(ctx);

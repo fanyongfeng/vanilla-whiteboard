@@ -113,6 +113,12 @@ export default class Style {
       ctx.setLineDash(this.dashArray);
       ctx.lineDashOffset = this.lineDashOffset;
     }
+
+    if(this.hasShadow) {
+      ctx.shadowColor = this.shadowColor.toString();
+      ctx.shadowBlur = this.shadowBlur;
+    }
+
     //TODO: implement rest props.
   }
 
