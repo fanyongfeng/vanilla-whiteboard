@@ -43,7 +43,7 @@ abstract class Item {
 
   layer!: Layer; //inject when it is added on layer.
   type?: IToolType;
-  typeId!: number;
+  typeId?: number;
   id!: number;
 
   style: Style;
