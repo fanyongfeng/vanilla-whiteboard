@@ -40,7 +40,7 @@ class Pointer extends Tool {
 
   onMouseDrag(event: CustomizeMouseEvent) {
     const { point } = event;
-    this.globalCtx.emit('pointer:move', ['m', [point.x, point.y]]);
+    this.globalCtx.emit('pointer:move', ['m', [point.x, point.y]]); // TODO: delete
   }
   onMouseMove(event: CustomizeMouseEvent) {
     const { point } = event;

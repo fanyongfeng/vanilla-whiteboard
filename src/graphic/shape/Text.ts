@@ -98,9 +98,8 @@ export default class Text extends Item {
         top: `${(y - 10) * this.zoom }px`,
       });
       this.toggleInput();
-      if (!this.textWrapper) {
-        throw ("can not find div about draw-panel");
-      }
+      if (!this.textWrapper) throw ("can not find div about draw-panel");
+
       this.textWrapper.appendChild(this.input);
       this.bindInputEvent();
     }
@@ -131,6 +130,9 @@ export default class Text extends Item {
    * invoke typingCallback when truly input occurred
    */
   bindInputEvent() {
+    const invokeTyping = (value: string) => {
+      this.onTyping([this.id, value]);
+    }
     let locked = false;
     if (!this.input) return;
     this.input.addEventListener('compositionstart', () => {
@@ -138,22 +140,25 @@ export default class Text extends Item {
     });
     this.input.addEventListener('compositionend', () => {
       locked = false;
+      invokeTyping(this.input.innerHTML);
     });
     this.input.addEventListener('input', event => {
-      setTimeout(() => {
-        if (!event.target || locked) return;
-        this.value = event.target.innerHTML;
-        this.onTyping([this.id, this.value]);
-      }, 0);
-      // this.lines = this.value.split(/\r?\n/);
+      if (!event.target || locked) return;
+      invokeTyping(event.target.innerHTML);
     });
+
   }
 
+  /**
+   * it is a hook, invoked when user drag Text instance
+   * @param point
+   */
   onMouseDrag(point: Point) {
     this.updatePosition(point)
   }
 
   /**
+   * update input position
    * @param offset object {x, y}
    */
   updatePosition({ x = 0, y = 0 }) {

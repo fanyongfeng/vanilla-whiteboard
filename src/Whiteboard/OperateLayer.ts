@@ -1,5 +1,6 @@
-import Layer from './Layer';
+import Layer, { layerDep } from './Layer';
 import Img from '../graphic/shape/Image';
+
 
 /**
  * Support Cursor & Event .. operate layer behavior
@@ -8,8 +9,8 @@ import Img from '../graphic/shape/Image';
 export default class OperateLayer extends Layer {
   private _cursorImage?: Img;
 
-  constructor(width: number, height: number, role: string) {
-    super(width, height, role);
+  constructor(width: number, height: number, role: string, props: layerDep) {
+    super(width, height, role, props);
     this.el.tabIndex = 1; //make OperateLayer focusable.
   }
   /**

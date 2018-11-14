@@ -2,8 +2,12 @@ import { setStyle } from '../util/dom';
 import ItemCollection from './ItemCollection';
 import Matrix from '../graphic/types/Matrix';
 import Rect from '../graphic/types/Rect';
-import Whiteboard from '.';
 import Item from '../graphic/Item';
+
+export type layerDep = {
+  context: IContext,
+  wrapper?: HTMLElement
+};
 
 /**
  * Create canvas layer, and Manage all canvases in whiteboard.
@@ -11,15 +15,14 @@ import Item from '../graphic/Item';
 export default class Layer {
   width: number;
   height: number;
-  ctx: CanvasRenderingContext2D;
-  globalCtx!: IContext;
-  role: string;
-  el: HTMLCanvasElement;
-  wrapper!: HTMLElement;
-
+  globalCtx: IContext;
   matrix = new Matrix();
-  offscreen = false;
+  ctx: CanvasRenderingContext2D;
+  el: HTMLCanvasElement;
 
+  protected role: string;
+  protected wrapper?: HTMLElement;
+  protected offscreen = false;
   private _bounds!: Rect;
   private _items: ItemCollection;
   private _isDirty = true;
@@ -71,16 +74,20 @@ export default class Layer {
    * @param height
    * @param role
    */
-  constructor(width: number, height: number, role: string = '') {
+  constructor(width: number, height: number, role: string = '', props: layerDep) {
     this._items = new ItemCollection(this);
-    let el = document.createElement('canvas');
+    const el = document.createElement('canvas');
     el.setAttribute('data-role', role);
     el.setAttribute('canvas-id', role);
     el.setAttribute('width', width.toString());
     el.setAttribute('height', height.toString());
     this.role = role;
     this.el = el;
-
+    if (!this.offscreen && props.wrapper) {
+      this.wrapper = props.wrapper;
+      this.wrapper.appendChild(this.el);
+    }
+    this.globalCtx = props.context;
     // if (typeof wx !== 'undefined' && wx.createCanvasContext) {
     //   // adapt to wechat-mini-app
     //   this.ctx = wx.createCanvasContext(role);
@@ -106,6 +113,17 @@ export default class Layer {
       this.applyRatio();
     }
   }
+
+  // appendTo(whiteboard: Whiteboard) {
+  //   //appendTo wrapper.
+  //   if (this.offscreen) return;
+
+  //   this.wrapper = whiteboard.wrapper;
+  //   this.wrapper.appendChild(this.el);
+
+  //   //ref whiteboard context.
+  //   this.globalCtx = whiteboard.context;
+  // }
 
   _draw() {
     this.globalCtx.refreshCount++;
@@ -207,16 +225,6 @@ export default class Layer {
     this.markAsDirty();
   }
 
-  appendTo(whiteboard: Whiteboard) {
-    //appendTo wrapper.
-    if (this.offscreen) return;
-
-    this.wrapper = whiteboard.wrapper;
-    this.wrapper.appendChild(this.el);
-
-    //ref whiteboard context.
-    this.globalCtx = whiteboard.context;
-  }
 
   /**
    * Move own items to target

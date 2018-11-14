@@ -54,7 +54,7 @@ export default class Whiteboard  {
   private options: typeof defaultOptions & WhiteboardOptions;
   private isLoop = false;
   private _zoom = 1;
-  wrapper!: HTMLDivElement;
+  wrapper: HTMLDivElement;
   width: number;
   height: number;
   backgroundLayer!: Layer;
@@ -88,24 +88,26 @@ export default class Whiteboard  {
     this.height = height;
     this.context = this._createContext();
 
+    const layerDep = {
+      wrapper: this.wrapper,
+      context: this.context
+    };
+    this.backgroundLayer = new Layer(this.width, this.height, 'background', layerDep);
+    this.operateLayer = new OperateLayer(this.width, this.height, 'active', layerDep);
+    this.activeLayer = new Layer(this.width, this.height, 'background', layerDep);
     this.operateLayer.el.tabIndex = 1; //make container focusable.
-    this.backgroundLayer.appendTo(this);
-    this.activeLayer.appendTo(this);
-    this.operateLayer.appendTo(this);
 
-    let handler = (this.handler = new EventHandler(this.items));
+
+    const handler = (this.handler = new EventHandler(this.items));
     handler.context = this.context;
     handler.bind(this.operateLayer);
     // this.tool = 'selection';
 
-    if (this.options.zoom !== 1) {
-      this.zoom = this.options.zoom;
-    }
+    if (this.options.zoom !== 1) this.zoom = this.options.zoom;
 
     this.context.zoom = this.options.zoom;
 
     Whiteboard.instances.push(this);
-
   }
 
   /**
@@ -115,16 +117,9 @@ export default class Whiteboard  {
    *
    */
   private _createContext() {
-    let backgroundLayer = new Layer(this.width, this.height, 'background'),
-      activeLayer = new Layer(this.width, this.height, 'active'),
-      operateLayer = new OperateLayer(this.width, this.height, 'operate');
-
-    let proto = {
+    const proto = {
       textWrapper: this.wrapper,
       whiteboard: this,
-      backgroundLayer,
-      activeLayer,
-      operateLayer,
       currentMode: null,
       refreshCount: 0, //刷新计数，白板所有layers刷新总次数
       settings: Object.freeze(this.options),
@@ -132,20 +127,11 @@ export default class Whiteboard  {
       emit: this.emit.bind(this),
     };
 
-    // 将context 属性赋值白板实例
-    // if (!IS_PRODUCTION) Object.keys(proto).forEach(key => (this[key] = proto[key]));
-    // Object.keys(proto).forEach(key => (this[key] = proto[key])); //TODO: 重构
-    this.backgroundLayer = backgroundLayer;
-    this.operateLayer = operateLayer;
-    this.activeLayer = activeLayer;
-
-    //return context;
     return Object.create(proto);
   }
 
   /**
    * Watch mode. Redraw layer if it mark as dirty in every tick.
-   *
    */
   watch() {
     if (this.isLoop === true) throw new Error("Can't watch twice!");
@@ -309,12 +295,14 @@ export default class Whiteboard  {
     if (!/^jpeg|jpg|png$/.test(type)) throw new Error(`Can't support type ${type}`);
 
     //创建离屏canvas，绘制layers；
-    let offscreenCanvas = new Layer(this.width, this.height);
-    let ctx = offscreenCanvas.ctx;
+    const offscreenCanvas = new Layer(this.width, this.height, '', {
+      context: this.context
+    });
+    const ctx = offscreenCanvas.ctx;
 
     this.layers.forEach(layer => ctx.drawImage(layer.el, 0, 0, this.width, this.height));
 
-    let $link = document.createElement('a');
+    const $link = document.createElement('a');
     function downloadCanvas() {
       $link.href = offscreenCanvas.el.toDataURL(`image/${type}`);
       $link.download = filename;
