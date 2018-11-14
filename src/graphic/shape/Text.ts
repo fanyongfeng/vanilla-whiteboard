@@ -59,6 +59,7 @@ export default class Text extends Item {
   // private _autoBreak = true; // if _autoBreak is true, Text line will break if out of canvas bounds.
   // private _crossBorder = false; // can cross a boundary
   private _cxt!: CanvasRenderingContext2D;
+  private isDeleted = false;
 
   public _editable!: boolean;
 
@@ -78,9 +79,8 @@ export default class Text extends Item {
   protected _draw(cxt: CanvasRenderingContext2D) {
     this._cxt = cxt;
     const { x, y } = this.startPoint;
-    if (!this.input) {
+    if (!this.input && !this.isDeleted) {
       this.input = document.createElement('div');
-      this.input.setAttribute('contenteditable', this._editable.toString());
       this.input.setAttribute('style', '');
       this.input.setAttribute('autocapitalize', 'off');
       this.input.setAttribute('autocorrect', 'off');
@@ -97,6 +97,7 @@ export default class Text extends Item {
         left: `${x * this.zoom}px`,
         top: `${(y - 10) * this.zoom }px`,
       });
+      this.toggleInput();
       if (!this.textWrapper) {
         throw ("can not find div about draw-panel");
       }
@@ -110,14 +111,25 @@ export default class Text extends Item {
 
   set editable(val: boolean) {
     this._editable = val;
-    if (this.input) {
-      setStyle(this.input, {
-        'pointer-events': this._editable ? 'initial' : 'none',
-      });
-      this.input.setAttribute('contenteditable', val.toString());
-    }
+    this.toggleInput();
   }
 
+  /**
+   * freeze input by editable
+   */
+  toggleInput() {
+    if (!this.input) return;
+    setStyle(this.input, {
+      'pointer-events': this._editable ? 'initial' : 'none',
+      'user-select': this._editable ? 'initial' : 'none'
+    });
+    this.input.setAttribute('contenteditable', this._editable.toString());
+  }
+
+  /**
+   * bind event for input
+   * invoke typingCallback when truly input occurred
+   */
   bindInputEvent() {
     let locked = false;
     if (!this.input) return;
@@ -148,11 +160,15 @@ export default class Text extends Item {
     const { left, top } = this.input.style;
     if (!left || !top) return;
     Object.assign(this.input.style, {
-      left: `${parseInt(left) + x * 1/this.zoom}px`,
-      top: `${parseInt(top) + y * 1/this.zoom}px`,
+      left: `${parseInt(left) + x * this.zoom}px`,
+      top: `${parseInt(top) + y * this.zoom}px`,
     });
   }
 
+  /**
+   * draw canvas Img by text element
+   * @param showOriginInput
+   */
   drawTextImg(showOriginInput = false) {
     this.input.style.visibility = 'visible';
     drawTextImg(this.input, this._cxt);
@@ -164,7 +180,7 @@ export default class Text extends Item {
   }
 
   /**
-   * just for ts lint, no sense
+   * get text element bound
    */
   public get bounds(): Rect {
     const { left, top } = this.input.style;
@@ -176,6 +192,7 @@ export default class Text extends Item {
    * invoked when ItemCollection Delete this
    */
   onDeleted() {
-    this.input.remove();
+    this.isDeleted = true;
+    this.input && this.input.remove();
   }
 }

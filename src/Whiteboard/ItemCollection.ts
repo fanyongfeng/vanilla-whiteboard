@@ -257,7 +257,7 @@ class ItemCollection {
    */
   deleteSelected() {
     const deleted = this.delete(item => item.selected);
-    if (this.layer) this.layer.globalCtx.emit('items:delete', deleted.map(item => item.id));
+    if (this.layer && deleted.length > 0) this.layer.globalCtx.emit('items:delete', deleted.map(item => item.id));
     return deleted;
   }
 
@@ -266,7 +266,7 @@ class ItemCollection {
    * @param {Array} ids
    */
   deleteById(ids: number[] = []) {
-    return this.delete(item => !~ids.lastIndexOf(item.id));
+    return this.delete(item => ids.lastIndexOf(item.id) > -1);
   }
 
   /**
