@@ -4,7 +4,8 @@
   "description": "whiteboard by plain javascript",
   "author": "",
   "private": true,
-  "typings": "./src/typings/index.d.ts",
+  "typings": "./src/typings",
+  "main": "./libs/app.min.js",
   "scripts": {
     "test": "NODE_ENV=test ava --verbose #&& rm -rf ./coverage && mkdir ./coverage && nyc report --reporter=text-lcov > ./coverage/lcov.info",
     "test:watch": "NODE_ENV=test ava --verbose --watch",
@@ -22,14 +23,13 @@
       "prettier --write",
       "git add"
     ]
-},
+  },
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
     }
   },
   "devDependencies": {
-    "npm": "^6.4.1",
     "@ava/babel-preset-stage-4": "^2.0.0",
     "@babel/core": "^7.0.0",
     "@babel/plugin-proposal-class-properties": "^7.0.0",
@@ -65,13 +65,14 @@
     "husky": "^1.0.0",
     "lint-staged": "^7.2.2",
     "node-notifier": "^5.1.2",
+    "npm": "^6.4.1",
     "onchange": "^4.1.0",
     "ora": "^1.2.0",
     "portfinder": "^1.0.13",
     "prettier": "1.14.2",
     "rimraf": "^2.6.0",
     "rollup": "^0.65.0",
-    "rollup-plugin-babel": "latest",
+    "rollup-plugin-babel": "^4.0.3",
     "rollup-plugin-commonjs": "^9.1.6",
     "rollup-plugin-eslint": "^5.0.0",
     "rollup-plugin-node-globals": "^1.2.1",

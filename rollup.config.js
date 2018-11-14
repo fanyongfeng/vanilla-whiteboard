@@ -12,7 +12,7 @@ const buildForEsModule = process.env.MODULE === 'ES';
 let config = {
   input: './src/index.ts',
   output: {
-    file: isProd ? 'dist/app.min.js' : 'dist/app.js',
+    file: isProd ? 'libs/app.min.js' : 'libs/app.js',
     format: buildForEsModule ? 'esm' : 'iife', //amd, cjs, esm, iife, umd  iife is for browsers
     name: 'app',
     sourcemap: !isProd,
