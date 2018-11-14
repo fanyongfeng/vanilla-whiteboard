@@ -93,8 +93,9 @@ export default class Whiteboard  {
       context: this.context
     };
     this.backgroundLayer = new Layer(this.width, this.height, 'background', layerDep);
-    this.operateLayer = new OperateLayer(this.width, this.height, 'active', layerDep);
-    this.activeLayer = new Layer(this.width, this.height, 'background', layerDep);
+    this.activeLayer = new Layer(this.width, this.height, 'active', layerDep);
+    this.operateLayer = new OperateLayer(this.width, this.height, 'operate', layerDep);
+    //operateLayer must be last one
     this.operateLayer.el.tabIndex = 1; //make container focusable.
 
 

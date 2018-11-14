@@ -43,30 +43,6 @@ export default class Layer {
     }
     fn && fn();
   }
-
-  /**
-   * Get bounds of layer.
-   */
-  get bounds() {
-    return this._bounds;
-  }
-
-  /**
-   * Alias of items.append .
-   * @param item
-   */
-  append(item: Item) {
-    this.items.add(item);
-  }
-
-  /**
-   * Alias of items.remove .
-   * @param item
-   */
-  remove(item: Item) {
-    this.items.remove(item);
-  }
-
   /**
    * Create whiteboard layer with specified width & height.
    *
@@ -113,6 +89,30 @@ export default class Layer {
       this.applyRatio();
     }
   }
+
+  /**
+   * Get bounds of layer.
+   */
+  get bounds() {
+    return this._bounds;
+  }
+
+  /**
+   * Alias of items.append .
+   * @param item
+   */
+  append(item: Item) {
+    this.items.add(item);
+  }
+
+  /**
+   * Alias of items.remove .
+   * @param item
+   */
+  remove(item: Item) {
+    this.items.remove(item);
+  }
+
 
   // appendTo(whiteboard: Whiteboard) {
   //   //appendTo wrapper.
