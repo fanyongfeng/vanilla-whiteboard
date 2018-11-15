@@ -16,7 +16,7 @@ export default class Writing extends Path {
    * @param {*} segments
    */
   static instantiate(options: object, segments: Segment[]) {
-    let instance = new Path(options);
+    let instance = new Writing(options);
 
     segments.forEach(seg => {
       let segment;
