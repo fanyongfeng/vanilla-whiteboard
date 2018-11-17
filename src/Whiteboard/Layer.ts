@@ -220,7 +220,7 @@ export default class Layer {
     this.el.height = this.el.height * radio;
     this.ctx.restore();
     this.ctx.save();
-    this.ctx.scale(this.deviceRatio, this.deviceRatio);
+    if (this.deviceRatio > 1) this.ctx.scale(this.deviceRatio, this.deviceRatio);
     this.ctx.scale(radio, radio);
     this.markAsDirty();
   }

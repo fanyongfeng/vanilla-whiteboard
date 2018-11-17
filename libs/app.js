@@ -3462,6 +3462,7 @@ var app = (function (exports) {
           this.globalCompositeOperation = 'source-over'; //'xor'
           this.filter = 'blur(5px)'; //experiment feature.
           this.scaleMode = 'free'; //no-scale, free, proportion
+          this.style = new Style();
           if (options) {
               var type = options.type, typeId = options.typeId, id = options.id, style = options.style, rest = __rest(options, ["type", "typeId", "id", "style"]);
               type && (this.type = type);
@@ -3473,9 +3474,6 @@ var app = (function (exports) {
                   this.style.shadowBlur = 20;
               }
               this.handleRest(rest);
-          }
-          else {
-              this.style = new Style();
           }
           this.matrix = new Matrix();
       }
@@ -3678,6 +3676,7 @@ var app = (function (exports) {
       ], Item);
       return Item;
   }());
+  //# sourceMappingURL=Item.js.map
 
   /**
    * A full path and base class of all single path shapes.
@@ -4483,7 +4482,8 @@ var app = (function (exports) {
           this.el.height = this.el.height * radio;
           this.ctx.restore();
           this.ctx.save();
-          this.ctx.scale(this.deviceRatio, this.deviceRatio);
+          if (this.deviceRatio > 1)
+              this.ctx.scale(this.deviceRatio, this.deviceRatio);
           this.ctx.scale(radio, radio);
           this.markAsDirty();
       };

@@ -47,7 +47,7 @@ abstract class Item {
   typeId?: number;
   id!: number;
 
-  style: Style;
+  style = new Style();
   matrix: Matrix;
   selected!: boolean;
   showShadow!: boolean;
@@ -67,8 +67,6 @@ abstract class Item {
         this.style.shadowBlur = 20;
       }
       this.handleRest(rest);
-    } else {
-      this.style = new Style();
     }
 
     this.matrix = new Matrix();
