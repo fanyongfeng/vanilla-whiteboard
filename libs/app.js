@@ -278,7 +278,7 @@ var app = (function (exports) {
     return store[key] || (store[key] = value !== undefined ? value : {});
   })('versions', []).push({
     version: _core.version,
-    mode: _library ? 'pure' : 'global',
+    mode: 'pure',
     copyright: '© 2018 Denis Pushkarev (zloirock.ru)'
   });
   });
@@ -855,6 +855,7 @@ var app = (function (exports) {
       };
       return Point;
   }());
+  //# sourceMappingURL=Point.js.map
 
   /*! *****************************************************************************
   Copyright (c) Microsoft Corporation. All rights reserved.
@@ -1195,6 +1196,7 @@ var app = (function (exports) {
           return target;
       };
   }
+  //# sourceMappingURL=mixin.js.map
 
   /**
    *  Type Rect
@@ -1452,6 +1454,7 @@ var app = (function (exports) {
       ], Rect);
       return Rect;
   }());
+  //# sourceMappingURL=Rect.js.map
 
   var _stringWs = '\x09\x0A\x0B\x0C\x0D\x20\xA0\u1680\u180E\u2000\u2001\u2002\u2003' +
     '\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u202F\u205F\u3000\u2028\u2029\uFEFF';
@@ -1705,6 +1708,7 @@ var app = (function (exports) {
       };
       return Color;
   }());
+  //# sourceMappingURL=Color.js.map
 
   var fillRule = {
       nonzero: 'nonzero',
@@ -1924,6 +1928,7 @@ var app = (function (exports) {
       };
       return Style;
   }());
+  //# sourceMappingURL=Style.js.map
 
   //https://github.com/chrisaljoudi/transformatrix.js
   /**
@@ -2153,6 +2158,7 @@ var app = (function (exports) {
       };
       return Matrix;
   }());
+  //# sourceMappingURL=Matrix.js.map
 
   /**
    * 向量距离平方
@@ -2766,6 +2772,7 @@ var app = (function (exports) {
       });
       return ArcSegment;
   }(Segment$1));
+  //# sourceMappingURL=Segment.js.map
 
   /**
    *  Adapt from https://github.com/paperjs/paper.js
@@ -3305,6 +3312,7 @@ var app = (function (exports) {
           }
       };
   }
+  //# sourceMappingURL=memoized.js.map
 
   var letters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
   var lettersLen = letters.length;
@@ -3323,6 +3331,7 @@ var app = (function (exports) {
    * Generate unique id via timestamp per 3 hours, and format as [0-9a-zA-Z]+
    */
   var tsid = function () { return genMixId((+new Date() % dateTS) * 1000 + parseInt(((Math.random() * 100) % 100).toString(), 10)); };
+  //# sourceMappingURL=id.js.map
 
   /**
    *
@@ -3432,6 +3441,7 @@ var app = (function (exports) {
       ], Emitter);
       return Emitter;
   }());
+  //# sourceMappingURL=emitter.js.map
 
   // 白板所有元素的父类
   var Item = /** @class */ (function () {
@@ -3925,6 +3935,7 @@ var app = (function (exports) {
       ], Path);
       return Path;
   }(Item));
+  //# sourceMappingURL=Path.js.map
 
   //Dom helpers
   /**
@@ -4004,6 +4015,7 @@ var app = (function (exports) {
           element['on' + eventType] = null;
       }
   }
+  //# sourceMappingURL=dom.js.map
 
   /**
    * ItemCollection Embedded-Array 版本
@@ -4272,6 +4284,7 @@ var app = (function (exports) {
       ], ItemCollection);
       return ItemCollection;
   }());
+  //# sourceMappingURL=ItemCollection.js.map
 
   /**
    * Create canvas layer, and Manage all canvases in whiteboard.
@@ -4489,6 +4502,7 @@ var app = (function (exports) {
       };
       return Layer;
   }());
+  //# sourceMappingURL=Layer.js.map
 
   var requestAnimationFrame$1 = typeof window !== 'undefined' && (window.requestAnimationFrame && window.requestAnimationFrame.bind(window) || window.msRequestAnimationFrame && window.msRequestAnimationFrame.bind(window) || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame) || function (fn) {
     return setTimeout(fn, 16);
@@ -4714,6 +4728,7 @@ var app = (function (exports) {
       };
       return OperateLayer;
   }(Layer));
+  //# sourceMappingURL=OperateLayer.js.map
 
   /**
    * Custom Mouse Event Class
@@ -4787,6 +4802,7 @@ var app = (function (exports) {
       NUMPAD_MINUS: 109,
       NUMPAD_DOT: 110,
   };
+  //# sourceMappingURL=EventType.js.map
 
   // 20.3.3.1 / 15.9.4.4 Date.now()
 
@@ -5265,6 +5281,7 @@ var app = (function (exports) {
       };
       return EventHandler;
   }());
+  //# sourceMappingURL=EventHandler.js.map
 
   /**
    * Base class of tools, for:
@@ -5313,6 +5330,7 @@ var app = (function (exports) {
       });
       return Tool;
   }());
+  //# sourceMappingURL=Tool.js.map
 
   var ArcDrawing = /** @class */ (function (_super) {
       __extends(ArcDrawing, _super);
@@ -5333,6 +5351,7 @@ var app = (function (exports) {
       ArcDrawing.prototype.onMouseUp = function (_event) { };
       return ArcDrawing;
   }(Tool));
+  //# sourceMappingURL=ArcDrawing.js.map
 
   var viewWidth = 1000;
   var viewHeight = 800;
@@ -5513,6 +5532,7 @@ var app = (function (exports) {
       ], Img);
       return Img;
   }(Item));
+  //# sourceMappingURL=Image.js.map
 
   /**
    * Custom tool cursor as specified image.
@@ -5565,6 +5585,7 @@ var app = (function (exports) {
           },
       };
   }
+  //# sourceMappingURL=cursor.js.map
 
   /**
    * The base class of 'two points shapes' that build with start-point & end-point.
@@ -5648,6 +5669,7 @@ var app = (function (exports) {
       ], Shape);
       return Shape;
   }(Path));
+  //# sourceMappingURL=Shape.js.map
 
   var Rectangle = /** @class */ (function (_super) {
       __extends(Rectangle, _super);
@@ -5686,12 +5708,12 @@ var app = (function (exports) {
       ], Rectangle);
       return Rectangle;
   }(Shape));
+  //# sourceMappingURL=Rectangle.js.map
 
   var Line = /** @class */ (function (_super) {
       __extends(Line, _super);
       function Line(options, sp, ep) {
           var _this = _super.call(this, options, sp, ep) || this;
-          _this.dash = [];
           _this.style.dashArray = _this.dash || [];
           return _this;
       }
@@ -5704,6 +5726,7 @@ var app = (function (exports) {
       };
       return Line;
   }(Shape));
+  //# sourceMappingURL=Line.js.map
 
   function calcArrow(sx, sy, ex, ey) {
       var l = Math.sqrt(Math.pow(ex - sx, 2) + Math.pow(ey - sy, 2)), e0 = ex - (((ex - sx) * Math.cos(0.5) - (ey - sy) * Math.sin(0.5)) * 10) / l, e1 = ey - (((ey - sy) * Math.cos(0.5) + (ex - sx) * Math.sin(0.5)) * 10) / l, e2 = ex - (((ex - sx) * Math.cos(0.5) + (ey - sy) * Math.sin(0.5)) * 10) / l, e3 = ey - (((ey - sy) * Math.cos(0.5) - (ex - sx) * Math.sin(0.5)) * 10) / l;
@@ -5726,6 +5749,7 @@ var app = (function (exports) {
       };
       return Arrow;
   }(Shape));
+  //# sourceMappingURL=Arrow.js.map
 
   /**
    * 支持等腰，直角三角形
@@ -5778,6 +5802,7 @@ var app = (function (exports) {
       ], Triangle);
       return Triangle;
   }(Shape));
+  //# sourceMappingURL=Triangle.js.map
 
   var Ellipse = /** @class */ (function (_super) {
       __extends(Ellipse, _super);
@@ -5802,6 +5827,7 @@ var app = (function (exports) {
       };
       return Ellipse;
   }(Shape));
+  //# sourceMappingURL=Ellipse.js.map
 
   /** 五角星，用黄金分割 */
   var radio = 0.382;
@@ -5831,6 +5857,7 @@ var app = (function (exports) {
       };
       return Star;
   }(Shape));
+  //# sourceMappingURL=Star.js.map
 
   /**
    * Marker & highlighter.
@@ -5849,7 +5876,7 @@ var app = (function (exports) {
        * @param {*} segments
        */
       Writing.instantiate = function (options, segments) {
-          var instance = new Path(options);
+          var instance = new Writing(options);
           segments.forEach(function (seg) {
               var segment;
               if (seg.length === 1) {
@@ -5864,6 +5891,7 @@ var app = (function (exports) {
       };
       return Writing;
   }(Path));
+  //# sourceMappingURL=Writing.js.map
 
   var replaceAll = function (target, search, replacement) { return target.replace(new RegExp(search, 'g'), replacement); };
   var getStylePropertyValue = function (target, property) {
@@ -6059,6 +6087,7 @@ var app = (function (exports) {
       ], Text);
       return Text;
   }(Item));
+  //# sourceMappingURL=Text.js.map
 
   var ChatBox = /** @class */ (function (_super) {
       __extends(ChatBox, _super);
@@ -6084,6 +6113,7 @@ var app = (function (exports) {
       };
       return ChatBox;
   }(Shape));
+  //# sourceMappingURL=ChatBox.js.map
 
   /**
    * @class A compound path is a complex path that is made up of one or more
@@ -6156,6 +6186,7 @@ var app = (function (exports) {
       ], CompoundPath.prototype, "bounds", null);
       return CompoundPath;
   }(Item));
+  //# sourceMappingURL=CompoundPath.js.map
 
   /**
    * magic numbers map to shapes, copy from milkyway.
@@ -6266,6 +6297,7 @@ var app = (function (exports) {
           style: style }, preset);
       return new ctor(options);
   }
+  //# sourceMappingURL=ItemFactory.js.map
 
   /**
    * Enable tool add item on mouse event triggered!
@@ -6296,6 +6328,7 @@ var app = (function (exports) {
           },
       };
   }
+  //# sourceMappingURL=itemCreator.js.map
 
   var markerCursor = 'https://www-stage.tutormeetplus.com/v2/static/media/pen.3ec0e0e7.png';
   var highlighterCursor = 'https://www-stage.tutormeetplus.com/v2/static/media/mark_pen.901db183.png';
@@ -6377,6 +6410,7 @@ var app = (function (exports) {
       ], Highlighter);
       return Highlighter;
   }(FreeDrawing));
+  //# sourceMappingURL=FreeDrawing.js.map
 
   var defaultStyle = {
       strokeStyle: '#aaa',
@@ -6435,6 +6469,7 @@ var app = (function (exports) {
           },
       };
   }
+  //# sourceMappingURL=dragBounds.js.map
 
   /**
    * 绘制两点图形工具
@@ -6469,6 +6504,7 @@ var app = (function (exports) {
       ], ShapeDrawing);
       return ShapeDrawing;
   }(Tool));
+  //# sourceMappingURL=ShapeDrawing.js.map
 
   /**
    * enable tool has select behavior.
@@ -6524,6 +6560,7 @@ var app = (function (exports) {
           },
       };
   }
+  //# sourceMappingURL=selectable.js.map
 
   var POINT_WIDTH$1 = 4;
   var OFFSET$1 = POINT_WIDTH$1 / 2;
@@ -6595,6 +6632,7 @@ var app = (function (exports) {
       ], ControlRect);
       return ControlRect;
   }(Item));
+  //# sourceMappingURL=ControlRect.js.map
 
   /**
    * 图形成组，包括Path, Image, Text, CompoundPath
@@ -6643,6 +6681,7 @@ var app = (function (exports) {
       ], Group);
       return Group;
   }(Item));
+  //# sourceMappingURL=Group.js.map
 
   /**
    * 通过中心点、起始点和结束点获取角度（绝对值）
@@ -6772,6 +6811,7 @@ var app = (function (exports) {
           },
       };
   }
+  //# sourceMappingURL=transformable.js.map
 
   /**
    * Select Tool of whiteboard.
@@ -6793,6 +6833,7 @@ var app = (function (exports) {
       ], Selection);
       return Selection;
   }(Tool)); // TODO : try to fix via doc of ts
+  //# sourceMappingURL=Selection.js.map
 
   /**
    * Pointer of whiteboard.
@@ -6846,6 +6887,7 @@ var app = (function (exports) {
       ], Pointer);
       return Pointer;
   }(Tool));
+  //# sourceMappingURL=Pointer.js.map
 
   /**
    * Eraser， 橡皮擦工具
@@ -6875,6 +6917,7 @@ var app = (function (exports) {
       ], Eraser);
       return Eraser;
   }(Tool));
+  //# sourceMappingURL=Eraser.js.map
 
   /**
    * Tool to input text on whiteboard
@@ -6916,6 +6959,7 @@ var app = (function (exports) {
       ], Text);
       return Text;
   }(Tool));
+  //# sourceMappingURL=TextInput.js.map
 
   /**
    * enable tool has mutate behavior.
@@ -6979,6 +7023,7 @@ var app = (function (exports) {
           },
       };
   }
+  //# sourceMappingURL=mutable.js.map
 
   /**
    * Mutate Path of shape.
@@ -6995,6 +7040,7 @@ var app = (function (exports) {
       ], PathMutator);
       return PathMutator;
   }(Tool));
+  //# sourceMappingURL=PathMutator.js.map
 
   /**
    * Register tools
@@ -7037,6 +7083,7 @@ var app = (function (exports) {
       return tools[name];
   }
   create();
+  //# sourceMappingURL=index.js.map
 
   /**
    * 简单网格
@@ -7124,6 +7171,7 @@ var app = (function (exports) {
       ], Grid);
       return Grid;
   }(Item));
+  //# sourceMappingURL=Grid.js.map
 
   // const defaultOptions = {
   //   showX: true,
@@ -7229,6 +7277,7 @@ var app = (function (exports) {
       ], Axes);
       return Axes;
   }(Item));
+  //# sourceMappingURL=Axes.js.map
 
   /**
    * Manage & cache materials of whiteboard.
@@ -7291,6 +7340,7 @@ var app = (function (exports) {
       };
       return MaterialProvider;
   }());
+  //# sourceMappingURL=MaterialProvider.js.map
 
   /**
    * enum of action type
@@ -7377,6 +7427,7 @@ var app = (function (exports) {
       });
       return Action;
   }());
+  //# sourceMappingURL=Action.js.map
 
   // History Stack for undo/redo
   /**
@@ -7462,6 +7513,7 @@ var app = (function (exports) {
       ], History);
       return History;
   }());
+  //# sourceMappingURL=History.js.map
 
   // const _createContext = Symbol('_createContext');
   var defaultOptions$1 = {
@@ -7755,6 +7807,7 @@ var app = (function (exports) {
       ], Whiteboard);
       return Whiteboard;
   }());
+  //# sourceMappingURL=index.js.map
 
   /**
    * Adapt from  https://github.com/sole/tween.js/blob/master/src/Tween.js
@@ -8480,6 +8533,7 @@ var app = (function (exports) {
       playground.init();
   }
   window.nebula = nebula;
+  //# sourceMappingURL=index.js.map
 
   exports.default = nebula;
   exports.Whiteboard = Whiteboard;

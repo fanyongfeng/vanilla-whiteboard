@@ -51,7 +51,7 @@ abstract class Item {
   matrix: Matrix;
   selected!: boolean;
   showShadow!: boolean;
-  children!: Item[];
+children!: Item[];
   input?: HTMLDivElement; // for  Text Item
   changed!: () => void
 
