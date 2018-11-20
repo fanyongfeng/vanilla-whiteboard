@@ -7,10 +7,10 @@
   backingStorePixelRatio?: number,
  }
 
-interface EventTarget {
+interface EventTarget extends Range {
   innerHTML: string,
   width: number,
-  height: number
+  height: number,
 }
 
 declare type IToolType = "highlighter" | "marker" | "text" | "selection" | "pointer" | "eraser" | "pathMutator";

@@ -24,6 +24,11 @@ export class CustomizeMouseEvent {
     this.type = originEvent.type;
     this.target = originEvent.target;
     this.zoom = zoom;
+    if (originEvent instanceof TouchEvent && originEvent.targetTouches.length > 0 && !!this.target) {
+      const rect = this.target.getBoundingClientRect();
+      this.offsetX = originEvent.targetTouches[0].clientX - rect.left;
+      this.offsetY = originEvent.targetTouches[0].clientY - rect.top;
+    }
     if (originEvent instanceof MouseEvent) this.offsetX = originEvent.offsetX;
     if (originEvent instanceof MouseEvent) this.offsetY = originEvent.offsetY;
   }

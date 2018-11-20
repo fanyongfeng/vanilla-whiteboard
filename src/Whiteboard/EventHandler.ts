@@ -76,12 +76,14 @@ export default class EventHandler {
     this.layer = layer;
     this.canvas = layer.el;
     this.onMouseMove = throttle(this.onMouseMove, 0).bind(this); //
-    this.onMouseUp = this.onMouseUp.bind(this);
 
     const canvas = this.canvas;
     //TODO: 改为箭头函数，private， readonly
-    addListener(canvas, mousedown, this.onMouseDown.bind(this));
+    addListener(canvas, mousedown, this.onMouseDown);
     addListener(canvas, mousemove, this.onMouseMove);
+    addListener(canvas, 'touchstart', this.onMouseDown);
+    addListener(canvas, 'touchmove', this.onMouseMove);
+    addListener(canvas, 'touchend', this.onMouseUp);
     addListener(canvas, 'mouseenter', this.onMouseEnter.bind(this));
     addListener(canvas, 'mouseleave', this.onMouseLeave.bind(this));
     addListener(canvas, 'keydown', this.onKeyDown.bind(this));
@@ -141,7 +143,7 @@ export default class EventHandler {
     return _event;
   }
 
-  onMouseDown(event: MouseOrTouchEvent) {
+  onMouseDown = (event: MouseOrTouchEvent) => {
     event.preventDefault();
 
     const _event = this.getMouseEvent(event);
@@ -158,7 +160,7 @@ export default class EventHandler {
     removeListener(this.canvas, mousemove, this.onMouseMove);
   }
 
-  onMouseUp(event: MouseOrTouchEvent) {
+  onMouseUp = (event: MouseOrTouchEvent) => {
     event.preventDefault();
 
     this.isMouseDown = false;

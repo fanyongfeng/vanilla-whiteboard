@@ -4742,6 +4742,11 @@ var app = (function (exports) {
           this.type = originEvent.type;
           this.target = originEvent.target;
           this.zoom = zoom;
+          if (originEvent instanceof TouchEvent && originEvent.targetTouches.length > 0 && !!this.target) {
+              var rect = this.target.getBoundingClientRect();
+              this.offsetX = originEvent.targetTouches[0].clientX - rect.left;
+              this.offsetY = originEvent.targetTouches[0].clientY - rect.top;
+          }
           if (originEvent instanceof MouseEvent)
               this.offsetX = originEvent.offsetX;
           if (originEvent instanceof MouseEvent)
@@ -5118,6 +5123,27 @@ var app = (function (exports) {
           // private isDragging = false;
           this.isMouseDown = false;
           this.keyModifiers = {};
+          this.onMouseDown = function (event) {
+              event.preventDefault();
+              var _event = _this.getMouseEvent(event);
+              if (_this.invokeToolSlotHandler('onBeforeMouseDown', _event) === false)
+                  return;
+              _this.isMouseDown = true;
+              _this.draggingTriggered = 0;
+              _this.invokeToolSlotHandler('onMouseDown', _event);
+              addListener(document, mouseup, _this.onMouseUp);
+              addListener(document, mousemove, _this.onMouseMove);
+              removeListener(_this.canvas, mousemove, _this.onMouseMove);
+          };
+          this.onMouseUp = function (event) {
+              event.preventDefault();
+              _this.isMouseDown = false;
+              // this.isDragging = false;
+              _this.invokeToolSlotHandler('onMouseUp', _this.getMouseEvent(event));
+              removeListener(document, mouseup, _this.onMouseUp);
+              removeListener(document, mousemove, _this.onMouseMove);
+              addListener(_this.canvas, mousemove, _this.onMouseMove);
+          };
           this.onMouseMove = function (event) {
               event.preventDefault();
               var _event = _this.getMouseEvent(event), point = _event.point;
@@ -5182,11 +5208,13 @@ var app = (function (exports) {
           this.layer = layer;
           this.canvas = layer.el;
           this.onMouseMove = throttle(this.onMouseMove, 0).bind(this); //
-          this.onMouseUp = this.onMouseUp.bind(this);
           var canvas = this.canvas;
           //TODO: 改为箭头函数，private， readonly
-          addListener(canvas, mousedown, this.onMouseDown.bind(this));
+          addListener(canvas, mousedown, this.onMouseDown);
           addListener(canvas, mousemove, this.onMouseMove);
+          addListener(canvas, 'touchstart', this.onMouseDown);
+          addListener(canvas, 'touchmove', this.onMouseMove);
+          addListener(canvas, 'touchend', this.onMouseUp);
           addListener(canvas, 'mouseenter', this.onMouseEnter.bind(this));
           addListener(canvas, 'mouseleave', this.onMouseLeave.bind(this));
           addListener(canvas, 'keydown', this.onKeyDown.bind(this));
@@ -5239,27 +5267,6 @@ var app = (function (exports) {
           var point = _event.point;
           this.inverseMatrix.applyToPoint(point);
           return _event;
-      };
-      EventHandler.prototype.onMouseDown = function (event) {
-          event.preventDefault();
-          var _event = this.getMouseEvent(event);
-          if (this.invokeToolSlotHandler('onBeforeMouseDown', _event) === false)
-              return;
-          this.isMouseDown = true;
-          this.draggingTriggered = 0;
-          this.invokeToolSlotHandler('onMouseDown', _event);
-          addListener(document, mouseup, this.onMouseUp);
-          addListener(document, mousemove, this.onMouseMove);
-          removeListener(this.canvas, mousemove, this.onMouseMove);
-      };
-      EventHandler.prototype.onMouseUp = function (event) {
-          event.preventDefault();
-          this.isMouseDown = false;
-          // this.isDragging = false;
-          this.invokeToolSlotHandler('onMouseUp', this.getMouseEvent(event));
-          removeListener(document, mouseup, this.onMouseUp);
-          removeListener(document, mousemove, this.onMouseMove);
-          addListener(this.canvas, mousemove, this.onMouseMove);
       };
       EventHandler.prototype.onMouseEnter = function (event) {
           this.invokeToolSlotHandler('onMouseEnter', event);
